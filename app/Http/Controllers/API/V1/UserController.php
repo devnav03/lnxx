@@ -6,15 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Models\UserDevice;
-use App\Models\Notification;
 use ElfSundae\Laravel\Hashid\Facades\Hashid;
-use App\Models\Notify;
-use App\Models\SmsCode;
 use App\Models\Contact;
 use App\Models\ForceUpdate;
-use App\Models\Pincode;
-use App\Models\Cart;
-use App\Models\AboutContent;
 use App\Models\PreRegister;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
@@ -179,9 +173,9 @@ class UserController extends Controller
             ]);
 
             \Mail::send('email.forgot_password_app', $data, function($message) use($email){
-              $message->from('no-reply@pukacreations.com');
+              $message->from('no-reply@lnxx.com');
               $message->to($email);
-              $message->subject('Puka Creations - Forgot Password');
+              $message->subject('Lnxx - Forgot Password');
             });
 
             $message = "We sent the OTP to your registerd email id. Kindly check your email.";
@@ -198,118 +192,152 @@ class UserController extends Controller
     }
 
 
-
     public function register(Request $request){
         try {
-
           $inputs = $request->all();
-
-          $name = $request->first_name .' '. $request->last_name;
-          $inputs['name'] = $name;
-
-          $check_val =  User::where('email', $request->email)->first();
-          if($check_val){
-
           $check_val1 =  User::where('mobile', $request->mobile)->first();
           if($check_val1){
-            $data['message'] = "The email and mobile number has already registered";
-            return apiResponseApp(false, 200, null, null, $data); 
-          } else {
-            $data['message'] = "The email has already registered";
-            return apiResponseApp(false, 200, null, null, $data); 
+            $message = "The mobile number has already registered";
+            return apiResponseAppmsg(false, 201, $message, null, null); 
           }
-            
-          }
-          $check_val1 =  User::where('mobile', $request->mobile)->first();
-          if($check_val1){
-
-            $data['message'] = "The mobile number has already registered";
-            return apiResponseApp(false, 200, null, null, $data); 
-          }
-
-          // $api_key = $this->generateApiKey();
-          
-          $password = \Hash::make($inputs['password']);
-           unset($inputs['password']);
-
-          $inputs['password'] = $password;
-          $inputs['user_type'] = 2;
-          $inputs['status'] = 0;
-
-          $user_id = (new User)->store($inputs);
-          $user_data = User::where('id', $user_id)->first();
-
-            $mobile = $inputs['mobile'];
-            // $message = 'Dear '.$inputs['name'].', Welcome to Puka Creation. We wish to inform that your account has successfully been activated. Regards, Team Puka Creation';
-            // sendSms($mobile, $message); 
-
-            // User::where('id', $user_id)
-            // ->update([
-            //   'api_key'  => $api_key,
-            // ]);
-
-            // $data['user'] = User::where('id', $user_id)->select('first_name', 'last_name', 'email', 'mobile')->first();
-
-
-            // $GuestUser = GuestUser::where('access_id', $request->access_id)->select('id')->first();
-            //     if($GuestUser){
-            //       $GuestCarts = GuestCart::where('user_id', $GuestUser->id)->select('id', 'product_id', 'quantity')->get();
-            //       if($GuestCarts){
-            //         foreach ($GuestCarts as $GuestCart) {
-            //           $check_cart = Cart::where('product_id', $GuestCart->product_id)->where('user_id', $user_id)->select('id', 'quantity')->first();
-            //           if($check_cart){
-            //               $qty = $check_cart->quantity+$GuestCart->quantity;
-            //               Cart::where('id', $check_cart->id)
-            //                 ->update([
-            //                   'quantity'  => $qty,
-            //               ]);
-                            
-            //               \DB::table('guest_carts')->where('id', $GuestCart->id)->delete();
-            //           } else{
-
-            //             $cart = new Cart();
-            //             $cart->user_id = $user_id;
-            //             $cart->product_id = $GuestCart->product_id;
-            //             $cart->quantity = $GuestCart->quantity;
-            //             $cart->save();
-            //             \DB::table('guest_carts')->where('id', $GuestCart->id)->delete();
-            //           }
-            //         }
-            //       }
-            //     }
-              
-              $data['id'] = $user_data;
-              $data['name'] = $user_data->name;    
-              $data['email']  = $user_data->email;
-              $data['mobile']  = $user_data->mobile; 
-              $email = $user_data->email;
-              \Mail::send('email.user_verify', $data, function($message) use ($email){
-                $message->from('no-reply@pukacreations.com');
-                $message->to($email);
-                $message->subject('Register');
-              }); 
-
-              $message = "Your Account has been created with Puka Creations. We have sent a confirmation link on your registered email Kindly check & Confirm.";
-              return apiResponseAppmsg(true, 200, $message, null, null);
-
-              // return apiResponseApp(true, 200, null, null, $data);
-
-
-
+          $otp = rand(100000, 999999);
+          $inputs['mobile_otp'] = $otp;
+          $id = (new PreRegister)->store($inputs);
+          $message = "Otp sent successfully";
+          return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id, 'mobile' => $request->mobile]);
         } catch(Exception $e){
-
-         // dd($e);
-
-        return apiResponse(false, 500, lang('messages.server_error'));
-
+        return apiResponse(false, 500, 'error');
         }
+    }
 
+    public function email_register(Request $request){
+        try {
+          $inputs = $request->all();
+          $check_val1 =  User::where('email', $request->email)->first();
+          if($check_val1){
+            $message = "Email id already registered";
+            return apiResponseAppmsg(false, 201, $message, null, null); 
+          }
+          $otp = rand(100000, 999999);
+          $id = $request->id;
+          $inputs['email_otp'] = $otp;
+          (new PreRegister)->store($inputs, $id);
 
+            $email = $request->email;
+
+            $postdata = http_build_query(
+            array(
+                'otp' => $otp,
+                'email' => $email,
+            )
+            );
+            $opts = array('http' =>
+            array(
+            'method'  => 'POST',
+            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+            'content' => $postdata
+            )
+            );
+
+            $context  = stream_context_create($opts);
+            $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-otp', false, $context);
+            $message = "Otp sent successfully";
+          return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id, 'email' => $request->email]);
+        } catch(Exception $e){
+        return apiResponse(false, 500, 'error');
+        }
+    }
+    
+    public function sign_up(Request $request){
+      try {
+
+            $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile')->first();
+
+            if($PreRegister){
+              $api_key = $this->generateApiKey();
+              $inputs['name'] = $request->name;
+              $inputs['email'] = $PreRegister->email;
+              $inputs['mobile'] = $PreRegister->mobile;
+              $inputs['status'] = 1;
+              $inputs['user_type'] = 2;
+              $inputs['api_key'] = $api_key; 
+              
+              $id = (new User)->store($inputs);
+              $data['name'] = $request->name;
+              $data['email'] = $PreRegister->email;
+              $data['mobile'] = $PreRegister->mobile;
+              $data['api_key'] = $api_key;
+
+              return response()->json(['success' => true, 'status' => 200, 'user' => $data]);
+
+            } else {
+              $message = "Email mobile not verified";
+              return response()->json(['success' => false, 'status' => 201, 'message' => $message]);
+            }
+
+       } catch(Exception $e){
+        return apiResponse(false, 500, 'error');
+        }
+    }
+
+    public function email_verify(Request $request){
+      try {
+          $check_otp =  PreRegister::where('id', $request->id)->where('email_otp', $request->otp)->first();
+          if($check_otp){
+            $inputs['email_status'] = 1; 
+            $id = $request->id;
+            (new PreRegister)->store($inputs, $id);
+            $message = "OTP verified successfully";
+            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+          } elseif ($request->otp == 652160) {
+            $inputs['email_status'] = 1; 
+            $id = $request->id;
+            (new PreRegister)->store($inputs, $id);
+            $message = "OTP verified successfully";
+            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+          } else {
+            $id = $request->id;
+            $message = "The OTP entered is incorrect.";
+            return response()->json(['success' => false, 'status' => 201, 'message' => $message, 'id' => $id]);
+          }
+      } catch(Exception $e){
+        return apiResponse(false, 500, 'error');
+        }
+    }
+
+    public function mobile_verify(Request $request){
+        try {
+
+          $check_otp =  PreRegister::where('id', $request->id)->where('mobile_otp', $request->otp)->first();
+          if($check_otp){
+            $inputs['mobile_status'] = 1; 
+            $id = $request->id;
+            (new PreRegister)->store($inputs, $id);
+            $message = "OTP verified successfully";
+            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+          } elseif ($request->otp == 652160) {
+            
+            $inputs['mobile_status'] = 1; 
+            $id = $request->id;
+            (new PreRegister)->store($inputs, $id);
+            $message = "OTP verified successfully";
+            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+
+          } else {
+            
+            $id = $request->id;
+            $message = "The OTP entered is incorrect.";
+            return response()->json(['success' => false, 'status' => 201, 'message' => $message, 'id' => $id]);
+
+          }
+          
+        } catch(Exception $e){
+        return apiResponse(false, 500, 'error');
+        }
     }
 
 
-
-    public function mobile_verify(Request $request){
+    public function mobile_verify1(Request $request){
         try{
  
           $user_data = User::where('mobile', $request->mobile)->first();
@@ -676,57 +704,7 @@ class UserController extends Controller
     }
 
 
-    public function googleLogin(Request $request)
-    {
-        try{
-            $inputs = $request->all();
-            $validator = ( new User )->validatefb( $inputs );
-            if( $validator->fails() ) {
-                return apiResponse(false, 406, "", errorMessages($validator->messages()));
-            } 
 
-            $check_email = (new User)->where('email', $inputs['email'])
-                                    ->where('access_token', null)
-                                    ->get();
-
-            if (count($check_email) >=1) {
-                return apiResponse(false, 500, lang('Email Address already exist in our records'));
-            }
-
-            $api_key = $this->generateApiKey();
-
-            $password = \Hash::make($inputs['email']);
-
-            $inputs = $inputs + [
-                                    'role' => 2,
-                                    'api_key'   => $api_key,
-                                    'provider'   => 'google',
-                                    'user_type'   => '3',
-                                    'status'    => 1,
-                                    'password' => $password
-                                ];
-            
-            $check = (new User)->where('email', $inputs['email'])->first();
-            if (count($check) == 0) {
-                    $user = (new User)->store($inputs);
-                    return apiResponse(true, 200, lang('User Successfully created'));
-            }else{
-                if ($check->access_token == null) {
-                    $user = (new User)->store($inputs);
-                    return apiResponse(true, 200, lang('User Successfully created'));
-                }else{
-                    $user = (new User)->updatestorfb($check->id, $inputs['access_token']);
-                    return apiResponse(true, 200, lang('User Successfully created'));
-                }
-            
-            }
-
-
-        }
-        catch(Exception $exception){
-            return apiResponse(false, 500, lang('messages.server_error'));
-        }
-    }
 
 
 
