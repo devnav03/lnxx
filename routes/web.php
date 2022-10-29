@@ -69,3 +69,24 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
 });
 
 });
+
+
+Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
+Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
+
+
+Route::get('getState', [App\Http\Controllers\CategoryController::class, 'getState'])->name('getState');
+Route::get('getCity', [App\Http\Controllers\CategoryController::class, 'getCity'])->name('getCity');
+
+Route::get('getSubcategory', [App\Http\Controllers\Front\HomeController::class, 'getSubcategory'])->name('getSubcategory');
+Route::get('otp-sent', [App\Http\Controllers\Front\HomeController::class, 'otp_sent'])->name('otp-sent');
+
+Route::get('reset', function (){
+    Artisan::call('route:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    Artisan::call('config:cache');
+});
+
+
+
