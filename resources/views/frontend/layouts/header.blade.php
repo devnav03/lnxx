@@ -12,7 +12,7 @@
       </div>
       <div class="col-md-8">
         <ul>
-          <li><a href="#">Home</a></li>
+          <li><a href="{{ route('home') }}">Home</a></li>
           <li><a href="#">About</a></li>
           <li><a href="#">Features</a></li>
           <li><a href="#">App Reviews</a></li>

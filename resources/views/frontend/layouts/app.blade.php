@@ -72,7 +72,9 @@
     $route  = \Route::currentRouteName();    
 @endphp
     @if($route == 'get-started')    
-        @include('frontend.layouts.header')    
+        @include('frontend.layouts.header') 
+    @else 
+        @include('frontend.layouts.header_main')
     @endif
 
         <!-- Main Content -->
@@ -147,7 +149,7 @@ counters.forEach(counter => {
   updateCounter();
 });
 
-$('.clients-slider').owlCarousel({
+$('.testimonials-slider').owlCarousel({
     autoplay: true,
     smartSpeed: 900,
     loop: true,
@@ -163,23 +165,55 @@ $('.clients-slider').owlCarousel({
             nav: false
         },
         575:{
-            items:1,
+            items:2,
             nav: false
         },
         768:{
-            items:1,
+            items:3,
             nav: false
         },
         992:{
-            items:1
+            items:3,
         },
         1200:{
-            items:1
+            items:3
+           
         }
     }
 });
 
-
+$('.main-slider').owlCarousel({
+    autoplay: true,
+    smartSpeed: 900,
+    loop: true,
+    margin: 20,
+    nav: false,
+    center:false,
+    autoplayHoverPause:true,
+    navText: ['<i class="fas fa-angle-left"></i>','<i class="fas fa-angle-right"></i>'],
+    dots: true,
+    responsive:{
+        0:{
+            items:1,
+            nav: false
+        },
+        575:{
+            items:2,
+            nav: false
+        },
+        768:{
+            items:3,
+            nav: false
+        },
+        992:{
+            items:3,
+        },
+        1200:{
+            items:3
+           
+        }
+    }
+});
 
 // function getState(val) {
 //   $.ajax({
