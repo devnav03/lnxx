@@ -451,6 +451,8 @@ footer ul.footer-menu li a:hover{
     background: #fff;
     padding-left: 10px;
     padding-right: 10px;
+        position: relative;
+    z-index: 111111;
 }
 .right_login li:last-child a {
     color: #7CC688;

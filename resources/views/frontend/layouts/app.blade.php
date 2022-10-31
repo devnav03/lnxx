@@ -198,18 +198,18 @@ $('.main-slider').owlCarousel({
             nav: false
         },
         575:{
-            items:2,
+            items:1,
             nav: false
         },
         768:{
-            items:3,
+            items:1,
             nav: false
         },
         992:{
-            items:3,
+            items:1,
         },
         1200:{
-            items:3
+            items:1
            
         }
     }
