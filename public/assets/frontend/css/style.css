@@ -12,19 +12,19 @@ body a:hover{
 .header .logo img{
     max-width: 100px;
 }
-.header .col-md-8 ul {
+.header .col-md-9 ul {
     float: right;
     list-style: none;
     margin-bottom: 0px;
     padding: 0px;
 }
-.header .col-md-8 ul li {
+.header .col-md-9 ul li {
     float: left;
     margin-left: 45px;
     padding-top: 8px;
     font-family: 'Open Sans', sans-serif;
 }
-.header .col-md-8 ul li a{
+.header .col-md-9 ul li a{
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 400;
@@ -41,7 +41,7 @@ body a:hover{
 .header {
     padding-top: 15px;
 }
-.header .col-md-8 ul li:last-child {
+.header .col-md-9 ul li:last-child {
     padding-top: 0px;
 }
 .header .container {
@@ -69,7 +69,8 @@ body a:hover{
 .banner .col-md-6 .col-md-8{
     margin-top: 50px;
 }
-.banner .col-md-6 .col-md-8 h4{
+.banner .col-md-6 .col-md-8 h4,
+.lnxx-app h4{
     font-family: 'Open Sans';
     font-style: normal;
     font-weight: 600;
@@ -78,7 +79,8 @@ body a:hover{
     color: #7BC9AE;
     margin-top: 10px;
 }
-.banner .col-md-6 .col-md-8 p{
+.banner .col-md-6 .col-md-8 p,
+.app_des {
   color: #858585;
   font-family: 'Open Sans';
   font-style: normal;
@@ -181,6 +183,9 @@ body a:hover{
     margin-top: -114px;
     margin-left: -27px;
 }
+.blog-articles .col-md-7 {
+    padding-left: 0px;
+}
 }
 .continue_index h3 {
     font-family: 'Open Sans';
@@ -259,7 +264,8 @@ body a:hover{
     padding-left: 100px;
     font-size: 23px;
 }
-.about_index h2{
+.about_index h2,
+.lnxx-app h2 {
     color: #5EB495;
     font-family: 'Open Sans', sans-serif;
     font-weight: 700;
@@ -349,6 +355,7 @@ body{
     padding: 20px;
     text-align: center;
     border-radius: 10px;
+    background: #fff;
 }
 .testimonials-slide p{
     text-align: justify;
@@ -487,6 +494,190 @@ footer ul.footer-menu li a:hover{
 .left_menu li a{
     color: #929292;
 }
+.slider .owl-dots {
+    margin-top: -35px !important;
+    position: relative;
+    z-index: 9;
+}
+.product-index {
+    margin-top: 80px;
+    margin-bottom: 60px;
+}
+.product-index h2,
+.lnxx-partners h2,
+.blog-articles h2 {
+    text-align: center;
+    color: #5EB495;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 45px;
+    margin-bottom: 60px;
+}
+.product-index h2 span {
+    font-size: 28px;
+}
+.product-index .item img {
+    width: 55px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+.product-index .item {
+    background: #fff;
+    text-align: center;
+    padding: 30px;
+    box-shadow: 1px 1px 10px rgb(0 0 0 / 20%);
+    border-radius: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.product-index .item h3{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: #000;
+    font-weight: 600;
+}
+.lnxx-work h2{
+    text-align: center;
+    color: #000;
+    font-size: 28px;
+    font-weight: 400;
+}
+.lnxx-work h2 span{
+    font-weight: 700;
+    font-size: 28px;
+}
+.lnxx-work .col-md-6,
+.lnxx-work .col-md-5 {
+    margin-top: 40px;
+}
+.lnxx-work h3{
+    color: #000;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 31px;
+    margin-top: 30px;
+}
+.lnxx-work p {
+    margin-top: 12px;
+    line-height: 26px;
+}
+.lnxx-work a {
+    background: #5EB495;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 20px;
+    margin-top: 10px;
+    float: left;
+}
+.lnxx-app {
+    margin-top: 75px;
+    margin-bottom: 70px;
+}
+.lnxx-app h3{
+    font-size: 22px;
+    color: #000;
+    font-weight: 600;
+    margin-top: 22px;
+    margin-bottom: 15px;
+}
+.lnxx-app li{
+    font-family: 'Open Sans', sans-serif;
+    color: #858585;
+    font-size: 14px;
+    margin-bottom: 10px;
+    position: relative;
+    list-style: none;
+    padding-left: 25px;
+}
+.lnxx-app li:after{
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    background: url(../images/li_icon.png);
+    content: "";
+    width: 15px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    top: 3px;
+
+}
+.lnxx-app ul {
+    padding: 0px;
+}
+.lnxx-partners .col-md-2{
+    margin-bottom: 20px;
+}
+.lnxx-partners h2 {
+    margin-bottom: 10px;
+}
+.lnxx-partners p{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.blog-articles {
+    margin-top: 60px;
+}
+.blog-articles .col-md-12 {
+    background: #fff;
+    box-shadow: 1px 1px 13px rgb(0 0 0 / 20%);
+    margin-top: 12px;
+    margin-bottom: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 10px;
+}
+.blog-articles .col-md-12 h4 {
+    font-size: 16px;
+    font-weight: 600;
+}
+.blog-articles .col-md-12 p{
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+.blog-articles .col-md-7 a img {
+    width: auto;
+    display: initial;
+}
+.blog-articles .col-md-7 a {
+    display: block;
+    color: #5EB495;
+    font-size: 14px;
+}
+.blog-articles h2{
+    margin-bottom: 30px;
+}
+header.header{
+    position: absolute;
+    width: 100%;
+    z-index: 999;
+}
+.sign_up{
+    background: url(../images/Overlay_blur.jpg);
+    height: 100vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

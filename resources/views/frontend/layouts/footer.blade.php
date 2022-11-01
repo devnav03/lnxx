@@ -3,7 +3,7 @@
 <div class="row">
 <div class="col-md-4">
 <img src="{!! asset('assets/frontend/images/lnxx_logo.png')  !!}" class="img-responsive">
-<p>Lorem ipsum dolor sit amet,  consectetur adipiscing elit.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 </div>
 <div class="col-md-8">
  

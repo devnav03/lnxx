@@ -74,6 +74,8 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
 
+Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign-up');
+
 
 Route::get('getState', [App\Http\Controllers\CategoryController::class, 'getState'])->name('getState');
 Route::get('getCity', [App\Http\Controllers\CategoryController::class, 'getCity'])->name('getCity');

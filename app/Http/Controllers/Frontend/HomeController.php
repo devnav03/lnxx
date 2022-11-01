@@ -20,7 +20,10 @@ class HomeController extends Controller {
         }
     }
 
-
+    public function sign_up(){
+        return view('frontend.pages.sign_up');
+    }
+  
 
 
 

@@ -74,14 +74,17 @@
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
+    @if($route != 'sign-up')
         @include('frontend.layouts.header_main')
+    @endif    
     @endif
 
         <!-- Main Content -->
         @yield('content')
-      
+        
+        @if($route != 'sign-up')
         @include('frontend.layouts.footer') 
-
+        @endif
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -215,6 +218,72 @@ $('.main-slider').owlCarousel({
     }
 });
 
+$('.product-slider').owlCarousel({
+    autoplay: true,
+    smartSpeed: 900,
+    loop: true,
+    margin: 20,
+    nav: false,
+    center:false,
+    autoplayHoverPause:true,
+    navText: ['<i class="fas fa-angle-left"></i>','<i class="fas fa-angle-right"></i>'],
+    dots: true,
+    responsive:{
+        0:{
+            items:1,
+            nav: false
+        },
+        575:{
+            items:2,
+            nav: false
+        },
+        768:{
+            items:3,
+            nav: false
+        },
+        992:{
+            items:3,
+        },
+        1200:{
+            items:5
+           
+        }
+    }
+});
+
+$('.blog-slider').owlCarousel({
+    autoplay: true,
+    smartSpeed: 900,
+    loop: true,
+    margin: 20,
+    nav: false,
+    center:false,
+    autoplayHoverPause:true,
+    navText: ['<i class="fas fa-angle-left"></i>','<i class="fas fa-angle-right"></i>'],
+    dots: true,
+    responsive:{
+        0:{
+            items:1,
+            nav: false
+        },
+        575:{
+            items:2,
+            nav: false
+        },
+        768:{
+            items:3,
+            nav: false
+        },
+        992:{
+            items:3,
+        },
+        1200:{
+            items:4
+           
+        }
+    }
+});
+
 // function getState(val) {
 //   $.ajax({
 //     type: "GET",
@@ -307,9 +376,7 @@ function yesnoCheckEmployer(that) {
 
 
 
-
 </script>
-
 
 
 </body>
