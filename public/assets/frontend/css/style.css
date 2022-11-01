@@ -659,15 +659,25 @@ header.header{
     background: url(../images/Overlay_blur.jpg);
     height: 100vh;
 }
-
-
-
-
-
-
-
-
-
+.sign_up_content{
+    background: #5EB495;
+}
+.sign_up_field{
+    background: #fff;
+}
+.sign_up .col-md-8 {
+    margin-top: 130px;
+}
+.sign_up_content {
+    border-radius: 13px 0px 0px 13px;
+}
+.sign_up_field {
+    border-radius: 0px 13px 13px 0px;
+}
+.sign_up_content ul {
+    padding: 0px;
+    list-style: none;
+}
 
 
 

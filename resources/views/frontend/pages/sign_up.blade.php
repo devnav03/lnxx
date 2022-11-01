@@ -4,21 +4,80 @@
 <section class="sign_up">
 <div class="container">
 <div class="row">
-<div class="col-md-9 mx-auto">
+<div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
 <h3>Lorem ipsum</h3>
 <h5>Lorem ipsum dolor sit amet elit.</h5>
 <ul>
+<li>
+<div class="row">
+<div class="col-md-2">
+<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
+</div>
+<div class="col-md-10">
+<h4>Lorem ipsum</h4>
+<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
+</div>
+</div>
+</li>
+
+<li>
+<div class="row">
+<div class="col-md-2">
+<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
+</div>
+<div class="col-md-10">
+<h4>Lorem ipsum</h4>
+<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
+</div>
+</div>
+</li>
+
+<li>
+<div class="row">
+<div class="col-md-2">
+<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
+</div>
+<div class="col-md-10">
+<h4>Lorem ipsum</h4>
+<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
+</div>
+</div>
+</li>
+
+<li>
+<div class="row">
+<div class="col-md-2">
+<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
+</div>
+<div class="col-md-10">
+<h4>Lorem ipsum</h4>
+<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
+</div>
+</div>
+</li>
 
 
 </ul>
 
 
-
 </div>
 <div class="col-md-6 sign_up_field">
+<h3>Sign Up</h3>
+<p>Please enter your correct information.</p>
 
+<form>
+	
+<div class="form-group">
+<input class="form-control" required="true" placeholder="Enter Mobile number" name="mobile">
+</div>
+
+<div class="form-group">
+<input class="form-control" required="true" placeholder="Enter Mobile number" name="mobile">
+</div>
+
+</form>
 
 </div>
 
