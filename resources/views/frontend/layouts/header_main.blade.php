@@ -21,7 +21,7 @@
       <div class="col-md-5">
         <ul class="right_login">
           <li><a href="#">English <img src="{!! asset('assets/frontend/images/dropdown.png')  !!}"> </a></li>
-          <li><a href="#">Sign In</a></li>
+          <li><a href="{{ route('sign-in') }}">Sign In</a></li>
           <li><a href="#">Agent <img src="{!! asset('assets/frontend/images/agent_icon.png')  !!}" style="width: 13px; margin-left: 5px;"></a></li>
         </ul>
       </div>

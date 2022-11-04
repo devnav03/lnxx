@@ -74,14 +74,26 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
 
-Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign-up');
-
+Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign_up');
+Route::any('register-email', [App\Http\Controllers\Frontend\HomeController::class, 'email_register'])->name('register-email');
+Route::any('email-otp', [App\Http\Controllers\Frontend\HomeController::class, 'email_otp'])->name('email-otp');
+Route::any('enter-name', [App\Http\Controllers\Frontend\HomeController::class, 'enter_name'])->name('enter-name');
+Route::any('user-register', [App\Http\Controllers\Frontend\HomeController::class, 'user_register'])->name('user-register');
 
 Route::get('getState', [App\Http\Controllers\CategoryController::class, 'getState'])->name('getState');
 Route::get('getCity', [App\Http\Controllers\CategoryController::class, 'getCity'])->name('getCity');
+Route::get('otp-match', [App\Http\Controllers\Frontend\HomeController::class, 'otp_match'])->name('otp-match');
+Route::get('email-otp-match', [App\Http\Controllers\Frontend\HomeController::class, 'email_otp_match'])->name('email-otp-match');
+Route::get('login-otp-match', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp_match'])->name('login-otp-match');
 
-Route::get('getSubcategory', [App\Http\Controllers\Front\HomeController::class, 'getSubcategory'])->name('getSubcategory');
-Route::get('otp-sent', [App\Http\Controllers\Front\HomeController::class, 'otp_sent'])->name('otp-sent');
+Route::any('sign-in', [App\Http\Controllers\Frontend\HomeController::class, 'sign_in'])->name('sign-in');
+Route::any('login-otp', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp'])->name('login-otp');
+Route::any('login', [App\Http\Controllers\Frontend\HomeController::class, 'login'])->name('login');
+
+
+Route::get('getSubcategory', [App\Http\Controllers\Frontend\HomeController::class, 'getSubcategory'])->name('getSubcategory');
+Route::get('otp-sent', [App\Http\Controllers\Frontend\HomeController::class, 'otp_sent'])->name('otp-sent');
+Route::get('email-check', [App\Http\Controllers\Frontend\HomeController::class, 'email_check'])->name('email-check');
 
 Route::get('reset', function (){
     Artisan::call('route:clear');

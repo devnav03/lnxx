@@ -64,38 +64,21 @@
 
 </div>
 <div class="col-md-6 sign_up_field">
-<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>	
+<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
 <h3>Sign Up</h3>
 <p>Please enter your correct information.</p>
-
-<form action="{{ route('register-email') }}" method="post">
+<form action="{{ route('email-otp') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">
-	<input type="number" class="form-control" required="true" placeholder="Enter Mobile number" name="mobile">
-	<img src="{!! asset('assets/frontend/images/mobile_register.png')  !!}" alt="logo" class="input-img">
-	<div class="valid_no">Enter your 10-digit mobile number</div>
-	@if($errors->has('mobile'))
-       <span class="text-danger">{{$errors->first('mobile')}}</span>
+	<input type="email" class="form-control" required="true" placeholder="Enter Email Id" name="email">
+	<img src="{!! asset('assets/frontend/images/email.png')  !!}" alt="logo" class="input-img">
+	<div class="valid_no">Enter your valid email id</div>
+	<input type="hidden" name="mobile" value="{{ $mobile }}">
+	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 
+	@if($errors->has('email'))
+       <span class="text-danger">{{$errors->first('email')}}</span>
     @endif
-	<div class="already_exist" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
-	<div class="otp_sent" style="color: green; font-size: 12px; padding-top: 2px;"></div> 
 </div>
-
-<div class="form-group mob_input" style="margin-top: 25px;">
-	<input type="number" class="form-control" required="true" placeholder="Enter OTP" name="otp">
-	<img src="{!! asset('assets/frontend/images/otp.png')  !!}" alt="logo" class="input-img">
-	<div class="otp_lab">OTP will be sent to above mobile number</div>
-	<div class="not_verify" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
-	<div class="otp_verify" style="color: green; font-size: 12px; padding-top: 2px;"></div>
-	@if(session()->has('otp_not_match'))
-	<div class="errors_otp" style="color: #f00; font-size: 12px; padding-top: 2px;">Invalid OTP</div>
-	@endif
-</div>
-<div class="form-group">
-<p><input type="checkbox" required="true" value="1" name="terms_conditions"> I accept the <a href="#">Terms and Conditions</a></p>
-
-</div>
-
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Next</button>
 </div>

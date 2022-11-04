@@ -74,7 +74,7 @@
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
-    @if($route != 'sign-up')
+    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'login-otp')
         @include('frontend.layouts.header_main')
     @endif    
     @endif
@@ -82,7 +82,7 @@
         <!-- Main Content -->
         @yield('content')
         
-        @if($route != 'sign-up')
+        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'login-otp')
         @include('frontend.layouts.footer') 
         @endif
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -114,17 +114,6 @@
         {!! Html::script('assets/frontend/js/jquery-ui.js') !!}
         {!! Html::script('assets/frontend/js/popper.min.js') !!}
         {!! Html::script('assets/frontend/js/owl.carousel.min.js') !!}
-       <!--  {!! Html::script('assets/frontend/js/jquery.countdown.min.js') !!}
-        {!! Html::script('assets/frontend/js/jquery.easing.1.3.js') !!}
-        {!! Html::script('assets/frontend/js/aos.js') !!}
-        {!! Html::script('assets/frontend/js/jquery.fancybox.min.js') !!}
-        {!! Html::script('assets/frontend/js/jquery.sticky.js') !!}
-        {!! Html::script('assets/frontend/js/isotope.pkgd.min.js') !!} -->
- <!--        {!! Html::script('assets/frontend/js/main.js') !!} -->
-
-     
-      <!--   {!! HTML::script('assets/frontend/js/stellarnav.min.js') !!} -->
-        <!-- {!! HTML::script('assets/frontend/js/custom.js') !!} -->
 
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function() {
@@ -345,34 +334,142 @@ function yesnoCheckEmployer(that) {
 //   });
 // }
 
+$('input[name=otp_code]').on('keyup' , function() { 
+    var email = $("input[name=email]").val();
+    var email_otp = $("input[name=otp_code]").val();
+    if( email_otp.length == 6 ) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('email-otp-match') }}",
+            data: {'otp' : email_otp, 'email' : email },  
+            success: function(data){
+                if(data.status == 'Fail'){
+                    $(".not_verify").html('Invalid OTP');
+                    $(".otp_lab").html('');
+                    $(".otp_verify").html('');
+                    $(".errors_otp").html('');
+                    $(".otp_email").html('');
+                } else{
+                    $(".not_verify").html('');
+                    $(".otp_lab").html('');
+                    $(".otp_verify").html('OTP Verify');
+                    $(".errors_otp").html('');
+                    $(".otp_email").html('');
+                }
+            }
+        });
+    } else {
+        $(".not_verify").html('');
+        $(".otp_verify").html('');
+    }
+}); 
 
-// $('input[name=mobile]').on('keyup' , function() { 
-//     var mobile = $("input[name=mobile]").val();
-//     if( mobile.length == 10 ) {
-//         $.ajax({
-//             type: "GET",
-//             url: "{{ route('otp-sent') }}",
-//             data: {'mobile' : mobile},
-//             success: function(data){
-//                 if(data.status == 'Fail'){
-//                     $(".already_exist").html('Mobile no is already exist');
-//                     $(".valid_no").html('');
-//                     $(".otp").val('');
-//                     $(".otp_sent").html('');
-//                 } else{
-//                     $(".otp_sent").html('OTP sent...');
-//                     $(".valid_no").html('');
-//                     $(".already_exist").html('');
-//                 }
-//             }
-//         });
-//     } else {
-//         $(".valid_no").html('Enter a valid mobile no');
-//         $(".otp").val('');
-//         $(".already_exist").html('');
-//         $(".otp_sent").html('');
-//     }
-// }); 
+
+$('input[name=login_otp]').on('keyup' , function() { 
+    var id = $("input[name=id]").val();
+    var login_otp = $("input[name=login_otp]").val();
+    if( login_otp.length == 6 ) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('login-otp-match') }}",
+            data: {'otp' : login_otp, 'id' : id },  
+            success: function(data){
+                if(data.status == 'Fail'){
+                    $(".not_verify").html('Invalid OTP');
+                    $(".otp_lab").html('');
+                    $(".otp_verify").html('');
+                    $(".errors_otp").html('');
+                    $(".otp_email").html('');
+                } else{
+                    $(".not_verify").html('');
+                    $(".otp_lab").html('');
+                    $(".otp_verify").html('OTP Verify');
+                    $(".errors_otp").html('');
+                    $(".otp_email").html('');
+                }
+            }
+        });
+    } else {
+        $(".not_verify").html('');
+        $(".otp_verify").html('');
+    }
+}); 
+
+$('input[name=mobile]').on('keyup' , function() { 
+    var mobile = $("input[name=mobile]").val();
+    if( mobile.length == 10 ) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('otp-sent') }}",
+            data: {'mobile' : mobile},
+            success: function(data){
+                if(data.status == 'Fail'){
+                    $(".already_exist").html('Mobile no is already exist');
+                    $(".valid_no").html('');
+                    $(".otp").val('');
+                    $(".otp_sent").html('');
+                } else{
+                    $(".otp_sent").html('OTP sent successfully');
+                    $(".valid_no").html('');
+                    $(".already_exist").html('');
+                }
+            }
+        });
+    } else {
+        $(".valid_no").html('Enter a valid mobile no');
+        $(".otp").val('');
+        $(".already_exist").html('');
+        $(".otp_sent").html('');
+    }
+}); 
+
+$('input[name=email]').on('keyup' , function() { 
+    var email = $("input[name=email]").val();
+        $.ajax({
+            type: "GET",
+            url: "{{ route('email-check') }}",
+            data: {'email' : email},
+            success: function(data){
+                if(data.status == 'Fail'){
+                    $(".already_exist").html('Email id already registered');
+                    $(".valid_no").html('');
+                } else{
+                    $(".already_exist").html('');
+                    $(".valid_no").html('');
+                }
+            }
+        }); 
+}); 
+
+
+$('input[name=otp]').on('keyup' , function() { 
+    var otp = $("input[name=otp]").val();
+    var mobile = $("input[name=mobile]").val();
+    if( otp.length == 6 ) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('otp-match') }}",
+            data: {'otp' : otp, 'mobile' : mobile },  
+            success: function(data){
+                if(data.status == 'Fail'){
+                    $(".not_verify").html('Invalid OTP');
+                    $(".otp_lab").html('');
+                    $(".otp_verify").html('');
+                    $(".errors_otp").html('');
+                } else{
+                    $(".not_verify").html('');
+                    $(".otp_lab").html('');
+                    $(".otp_verify").html('OTP Verify');
+                    $(".errors_otp").html('');
+                }
+            }
+        });
+    } else {
+        $(".not_verify").html('');
+        $(".otp_verify").html('');
+    }
+}); 
+
 
 
 

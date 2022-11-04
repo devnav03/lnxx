@@ -19,7 +19,7 @@
           <li><a href="#">App Reviews</a></li>
           
           <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Sign In</a></li>
+          <li><a href="{{ route('sign-in') }}">Sign In</a></li>
           <li><a href="#"><img src="{!! asset('assets/frontend/images/download.png')  !!}" alt="download" class="img-responsive"></a></li>
         </ul>
 

@@ -64,40 +64,28 @@
 
 </div>
 <div class="col-md-6 sign_up_field">
-<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>	
-<h3>Sign Up</h3>
-<p>Please enter your correct information.</p>
+<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
+<h3>Sign In</h3>
+<p>To proceed, verify your details.</p>
 
-<form action="{{ route('register-email') }}" method="post">
+@if(session()->has('username_not_exist'))
+<p style="color: #f00;margin-bottom: 25px;">Username not registered with us</p>
+@endif
+
+<form action="{{ route('login-otp') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">
-	<input type="number" class="form-control" required="true" placeholder="Enter Mobile number" name="mobile">
+	<input type="text" class="form-control" required="true" placeholder="Enter Mobile / Email" name="username">
 	<img src="{!! asset('assets/frontend/images/mobile_register.png')  !!}" alt="logo" class="input-img">
-	<div class="valid_no">Enter your 10-digit mobile number</div>
-	@if($errors->has('mobile'))
-       <span class="text-danger">{{$errors->first('mobile')}}</span>
-    @endif
-	<div class="already_exist" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
-	<div class="otp_sent" style="color: green; font-size: 12px; padding-top: 2px;"></div> 
-</div>
-
-<div class="form-group mob_input" style="margin-top: 25px;">
-	<input type="number" class="form-control" required="true" placeholder="Enter OTP" name="otp">
-	<img src="{!! asset('assets/frontend/images/otp.png')  !!}" alt="logo" class="input-img">
-	<div class="otp_lab">OTP will be sent to above mobile number</div>
-	<div class="not_verify" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
-	<div class="otp_verify" style="color: green; font-size: 12px; padding-top: 2px;"></div>
-	@if(session()->has('otp_not_match'))
-	<div class="errors_otp" style="color: #f00; font-size: 12px; padding-top: 2px;">Invalid OTP</div>
-	@endif
-</div>
-<div class="form-group">
-<p><input type="checkbox" required="true" value="1" name="terms_conditions"> I accept the <a href="#">Terms and Conditions</a></p>
-
+	@if($errors->has('username'))
+       <span class="text-danger">{{$errors->first('username')}}</span>
+    @endif 
 </div>
 
 <div class="btn-box" style="text-align: center;">
-<button class="btn">Next</button>
+<button class="btn">Sign In</button>
+<br>
+<a href="{{ route('sign_up') }}">For new click here</a>
 </div>
 </form>
 

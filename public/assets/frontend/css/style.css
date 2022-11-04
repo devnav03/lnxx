@@ -42,7 +42,7 @@ body a:hover{
     padding-top: 15px;
 }
 .header .col-md-9 ul li:last-child {
-    padding-top: 0px;
+    /*padding-top: 0px;*/
 }
 .header .container {
     border-bottom: 1px solid #BCBCBC;
@@ -673,11 +673,123 @@ header.header{
 }
 .sign_up_field {
     border-radius: 0px 13px 13px 0px;
+    box-shadow: 7px 1px 10px #ddd;
 }
 .sign_up_content ul {
     padding: 0px;
     list-style: none;
 }
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+.btn-box .btn{
+    background: #5EB495;
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 25px;
+    padding: 8px 32px;
+}
+.mob_input{
+  position: relative;
+}
+.input-img{
+  position: absolute;
+  left: 0px;
+  top: 10px;
+}
+.mob_input input {
+    border: 0px;
+    border-bottom: 1px solid rgba(9, 15, 5, 0.5);
+    border-radius: 0px;
+    padding-left: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    height: 45px;
+}
+.sign_up_field h3{
+    color: #000;
+    font-weight: 700;
+    font-size: 22px;
+    margin-top: 30px;
+}
+.sign_up_field p {
+    color: #888;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 35px;
+}
+.valid_no, .otp_lab {
+    font-size: 13px;
+    margin-top: 8px;
+    color: #888;
+}
+.sign_up_field {
+    padding-bottom: 35px;
+}
+.sign_up_field input[type="checkbox"] {
+    margin-top: 5px;
+    float: left;
+    margin-right: 10px;
+    width: 17px;
+    height: 17px;
+}
+.sign_up_field a {
+    font-size: 14px;
+}
+.form-control:focus {
+    background-color: rgba(9, 15, 5, 0.5);
+    box-shadow: none !important;
+}
+.sign_up_content h3{
+    color: #fff;
+    font-weight: 400;
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 4px;
+}
+.sign_up_content h5 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+.sign_up_content ul li .col-md-10{
+    padding-left: 0px;
+}
+.sign_up_content h4{
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 0px;
+}
+.sign_up_content p {
+    color: #fff;
+    font-size: 14px;
+}
+.btn-box .btn:hover{
+    color: #fff;
+}
+.home-cross {
+    position: absolute;
+    right: 15px;
+    top: 33px;  
+}
+.btn-box a {
+    color: #5FB291;
+    font-size: 17px;
+    margin-top: 20px;
+    display: block;
+    font-weight: 500;
+}
+
+
+
+
+
+
+
 
 
 
