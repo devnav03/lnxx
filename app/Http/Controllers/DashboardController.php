@@ -14,13 +14,13 @@ use Auth;
 class DashboardController extends Controller {
   
     public function index() {
-        // $user = (new User)->totaluser_ent();
+        $total_user = (new User)->totalCustomer();
         // $user_id =  Auth::id();
-        // $currentMonth = date('m');
-        // $newusers = \DB::table("users")
-        // ->where('user_type', 2)
-        // ->whereRaw('MONTH(created_at) = ?', [$currentMonth])
-        // ->count();
+        $currentMonth = date('m');
+        $newusers = \DB::table("users")
+        ->where('user_type', 2)
+        ->whereRaw('MONTH(created_at) = ?', [$currentMonth])
+        ->count();
         // $total_order = \DB::table('orders')->count(\DB::raw('DISTINCT id'));
         // $newproduct = \DB::table("products")
         // ->whereRaw('MONTH(created_at) = ?',[$currentMonth])
@@ -40,7 +40,7 @@ class DashboardController extends Controller {
         // $OrderProducts = OrderProduct::select(\DB::raw('sum(quantity) as max_qty'), 'product_id')->groupBy('product_id')->orderBy('max_qty','desc')->limit(10)->get();
         
         
-       return view('admin.dashboard');
+       return view('admin.dashboard', compact('newusers', 'total_user'));
        
     }  
 

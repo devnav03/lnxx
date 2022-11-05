@@ -15,7 +15,7 @@
           <li><a href="{{ route('home') }}">Home</a></li>
           <li><a href="#">About</a></li>
           <li><a href="#">Products</a></li>
-          <li><a href="#">Features</a></li>
+       <!--    <li><a href="#">Features</a></li> -->
           <li><a href="#">App Reviews</a></li>
           
           <li><a href="#">Contact Us</a></li>

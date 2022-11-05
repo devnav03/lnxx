@@ -135,6 +135,8 @@
     padding: 0px;
     border: 0px;
     margin: 0px;
+    text-align: left;
+    margin-bottom: 20px;
 }   
 .alert {
     padding: 0px;

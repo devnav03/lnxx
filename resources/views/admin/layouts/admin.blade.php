@@ -212,10 +212,10 @@
                             <!-- Full screen -->
                             <!-- Notification -->
                             <div class="dropdown main-header-notification">
-                                <a class="nav-link icon" href="">
+                               <!--  <a class="nav-link icon" href="">
                                     <i class="fe fe-bell header-icons"></i>
                                     <span class="badge bg-danger nav-link-badge">4</span>
-                                </a>
+                                </a> -->
                                 <div class="dropdown-menu">
                                     <div class="header-navheading">
                                         <p class="main-notification-text">You have 1 unread notification<span
@@ -274,9 +274,9 @@
                                 <div class="dropdown-menu">
                                     <div class="header-navheading">
                                         <h6 class="main-notification-title">{{ Auth::user()->name }}</h6>
-                                        <p class="main-notification-text">Web Designer</p>
+                                    <!--     <p class="main-notification-text">Web Designer</p> -->
                                     </div>
-                                    <a class="dropdown-item border-top" href="profile.html">
+                                  <!--   <a class="dropdown-item border-top" href="profile.html">
                                         <i class="fe fe-user"></i> My Profile
                                     </a>
                                     <a class="dropdown-item" href="profile.html">
@@ -284,13 +284,12 @@
                                     </a>
                                     <a class="dropdown-item" href="profile.html">
                                         <i class="fe fe-settings"></i> Account Settings
-                                    </a>
-                                    <a class="dropdown-item" href="profile.html">
-                                        <i class="fe fe-settings"></i> Support
-                                    </a>
-                                    <a class="dropdown-item" href="profile.html">
+                                    </a> -->
+                                    <a class="dropdown-item" href="{!! route('setting.manage-account') !!}">
+                                        <i class="fe fe-settings"></i> Change Password </a>
+                                   <!--  <a class="dropdown-item" href="profile.html">
                                         <i class="fe fe-compass"></i> Activity
-                                    </a>
+                                    </a> -->
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="fe fe-power"></i> Sign Out
                                     </a>
@@ -383,5 +382,6 @@
         <script src="{{ asset('js/sticky.js') }}"></script>
         <!-- Custom js -->
         <script src="{{ asset('js/custom.js') }}"></script>
+        <script src="{{ asset('js/template.js') }}"></script>
 	</body>
 </html>

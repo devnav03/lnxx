@@ -72,7 +72,7 @@
 <div class="form-group mob_input">
 	<input type="text" class="form-control" required="true" placeholder="Name" name="name">
 	<img src="{!! asset('assets/frontend/images/name.png')  !!}" style="top: 14px;" alt="name" class="input-img">
-	<div class="valid_no">Enter your name as it appears on your PAN card.</div>
+	<div class="valid_no">Enter your full Name</div>
 	<input type="hidden" name="mobile" value="{{ $mobile }}">
 	<input type="hidden" name="email" value="{{ $email }}">
 	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 

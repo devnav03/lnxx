@@ -448,18 +448,8 @@ footer ul.footer-menu li a:hover{
     margin-bottom: 0px;
     margin-top: 8px;
 }
-.logo-main {
-    text-align: center;
-}
 .logo-main img {
-    max-width: 122px;
-    margin: 0 auto;
-    margin-bottom: -65px;
-    background: #fff;
-    padding-left: 10px;
-    padding-right: 10px;
-        position: relative;
-    z-index: 111111;
+    max-width: 90px;
 }
 .right_login li:last-child a {
     color: #7CC688;
@@ -783,9 +773,220 @@ input[type=number]::-webkit-outer-spin-button {
     display: block;
     font-weight: 500;
 }
-
-
-
+.agent_banner{
+    background: url(../images/agent_back.png);
+    padding: 50px 0;
+}
+.agent_header{
+    position: static !important;
+    background: url(../images/header_back.png);
+}
+.agent_header .container{
+    border-bottom: 0px;
+}
+.agent_header h2 {
+    color: #fff;
+    font-weight: 700;
+    line-height: 43px;
+    margin-bottom: 15px;
+}
+.agent_header .col-md-6 p {
+    color: #fff;
+    font-size: 20px;
+}
+.lnxx-work.agent h2{
+    text-align: center;
+    color: #5EB495;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 15px;
+    margin-top: 60px;
+}
+.lnxx-work.agent h2 span{
+    font-weight: 400;
+}
+.product-index.agent h2 {
+    text-align: center;
+    color: #000;
+    font-size: 28px;
+    font-weight: 400;
+}
+.product-index.agent h2 span {
+    font-weight: 700;
+}
+.agent_banner h2 {
+    color: #fff;
+    font-weight: 700;
+    line-height: 41px;
+}
+.agent_banner p{
+    color: #fff;
+    font-size: 22px;
+}
+.agent_banner .col-md-4 {
+    text-align: center;
+}
+.agent_banner .col-md-4 h4{
+    font-size: 17px;
+    color: #000;
+    font-weight: 600;
+    margin-top: 8px;
+}
+.agent_banner .col-md-4{
+    margin-top: 25px;
+}
+.agent_banner .mob_input input {
+    box-shadow: 1px 1px 10px rgb(0 0 0 / 20%);
+    border: 1px solid rgba(9, 15, 6, 0.1);
+    padding-left: 55px;
+}
+.agent_banner .input-img {
+    left: 15px;
+    top: 11px;
+}
+.agent_banner select {
+    height: 45px;
+    padding: 10px 10px;
+    border-radius: 0px;
+    font-size: 14px;
+    border: 1px solid rgba(9, 15, 6, 0.1);
+}
+.agent_banner .col-md-9 input {
+    height: 45px;
+    padding: 10px 10px;
+    border-radius: 0px;
+    font-size: 14px;
+    border: 1px solid rgba(9, 15, 6, 0.1);
+    padding-left: 20px;
+}
+.agent_banner .col-md-3 {
+    padding-right: 0px;
+    margin-left: -2px;
+}
+.agent_banner .col-md-9 {
+    padding-left: 0px;
+}
+.agent_banner .col-md-12 p {
+    font-size: 14px;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 440px;
+}
+.agent_banner .col-md-12 p a{
+    color: #FF6722;
+}
+.agent_banner .col-md-12 p input {
+    height: 21px;
+    width: 21px;
+    box-shadow: none;
+    margin-right: 12px;
+    margin-top: 2px;
+    border: 1px solid #fff;
+    float: left;
+}
+.agent_banner .col-md-12 button {
+    background: #FF6722;
+    color: #fff;
+    border: 0px;
+    padding: 9px 60px;
+    font-weight: 500;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+.agent_banner .col-md-5 form{
+    padding-top: 25px;
+}
+.loan-box {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 1px 1px 10px rgb(0 0 0 / 10%);
+    max-width: 310px;
+    margin: 0 auto;
+}
+.product-index.agent .col-md-4 {
+    margin-bottom: 40px;
+}
+.product-index.agent .col-md-4 h3 {
+    font-size: 20px;
+    font-weight: 600;
+}
+.product-index.agent .col-md-4 p {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 24px;
+}
+.lnxx_agent {
+    padding-bottom: 45px;
+}
+.lnxx_agent h2{
+    font-weight: 700;
+    font-size: 26px;
+}
+.lnxx_agent p{
+    color: #000;
+    font-size: 15px;
+    font-weight: 400;
+}
+.become_agent {
+    background: #88C6AD;
+    padding: 60px 0 65px 0;
+}
+.become_agent .agent_box{
+    background: #fff;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px rgb(0 0 0 / 20%);
+    margin-top: 40px;
+    padding-top: 35px;
+}
+.become_agent .agent_box h2{
+    color: #fff;
+    font-weight: 700;
+}
+.become_agent ul li {
+    color: #fff;
+    font-weight: 500;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 3px;
+}
+.become_agent ul{
+    padding: 0px;
+    list-style: none;
+}
+.become_agent ul li:after{
+    background: #fff;
+    width: 13px;
+    height: 13px;
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    left: 0px;
+    top: 6px;
+}
+.become_agent .agent_box p {
+    font-size: 15px;
+    text-align: justify;
+    line-height: 24px;
+    color: #000;
+}
+.become_agent .agent_box img{
+    width: 50px;
+}
+.become_agent .agent_box h4{
+    font-size: 19px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+.become_agent h2{
+    color: #fff;
+    font-weight: 600;
+}
 
 
 

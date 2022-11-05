@@ -64,10 +64,10 @@
 <div class="con-box">
 <h4>Customer</h4>
 <p>To access services, use the option to continue as a customer.</p>
-<button class="con_btn" type="submit">
+<a class="con_btn" href="{{ route('customer-menu') }}">
 <img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
-</button>
+</a>
 </div>
 </div>
 
@@ -75,10 +75,10 @@
 <div class="con-box">
 <h4>Agent</h4>
 <p>To access services, use the option to continue as a customer.</p>
-<button class="con_btn" type="submit">
+<a class="con_btn" href="{{ route('agent-menu') }}">
 <img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
-</button>
+</a>
 </div>
 </div>
 </div>

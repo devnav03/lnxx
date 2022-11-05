@@ -50,6 +50,30 @@ class HomeController extends Controller {
         }
     }
 
+    public function agent_menu(){
+        try {
+           \Session::forget('user_base');
+           \Session::start();
+           \Session::put('user_base', 'Agent');
+            return redirect()->route('home');
+        } catch (\Exception $exception) {
+        //dd($exception);
+        return back();    
+        }
+    }
+
+    public function customer_menu(){
+        try {
+           \Session::forget('user_base');
+           \Session::start();
+           \Session::put('user_base', 'Customer');
+            return redirect()->route('home');
+        } catch (\Exception $exception) {
+        //dd($exception);
+        return back();    
+        }
+    }
+
     public function email_otp(Request $request){
         try {
             if(isset($request->email)){

@@ -17,7 +17,7 @@
                     </button>
                     <i class="fa fa-times-circle"></i> &nbsp;
                     {!! Session::get('error') !!}
-                </div>
+                </div>    
             @endif
             @if (Session::has('warning'))
                 <div class="alert alert-warning">

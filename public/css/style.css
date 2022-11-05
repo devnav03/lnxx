@@ -75986,3 +75986,45 @@ pre {
     }
 }
 /*# sourceMappingURL=style.css.map */
+
+
+h1.page-header{
+    font-size: 24px;
+}
+.hidden{
+    display: none !important;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+.form-control{
+    color: #000;
+}
+
+.margintop20{
+    margin-top: 28px;
+}
+.pagination.pagination-sm.pull-right.custom-martop {
+    padding-top: 4px;
+    margin-bottom: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

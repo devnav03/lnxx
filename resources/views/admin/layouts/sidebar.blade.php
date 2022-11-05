@@ -31,7 +31,7 @@
                             </a>
                             <ul class="nav-sub">
                                 <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
                             </ul>
                         </li>

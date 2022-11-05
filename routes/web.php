@@ -26,7 +26,7 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
         Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\DashboardController@index']);
       
                // Customer route start
-            Route::resource('customer','CustomerController', [
+            Route::resource('customer','App\Http\Controllers\CustomerController', [
                 'names' => [
                     // 'index'     => 'customer.index',
                     'create'    => 'customer.create',
@@ -36,19 +36,19 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 ],
                 'except' => ['show','destroy']
             ]);
-            Route::get('customer', 'CustomerController@index')->name('customer');
+            Route::get('customer', 'App\Http\Controllers\CustomerController@index')->name('customer');
 
             Route::any('customer/paginate/{page?}', ['as' => 'customer.paginate',
-                'uses' => 'CustomerController@customerPaginate']);
+                'uses' => 'App\Http\Controllers\CustomerController@customerPaginate']);
             Route::any('customer/paginate-data-entry/{page?}', ['as' => 'customer.paginate-data-entry',
-                'uses' => 'CustomerController@customerPaginate_data_entry']);
+                'uses' => 'App\Http\Controllers\CustomerController@customerPaginate_data_entry']);
             Route::any('customer/action', ['as' => 'customer.action',
-                'uses' => 'CustomerController@customerAction']);
+                'uses' => 'App\Http\Controllers\CustomerController@customerAction']);
             Route::any('customer/toggle/{id?}', ['as' => 'customer.toggle',
-                'uses' => 'CustomerController@customerToggle']);
+                'uses' => 'App\Http\Controllers\CustomerController@customerToggle']);
             Route::any('customer/drop/{id?}', ['as' => 'customer.drop',
-                'uses' => 'CustomerController@drop']);
-            Route::any('customer/data-entry', 'CustomerController@customerdataentry')->name('customer.data-entry');
+                'uses' => 'App\Http\Controllers\CustomerController@drop']);
+            Route::any('customer/data-entry', 'App\Http\Controllers\CustomerController@customerdataentry')->name('customer.data-entry');
             Route::any('customer/action-data-entry', ['as' => 'customer-data-entry.action',
                 'uses' => 'CustomerController@customerAction_data_entry']);
             Route::any('customer/export-users', 'CustomerController@export_users')->name('customer.export-users');
@@ -62,7 +62,7 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
       
             // Change Password Routes
             Route::any('myaccount', ['as' => 'setting.manage-account',
-                'uses' => 'SettingController@myAccount']);
+                'uses' => 'App\Http\Controllers\SettingController@myAccount']);
             // Change Password Routes
 
 
@@ -89,6 +89,9 @@ Route::get('login-otp-match', [App\Http\Controllers\Frontend\HomeController::cla
 Route::any('sign-in', [App\Http\Controllers\Frontend\HomeController::class, 'sign_in'])->name('sign-in');
 Route::any('login-otp', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp'])->name('login-otp');
 Route::any('login', [App\Http\Controllers\Frontend\HomeController::class, 'login'])->name('login');
+
+Route::any('agent-menu', [App\Http\Controllers\Frontend\HomeController::class, 'agent_menu'])->name('agent-menu');
+Route::any('customer-menu', [App\Http\Controllers\Frontend\HomeController::class, 'customer_menu'])->name('customer-menu');
 
 
 Route::get('getSubcategory', [App\Http\Controllers\Frontend\HomeController::class, 'getSubcategory'])->name('getSubcategory');

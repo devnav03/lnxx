@@ -118,8 +118,8 @@ class User extends Authenticatable
         }
          return $this
              ->whereRaw($filter)
-             ->where('user_type', 3)
-             ->where('deleted_at', null)
+             ->where('user_type', 2)
+             // ->where('deleted_at', null)
              ->orderBy($orderEntity, $orderAction)
              ->skip($skip)->take($take)->get($fields);
     }
@@ -165,7 +165,7 @@ class User extends Authenticatable
 
          return $this
              ->whereRaw($filter)
-             ->where('user_type', 2)
+             ->where('user_type', 3)
              ->orderBy($orderEntity, $orderAction)
              ->skip($skip)->take($take)->get($fields);
     }
@@ -182,7 +182,7 @@ class User extends Authenticatable
              $filter .= $partyName;
          }
          return $this->select(\DB::raw('count(*) as total'))
-                    ->where('user_type', 3)
+                    ->where('user_type', 2)
                     ->whereRaw($filter)
                     ->first();
     }
@@ -197,7 +197,7 @@ class User extends Authenticatable
              $filter .= $partyName;
          }
          return $this->select(\DB::raw('count(*) as total'))
-                    ->where('user_type', 2)
+                    ->where('user_type', 3)
                     ->whereRaw($filter)
                     ->first();
     }
