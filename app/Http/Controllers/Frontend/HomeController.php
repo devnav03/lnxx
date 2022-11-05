@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\UserOtp;
 use App\Models\UserEmailOtp;
 use App\User;
+use Intervention\Image\ImageManagerStatic as Image;
+use Auth;
 
 class HomeController extends Controller {
    
@@ -355,20 +357,107 @@ public function login(Request $request){
        $user_data = User::where('id', $request->id)->where('login_otp', $request->login_otp)->first();
         if($user_data){
            \Auth::login($user_data);
+
+           \Session::forget('user_base');
+           \Session::start();
+            if($user_data->user_type == 3 ){
+                \Session::put('user_base', 'Agent');
+            } else {
+                \Session::put('user_base', 'Customer');
+            }
+
            return redirect()->route('home');
         } else {
             if($request->login_otp == 652160){
                 $user_data = User::where('id', $request->id)->first();
-                \Auth::login($user_data);
+                    \Auth::login($user_data);
+                    \Session::forget('user_base');
+                    \Session::start();
+                    if($user_data->user_type == 3 ){
+                        \Session::put('user_base', 'Agent');
+                    } else {
+                        \Session::put('user_base', 'Customer');
+                    }
                 return redirect()->route('home');
             } else {
-                return back();
+                return back()->with('otp_not_match', 'otp_not_match');
             }
         }
     } catch (\Exception $e) {
+        //dd($e);
         return back();
     }
 }
+
+    public function profileShow(){
+        try{
+            $user_id =  Auth::id();
+            $user = User::where('id', $user_id)->first();
+            return view('frontend.pages.profile', compact('user'));
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function dashboard(){
+        try{
+            $user_id =  Auth::id();
+            $user = User::where('id', $user_id)->first();
+            
+            return view('frontend.pages.dashboard', compact('user'));
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function logout() {
+        \Auth::logout();
+        \Session::flush();
+        return redirect()->route('home');
+    }
+
+    public function update_profile(Request $request){
+        try{
+
+            $inputs = $request->all(); 
+            $user_id = Auth::id();
+            $user = User::where('id', $user_id)->select('profile_image')->first();
+            if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
+                $image_name = rand(100000, 999999);
+                $fileName = '';
+                if($file = $request->hasFile('profile_image'))  {
+                    $file = $request->file('profile_image') ;
+                    $img_name = $file->getClientOriginalName();
+                    $image_resize = Image::make($file->getRealPath()); 
+                    $image_resize->resize(250, 250);
+                    $fileName = $image_name.$img_name;
+                    $image_resize->save(public_path('/uploads/user_images/' .$fileName));       
+                }
+                $fname ='/uploads/user_images/';
+                $image = $fname.$fileName;
+            }
+            else{
+                $image = $user->profile_image;
+            }
+            unset($inputs['profile_image']);
+            $inputs['profile_image'] = $image;
+
+            User::where('id', $user_id)
+                ->update([
+                'name' =>  $request->name,
+                'email' =>  $request->email,
+                'mobile' =>  $request->mobile,
+                'gender' =>  $request->gender,
+                'date_of_birth' =>  $request->date_of_birth,
+                'profile_image' => $image,
+            ]);
+
+            return redirect()->back()->with('profile_update', 'profile update');
+        }
+        catch (Exception $e) {
+            return back();
+        }
+    }
 
 
 }

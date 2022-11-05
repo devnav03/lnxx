@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin/lnxx', [App\Http\Controllers\Auth\AuthController::class, 'getLogin'])->name('admin');
 
 Route::post('/admin/login', [App\Http\Controllers\Auth\AuthController::class, 'postLogin']);
-Route::any('/admin/logout', [App\Http\Controllers\Auth\AuthController::class, 'adminLogout'])->name('logout');
+Route::any('/admin/logout', [App\Http\Controllers\Auth\AuthController::class, 'adminLogout'])->name('logout-admin');
 
 
 Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
@@ -87,16 +87,29 @@ Route::get('email-otp-match', [App\Http\Controllers\Frontend\HomeController::cla
 Route::get('login-otp-match', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp_match'])->name('login-otp-match');
 
 Route::any('sign-in', [App\Http\Controllers\Frontend\HomeController::class, 'sign_in'])->name('sign-in');
-Route::any('login-otp', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp'])->name('login-otp');
-Route::any('login', [App\Http\Controllers\Frontend\HomeController::class, 'login'])->name('login');
+Route::any('enter-login-otp', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp'])->name('enter-login-otp');
+Route::any('log-in', [App\Http\Controllers\Frontend\HomeController::class, 'login'])->name('log-in');
 
 Route::any('agent-menu', [App\Http\Controllers\Frontend\HomeController::class, 'agent_menu'])->name('agent-menu');
 Route::any('customer-menu', [App\Http\Controllers\Frontend\HomeController::class, 'customer_menu'])->name('customer-menu');
 
-
 Route::get('getSubcategory', [App\Http\Controllers\Frontend\HomeController::class, 'getSubcategory'])->name('getSubcategory');
 Route::get('otp-sent', [App\Http\Controllers\Frontend\HomeController::class, 'otp_sent'])->name('otp-sent');
 Route::get('email-check', [App\Http\Controllers\Frontend\HomeController::class, 'email_check'])->name('email-check');
+
+Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
+
+Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
+Route::any('my-profile', [App\Http\Controllers\Frontend\HomeController::class, 'profileShow'])->name('my-profile');
+Route::any('dashboard', [App\Http\Controllers\Frontend\HomeController::class, 'dashboard'])->name('dashboard');
+
+
+Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::class, 'update_profile'])->name('profile-update');
+
+});
+
+
+
 
 Route::get('reset', function (){
     Artisan::call('route:clear');

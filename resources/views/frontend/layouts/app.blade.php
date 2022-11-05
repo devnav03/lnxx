@@ -74,15 +74,13 @@
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
-    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'login-otp')
+    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp')
         @include('frontend.layouts.header_main')
     @endif    
     @endif
-
         <!-- Main Content -->
         @yield('content')
-        
-        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'login-otp')
+        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp')
         @include('frontend.layouts.footer') 
         @endif
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -123,9 +121,7 @@
 
 <script type="text/javascript">
 
-
 const counters = document.querySelectorAll('.counters');
-
 counters.forEach(counter => {
   let count = 0;
   const updateCounter = () => {
@@ -301,7 +297,7 @@ $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
 
 </script>
 
-@if($route != 'home')
+@if($route == 'my-profile')
 <script type="text/javascript">
 imgInp.onchange = evt => {
   const [file] = imgInp.files

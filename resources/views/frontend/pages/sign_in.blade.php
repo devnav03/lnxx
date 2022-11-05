@@ -72,7 +72,7 @@
 <p style="color: #f00;margin-bottom: 25px;">Username not registered with us</p>
 @endif
 
-<form action="{{ route('login-otp') }}" method="post">
+<form action="{{ route('enter-login-otp') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">
 	<input type="text" class="form-control" required="true" placeholder="Enter Mobile / Email" name="username">
@@ -85,7 +85,7 @@
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Sign In</button>
 <br>
-<a href="{{ route('sign_up') }}">For new click here</a>
+<p><a href="{{ route('sign_up') }}">Click here to Sign Up</a>
 </div>
 </form>
 

@@ -65,12 +65,12 @@
 </div>
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
-<h3>Sign Up</h3>
+<h3>Sign In</h3>
 <p>Please enter your correct information.</p>
-<form action="{{ route('enter-name') }}" method="post">
+<form action="{{ route('log-in') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">
-	<input type="number" name="otp_code" class="form-control" required="true" placeholder="Enter OTP">
+	<input type="number" name="login_otp" class="form-control" required="true" placeholder="Enter OTP">
 	<img src="{!! asset('assets/frontend/images/otp.png')  !!}" alt="logo" class="input-img">
 	<div class="valid_no"></div>
 	<div class="not_verify" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
@@ -78,8 +78,8 @@
 	<div class="otp_email" style="color:green; font-size: 14px;">OTP sent successfully on your registered {{ $username }}</div>
 	<input type="hidden" name="id" value="{{ $id }}">
 	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 
-	@if($errors->has('otp_login'))
-       <span class="text-danger">{{$errors->first('otp_login')}}</span>
+	@if($errors->has('login_otp'))
+       <span class="text-danger">{{$errors->first('login_otp')}}</span>
     @endif
     @if(session()->has('otp_not_match'))
 	<div class="errors_otp" style="color: #f00; font-size: 12px; padding-top: 2px;">Invalid OTP</div>

@@ -58,7 +58,7 @@
                         </li> -->
 
                         
-                        <li class="nav-item"><a href="{{ route('logout') }}" class="nav-link with-sub"> <i class="ti-power-off sidemenu-icon menu-icon "></i><span class="sidemenu-label">Log Out</span></a></li>
+                        <li class="nav-item"><a href="{{ route('logout-admin') }}" class="nav-link with-sub"> <i class="ti-power-off sidemenu-icon menu-icon "></i><span class="sidemenu-label">Log Out</span></a></li>
                           
                         
                     </ul>

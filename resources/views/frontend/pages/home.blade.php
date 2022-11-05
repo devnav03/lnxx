@@ -299,7 +299,7 @@ $user_base = 'Customer';
 </div>
 <div class="col-md-12">
 <div class="form-group mob_input">
-    <input name="mobile" class="form-control" placeholder="Enter your Mobile number*" type="number" required="true">
+    <input name="mobile" class="form-control" value="{{ old('mobile') }}" placeholder="Enter your Mobile number*" type="number" required="true">
     <img src="{!! asset('assets/frontend/images/home_mob.png')  !!}" class="input-img">
     @if($errors->has('date_of_birth'))
 		<span class="text-danger">{{$errors->first('date_of_birth')}}</span>
@@ -317,12 +317,7 @@ $user_base = 'Customer';
 </div>
 </form>
 
-
-
-
 </div>
-
-
 
 </div>
 </div>

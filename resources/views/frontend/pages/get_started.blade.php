@@ -6,7 +6,6 @@
 <div class="row">
 <div class="col-md-6">
 <h3><span>Lorem</span> ipsum <br> dolor <span>sit amet, consectetur</span> <br> adipiscing elit.</h3>
-
 <div class="row">
 <div class="col-md-4">
 <img src="{!! asset('assets/frontend/images/found_qr_code.png')  !!}" alt="scan" class="img-responsive">
@@ -19,6 +18,45 @@
 </div>
 </div>
 
+<section class="continue_index">
+<!-- <div class="container">	 -->
+<h3>Select to Continue as</h3>
+<div class="row">	
+<div class="col-md-10 offset-md-1">	
+<div class="row">
+<div class="col-md-6 pdr50">	
+<div class="con-box">
+<h4>Customer</h4>
+<p>To access services, use the option to continue as a customer.</p>
+<a class="con_btn" href="{{ route('customer-menu') }}">
+<img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
+<img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
+</a>
+</div>
+</div>
+
+<div class="col-md-6 pdl50">	
+<div class="con-box">
+<h4>Agent</h4>
+<p>To access services, use the option to continue as a customer.</p>
+<a class="con_btn" href="{{ route('agent-menu') }}">
+<img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
+<img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- </div> -->
+</section>
+
+</div>
+<img src="{!! asset('assets/frontend/images/demo_images.png')  !!}" class="img-responsive abs_banner_img">
+</section>
+
+<div class="logo_back">
+<div class="container">
 <div class="sec_banner_sec">
 <div class="row">
 <div class="col-md-6">
@@ -50,42 +88,6 @@
 </div>
 </div>
 </div>
-<img src="{!! asset('assets/frontend/images/demo_images.png')  !!}" class="img-responsive abs_banner_img">
-</section>
-
-<div class="logo_back">
-<section class="continue_index">
-<div class="container">	
-<h3>Select to Continue as</h3>
-<div class="row">	
-<div class="col-md-10 offset-md-1">	
-<div class="row">
-<div class="col-md-6 pdr50">	
-<div class="con-box">
-<h4>Customer</h4>
-<p>To access services, use the option to continue as a customer.</p>
-<a class="con_btn" href="{{ route('customer-menu') }}">
-<img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
-<img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
-</a>
-</div>
-</div>
-
-<div class="col-md-6 pdl50">	
-<div class="con-box">
-<h4>Agent</h4>
-<p>To access services, use the option to continue as a customer.</p>
-<a class="con_btn" href="{{ route('agent-menu') }}">
-<img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
-<img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
-</a>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
 
 <section class="about_index">
 <div class="container">	
@@ -161,8 +163,53 @@
 </div>
 </section>
 
+<section class="lnxx-partners">
+<div class="container">
+<h2>Our Partners</h2>   
+<p>We collaborate with the biggest and best names in banking and<br> finance to bring you relevant items at competitive prices.</p>
+<div class="row">
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
+<div class="col-md-2">
+<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+</div>
 
-<section class="lorem_ipsum">
+</div>
+</div>
+</section>
+
+<!--<section class="lorem_ipsum">
 <div class="row">	
 <div class="col-md-4">	
 <img src="{!! asset('assets/frontend/images/Demo_image.png')  !!}" class="img-responsive">
@@ -174,7 +221,7 @@
 
 </div>
 </div>
-</section>
+</section> -->
 
 <section class="testimonials">
 <div class="container">	
