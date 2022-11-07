@@ -7,6 +7,7 @@ use App\User;
 use App\Models\State;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\CustomerOnboarding;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -33,12 +34,12 @@ class CustomerController extends Controller
     }
 
 
-    public function create()
-    {
+    // public function create()
+    // {
 
-        return view('admin.customer.create');
+    //     return view('admin.customer.create');
      
-    }
+    // }
 
 
     public function store( Request $request ){
@@ -146,7 +147,11 @@ class CustomerController extends Controller
             abort(404);
         }
        if(((\Auth::user()->user_type)) == 1){
-        return view('admin.customer.create', compact('result'));
+        
+        $country = Country::all();
+        $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
+
+        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding'));
       } else {
         echo "404";
       }

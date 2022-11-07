@@ -395,6 +395,7 @@ public function login(Request $request){
         try{
             $user_id =  Auth::id();
             $user = User::where('id', $user_id)->first();
+
             return view('frontend.pages.profile', compact('user'));
         } catch (Exception $e) {
             return back();
@@ -406,7 +407,9 @@ public function login(Request $request){
             $user_id =  Auth::id();
             $user = User::where('id', $user_id)->select('name', 'email', 'gender', 'date_of_birth')->first();
             $countries = Country::all();
-            return view('frontend.pages.personal_details', compact('user', 'countries'));
+            $result = CustomerOnboarding::where('user_id', $user_id)->first();
+
+            return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
         } catch (Exception $e) {
             return back();
         }

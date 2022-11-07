@@ -82,8 +82,8 @@
 </div>
 </div>
 <div class="col-md-6">
-<img src="{!! asset('assets/frontend/images/card.png') !!}" class="img-responsive img_sec_pol">
-<img src="{!! asset('assets/frontend/images/card.png') !!}" class="img-responsive img_sec_card">
+<img src="{!! asset('assets/frontend/images/Card.png') !!}" class="img-responsive img_sec_pol">
+<img src="{!! asset('assets/frontend/images/Card.png') !!}" class="img-responsive img_sec_card">
 </div>
 </div>
 </div>
