@@ -291,6 +291,27 @@ $('.blog-slider').owlCarousel({
 //   });
 // }
 
+$('#salaried').click(function(){
+    $('#cm_type').val('1');
+    document.getElementById("salaried").classList.add("active");
+    document.getElementById("other_employed").classList.remove("active");
+    document.getElementById("self_employed").classList.remove("active");
+});
+
+$('#self_employed').click(function(){
+    $('#cm_type').val('2');
+    document.getElementById("self_employed").classList.add("active");
+    document.getElementById("other_employed").classList.remove("active");
+    document.getElementById("salaried").classList.remove("active");
+});
+
+$('#other_employed').click(function(){
+    $('#cm_type').val('3');
+    document.getElementById("other_employed").classList.add("active");
+    document.getElementById("self_employed").classList.remove("active");
+    document.getElementById("salaried").classList.remove("active");
+});
+
 $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
     $("#success-alert").slideUp(500);
 });

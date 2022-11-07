@@ -85,12 +85,13 @@ class User extends Authenticatable
          $take = ((int)$perPage > 0) ? $perPage : 20;
          $filter = 1; // default filter if no search
          $fields = [
-                'id',
-                'name',
-                'email',
-                'user_type', 
-                'mobile', 
-                'status',
+                'users.id',
+                'users.name',
+                'users.email',
+                'users.user_type', 
+                'users.mobile', 
+                'users.status',
+                'customer_onboardings.cm_type',
             ];
          $sortBy = [
              'name' => 'name',
@@ -116,7 +117,7 @@ class User extends Authenticatable
                 addslashes(trim($search['name'])) . "%')" : "";  
             $filter .= $f1 . $f2 . $f3 . $f4;
         }
-         return $this
+         return $this->leftjoin('customer_onboardings', "customer_onboardings.user_id", "=", 'users.id')
              ->whereRaw($filter)
              ->where('user_type', 2)
              // ->where('deleted_at', null)

@@ -6,7 +6,7 @@ $user_base = 'Customer';
 }
 @endphp
 
-@if($route == 'dashboard') 
+@if($route == 'dashboard' || $route == 'personal-details' || $route == 'cm-details') 
 
 <header class="header dashboard-header">
   <div class="container">

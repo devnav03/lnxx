@@ -7,7 +7,7 @@
 <div class="col-md-9">
 <div class="our_assistance">
 <h2>Do you want our assistance ?</h2>
-<a href="#" class="yes_assistance">Yes</a>
+<a href="{{ route('personal-details') }}" class="yes_assistance">Yes</a>
 <a href="#" class="no_assistance">No</a>
 </div>
 

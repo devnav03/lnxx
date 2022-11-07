@@ -102,9 +102,12 @@ Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
 Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
 Route::any('my-profile', [App\Http\Controllers\Frontend\HomeController::class, 'profileShow'])->name('my-profile');
 Route::any('dashboard', [App\Http\Controllers\Frontend\HomeController::class, 'dashboard'])->name('dashboard');
-
+Route::any('personal-details', [App\Http\Controllers\Frontend\HomeController::class, 'personal_details'])->name('personal-details');
 
 Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::class, 'update_profile'])->name('profile-update');
+
+Route::any('cm-details', [App\Http\Controllers\Frontend\HomeController::class, 'cm_details'])->name('cm-details');
+
 
 });
 

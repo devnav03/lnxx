@@ -1098,7 +1098,8 @@ input[type=number]::-webkit-outer-spin-button {
 .dashboard-header .right_login {
     margin-bottom: 0px;
 }
-.cus_dashboard {
+.cus_dashboard,
+.personal_details {
     background: url(../images/header_back.png);
     padding: 50px 0;
 }
@@ -1199,6 +1200,119 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 14px;
     line-height: 24px;
 }
+.personal_details h2{
+    color: #5EB495;
+    background: url(../images/Icon_Component.png);
+    background-repeat: no-repeat;
+    padding-left: 50px;
+    margin-bottom: 0px;
+    background-position: left;
+    font-weight: 700;
+    font-size: 25px;
+    background-size: 33px;
+}
+.personal_details_box {
+    background: #fff;
+    padding: 25px;
+    box-shadow: 1px 1px 9px rgb(0 0 0 / 10%);
+    border-radius: 6px;
+}
+.personal_details_box h6{
+    color: rgba(9, 15, 5, 0.5);
+    margin-top: 20px;
+}
+.personal_details_box label{
+    color: #000;
+    font-weight: 600;
+    margin-top: 10px;
+    font-size: 16px;
+    margin-bottom: 0px;
+}
+.personal_details_box label.sub-label {
+    color: #555;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-top: 5px;
+}
+.personal_details_box input,
+.personal_details_box select {
+    border: 1px solid rgba(9, 15, 6, 0.5);
+    background: #fff;
+    margin-bottom: 18px;
+    border: 0px;
+    font-size: 14px;
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 40%)
+}
+.personal_details_box input:focus,
+.personal_details_box select:focus {
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 40%) !important;
+}
+.chk_bx {
+    text-align: center;
+}
+.chk_bx input {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+.chk_bx a{
+    color: #FF6722;
+}
+.personal_details_box button {
+    background: #FF6722;
+    color: #fff;
+    border: 0px;
+    padding: 9px 60px;
+    font-weight: 500;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+.service-step h3 {
+    font-weight: 700;
+    color: #000;
+    font-size: 25px;
+    margin-bottom: 30px;
+}
+.personal_details .col-md-5 {
+    padding-left: 40px;
+}
+.service-step p {
+    color: rgba(0, 0, 0, 0.5);
+    margin-bottom: 4px;
+}
+.service-step {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    padding-bottom: 30px;
+    margin-top: 30px;
+}
+.cm_type {
+    float: left;
+    color: #000 !important;
+    background: #ffff;
+    padding: 9px 22px;
+    border: 1px solid #000;
+    border-radius: 25px;
+    margin-right: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.cm_type.active{
+   background: #FF6722;
+   color: #fff !important;
+}
+.cm_dt h2{
+   background: url(../images/cm_icon.png);
+   background-repeat: no-repeat;
+}
+
+
+
+
+
 
 
 

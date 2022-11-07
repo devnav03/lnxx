@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserOtp;
 use App\Models\UserEmailOtp;
+use App\Models\Country;
+use App\Models\CustomerOnboarding;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -398,6 +400,53 @@ public function login(Request $request){
             return back();
         }
     }
+
+    public function personal_details(){
+        try{
+            $user_id =  Auth::id();
+            $user = User::where('id', $user_id)->select('name', 'email', 'gender', 'date_of_birth')->first();
+            $countries = Country::all();
+            return view('frontend.pages.personal_details', compact('user', 'countries'));
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function cm_details(Request $request){
+        try{
+
+            $user_id =  Auth::id();
+            $inputs = $request->all(); 
+            if($request->cm_type){
+                $inputs['user_id'] = $user_id;
+
+                $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
+                if($cm_details){
+                    $id = $cm_details->id;
+                    (new CustomerOnboarding)->store($inputs, $id); 
+                } else {
+                    (new CustomerOnboarding)->store($inputs); 
+                }
+                 
+
+                $cm_type = $request->cm_type;
+                return view('frontend.pages.cm_details', compact('cm_type'));
+
+            } else {
+
+                $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
+                if($cm_details){
+                    $cm_type = $cm_details->cm_type;
+                    return view('frontend.pages.cm_details', compact('cm_type'));
+                } else {
+                    return back();
+                }
+            }
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
 
     public function dashboard(){
         try{
