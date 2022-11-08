@@ -103,10 +103,12 @@ Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'log
 Route::any('my-profile', [App\Http\Controllers\Frontend\HomeController::class, 'profileShow'])->name('my-profile');
 Route::any('dashboard', [App\Http\Controllers\Frontend\HomeController::class, 'dashboard'])->name('dashboard');
 Route::any('personal-details', [App\Http\Controllers\Frontend\HomeController::class, 'personal_details'])->name('personal-details');
-
 Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::class, 'update_profile'])->name('profile-update');
-
 Route::any('cm-details', [App\Http\Controllers\Frontend\HomeController::class, 'cm_details'])->name('cm-details');
+Route::any('education-detail', [App\Http\Controllers\Frontend\HomeController::class, 'education_detail'])->name('education-detail');
+
+
+
 
 
 });

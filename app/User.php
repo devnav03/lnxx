@@ -92,6 +92,10 @@ class User extends Authenticatable
                 'users.mobile', 
                 'users.status',
                 'customer_onboardings.cm_type',
+                'other_cm_details.source_name',
+                'cm_salaried_details.designation',
+                'self_emp_details.org_name',
+
             ];
          $sortBy = [
              'name' => 'name',
@@ -118,11 +122,14 @@ class User extends Authenticatable
             $filter .= $f1 . $f2 . $f3 . $f4;
         }
          return $this->leftjoin('customer_onboardings', "customer_onboardings.user_id", "=", 'users.id')
-             ->whereRaw($filter)
-             ->where('users.user_type', 2)
+            ->leftjoin('other_cm_details', "other_cm_details.customer_id", "=", 'users.id')
+            ->leftjoin('cm_salaried_details', "cm_salaried_details.customer_id", "=", 'users.id')
+            ->leftjoin('self_emp_details', "self_emp_details.customer_id", "=", 'users.id')
+            ->whereRaw($filter)
+            ->where('users.user_type', 2)
              // ->where('deleted_at', null)
-             ->orderBy($orderEntity, $orderAction)
-             ->skip($skip)->take($take)->get($fields);
+            ->orderBy($orderEntity, $orderAction)
+            ->skip($skip)->take($take)->get($fields);
     }
 
      public function getEmployer($search = null, $skip, $perPage) {

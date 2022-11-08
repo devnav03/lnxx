@@ -339,6 +339,350 @@
                 </div>
                 @endif
 
+
+            @if($customer_onboarding)
+            @if($customer_onboarding->cm_type == 1)
+            @if($cm_salaried_details)
+            <div class="card custom-card">
+                <div class="card-body">
+                <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                <div class="form-title">
+                                    <h4>CM Details</h4>                        
+                                </div>
+                                <div class="form-body">
+                    <div class="row">        
+                    <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Designation</label>
+      <input name="designation" class="form-control" value="{{ $cm_salaried_details->designation }}" type="text" required="true">
+      @if($errors->has('designation'))
+      <span class="text-danger">{{$errors->first('designation')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Date Of Joining</label>
+      <input name="date_of_joining" class="form-control" value="{{ $cm_salaried_details->date_of_joining }}" type="date">
+      @if($errors->has('date_of_joining'))
+      <span class="text-danger">{{$errors->first('date_of_joining')}}</span>
+      @endif
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Department</label>
+      <input name="department" class="form-control" value="{{ $cm_salaried_details->department }}" type="text">
+      @if($errors->has('department'))
+      <span class="text-danger">{{$errors->first('department')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Monthly Salary</label>
+      <input name="monthly_salary" class="form-control" value="{{ $cm_salaried_details->monthly_salary }}" type="number">
+      @if($errors->has('monthly_salary'))
+      <span class="text-danger">{{$errors->first('monthly_salary')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Staff Id No.</label>
+      <input name="staff_id_no" class="form-control" value="{{ $cm_salaried_details->staff_id_no }}" type="text">
+      @if($errors->has('staff_id_no'))
+      <span class="text-danger">{{$errors->first('staff_id_no')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Name Of Previous Employer</label>
+      <input name="name_previous_emp" class="form-control" value="{{ $cm_salaried_details->name_previous_emp }}"  type="text">
+      @if($errors->has('name_previous_emp'))
+      <span class="text-danger">{{$errors->first('name_previous_emp')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">No. Of Years With Previous Employer</label>
+      <input name="no_year_previous_emp" class="form-control" value="{{ $cm_salaried_details->no_year_previous_emp }}" type="number">
+      @if($errors->has('no_year_previous_emp'))
+      <span class="text-danger">{{$errors->first('no_year_previous_emp')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Monthly Additional Income</label>
+      <input name="monthly_add_income" class="form-control" value="{{ $cm_salaried_details->monthly_add_income }}"  type="text">
+      @if($errors->has('monthly_add_income'))
+      <span class="text-danger">{{$errors->first('monthly_add_income')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Monthly Deductions</label>
+      <input name="monthly_deductions" class="form-control" value="{{ $cm_salaried_details->monthly_deductions }}"  type="text">
+      @if($errors->has('monthly_deductions'))
+      <span class="text-danger">{{$errors->first('monthly_deductions')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Salary Payment Date</label>
+      <input name="salary_pay_date" class="form-control" value="{{ $cm_salaried_details->salary_pay_date }}" type="number">
+      @if($errors->has('salary_pay_date'))
+      <span class="text-danger">{{$errors->first('salary_pay_date')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+    <label class="sub-label" style="width: 100%;">Are You A Confirmed Employee?</label>
+    <label class="sub-label"> @if($cm_salaried_details->confirm_emp == 1) Yes @else No @endif  </label>
+     <!--  <label class="sub-label" style="float: left; display: flex;"><input name="confirm_emp" class="form-control" value="1" @if($cm_salaried_details->confirm_emp == 1) checked="" @endif type="radio">Yes</label>
+      <label class="sub-label" style="float: left; display: flex;"><input name="confirm_emp" class="form-control" value="0" @if($cm_salaried_details->confirm_emp == 0) checked="" @endif type="radio" style="margin-left: 25px;">No</label> -->
+
+     
+
+      @if($errors->has('confirm_emp'))
+      <span class="text-danger">{{$errors->first('confirm_emp')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Total Work Experience (Years)</label>
+      <input name="work_exp" class="form-control" value="{{ $cm_salaried_details->work_exp }}" type="number">
+      @if($errors->has('work_exp'))
+      <span class="text-danger">{{$errors->first('work_exp')}}</span>
+      @endif
+    </div>
+  </div>
+    </div>                           
+         
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    </div> 
+                </div>
+                @endif
+                @endif
+              
+            @if($customer_onboarding->cm_type == 2)
+            @if($self_emp_details)
+
+            <div class="card custom-card">
+                <div class="card-body">
+                <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                <div class="form-title">
+                                    <h4>CM Details</h4>                        
+                                </div>
+                                <div class="form-body">
+                    <div class="row">        
+
+
+<div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Organisation Name</label>
+      <input name="org_name" class="form-control" required="true" value="{{ $self_emp_details->org_name }}" type="text">
+      @if($errors->has('org_name'))
+      <span class="text-danger">{{$errors->first('org_name')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Nature Of Business</label>
+      <input name="nature_business" class="form-control" value="{{ $self_emp_details->nature_business }}" type="text">
+      @if($errors->has('nature_business'))
+      <span class="text-danger">{{$errors->first('nature_business')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Year Of Business In Uae</label>
+      <input name="year_business" class="form-control" required="true" value="{{ $self_emp_details->year_business }}" type="number">
+      @if($errors->has('year_business'))
+      <span class="text-danger">{{$errors->first('year_business')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Annual Gross Income</label>
+      <input name="annual_gross_income" class="form-control" value="{{ $self_emp_details->annual_gross_income }}" type="number">
+      @if($errors->has('annual_gross_income'))
+      <span class="text-danger">{{$errors->first('annual_gross_income')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Annual Gross Expenses</label>
+      <input name="annual_gross_expenses" class="form-control" value="{{ $self_emp_details->annual_gross_expenses }}" type="number">
+      @if($errors->has('annual_gross_expenses'))
+      <span class="text-danger">{{$errors->first('annual_gross_expenses')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Annual Net Income</label>
+      <input name="annaul_net_income" class="form-control" value="{{ $self_emp_details->annaul_net_income }}"  type="number">
+      @if($errors->has('annaul_net_income'))
+      <span class="text-danger">{{$errors->first('annaul_net_income')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Trade Licence No.</label>
+      <input name="trade_licence_no" class="form-control" value="{{ $self_emp_details->trade_licence_no }}" type="text">
+      @if($errors->has('trade_licence_no'))
+      <span class="text-danger">{{$errors->first('trade_licence_no')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Insurance Date</label>
+      <input name="insurance_date" class="form-control" value="{{ $self_emp_details->insurance_date }}" type="date">
+      @if($errors->has('insurance_date'))
+      <span class="text-danger">{{$errors->first('insurance_date')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Expire Date</label>
+      <input name="exp_date" class="form-control" value="{{ $self_emp_details->insurance_date }}" type="date">
+      @if($errors->has('exp_date'))
+      <span class="text-danger">{{$errors->first('exp_date')}}</span>
+      @endif
+    </div>
+  </div>
+
+
+
+    </div>                           
+         
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    </div> 
+                </div>
+                @endif
+                @endif
+
+            @if($customer_onboarding->cm_type == 3)
+            @if($other_cm_details)
+
+            <div class="card custom-card">
+                <div class="card-body">
+                <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                <div class="form-title">
+                                    <h4>CM Details</h4>                        
+                                </div>
+                                <div class="form-body">
+                    <div class="row">        
+<div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Source Name</label>
+      <input name="source_name" class="form-control" required="true" value="{{ $other_cm_details->source_name }}"  type="text">
+      @if($errors->has('source_name'))
+      <span class="text-danger">{{$errors->first('source_name')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+  <div class="form-group">
+  <label class="sub-label">Source Of Income</label>
+  <input name="source_income" class="form-control" required="true" value="{{ $other_cm_details->source_income }}"  type="text">
+    @if($errors->has('source_income'))
+    <span class="text-danger">{{$errors->first('source_income')}}</span>
+    @endif
+  </div>
+  </div>
+
+  <div class="col-md-6">
+  <div class="form-group">
+  <label class="sub-label">Monthly Income</label>
+  <input name="month_income" class="form-control" required="true" value="{{ $other_cm_details->month_income }}" type="number">
+    @if($errors->has('month_income'))
+    <span class="text-danger">{{$errors->first('month_income')}}</span>
+    @endif
+  </div>
+  </div>
+
+  <div class="col-md-6">
+  <div class="form-group">
+  <label class="sub-label">Additional Income</label>
+  <input name="add_income" class="form-control"value="{{ $other_cm_details->add_income }}" type="number">
+    @if($errors->has('add_income'))
+    <span class="text-danger">{{$errors->first('add_income')}}</span>
+    @endif
+  </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Total Income</label>
+      <input name="total_income" class="form-control" value="{{ $other_cm_details->total_income }}" type="number">
+        @if($errors->has('total_income'))
+        <span class="text-danger">{{$errors->first('total_income')}}</span>
+        @endif
+    </div>
+  </div>
+    </div>                           
+         
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    </div> 
+                </div>
+                @endif
+                @endif
+                @endif
+
+
+
+
+
             </div>
         </div>
     </div>

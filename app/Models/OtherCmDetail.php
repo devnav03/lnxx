@@ -1,11 +1,10 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class SelfEmpDetail extends Model
+class OtherCmDetail extends Model
 {
-    protected $fillable = [ 'customer_id', 'org_name', 'nature_business', 'year_business', 'annual_gross_income',
- 'annual_gross_expenses', 'annaul_net_income', 'trade_licence_no', 'insurance_date', 'exp_date', 'created_at', 'updated_at' ];
-
+    protected $fillable = [ 'customer_id', 'source_name', 'source_income', 'month_income', 'add_income',
+ 'total_income', 'created_at', 'updated_at' ];
 
     public function store($inputs, $id = null)  {
         if ($id) {
@@ -14,8 +13,6 @@ class SelfEmpDetail extends Model
             return $this->create($inputs)->id;
         }
     }
-
-
 }
 
  

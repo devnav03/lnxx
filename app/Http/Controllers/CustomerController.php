@@ -8,12 +8,14 @@ use App\Models\State;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\CustomerOnboarding;
+use App\Models\OtherCmDetail;
+use App\Models\CmSalariedDetail;
+use App\Models\SelfEmpDetail;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class CustomerController extends Controller
-{
+class CustomerController extends Controller {
    
     public function index() {
       
@@ -149,9 +151,13 @@ class CustomerController extends Controller
        if(((\Auth::user()->user_type)) == 1){
         
         $country = Country::all();
+
+        $other_cm_details = OtherCmDetail::where('customer_id', $id)->first();
+        $cm_salaried_details = CmSalariedDetail::where('customer_id', $id)->first();
+        $self_emp_details = SelfEmpDetail::where('customer_id', $id)->first();
         $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
 
-        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding'));
+        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding', 'other_cm_details', 'cm_salaried_details', 'self_emp_details'));
       } else {
         echo "404";
       }

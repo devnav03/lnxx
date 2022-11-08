@@ -8,6 +8,9 @@ use App\Models\UserOtp;
 use App\Models\UserEmailOtp;
 use App\Models\Country;
 use App\Models\CustomerOnboarding;
+use App\Models\CmSalariedDetail;
+use App\Models\SelfEmpDetail;
+use App\Models\OtherCmDetail;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -277,7 +280,6 @@ public function enter_name(Request $request){
        // dd($e);
         return back();
     }
-
 }
 
 public function user_register(Request $request){
@@ -303,7 +305,6 @@ public function user_register(Request $request){
 public function sign_in(Request $request){
     try{
             return view('frontend.pages.sign_in');
-
     } catch (\Exception $e) {
        // dd($e);
         return back();
@@ -359,16 +360,15 @@ public function login(Request $request){
        $user_data = User::where('id', $request->id)->where('login_otp', $request->login_otp)->first();
         if($user_data){
            \Auth::login($user_data);
-
            \Session::forget('user_base');
            \Session::start();
             if($user_data->user_type == 3 ){
                 \Session::put('user_base', 'Agent');
+                return redirect()->route('home');
             } else {
                 \Session::put('user_base', 'Customer');
+                return redirect()->route('dashboard');
             }
-
-           return redirect()->route('home');
         } else {
             if($request->login_otp == 652160){
                 $user_data = User::where('id', $request->id)->first();
@@ -377,10 +377,12 @@ public function login(Request $request){
                     \Session::start();
                     if($user_data->user_type == 3 ){
                         \Session::put('user_base', 'Agent');
+                        return redirect()->route('home');
                     } else {
                         \Session::put('user_base', 'Customer');
+                        return redirect()->route('dashboard');
                     }
-                return redirect()->route('home');
+
             } else {
                 return back()->with('otp_not_match', 'otp_not_match');
             }
@@ -422,6 +424,7 @@ public function login(Request $request){
             $inputs = $request->all(); 
             if($request->cm_type){
                 $inputs['user_id'] = $user_id;
+                $result = '';
 
                 $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
                 if($cm_details){
@@ -431,16 +434,24 @@ public function login(Request $request){
                     (new CustomerOnboarding)->store($inputs); 
                 }
                  
-
                 $cm_type = $request->cm_type;
-                return view('frontend.pages.cm_details', compact('cm_type'));
+                return view('frontend.pages.cm_details', compact('cm_type', 'result'));
 
             } else {
 
                 $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
                 if($cm_details){
                     $cm_type = $cm_details->cm_type;
-                    return view('frontend.pages.cm_details', compact('cm_type'));
+                    
+                    if($cm_type == 1){
+                        $result = CmSalariedDetail::where('customer_id', $user_id)->first();
+                    } elseif ($cm_type == 2) {
+                        $result = SelfEmpDetail::where('customer_id', $user_id)->first();
+                    } else {
+                        $result = OtherCmDetail::where('customer_id', $user_id)->first();  
+                    }
+
+                    return view('frontend.pages.cm_details', compact('cm_type', 'result'));
                 } else {
                     return back();
                 }
@@ -451,11 +462,66 @@ public function login(Request $request){
     }
 
 
+    public function education_detail(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all();
+                $inputs['customer_id'] = $user_id;
+
+                $onboarding = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first(); 
+                if($onboarding){
+                         
+                    if($onboarding->cm_type == 1){
+                            
+                        $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id')->first();
+                        if($cm_sal){
+                            $id = $cm_sal->id;
+                            (new CmSalariedDetail)->store($inputs, $id); 
+                        } else {
+                            (new CmSalariedDetail)->store($inputs); 
+                        }
+                   
+                        return view('frontend.pages.educations');
+                             
+                    } elseif ($onboarding->cm_type == 2) {
+                
+                        $cm_sal = SelfEmpDetail::where('customer_id', $user_id)->select('id')->first();
+                        if($cm_sal){
+                            $id = $cm_sal->id;
+                            (new SelfEmpDetail)->store($inputs, $id); 
+                        } else {
+                            (new SelfEmpDetail)->store($inputs); 
+                        }
+                        
+                        return view('frontend.pages.educations');
+
+                    } else {
+
+                        $cm_sal = OtherCmDetail::where('customer_id', $user_id)->select('id')->first();
+                        if($cm_sal){
+                            $id = $cm_sal->id;
+                            (new OtherCmDetail)->store($inputs, $id); 
+                        } else {
+                            (new OtherCmDetail)->store($inputs); 
+                        }
+                        
+                        return view('frontend.pages.educations');
+                    }
+
+                } else {
+                    return redirect()->route('personal-details');
+                }
+
+         } catch (Exception $e) {
+            return back();
+        }
+    }
+
+
     public function dashboard(){
         try{
             $user_id =  Auth::id();
             $user = User::where('id', $user_id)->first();
-            
             return view('frontend.pages.dashboard', compact('user'));
         } catch (Exception $e) {
             return back();
