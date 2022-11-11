@@ -6,7 +6,7 @@ $user_base = 'Customer';
 }
 @endphp
 
-@if($route == 'dashboard' || $route == 'personal-details' || $route == 'cm-details' || $route == 'education-detail') 
+@if($route == 'user-dashboard' || $route == 'personal-details' || $route == 'cm-details' || $route == 'education-detail' || $route == 'address-details' || $route ==  'select-services' || $route == 'thank-you') 
 
 <header class="header dashboard-header">
   <div class="container">
@@ -31,9 +31,9 @@ $user_base = 'Customer';
           <!-- <li><a href="#">English <img src="{!! asset('assets/frontend/images/dropdown.png') !!}"></a></li> -->
         @if(\Auth::check())
             @if((\Auth::user()->user_type) == 2)
-              <li class="user-menu"><a href="{{ route('my-profile') }}"><img src="{!! asset('assets/frontend/images/user_white_icon.png')  !!}"> {{ \Auth::user()->name }}</a>
+              <li class="user-menu"><a href="{{ route('my-profile') }}">Welcome, {{ \Auth::user()->name }} <img src="{!! asset('assets/frontend/images/user_white_icon.png')  !!}"> </a>
               <ul class="sub-menu">
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ route('user-dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ route('my-profile') }}">Profile</a></li>
                 <li><a href="{{ route('user-logout') }}">Sign out</a></li>
               </ul>
@@ -82,7 +82,7 @@ $user_base = 'Customer';
             @if((\Auth::user()->user_type) == 2)
               <li class="user-menu"><a href="{{ route('my-profile') }}"><img src="{!! asset('assets/frontend/images/login_icon.png')  !!}"> {{ \Auth::user()->name }}</a>
               <ul class="sub-menu">
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ route('user-dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ route('my-profile') }}">Profile</a></li>
                 <li><a href="{{ route('user-logout') }}">Sign out</a></li>
               </ul>

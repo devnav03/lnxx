@@ -145,15 +145,41 @@ function authUserIdNull() {
 
     return $id;
 }
-function authUserId()
-{
+
+function get_service_status($service_id){
+
+    $id = \Auth::user()->id;
+    $apply_ser = App\Models\ServiceApply::where('service_id', $service_id)->where('customer_id', $id)->count();
+    
+    if($apply_ser == 0){
+        $value = 0;
+    } else {
+        $value = 1;
+    }
+    return $value;
+}
+
+function get_service_details($id){
+    $apply_ser = App\Models\ServiceApply::where('customer_id', $id)->select('service_id')->get();
+    $services = [];
+    foreach ($apply_ser as $service) {
+        $service = App\Models\Service::where('id', $service->service_id)->select('name')->first();
+            $slide['name'] = $service->name;
+            $services[] = $slide;   
+    }
+    
+        
+    return $services;
+}
+
+function authUserId() {
     $id = 1;
     if (\Auth::check()) {
         $id = \Auth::user()->id;
     }
-
     return $id;
 }
+
 function apiResponseApp($status, $statusCode, $message, $errors = [], $data = [])
 {
     $response = ['success' => $status, 'status' => $statusCode];

@@ -65,6 +65,28 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'App\Http\Controllers\SettingController@myAccount']);
             // Change Password Routes
 
+            // Service Master route start
+            Route::resource('services', 'App\Http\Controllers\ServiceController', [
+                'names' => [
+                    'index'     => 'services.index',
+                    'create'    => 'services.create',
+                    'store'     => 'services.store',
+                    'edit'      => 'services.edit',
+                    'update'    => 'services.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('services/paginate/{page?}', ['as' => 'services.paginate',
+                'uses' => 'App\Http\Controllers\ServiceController@servicesPaginate']);
+            Route::any('services/action', ['as' => 'services.action',
+                'uses' => 'App\Http\Controllers\ServiceController@servicesAction']);
+            Route::any('services/toggle/{id?}', ['as' => 'services.toggle',
+                'uses' => 'App\Http\Controllers\ServiceController@servicesToggle']);
+            Route::any('services/drop/{id?}', ['as' => 'services.drop',
+                'uses' => 'services@drop']);
+            // Service
+
 
 });
 
@@ -101,12 +123,15 @@ Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
 
 Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
 Route::any('my-profile', [App\Http\Controllers\Frontend\HomeController::class, 'profileShow'])->name('my-profile');
-Route::any('dashboard', [App\Http\Controllers\Frontend\HomeController::class, 'dashboard'])->name('dashboard');
+Route::any('dashboard', [App\Http\Controllers\Frontend\HomeController::class, 'dashboard'])->name('user-dashboard');
 Route::any('personal-details', [App\Http\Controllers\Frontend\HomeController::class, 'personal_details'])->name('personal-details');
 Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::class, 'update_profile'])->name('profile-update');
 Route::any('cm-details', [App\Http\Controllers\Frontend\HomeController::class, 'cm_details'])->name('cm-details');
 Route::any('education-detail', [App\Http\Controllers\Frontend\HomeController::class, 'education_detail'])->name('education-detail');
+Route::any('address-details', [App\Http\Controllers\Frontend\HomeController::class, 'address_details'])->name('address-details');
+Route::any('select-services', [App\Http\Controllers\Frontend\HomeController::class, 'select_services'])->name('select-services');
 
+Route::any('thank-you', [App\Http\Controllers\Frontend\HomeController::class, 'ServiceApply'])->name('thank-you');
 
 
 

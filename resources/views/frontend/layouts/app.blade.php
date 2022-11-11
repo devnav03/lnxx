@@ -414,7 +414,7 @@ $('input[name=login_otp]').on('keyup' , function() {
 
 $('input[name=mobile]').on('keyup' , function() { 
     var mobile = $("input[name=mobile]").val();
-    if( mobile.length == 10 ) {
+    if( mobile.length == 7 ) {
         $.ajax({
             type: "GET",
             url: "{{ route('otp-sent') }}",

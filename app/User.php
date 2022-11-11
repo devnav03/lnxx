@@ -95,7 +95,8 @@ class User extends Authenticatable
                 'other_cm_details.source_name',
                 'cm_salaried_details.designation',
                 'self_emp_details.org_name',
-
+                'user_education.education',
+                'addresses.permanent_address_home_country_line_1',
             ];
          $sortBy = [
              'name' => 'name',
@@ -125,6 +126,10 @@ class User extends Authenticatable
             ->leftjoin('other_cm_details', "other_cm_details.customer_id", "=", 'users.id')
             ->leftjoin('cm_salaried_details', "cm_salaried_details.customer_id", "=", 'users.id')
             ->leftjoin('self_emp_details', "self_emp_details.customer_id", "=", 'users.id')
+            ->leftjoin('addresses', "addresses.customer_id", "=", 'users.id')
+            ->leftjoin('user_education', "user_education.user_id", "=", 'users.id')
+
+
             ->whereRaw($filter)
             ->where('users.user_type', 2)
              // ->where('deleted_at', null)

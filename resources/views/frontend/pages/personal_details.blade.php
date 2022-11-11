@@ -101,7 +101,7 @@
     <select name="nationality" class="form-control" required="true">
       <option value="">Select</option>
       @foreach($countries as $country)
-        <option value="{{ $country->id }}" @if(isset($result->nationality)) @if($result->nationality == $country->id) selected  @endif @endif >{{ $country->country_name }}</option>
+        <option value="{{ $country->id }}" @if(isset($result->nationality)) @if($result->nationality == $country->id) selected  @endif @else @if($country->id == 229) selected @endif @endif >{{ $country->country_name }}</option>
       @endforeach
     </select>
   </div>
@@ -120,7 +120,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Passport Expiry Date</label>
-      <input name="passport_expiry_date" class="form-control" onfocus="(this.type='date')" @if(isset($result->passport_expiry_date)) value="{{ date('d M, Y', strtotime($result->passport_expiry_date)) }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text" required="true">
+      <input name="passport_expiry_date" class="form-control" onfocus="(this.type='date')" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text" required="true">
       @if($errors->has('passport_expiry_date'))
       <span class="text-danger">{{$errors->first('passport_expiry_date')}}</span>
       @endif
@@ -154,7 +154,7 @@
   <div class="col-md-4">
     <div class="form-group">
       <label class="sub-label">Visa Expiry Date</label>
-      <input name="visa_expiry_date" class="form-control" onfocus="(this.type='date')" @if(isset($result->visa_expiry_date)) value="{{ date('d M, Y', strtotime($result->visa_expiry_date)) }}" @else value="{{ old('visa_expiry_date') }}" @endif type="text">
+      <input name="visa_expiry_date" class="form-control" onfocus="(this.type='date')" @if(isset($result->visa_expiry_date)) value="{{ $result->visa_expiry_date }}" @else value="{{ old('visa_expiry_date') }}" @endif type="text">
       @if($errors->has('visa_expiry_date'))
       <span class="text-danger">{{$errors->first('visa_expiry_date')}}</span>
       @endif
@@ -207,7 +207,7 @@
   </div>
 
   <div class="col-md-6">
-    <label class="sub-label">Years In Uae</label>
+    <label class="sub-label">Years In UAE</label>
     <select name="years_in_uae" class="form-control" required="true">
       <option value="">Select</option>
       @if($result)
@@ -241,7 +241,7 @@
   </div>
 
   <div class="col-md-6">
-    <label class="sub-label">Favorite City <span>(As A Security Feature)</span></label>
+    <label class="sub-label">Favorite City <span>(as a security feature)</span></label>
     <input name="favorite_city" class="form-control" @if($result) value="{{ $result->favorite_city }}" @else value="{{ old('favorite_city') }}" @endif required="true" type="text">
       @if($errors->has('favorite_city'))
       <span class="text-danger">{{$errors->first('favorite_city')}}</span>

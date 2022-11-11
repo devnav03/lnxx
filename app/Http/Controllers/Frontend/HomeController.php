@@ -11,6 +11,10 @@ use App\Models\CustomerOnboarding;
 use App\Models\CmSalariedDetail;
 use App\Models\SelfEmpDetail;
 use App\Models\OtherCmDetail;
+use App\Models\Service;
+use App\Models\UserEducation;
+use App\Models\ServiceApply;
+use App\Models\Address;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -18,6 +22,7 @@ use Auth;
 class HomeController extends Controller {
    
     public function index() {
+
         return view('frontend.pages.get_started');
     }
 
@@ -77,7 +82,7 @@ class HomeController extends Controller {
             return redirect()->route('home');
         } catch (\Exception $exception) {
         //dd($exception);
-        return back();    
+            return back();    
         }
     }
 
@@ -254,7 +259,6 @@ public function login_otp_match(Request $request){
 
 
 public function enter_name(Request $request){
-
     try {
             if(isset($request->otp_code)){
                     $find = UserEmailOtp::where('email', $request->email)->where('status', 0)->where('otp', $request->otp_code)->select('id')->first();
@@ -270,8 +274,8 @@ public function enter_name(Request $request){
                                UserEmailOtp::where('email', $request->email)->update(['status' => 1]);
                               return view('frontend.pages.enter_name', compact('mobile', 'email'));
                             } else {
-                                \Session::put('verify', 0);
-                                return back()->with('otp_not_match', 'otp not match');
+                            \Session::put('verify', 0);
+                            return back()->with('otp_not_match', 'otp not match');
                         }
                     }
             }
@@ -282,119 +286,148 @@ public function enter_name(Request $request){
     }
 }
 
-public function user_register(Request $request){
-    try {
-            if(isset($request->name)){
-                $user = new User;
-                $user->email = $request->email;
-                $user->mobile = $request->mobile;
-                $user->name = $request->name;
-                $user->user_type = 2;
-                $user->status = 1;
-                $user->save();
-                $user_data = User::where('email', $request->email)->first();
-                \Auth::login($user_data);
-                return redirect()->route('home');
+    public function user_register(Request $request){
+        try {
+                if(isset($request->name)){
+                    $user = new User;
+                    $user->email = $request->email;
+                    $user->mobile = $request->mobile;
+                    $user->name = $request->name;
+                    $user->user_type = 2;
+                    $user->status = 1;
+                    $user->save();
+                    $user_data = User::where('email', $request->email)->first();
+                    \Auth::login($user_data);
+                    return redirect()->route('home');
+                }
+        } catch (\Exception $e) {
+           // dd($e);
+            return back();
+        }
+    }
+
+    public function ServiceApply(Request $request){
+        try{
+            if(isset($request->service)){
+                $user_id =  Auth::id();
+                foreach($request->service as $service_id){
+                    $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
+                    if($apply_ser == 0) {
+                        ServiceApply::create([
+                            'service_id'  =>  $service_id,
+                            'customer_id'  => $user_id,
+                        ]);
+                    }
+                }
+                $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
+                $ser = 1300;
+                $ref_id = $ser.$result->id;
+                CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
+                return view('frontend.pages.thanku', compact('ref_id'));
+            } else {
+                return back()->with('select_service', 'select_service');
             }
-    } catch (\Exception $e) {
-       // dd($e);
-        return back();
+        } catch (\Exception $e) {
+           // dd($e);
+            return back();
+        }
     }
-}
 
-public function sign_in(Request $request){
-    try{
-            return view('frontend.pages.sign_in');
-    } catch (\Exception $e) {
-       // dd($e);
-        return back();
+
+    public function sign_in(Request $request){
+        try{
+                return view('frontend.pages.sign_in');
+        } catch (\Exception $e) {
+           // dd($e);
+            return back();
+        }
     }
-}
 
-public function login_otp(Request $request){
-    try{
-        $user = User::where('mobile', $request->username)->where('status', 1)->select('id')->first();
-        if($user){
-            $gen_otp = rand(100000, 999999);
-            User::where('id', $user->id)->update([ 'login_otp' =>  $gen_otp]);
-            $id = $user->id;
-            $username = 'Mobile';
-            return view('frontend.pages.sign_in_otp', compact('id', 'username'));
-        } else {
-        $user = User::where('email', $request->username)->where('status', 1)->select('id')->first();
+    public function login_otp(Request $request){
+        try{
+            $user = User::where('mobile', $request->username)->where('status', 1)->select('id')->first();
             if($user){
                 $gen_otp = rand(100000, 999999);
                 User::where('id', $user->id)->update([ 'login_otp' =>  $gen_otp]);
-                $email = $request->username;
-                $postdata = http_build_query(
-                    array(
-                        'otp' => $gen_otp,
-                        'email' => $email,
-                    )
-                    );
-                    $opts = array('http' =>
-                        array(
-                        'method'  => 'POST',
-                        'header'  => 'Content-Type: application/x-www-form-urlencoded',
-                        'content' => $postdata
-                        )
-                    );
-                    $context  = stream_context_create($opts);
-                    $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-otp', false, $context);
-                $username = 'Email';    
                 $id = $user->id;
+                $username = 'Mobile';
                 return view('frontend.pages.sign_in_otp', compact('id', 'username'));
             } else {
-                return back()->with('username_not_exist', 'username_not_exist');
+            $user = User::where('email', $request->username)->where('status', 1)->select('id')->first();
+                if($user){
+                    $gen_otp = rand(100000, 999999);
+                    User::where('id', $user->id)->update([ 'login_otp' =>  $gen_otp]);
+                    $email = $request->username;
+                    $postdata = http_build_query(
+                        array(
+                            'otp' => $gen_otp,
+                            'email' => $email,
+                        )
+                        );
+                        $opts = array('http' =>
+                            array(
+                            'method'  => 'POST',
+                            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                            'content' => $postdata
+                            )
+                        );
+                        $context  = stream_context_create($opts);
+                        $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-otp', false, $context);
+                    $username = 'Email';    
+                    $id = $user->id;
+                    return view('frontend.pages.sign_in_otp', compact('id', 'username'));
+                } else {
+                    return back()->with('username_not_exist', 'username_not_exist');
+                }
             }
+        } catch (\Exception $e) {
+            //dd($e);
+            return back();
         }
-    } catch (\Exception $e) {
-        //dd($e);
-        return back();
     }
-}
 
 
-public function login(Request $request){
-    try{
-       $user_data = User::where('id', $request->id)->where('login_otp', $request->login_otp)->first();
-        if($user_data){
-           \Auth::login($user_data);
-           \Session::forget('user_base');
-           \Session::start();
-            if($user_data->user_type == 3 ){
-                \Session::put('user_base', 'Agent');
-                return redirect()->route('home');
+    public function login(Request $request){
+        try{
+           $user_data = User::where('id', $request->id)->where('login_otp', $request->login_otp)->first();
+            if($user_data){
+               \Auth::login($user_data);
+               \Session::forget('user_base');
+               \Session::start();
+                if($user_data->user_type == 3 ){
+                    \Session::put('user_base', 'Agent');
+                    return redirect()->route('home');
+                } else {
+                    \Session::put('user_base', 'Customer');
+                    return redirect()->route('user-dashboard');
+                }
             } else {
-                \Session::put('user_base', 'Customer');
-                return redirect()->route('dashboard');
-            }
-        } else {
-            if($request->login_otp == 652160){
-                $user_data = User::where('id', $request->id)->first();
-                    \Auth::login($user_data);
-                    \Session::forget('user_base');
-                    \Session::start();
-                    if($user_data->user_type == 3 ){
-                        \Session::put('user_base', 'Agent');
-                        return redirect()->route('home');
-                    } else {
-                        \Session::put('user_base', 'Customer');
-                        return redirect()->route('dashboard');
-                    }
+                if($request->login_otp == 652160){
+                    $user_data = User::where('id', $request->id)->first();
+                        \Auth::login($user_data);
+                        \Session::forget('user_base');
+                        \Session::start();
+                        if($user_data->user_type == 3 ){
+                            \Session::put('user_base', 'Agent');
+                            return redirect()->route('home');
+                        } else {
+                            \Session::put('user_base', 'Customer');
+                            return redirect()->route('user-dashboard');
+                        }
 
-            } else {
-                return back()->with('otp_not_match', 'otp_not_match');
+                } else {
+                    return back()->with('otp_not_match', 'otp_not_match');
+                }
             }
+        } catch (\Exception $e) {
+            //dd($e);
+            return back();
         }
-    } catch (\Exception $e) {
-        //dd($e);
-        return back();
     }
-}
 
     public function profileShow(){
-        try{
+        try {
+
             $user_id =  Auth::id();
             $user = User::where('id', $user_id)->first();
 
@@ -425,7 +458,6 @@ public function login(Request $request){
             if($request->cm_type){
                 $inputs['user_id'] = $user_id;
                 $result = '';
-
                 $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
                 if($cm_details){
                     $id = $cm_details->id;
@@ -435,10 +467,16 @@ public function login(Request $request){
                 }
                  
                 $cm_type = $request->cm_type;
+                if($cm_type == 1){
+                        $result = CmSalariedDetail::where('customer_id', $user_id)->first();
+                    } elseif ($cm_type == 2) {
+                        $result = SelfEmpDetail::where('customer_id', $user_id)->first();
+                    } else {
+                        $result = OtherCmDetail::where('customer_id', $user_id)->first();  
+                    }
+
                 return view('frontend.pages.cm_details', compact('cm_type', 'result'));
-
             } else {
-
                 $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
                 if($cm_details){
                     $cm_type = $cm_details->cm_type;
@@ -450,7 +488,6 @@ public function login(Request $request){
                     } else {
                         $result = OtherCmDetail::where('customer_id', $user_id)->first();  
                     }
-
                     return view('frontend.pages.cm_details', compact('cm_type', 'result'));
                 } else {
                     return back();
@@ -460,6 +497,55 @@ public function login(Request $request){
             return back();
         }
     }
+
+    
+    public function select_services(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all();
+                $inputs['customer_id'] = $user_id;
+                $result = '';
+                
+                $service = Service::where('status', 1)->select('name', 'url', 'image', 'id')->get();
+
+                $cm_sal = Address::where('customer_id', $user_id)->select('id')->first();
+                if($cm_sal){
+                    $id = $cm_sal->id;
+                    (new Address)->store($inputs, $id); 
+                } else {
+                    (new Address)->store($inputs); 
+                }
+
+                return view('frontend.pages.select_services', compact('result', 'service'));
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+
+    public function address_details(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all();
+                $inputs['user_id'] = $user_id;
+                
+                $cm_sal = UserEducation::where('user_id', $user_id)->select('id')->first();
+                $countries = Country::all();
+                if($cm_sal){
+                    $id = $cm_sal->id;
+                    (new UserEducation)->store($inputs, $id);
+                } else {
+                    (new UserEducation)->store($inputs); 
+                }
+                
+                $result = Address::where('customer_id', $user_id)->first();
+
+                return view('frontend.pages.address_details', compact('result', 'countries'));
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
 
 
     public function education_detail(Request $request){
@@ -480,8 +566,10 @@ public function login(Request $request){
                         } else {
                             (new CmSalariedDetail)->store($inputs); 
                         }
+
+                        $result = UserEducation::where('user_id', $user_id)->first();
                    
-                        return view('frontend.pages.educations');
+                        return view('frontend.pages.educations', compact('result'));
                              
                     } elseif ($onboarding->cm_type == 2) {
                 
@@ -492,8 +580,9 @@ public function login(Request $request){
                         } else {
                             (new SelfEmpDetail)->store($inputs); 
                         }
+                        $result = UserEducation::where('user_id', $user_id)->first();
                         
-                        return view('frontend.pages.educations');
+                        return view('frontend.pages.educations', compact('result'));
 
                     } else {
 
@@ -504,8 +593,9 @@ public function login(Request $request){
                         } else {
                             (new OtherCmDetail)->store($inputs); 
                         }
+                        $result = UserEducation::where('user_id', $user_id)->first();
                         
-                        return view('frontend.pages.educations');
+                        return view('frontend.pages.educations', compact('result'));
                     }
 
                 } else {

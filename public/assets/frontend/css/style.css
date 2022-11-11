@@ -1061,6 +1061,7 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 0px;
     right: 0px;
     z-index: 9999;
+    min-width: 135px;
     box-shadow: 1px 1px 10px rgb(0 0 0 / 10%);
     display: none;
 }
@@ -1321,27 +1322,114 @@ input[type=number]::-webkit-outer-spin-button {
     border: 1px solid #000;
     padding: 8px 40px;
 }
-
-
 .edu_dt h2 {
     background: url(../images/edu_icon.png); 
     background-repeat: no-repeat; 
 }
+.add_dt h2{
+    background: url(../images/address_icon.png); 
+    background-repeat: no-repeat;
+}
+.ser_dt h2{
+    background: url(../images/service_icon.png); 
+    background-repeat: no-repeat;
+    background-size: 30px;
+}
+.service-sel{
+    background: #fff;
+    box-shadow: 1px 1px 12px rgb(0 0 0 / 10%);
+    text-align: center;
+    padding: 20px 30px;
+    margin-bottom: 12px;
+}
+.service-sel img{
+    max-width: 55px;
+    margin: 0 auto;
+}
+.service-sel h5{
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 24px;
+    min-height: 48px;
+}
+.personal_details_box .blog-slider{
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
 
+.personal_details_box .blog-slider input[type="checkbox"] {
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    visibility: inherit;
+    top: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+.icn_box{
+    position: relative;
+}
+.personal_details_box .blog-slider input[type="checkbox"]:checked+label .service-sel{  
+    position: relative;
+} 
+.personal_details_box .blog-slider input[type="checkbox"]:checked+label .service-sel,
+.active_ser {
+    background: #5EB495;
+    color: #fff;
+      /*  content: '';
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+    position: absolute;*/
+/*    left: 0;
+    top: 59px;
+    right: 0;
+    margin: 0 auto;
+    background-image: url(../../../images/check_icon.png);
+    background-size: 100%;
+    background-color: transparent;
+    border: 0px;*/
+}
 
+.personal_details_box .blog-slider label:before{
+    display: none;
+}
+.personal_details_box .blog-slider label{
+    padding-left: 0px !important;
+    cursor: pointer;
+}
+.personal_details_box .blog-slider label label{
+    width: 100%;
+    height: 0px;
+    line-height: 0px;
+    font-size: 0px;
+}
+.slider_background{
+    background: url(../images/thanku_back.png);
+    padding: 100px 0;
+    text-align: center;
+}
+.thanku_sec {
+    padding: 50px 0;
+    text-align: center;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+.slider_background h2 {
+    color: #090F05;
+    font-weight: 700;
+}
+.slider_background img {
+    width: 45px;
+    margin-bottom: 15px;
+}
+.slider_background h5 span {
+    color: #FF6722;
+    font-size: 18px;
+    font-weight: 500;
+}
 
 
 

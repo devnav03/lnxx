@@ -51,7 +51,6 @@
                                     <div class="col-md-6" style="margin-top: 20px;">
                                         <div class="form-group"> 
                                             {!! Form::label('mobile', lang('Mobile'), array('class' => '')) !!}
-                                            
                                             @if(!empty($result->id))
                                                 {!! Form::number('mobile', null, array('class' => 'form-control', 'required'=> 'true')) !!}
                                             @else
@@ -64,11 +63,9 @@
                                         </div> 
                                     </div>
                                     <input type="hidden" value="{{ $result->user_type }}" name="user_type">
-
                                     <div class="col-md-6" style="margin-top: 20px;">
                                         <div class="form-group"> 
                                         {!! Form::label('date_of_birth', lang('Date of Birth'), array('class' => '')) !!}
-                                       
                                         @if($result->date_of_birth)
                                         <input type="text" value="{{ date('d M, Y', strtotime($result->date_of_birth)) }}" readonly="" class="form-control"> 
                                         @else
@@ -96,7 +93,6 @@
                                           <option value="Female">Female</option>
                                           @endif
                                         </select> -->
-                                   
                                         @if($errors->has('gender'))
                                             <span class="text-danger">{{$errors->first('gender')}}</span>
                                         @endif
@@ -678,7 +674,370 @@
                 @endif
                 @endif
                 @endif
+    
+     @if($UserEducation)
+            <div class="card custom-card">
+            <div class="card-body">
+            <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                <div class="form-title">
+                                    <h4>Education Information</h4>                        
+                                </div>
+                                <div class="form-body">
+                                   
+                             <div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Qualification</label>
+      <input name="education" class="form-control" value="{{ $UserEducation->education }}" type="text" required="true">
+      @if($errors->has('education'))
+      <span class="text-danger">{{$errors->first('education')}}</span>
+      @endif
+    </div>
+  </div>
 
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Primary School</label>
+      <input name="primary_school" class="form-control" value="{{ $UserEducation->primary_school }}" type="text" required="true">
+      @if($errors->has('primary_school'))
+      <span class="text-danger">{{$errors->first('primary_school')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">High School</label>
+      <input name="high_school" class="form-control" value="{{ $UserEducation->high_school }}" type="text">
+      @if($errors->has('high_school'))
+      <span class="text-danger">{{$errors->first('high_school')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Graduate</label>
+      <input name="graduate" class="form-control" value="{{ $UserEducation->graduate }}" type="text">
+      @if($errors->has('graduate'))
+      <span class="text-danger">{{$errors->first('graduate')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Postgraduate</label>
+      <input name="postgraduate" class="form-control" value="{{ $UserEducation->postgraduate }}" type="text">
+      @if($errors->has('postgraduate'))
+      <span class="text-danger">{{$errors->first('postgraduate')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Others</label>
+      <input name="others" class="form-control" value="{{ $UserEducation->others }}" type="text">
+      @if($errors->has('others'))
+      <span class="text-danger">{{$errors->first('others')}}</span>
+      @endif
+    </div>
+  </div>
+
+</div>
+                             
+         
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    </div> 
+                </div>
+                @endif
+
+
+        @if($address_details)
+            <div class="card custom-card">
+            <div class="card-body">
+            <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                <div class="form-title">
+                                    <h4>Address Details</h4>                        
+                                </div>
+                                <div class="form-body">
+
+    <div class="row">
+  <div class="col-md-12">
+    <label style="margin-top: 15px; font-size: 15px; font-weight: 500;">Residential Address Details</label>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Residential Address Line 1</label>
+      <input name="residential_address_line_1" class="form-control" value="{{ $address_details->residential_address_line_1 }}" type="text" required="true">
+      @if($errors->has('residential_address_line_1'))
+      <span class="text-danger">{{$errors->first('residential_address_line_1')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Residential Address Line 2</label>
+      <input name="residential_address_line_2" value="{{ $address_details->residential_address_line_2 }}" class="form-control" type="text">
+      @if($errors->has('residential_address_line_2'))
+      <span class="text-danger">{{$errors->first('residential_address_line_2')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Residential Address Line 3</label>
+      <input name="residential_address_line_3" value="{{ $address_details->residential_address_line_3 }}" class="form-control" type="text">
+      @if($errors->has('residential_address_line_3'))
+      <span class="text-danger">{{$errors->first('residential_address_line_3')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Nearest Landmark</label>
+      <input name="residential_address_nearest_landmark" value="{{ $address_details->residential_address_nearest_landmark }}" class="form-control" type="text">
+      @if($errors->has('residential_address_nearest_landmark'))
+      <span class="text-danger">{{$errors->first('residential_address_nearest_landmark')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Emirate</label>
+      <input name="residential_emirate" value="{{ $address_details->residential_emirate }}" class="form-control" type="text">
+      @if($errors->has('residential_emirate'))
+      <span class="text-danger">{{$errors->first('residential_emirate')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">PO Box No</label>
+      <input name="residential_po_box" value="{{ $address_details->residential_po_box }}" class="form-control" type="text">
+      @if($errors->has('residential_po_box'))
+      <span class="text-danger">{{$errors->first('residential_po_box')}}</span>
+      @endif
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Resdence Type</label>
+      <select name="resdence_type" class="form-control" required="true">
+        @if($address_details)
+        <option value="Shared" @if($address_details->resdence_type == 'Shared') selected @endif >Shared</option>
+        <option value="Rented" @if($address_details->resdence_type == 'Rented') selected @endif >Rented</option>
+        <option value="Owned" @if($address_details->resdence_type == 'Owned') selected @endif >Owned</option>
+        <option value="Employer Provided" @if($address_details->resdence_type == 'mployer Provided') selected @endif >Employer Provided</option>
+        <option value="Living With Parents" @if($address_details->resdence_type == 'Living With Parents') selected @endif >Living With Parents</option>
+        @else
+        <option value="Shared">Shared</option>
+        <option value="Rented">Rented</option>
+        <option value="Owned">Owned</option>
+        <option value="Employer Provided">Employer Provided</option>
+        <option value="Living With Parents">Living With Parents</option>
+        @endif
+      </select>
+      @if($errors->has('resdence_type'))
+      <span class="text-danger">{{$errors->first('resdence_type')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Annual Rent</label>
+      <input name="annual_rent" value="{{ $address_details->annual_rent }}" class="form-control" type="number">
+      @if($errors->has('annual_rent'))
+      <span class="text-danger">{{$errors->first('annual_rent')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Duration At Current Address</label>
+      <input name="duration_at_current_address" value="{{ $address_details->duration_at_current_address }}" class="form-control" type="number">
+      @if($errors->has('duration_at_current_address'))
+      <span class="text-danger">{{$errors->first('duration_at_current_address')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label style="margin-top: 15px; font-size: 15px; font-weight: 500;">Office Address</label>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Company Name</label>
+      <input name="company_name" value="{{ $address_details->company_name }}" class="form-control"  type="text">
+      @if($errors->has('company_name'))
+      <span class="text-danger">{{$errors->first('company_name')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Company Phone No</label>
+      <input name="company_phone_no" value="{{ $address_details->company_phone_no }}" class="form-control" type="text">
+      @if($errors->has('company_phone_no'))
+      <span class="text-danger">{{$errors->first('company_phone_no')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 1</label>
+      <input name="company_address_line_1" value="{{ $address_details->company_address_line_1 }}" class="form-control" type="text">
+      @if($errors->has('company_address_line_1'))
+      <span class="text-danger">{{$errors->first('company_address_line_1')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 2</label>
+      <input name="company_address_line_2" value="{{ $address_details->company_address_line_2 }}" class="form-control" type="text">
+      @if($errors->has('company_address_line_2'))
+      <span class="text-danger">{{$errors->first('company_address_line_2')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 3</label>
+      <input name="company_address_line_3" value="{{ $address_details->company_address_line_3 }}" class="form-control" type="text">
+      @if($errors->has('company_address_line_3'))
+      <span class="text-danger">{{$errors->first('company_address_line_3')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Po Box No</label>
+      <input name="company_po_box" value="{{ $address_details->company_po_box }}" class="form-control" type="text">
+      @if($errors->has('company_po_box'))
+      <span class="text-danger">{{$errors->first('company_po_box')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Emirate</label>
+      <input name="company_emirate" value="{{ $address_details->company_emirate }}" class="form-control" type="text">
+      @if($errors->has('company_emirate'))
+      <span class="text-danger">{{$errors->first('company_emirate')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label style="margin-top: 15px; font-size: 15px; font-weight: 500;">Permanent Address In Home Country</label>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 1</label>
+      <input name="permanent_address_home_country_line_1" value="{{ $address_details->permanent_address_home_country_line_1 }}" class="form-control"  type="text">
+      @if($errors->has('permanent_address_home_country_line_1'))
+      <span class="text-danger">{{$errors->first('permanent_address_home_country_line_1')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 2</label>
+      <input name="permanent_address_home_country_line_2" value="{{ $address_details->permanent_address_home_country_line_2 }}" class="form-control" type="text">
+      @if($errors->has('permanent_address_home_country_line_2'))
+      <span class="text-danger">{{$errors->first('permanent_address_home_country_line_2')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 3</label>
+      <input name="permanent_address_home_country_line_3" value="{{ $address_details->permanent_address_home_country_line_3 }}"  class="form-control" type="text">
+      @if($errors->has('permanent_address_home_country_line_3'))
+      <span class="text-danger">{{$errors->first('permanent_address_home_country_line_3')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">City</label>
+      <input name="permanent_address_city" value="{{ $address_details->permanent_address_city }}" class="form-control" type="text">
+      @if($errors->has('permanent_address_city'))
+      <span class="text-danger">{{$errors->first('permanent_address_city')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Country</label>
+      <select name="permanent_address_country" class="form-control" required="true">
+      <option value="">Select</option>
+      @foreach($countries as $country)
+        <option value="{{ $country->id }}" @if(isset($address_details->permanent_address_country)) @if($address_details->permanent_address_country == $country->id) selected  @endif @endif >{{ $country->country_name }}</option>
+      @endforeach
+    </select>
+      @if($errors->has('permanent_address_country'))
+      <span class="text-danger">{{$errors->first('permanent_address_country')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Zip/Pin Code</label>
+      <input name="permanent_address_zipcode" value="{{ $address_details->permanent_address_zipcode }}" class="form-control" type="number">
+      @if($errors->has('permanent_address_zipcode'))
+      <span class="text-danger">{{$errors->first('permanent_address_zipcode')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Tel. with IDD Code</label>
+      <input name="permanent_addresstel_with_idd_code" value="{{ $address_details->permanent_addresstel_with_idd_code }}"   class="form-control" type="text">
+      @if($errors->has('permanent_addresstel_with_idd_code'))
+      <span class="text-danger">{{$errors->first('permanent_addresstel_with_idd_code')}}</span>
+      @endif
+    </div>
+  </div>
+
+
+  
+</div>
+         
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    </div> 
+                </div>
+                @endif
 
 
 
@@ -714,6 +1073,9 @@
     background: #FF6722;
     color: #fff !important;
 }
+
+
+
 </style>
 
 @stop

@@ -17,7 +17,7 @@
                             <a class="nav-link" href="{{ route('dashboard') }}">
                                 <span class="shape1"></span>
                                 <span class="shape2"></span>
-                                <i class="ti-home sidemenu-icon menu-icon "></i>
+                                <i class="ti-home sidemenu-icon menu-icon"></i>
                                 <span class="sidemenu-label">Dashboard</span>
                             </a>
                         </li>
@@ -35,27 +35,21 @@
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
                             </ul>
                         </li>
-                     <!--    <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link with-sub" href="javascript:void(0)">
                                 <span class="shape1"></span>
                                 <span class="shape2"></span>
                                 <i class="ti-shopping-cart-full sidemenu-icon menu-icon "></i>
-                                <span class="sidemenu-label">ECommerce</span>
+                                <span class="sidemenu-label">Masters</span>
                                 <i class="angle fe fe-chevron-right"></i>
                             </a>
                             <ul class="nav-sub">
-                                <li class="side-menu-label1"><a href="javascript:void(0)">E-Commerce</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-dashboard.html">Dashboard</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-products.html">Products</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-product-details.html">Product Details</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-cart.html">Cart</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-wishlist.html">Wishlist</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-checkout.html">Checkout</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-orders.html">Orders</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-add-product.html">Add Product</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="ecommerce-account.html">Account</a></li>
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Masters</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('services.index') }}">Services</a></li>
+                            
+
                             </ul>
-                        </li> -->
+                        </li>
 
                         
                         <li class="nav-item"><a href="{{ route('logout-admin') }}" class="nav-link with-sub"> <i class="ti-power-off sidemenu-icon menu-icon "></i><span class="sidemenu-label">Log Out</span></a></li>

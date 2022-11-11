@@ -52,7 +52,7 @@
             <div class="clearfix"></div>
             <img src="{{ asset('img/logo.jpeg') }}" class="ht-100 mb-0" style="margin-top: 45px;" alt="user">
            <h5 class="mt-4 text-white"><!-- Create Your Account --></h5> 
-            <span style="color: #63cac6;" class="tx-white-6 tx-13 mb-5 mt-xl-0">Signup to create, discover and connect with the global community</span>
+            <span style="color: #63cac6;" class="tx-white-6 tx-13 mb-5 mt-xl-0">To get full user information, kindly sign in.</span>
         </div>
     </div>
     <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form ">

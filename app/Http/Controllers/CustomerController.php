@@ -11,6 +11,8 @@ use App\Models\CustomerOnboarding;
 use App\Models\OtherCmDetail;
 use App\Models\CmSalariedDetail;
 use App\Models\SelfEmpDetail;
+use App\Models\Address;
+use App\Models\UserEducation;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -20,7 +22,6 @@ class CustomerController extends Controller {
     public function index() {
       
         return view('admin.customer.index');
-   
     }
 
     public function admin_users() {
@@ -38,9 +39,7 @@ class CustomerController extends Controller {
 
     // public function create()
     // {
-
     //     return view('admin.customer.create');
-     
     // }
 
 
@@ -92,13 +91,11 @@ class CustomerController extends Controller {
     }
 
  
-    public function update(Request $request, $id = null)
-    {
+    public function update(Request $request, $id = null) {
         $result = User::find($id);
         $user_type = $result->user_type;
 
         if (!$result) {
-
             return redirect()->route('customer.index')
                 ->with('error', lang('messages.invalid_id', string_manip(lang('customer.customer'))));
         }
@@ -151,13 +148,17 @@ class CustomerController extends Controller {
        if(((\Auth::user()->user_type)) == 1){
         
         $country = Country::all();
+        $countries = Country::all();
 
         $other_cm_details = OtherCmDetail::where('customer_id', $id)->first();
         $cm_salaried_details = CmSalariedDetail::where('customer_id', $id)->first();
         $self_emp_details = SelfEmpDetail::where('customer_id', $id)->first();
         $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
 
-        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding', 'other_cm_details', 'cm_salaried_details', 'self_emp_details'));
+        $address_details = Address::where('customer_id', $id)->first();
+        $UserEducation = UserEducation::where('user_id', $id)->first();
+
+        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding', 'other_cm_details', 'cm_salaried_details', 'self_emp_details', 'UserEducation', 'address_details', 'countries'));
       } else {
         echo "404";
       }
@@ -374,7 +375,6 @@ class CustomerController extends Controller {
     // Data Entry Pagination End
 
 
-
     /**
      * code for toggle - financial year status
      * @param null $id
@@ -390,8 +390,6 @@ class CustomerController extends Controller {
         try {
             $game = User::find($id);
             //dd($game);
-
-
 
         } catch (\Exception $exception) {
             return lang('messages.invalid_id', string_manip(lang('Order')));

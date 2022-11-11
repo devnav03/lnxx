@@ -38,7 +38,7 @@
 <div class="col-md-6 pdl50">	
 <div class="con-box">
 <h4>Agent</h4>
-<p>To access services, use the option to continue as a customer.</p>
+<p>To access services, use the option to continue as a Agent.</p>
 <a class="con_btn" href="{{ route('agent-menu') }}">
 <img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">

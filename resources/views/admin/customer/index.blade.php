@@ -88,5 +88,14 @@
         </div>
     </div>
 </div>
+<style type="text/css">
+#paginate-load .fa-times{
+    color: #f00;
+}   
+#paginate-load .fa-check{
+    color: green;
+} 
+</style>
+
 @stop
 

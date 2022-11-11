@@ -10,6 +10,15 @@ use ElfSundae\Laravel\Hashid\Facades\Hashid;
 use App\Models\Contact;
 use App\Models\ForceUpdate;
 use App\Models\PreRegister;
+use App\Models\SelfEmpDetail;
+use App\Models\OtherCmDetail;
+use App\Models\UserEducation;
+use App\Models\CmSalariedDetail;
+use App\Models\CustomerOnboarding;
+use App\Models\Service;
+use App\Models\ServiceApply;
+use App\Models\Address;
+use App\Models\Country;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
 use PDF;
@@ -134,7 +143,128 @@ class UserController extends Controller
       }
     }
         
-    
+    public function service_list(Request $request){
+      try {
+            $data = Service::where('status', 1)->select('id', 'name')->get();
+            return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+          } catch(Exception $e){
+          return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
+
+    public function education_details_save(Request $request){
+      try {
+          if($request->api_key){
+            $inputs = $request->all();
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+              $inputs['user_id'] = $user->id;
+              $Details = UserEducation::where('user_id', $user->id)->select('id')->first();
+              if($Details){
+                    $id = $Details->id;
+                    (new UserEducation)->store($inputs, $id);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Education Details successfully updated']);
+              } else {
+                    (new UserEducation)->store($inputs); 
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Education Details successfully Saved']);
+              } 
+            }
+          }
+            return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+          } catch(Exception $e){
+          return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
+
+    public function address_details(Request $request){
+      try {
+          if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user) {
+              $data = Address::where('customer_id', $user->id)->first();
+              return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+            }
+          }
+      } catch(Exception $e){
+            return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
+
+    public function address_details_save(Request $request){
+        try {
+          if($request->api_key){
+            $inputs = $request->all();
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+              $inputs['customer_id'] = $user->id;
+              $Details = Address::where('customer_id', $user->id)->select('id')->first();
+              if($Details){
+                    $id = $Details->id;
+                    (new Address)->store($inputs, $id);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Address Details successfully updated']);
+              } else {
+                    (new Address)->store($inputs); 
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Address Details successfully Saved']);
+              } 
+            }
+          }
+            return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+        } catch(Exception $e){
+          return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
+
+    public function country(){
+      $data = Country::all();
+      return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+    }
+ 
+    public function select_services(Request $request){
+      try {
+          if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user) {
+                $user_id = $user->id;
+              if(isset($request->service)){
+
+                $ser_list = explode(',', $request->service);
+
+                foreach($ser_list as $service_id){
+                    $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
+                    if($apply_ser == 0) {
+                        ServiceApply::create([
+                            'service_id'  =>  $service_id,
+                            'customer_id'  => $user_id,
+                        ]);
+                    }
+                }
+                $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
+                $ser = 1300;
+                $ref_id = $ser.$result->id;
+                CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
+
+                return response()->json(['success' => true, 'status' => 200, 'ref_id' => $ref_id]);
+              }
+            }
+          }
+      } catch(Exception $e){
+            return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
+
+    public function education_details(Request $request){
+      try {
+          if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user) {
+              $data = UserEducation::where('user_id', $user->id)->select('education', 'primary_school', 'high_school', 'graduate', 'postgraduate', 'others')->first();
+                return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+            }
+          }
+      } catch(Exception $e){
+            return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
 
     public function forgot_password_otp(Request $request){
       try {
@@ -150,9 +280,7 @@ class UserController extends Controller
                 $message = "OTP not valid";
                 return apiResponseAppmsg(false, 200, $message, null, null);
               }
-
           }
-
       } catch(Exception $e){
           return apiResponse(false, 500, lang('messages.server_error'));
       }
@@ -370,15 +498,12 @@ class UserController extends Controller
                     $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-otp', false, $context);
                 $username = $request->username;;    
                 $id = $user->id;
-                
                 return response()->json(['success' => true, 'status' => 200, 'message' => 'OTP sent successfully on your registered email', 'id' => $id, 'username' => $username]);
-        
             } else {
                 $username = $request->username;
                 return response()->json(['success' => false, 'status' => 201, 'message' => 'Username not registered with us', 'username' => $username]);
             }
         }    
-        
     }
     
     public function login_otp(Request $request){
@@ -573,13 +698,10 @@ class UserController extends Controller
                 'api_key' =>  $api_key,
                  ]);
                 }
-               
-
                 if($user_data->user_type == 4){
 
                   return apiResponse(false, 200, 'You are not allow on APP');
                 } else {
-
                 $data['name'] = $user_data->name;
                 $data['email'] = $user_data->email;
                 if($user_data->profile_image){
@@ -590,18 +712,12 @@ class UserController extends Controller
                 $data['mobile'] = $user_data->mobile; 
                 $data['gender'] = $user_data->gender;  
                 $data['api_key'] = $api_key; 
-
                 return apiResponseApp(true, 200, null, null, $data);
-
                 }
-
         } else {
          //  dd($request);
           return apiResponse(false, 200, 'Invalid login credentials');
-
         }
-             
-              
     } catch(Exception $e){
             return apiResponse(false, 500, lang('messages.server_error'));
         }
@@ -613,8 +729,7 @@ class UserController extends Controller
         return md5(uniqid(rand(), true));
     }
 
-    public function emailVerifyApp($user_id)
-    {
+    public function emailVerifyApp($user_id) {
         try{
             if($user_id){
                 $de_crypt_user_id = Hashid::decode($user_id);
@@ -629,7 +744,141 @@ class UserController extends Controller
         }
     }
 
-   
+    public function show_basic_information(Request $request){
+      try {
+        if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user) {
+              $data = CustomerOnboarding::where('user_id', $user->id)->first();
+              return apiResponseApp(true, 200, null, null, $data);
+          }
+        }
+      } catch(\Exception $e){
+          return back();
+        }
+    }
+
+
+    public function save_cm_details(Request $request){
+      try {
+
+        if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user) {
+            $inputs = $request->all();
+            $user_id = $user->id;
+            $cm_type = CustomerOnboarding::where('user_id', $user->id)->select('cm_type')->first();
+            if($cm_type){
+              
+              $inputs['customer_id'] = $user->id;
+              if($cm_type->cm_type == 1){
+                
+                  $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id')->first();
+                  if($cm_sal){
+                    $id = $cm_sal->id;
+                    (new CmSalariedDetail)->store($inputs, $id);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully updated']);
+                  } else {
+                    (new CmSalariedDetail)->store($inputs); 
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully Saved']);
+                  }      
+              } elseif ($cm_type->cm_type == 2) {
+                
+                    $cm_sal = SelfEmpDetail::where('customer_id', $user_id)->select('id')->first();
+                    if($cm_sal){
+                        $id = $cm_sal->id;
+                        (new SelfEmpDetail)->store($inputs, $id); 
+                        return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully updated']);
+                    } else {
+                        (new SelfEmpDetail)->store($inputs); 
+                        return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully Saved']);
+                    }
+              } else {
+                      $cm_sal = OtherCmDetail::where('customer_id', $user_id)->select('id')->first();
+                      if($cm_sal){
+                          $id = $cm_sal->id;
+                          (new OtherCmDetail)->store($inputs, $id); 
+                          return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully updated']);
+                      } else {
+                          (new OtherCmDetail)->store($inputs); 
+                          return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully Saved']);
+                      }
+              }
+            } else {
+                  $message = "Basic information not updated";
+                  return apiResponseAppmsg(false, 201, $message, null, null);
+              }
+          }
+        }
+
+      } catch(\Exception $e){
+
+        dd($e);
+          return back();
+        }
+    }
+
+    public function show_cm_details(Request $request){
+      try {
+        if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user) {
+              $cm_type = CustomerOnboarding::where('user_id', $user->id)->select('cm_type')->first();
+              
+              if($cm_type){
+                $data = '';
+                if($cm_type->cm_type == 1){
+                    $data = CmSalariedDetail::where('customer_id', $user->id)->first();
+                } elseif ($cm_type->cm_type == 2) {
+                    $data = SelfEmpDetail::where('customer_id', $user->id)->first();
+                } else {
+                    $data = OtherCmDetail::where('customer_id', $user->id)->first();
+                }
+
+                // return apiResponseApp(true, 200, null, null, $data);
+                return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+
+              } else {
+
+                  $message = "Basic information not updated";
+                  return apiResponseAppmsg(false, 201, $message, null, null);
+              }
+          }
+        }
+      } catch(\Exception $e){
+          return back();
+        }
+    }
+
+
+    public function basic_information(Request $request){
+      try {
+        if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user) {
+              $user_id = $user->id;
+              $inputs = $request->all(); 
+              $inputs['user_id'] = $user_id;
+
+              $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
+              if($cm_details){
+                  $id = $cm_details->id;
+                  (new CustomerOnboarding)->store($inputs, $id); 
+                  $message = "Basic information details successfully updated";
+                  return apiResponseAppmsg(true, 200, $message, null, null);
+
+              } else {
+                  (new CustomerOnboarding)->store($inputs); 
+                  $message = "Basic information details successfully created";
+                  return apiResponseAppmsg(true, 200, $message, null, null);
+              }
+            }
+        }
+
+      } catch(Exception $e){
+             return apiResponse(false, 500, lang('messages.server_error'));
+          }
+    }
 
     public function logout(Request $request){
        try{
