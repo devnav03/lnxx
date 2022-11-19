@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 @section('content')
 
-<section class="sign_up">
+<section class="sign_up upload_emr">
 <div class="container">
 <div class="row">
 <div class="col-md-8 mx-auto">
@@ -57,8 +57,6 @@
 </div>
 </div>
 </li>
-
-
 </ul>
 
 
@@ -66,21 +64,29 @@
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
 <h3>Sign Up</h3>
-<p>Please enter your correct information.</p>
-<form action="{{ route('email-otp') }}" method="post">
+<p>Please upload your emirates id.</p>
+<form action="{{ route('upload-profile-image') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}	
-<div class="form-group mob_input">
-	<input type="email" class="form-control" required="true" placeholder="Enter email id" name="email">
-	<img src="{!! asset('assets/frontend/images/email.png')  !!}" alt="logo" class="input-img">
-	<div class="valid_no">Enter your valid email id</div>
-	<input type="hidden" name="mobile" value="{{ $mobile }}">
-	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 
-	@if($errors->has('email'))
-       <span class="text-danger">{{$errors->first('email')}}</span>
+<label style="font-size: 14px;">Upload Emirates id front side</label>
+<div class="form-group emirates_front">
+	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" required="true" id="imgInp" name="emirates_id_front">
+	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah" class="img-responsive">
+	@if($errors->has('emirates_id_front'))
+        <span class="text-danger">{{$errors->first('emirates_id_front')}}</span>
     @endif
 </div>
+<label style="font-size: 14px;">Upload Emirates id back side</label>
+<div class="form-group emirates_front">
+	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" required="true" id="imgInp1" name="emirates_id_back">
+	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah1" class="img-responsive">
+	@if($errors->has('emirates_id_back'))
+       <span class="text-danger">{{$errors->first('emirates_id_back')}}</span>
+    @endif
+</div>
+
 <div class="btn-box" style="text-align: center;">
-<button class="btn">Next</button>
+<button class="btn">Upload</button>
+<p style="margin-bottom: 0px;"><a href="{{ route('upload-profile-image') }}">Skip for now</a></p>
 </div>
 </form>
 

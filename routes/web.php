@@ -133,12 +133,14 @@ Route::any('select-services', [App\Http\Controllers\Frontend\HomeController::cla
 
 Route::any('thank-you', [App\Http\Controllers\Frontend\HomeController::class, 'ServiceApply'])->name('thank-you');
 
+Route::any('upload-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'upload_emirates'])->name('upload-emirates-id');
+Route::any('upload-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'upload_profile_image'])->name('upload-profile-image');
+
+Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'save_profile_image'])->name('save-profile-image');
 
 
 
 });
-
-
 
 
 Route::get('reset', function (){

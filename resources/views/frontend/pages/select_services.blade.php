@@ -7,7 +7,7 @@
 <div class="col-md-7">
 <div class="personal_details_box">
 <h2>Select Services</h2>
-<h6>You can select multiple products from the bewlo list</h6>
+<h6>You can select multiple products from the below list</h6>
 
 <form action="{{ route('thank-you') }}" method="post">
 {{ csrf_field() }}  

@@ -145,7 +145,16 @@ class UserController extends Controller
         
     public function service_list(Request $request){
       try {
-            $data = Service::where('status', 1)->select('id', 'name')->get();
+            $services = Service::where('status', 1)->select('id', 'name', 'image')->get();
+            $base = route('get-started');
+            $data = [];
+            foreach ($services as $service) {
+              $slide['id'] = $service->id;
+              $slide['name'] = $service->name;
+              $slide['image'] = $base.$service->image;
+              $data[] = $slide;
+            } 
+
             return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
           } catch(Exception $e){
           return apiResponse(false, 500, lang('messages.server_error'));

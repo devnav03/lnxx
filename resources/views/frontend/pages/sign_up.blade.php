@@ -71,9 +71,9 @@
 <form action="{{ route('register-email') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">
-	<input type="number" class="form-control" required="true" placeholder="Enter Mobile number" name="mobile">
+	<input type="number" class="form-control" required="true" placeholder="Enter mobile number" name="mobile">
 	<img src="{!! asset('assets/frontend/images/mobile_register.png')  !!}" alt="logo" class="input-img">
-	<div class="valid_no">Enter your 10-digit mobile number</div>
+	<div class="valid_no" style="color: #f00;">Enter your 7-digit mobile number</div>
 	@if($errors->has('mobile'))
        <span class="text-danger">{{$errors->first('mobile')}}</span>
     @endif

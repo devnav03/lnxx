@@ -74,13 +74,13 @@
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
-    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp')
+    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image')
         @include('frontend.layouts.header_main')
     @endif    
     @endif
         <!-- Main Content -->
         @yield('content')
-        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp')
+        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image')
         @include('frontend.layouts.footer') 
         @endif
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -328,6 +328,35 @@ imgInp.onchange = evt => {
 } 
 </script>
 @endif
+@if($route == 'upload-profile-image')
+<script type="text/javascript">
+imgInp.onchange = evt => {
+  const [file] = imgInp.files
+  if (file) {
+    blah.src = URL.createObjectURL(file)
+  }
+} 
+</script>
+@endif
+
+@if($route == 'upload-emirates-id')
+<script type="text/javascript">
+imgInp.onchange = evt => {
+  const [file] = imgInp.files
+  if (file) {
+    blah.src = URL.createObjectURL(file)
+  }
+} 
+</script>
+<script type="text/javascript">
+imgInp1.onchange = evt => {
+  const [file] = imgInp1.files
+  if (file) {
+    blah1.src = URL.createObjectURL(file)
+  }
+} 
+</script>
+@endif
 <script type="text/javascript">
 function yesnoCheckEmployer(that) {
     if (that.value == "2") {
@@ -369,7 +398,7 @@ $('input[name=otp_code]').on('keyup' , function() {
                 } else{
                     $(".not_verify").html('');
                     $(".otp_lab").html('');
-                    $(".otp_verify").html('OTP Verify');
+                    $(".otp_verify").html('OTP verify');
                     $(".errors_otp").html('');
                     $(".otp_email").html('');
                 }
@@ -400,7 +429,7 @@ $('input[name=login_otp]').on('keyup' , function() {
                 } else{
                     $(".not_verify").html('');
                     $(".otp_lab").html('');
-                    $(".otp_verify").html('OTP Verify');
+                    $(".otp_verify").html('OTP verify');
                     $(".errors_otp").html('');
                     $(".otp_email").html('');
                 }
@@ -433,7 +462,7 @@ $('input[name=mobile]').on('keyup' , function() {
             }
         });
     } else {
-        $(".valid_no").html('Enter a valid mobile no');
+        $(".valid_no").html('Enter a valid mobile number');
         $(".otp").val('');
         $(".already_exist").html('');
         $(".otp_sent").html('');
@@ -476,7 +505,7 @@ $('input[name=otp]').on('keyup' , function() {
                 } else{
                     $(".not_verify").html('');
                     $(".otp_lab").html('');
-                    $(".otp_verify").html('OTP Verify');
+                    $(".otp_verify").html('OTP verify');
                     $(".errors_otp").html('');
                 }
             }

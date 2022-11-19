@@ -33,6 +33,7 @@
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
 </a>
 </div>
+
 </div>
 
 <div class="col-md-6 pdl50">	
@@ -169,25 +170,25 @@
 <p>We collaborate with the biggest and best names in banking and<br> finance to bring you relevant items at competitive prices.</p>
 <div class="row">
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo1.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo2.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo3.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo4.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo5.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo6.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
+<a href="#"><img src="{!! asset('assets/frontend/images/logo7.jpg')  !!}" class="img-responsive"></a>
 </div>
 <div class="col-md-2">
 <a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
@@ -223,18 +224,51 @@
 </div>
 </section> -->
 
-<section class="testimonials">
-<div class="container">	
+<section class="testimonials" style="border-top: 1px solid; margin-top: 75px;">
+<div class="container"> 
 <h2>Testimonial</h2>
 <div class="testimonials-slider owl-theme owl-carousel">
 <div class="item">
 <div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center">	
-<h4>Customer Name</h4>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nisi quisque leo mi nibh. Fermentum turpis id nullam arcu, massa dignissim dis felis, dictum. Tristique sagittis lobortis neque iaculis pellentesque sagittis, pellentesque amet a. At aliquet vel nibh id gravida natoque tempor. Eget tristique sem nunc, velit magna sed. Pellentesque tellus tortor massa sem elit.</p>
+<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
+<h4>A happy Lnxx customer</h4>
+<p>Lnxx helped me consolidate all my outstanding balances in a single loan at the right interest rate. I want to thank Lnxx for making my finances more manageable as well as more affordable.</p>
 </div>
 </div>
+
+<div class="item">
+<div class="testimonials-slide">
+<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
+<h4>A Lnxx repeat customer from Dubai</h4>
+<p>I have been a Lnxx customer for over 2 years now. Both my credit cards and my personal loan have been so ably facilitated by Lnxx that now I love referring my friends to them for seeking help with their financial needs!</p>
 </div>
+</div>
+
+<div class="item">
+<div class="testimonials-slide">
+<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
+<h4>Lnxx customer in Abu Dhabi</h4>
+<p>The services provided by Lnxx were very useful in helping me make the right choice of credit card to best suit my needs!</p>
+</div>
+</div>
+
+<div class="item">
+<div class="testimonials-slide">
+<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
+<h4>A satisfied Lnxx customer</h4>
+<p>I was very impressed by the Lnxx representative’s knowledge of the various credit cards available in the market. It was a pleasure that unlike other sales companies, she did not push me unnecessarily and yet provided me with all the information required for me to make a good decision!</p>
+</div>
+</div>
+
+<div class="item">
+<div class="testimonials-slide">
+<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
+<h4>Lnxx customer in Sharjah</h4>
+<p>The representative from Lnxx was not only very professional but also made the documentation and process for my loan extremely simple!</p>
+</div>
+</div>
+
+
 </div>
 </section>
 

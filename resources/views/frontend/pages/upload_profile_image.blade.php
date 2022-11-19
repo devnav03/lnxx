@@ -57,8 +57,6 @@
 </div>
 </div>
 </li>
-
-
 </ul>
 
 
@@ -66,21 +64,21 @@
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
 <h3>Sign Up</h3>
-<p>Please enter your correct information.</p>
-<form action="{{ route('email-otp') }}" method="post">
+<p>Please upload your profile image.</p>
+<form action="{{ route('save-profile-image') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}	
-<div class="form-group mob_input">
-	<input type="email" class="form-control" required="true" placeholder="Enter email id" name="email">
-	<img src="{!! asset('assets/frontend/images/email.png')  !!}" alt="logo" class="input-img">
-	<div class="valid_no">Enter your valid email id</div>
-	<input type="hidden" name="mobile" value="{{ $mobile }}">
-	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 
-	@if($errors->has('email'))
-       <span class="text-danger">{{$errors->first('email')}}</span>
+<label style="font-size: 14px;">Upload your photo</label>
+<div class="form-group emirates_front">
+	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" required="true" id="imgInp" name="profile_image">
+	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah" class="img-responsive">
+	@if($errors->has('profile_image'))
+        <span class="text-danger">{{$errors->first('profile_image')}}</span>
     @endif
 </div>
+
 <div class="btn-box" style="text-align: center;">
-<button class="btn">Next</button>
+<button class="btn">Upload</button>
+<p style="margin-bottom: 0px;"><a href="{{ route('user-dashboard') }}">Skip for now</a></p>
 </div>
 </form>
 

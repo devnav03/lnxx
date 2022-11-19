@@ -28,7 +28,10 @@ class HomeController extends Controller {
 
     public function home(){
         try{
-            return view('frontend.pages.home');
+
+            $services = Service::where('status', 1)->select('id', 'name', 'url', 'image')->get(); 
+            return view('frontend.pages.home', compact('services'));
+            
         } catch (Exception $exception) {
             return back();
         }
@@ -298,12 +301,23 @@ public function enter_name(Request $request){
                     $user->save();
                     $user_data = User::where('email', $request->email)->first();
                     \Auth::login($user_data);
-                    return redirect()->route('home');
+                    return redirect()->route('upload-emirates-id');
                 }
         } catch (\Exception $e) {
            // dd($e);
             return back();
         }
+    }
+
+    public function upload_emirates(Request $request){
+        try {
+
+            return view('frontend.pages.upload_emirates_id');
+
+        } catch (Exception $e) {
+            return back();
+        }
+
     }
 
     public function ServiceApply(Request $request){
@@ -603,6 +617,90 @@ public function enter_name(Request $request){
                 }
 
          } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function upload_profile_image(Request $request){
+        try{
+         
+                $user_id =  Auth::id();
+                $inputs = $request->all(); 
+                $user = User::where('id', $user_id)->select('emirates_id_back', 'emirates_id', 'profile_image')->first();
+                if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('emirates_id_front')) {
+                        $file = $request->file('emirates_id_front') ;
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/emirates_id/' ;
+                        $file->move($destinationPath, $fileName);
+                    }
+                    $fname ='/uploads/emirates_id/';
+                    $emirates_id_front = $fname.$fileName;
+                } else {
+                    $emirates_id_front = $user->emirates_id;
+                }
+
+                if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('emirates_id_back')) {
+                        $file = $request->file('emirates_id_back') ;
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/emirates_id/' ;
+                        $file->move($destinationPath, $fileName);
+                    }
+                    $fname ='/uploads/emirates_id/';
+                    $emirates_id_back = $fname.$fileName;
+                } else {
+                    $emirates_id_back = $user->emirates_id;
+                }
+
+                User::where('id', $user_id)
+                ->update([
+                    'emirates_id' =>  $emirates_id_front,
+                    'emirates_id_back' =>  $emirates_id_back,
+                ]);
+
+            return view('frontend.pages.upload_profile_image', compact('user')); 
+
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function save_profile_image(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all(); 
+                $user = User::where('id', $user_id)->select('profile_image')->first();
+                if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('profile_image')) {
+                        $file = $request->file('profile_image') ;
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/user_images/' ;
+                        $file->move($destinationPath, $fileName);
+                    }
+                    $fname ='/uploads/user_images/';
+                    $profile_image = $fname.$fileName;
+                } else {
+                    $profile_image = $user->profile_image;
+                }
+
+                User::where('id', $user_id)
+                ->update([
+                    'profile_image' => $profile_image,
+                ]);
+
+                return redirect()->route('user-dashboard');
+
+        } catch (Exception $e) {
             return back();
         }
     }

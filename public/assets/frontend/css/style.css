@@ -1431,6 +1431,70 @@ input[type=number]::-webkit-outer-spin-button {
     font-weight: 500;
 }
 
+@media(max-width: 767px){
+.container {
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+}
+header.header .col-md-6,
+header.header .col-md-5 {
+    display: none;
+}
+
+
+}
+
+.emirates_front{
+    position: relative;
+}
+.emirates_front input{
+    position: absolute;
+    width: 100%;
+    cursor: pointer;
+    height: 100%;
+    opacity: 0;
+}
+.emirates_front img {
+    max-width: 340px;
+}
+.sign_up.upload_emr .col-md-8 {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+.testimonials .owl-prev{
+    left: -20px;
+    top: 45%;
+}
+.testimonials .owl-next{
+    right: -20px;
+    top: 45%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

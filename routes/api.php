@@ -34,10 +34,10 @@ Route::any('v1/save-cm-details', ['as' => 'save-cm-details','uses' => 'App\Http\
 Route::any('v1/service-list', ['as' => 'service-list','uses' => 'App\Http\Controllers\API\V1\UserController@service_list']);
 Route::any('v1/education-details', ['as' => 'education-details','uses' => 'App\Http\Controllers\API\V1\UserController@education_details']);
 Route::any('v1/education-details-save', ['as' => 'education-details-save','uses' => 'App\Http\Controllers\API\V1\UserController@education_details_save']);
-Route::any('v1/address-details', ['as' => 'address-details','uses' => 'App\Http\Controllers\API\V1\UserController@address_details']);
+Route::any('v1/address-detail', ['as' => 'address-detail','uses' => 'App\Http\Controllers\API\V1\UserController@address_details']);
 Route::any('v1/address-details-save', ['as' => 'address-details-save','uses' => 'App\Http\Controllers\API\V1\UserController@address_details_save']);
 
-Route::any('v1/select-services', ['as' => 'select-services','uses' => 'App\Http\Controllers\API\V1\UserController@select_services']);
+Route::any('v1/select-service', ['as' => 'select-service','uses' => 'App\Http\Controllers\API\V1\UserController@select_services']);
 
 Route::any('v1/country', ['as' => 'country','uses' => 'App\Http\Controllers\API\V1\UserController@country']);
 
