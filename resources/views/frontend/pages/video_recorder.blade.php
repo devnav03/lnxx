@@ -27,7 +27,7 @@
 
   </div>
   <div class="col-md-12 text-center">
-    <a href="{{ route('product-requested') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+    <a href="{{ route('consent-approval') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <!-- <button type="submit">Proceed</button>  -->
     <span onclick="SwitchButtons('download');"  id="download" class="upload_btn" style="display:none;">Upload</span>
     

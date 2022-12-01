@@ -13,19 +13,6 @@
 {{ csrf_field() }}  
 
 <div class="row">  
-<!-- <div class="col-md-12">
-@if($result)
-<h6 id="salaried" class="cm_type @if($result->cm_type == 1) active @endif">Salaried</h6>
-<h6 id="self_employed" class="cm_type @if($result->cm_type == 2) active @endif">Self Employed</h6>
-<h6 id="other_employed"  class="cm_type @if($result->cm_type == 3) active @endif">Other</h6>
-<input type="hidden" id="cm_type" name="cm_type" value="{{ $result->cm_type }}">
-@else
-<h6 id="salaried" class="cm_type active">Salaried</h6>
-<h6 id="self_employed" class="cm_type">Self Employed</h6>
-<h6 id="other_employed"  class="cm_type">Other</h6>
-<input type="hidden" id="cm_type" name="cm_type" value="1">
-@endif
-</div> -->
 
 <div class="col-md-12">
 <label>Name As Per Passport</label>
@@ -101,7 +88,13 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Nationality*</label>
-      <input name="nationality" class="form-control" required="true" @if($result) value="{{ $result->nationality }}" @else value="{{ old('nationality') }}" @endif type="text">
+      <select name="nationality" class="form-control" required="true">
+        <option value="">select</option>
+        @foreach($countries as $country)
+          <option value="{{ $country->id }}" @if($result) @if($result->nationality == $country->id) selected @endif @endif >{{ $country->country_name }}</option>
+        @endforeach
+      </select>
+
       @if($errors->has('nationality'))
       <span class="text-danger">{{$errors->first('nationality')}}</span>
       @endif
@@ -197,7 +190,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Official E-mail ID</label>
+      <label class="sub-label">Official mail ID</label>
       <input name="officer_email" class="form-control" @if($result) value="{{ $result->officer_email }}" @else value="{{ old('officer_email') }}" @endif type="email">
       @if($errors->has('officer_email'))
       <span class="text-danger">{{$errors->first('officer_email')}}</span>

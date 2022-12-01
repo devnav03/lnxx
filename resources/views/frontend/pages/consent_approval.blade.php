@@ -27,7 +27,7 @@
   </div>
 
   <div class="col-md-12 text-center">
-    <a href="{{ route('record-video') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+    <a href="{{ route('product-requested') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Confirm</button> 
   </div>
 </div>

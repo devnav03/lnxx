@@ -14,6 +14,7 @@ use App\Models\SelfEmpDetail;
 use App\Models\OtherCmDetail;
 use App\Models\Service;
 use App\Models\Contact;
+use App\Models\Company;
 use App\Models\Slider;
 use App\Models\SmallSlider;
 use App\Models\UserEducation;
@@ -679,6 +680,8 @@ public function enter_name(Request $request){
 
             $user_id =  Auth::id();
             $inputs = $request->all(); 
+            $company = Company::where('status', 1)->select('id', 'name')->get();
+
             if($request->first_name_as_per_passport){
                 $inputs['user_id'] = $user_id;
                 $result = '';
@@ -799,7 +802,7 @@ public function enter_name(Request $request){
                 ]);  
 
                 if($user->eid_status == 1) {
-                    return view('frontend.pages.cm_details', compact('cm_type', 'result'));
+                    return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
                 } else {
                     return redirect()->route('verify-emirates-id');
                 }
@@ -821,7 +824,7 @@ public function enter_name(Request $request){
                         $result = '';  
                     }
 
-                    return view('frontend.pages.cm_details', compact('cm_type', 'result'));
+                    return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
                 } else {
                     return redirect()->route('personal-details');
                 }
@@ -945,6 +948,8 @@ public function enter_name(Request $request){
                 $inputs = $request->all();
                 $inputs['customer_id'] = $user_id;
 
+                $banks = Bank::where('status', 1)->select('id', 'name')->get();
+
                 if($request->cm_type) {
                     $cm_type = $request->cm_type;
                     $r_type = 1;
@@ -974,7 +979,7 @@ public function enter_name(Request $request){
 
                         $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
 
-                        return view('frontend.pages.product_requested', compact('result', 'services'));
+                        return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
                              
                     } elseif ($cm_type == 2) {
                 
@@ -989,7 +994,7 @@ public function enter_name(Request $request){
 
                         $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
                         
-                        return view('frontend.pages.product_requested', compact('result', 'services'));
+                        return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
 
                     } else {
 
@@ -1004,7 +1009,7 @@ public function enter_name(Request $request){
                         $result = ProductRequest::where('user_id', $user_id)->first();
                         $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
                         
-                        return view('frontend.pages.product_requested', compact('result', 'services'));
+                        return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
                     }
 
                 } else {

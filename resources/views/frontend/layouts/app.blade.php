@@ -584,7 +584,59 @@ function closeNav() {
 }
 
 </script>
+@if($route == 'product-requested')
+<script type="text/javascript">
+$(".credit_card1_open").click(function(){
+  $(".credit_card1").show();
+  $(".credit_card1_open").hide();
+});
+$(".credit_card2_open").click(function(){
+  $(".credit_card2").show();
+  $(".credit_card2_open").hide();
+});
+$(".credit_card3_open").click(function(){
+  $(".credit_card3").show();
+  $(".credit_card3_open").hide();
+});
+$(".loan_bus2_open").click(function(){
+  $(".bus_lon2").show();
+  $(".loan_bus2_open").hide();
+});
+$(".loan_bus3_open").click(function(){
+  $(".bus_lon3").show();
+  $(".loan_bus3_open").hide();
+});
+$(".loan_bus4_open").click(function(){
+  $(".bus_lon4").show();
+  $(".loan_bus4_open").hide();
+});
+$(".loan_busin2_open").click(function(){
+  $(".loan_busin2").show();
+  $(".loan_busin2_open").hide();
+});
+$(".loan_busin3_open").click(function(){
+  $(".loan_busin3").show();
+  $(".loan_busin3_open").hide();
+});
+$(".loan_busin4_open").click(function(){
+  $(".loan_busin4").show();
+  $(".loan_busin4_open").hide();
+});
+$(".mortgage_loan2_open").click(function(){
+  $(".mortgage_loan2").show();
+  $(".mortgage_loan2_open").hide();
+});
+$(".mortgage_loan3_open").click(function(){
+  $(".mortgage_loan3").show();
+  $(".mortgage_loan3_open").hide();
+});
+$(".mortgage_loan4_open").click(function(){
+  $(".mortgage_loan4").show();
+  $(".mortgage_loan4_open").hide();
+});
 
+</script>
+@endif
 @if($route == 'record-video')
 <script type="text/javascript">
 jQuery(function(){

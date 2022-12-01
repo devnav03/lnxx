@@ -1695,7 +1695,12 @@ footer ul.footer-menu li {
     font-size: 18px;
     font-weight: 500;
 }
-
+.add_more_btn{
+    color: #f00 !important;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 
 

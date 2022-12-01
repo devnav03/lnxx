@@ -27,7 +27,14 @@
   <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;"  @endif>
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
-      <input name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif  id="company_name" class="form-control" @if($result) value="{{ $result->company_name }}" @else value="{{ old('company_name') }}" @endif type="text">
+      <select name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true" @endif id="company_name" class="form-control">
+          <option value="">select</option>
+          @foreach($company as $comp)
+           <option @if($result) @if($comp->id ==  $result->company_name) selected @endif @endif value="{{ $comp->id }}">{{ $comp->name }}</option>
+          @endforeach
+      </select>
+    <!--   <input name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif  id="company_name" class="form-control" @if($result) value="{{ $result->company_name }}" @else value="{{ old('company_name') }}" @endif type="text"> -->
+
       @if($errors->has('company_name'))
       <span class="text-danger">{{$errors->first('company_name')}}</span>
       @endif
@@ -145,7 +152,17 @@
   <div class="col-md-6 self_employed_type" @if($cm_type != 2) style="display: none;" @endif>
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
-      <input name="self_company_name" class="form-control" id="company_name_sec"  @if($result) value="{{ $result->self_company_name }}" @else value="{{ old('self_company_name') }}" @endif @if($cm_type == 2) required="true"  @endif type="text">
+
+      <select name="self_company_name" @if($cm_type == 2) required="true" @endif id="company_name_sec" class="form-control">
+          <option value="">select</option>
+          @foreach($company as $company)
+           <option @if($result) @if($company->id ==  $result->self_company_name) selected @endif @endif value="{{ $company->id }}">{{ $company->name }}</option>
+          @endforeach
+      </select>
+
+  <!--     <input name="self_company_name" class="form-control" id="company_name_sec"  @if($result) value="{{ $result->self_company_name }}" @else value="{{ old('self_company_name') }}" @endif @if($cm_type == 2) required="true"  @endif type="text"> -->
+
+
       @if($errors->has('self_company_name'))
       <span class="text-danger">{{$errors->first('self_company_name')}}</span>
       @endif

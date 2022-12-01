@@ -233,30 +233,17 @@
                                 </div>
 
                                 <div class="row">
-<!--     <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Embossing Name</label>
-      <input name="embossing_name" class="form-control" value="{{ $customer_onboarding->embossing_name }}" type="text" required="true">
-          </div>
-    </div> -->
 
-<!--     <div class="col-md-6">
-    <label class="sub-label">Country</label>
-    <select name="nationality" class="form-control" required="true">
-        <option value="">Select</option>
-        @foreach($country as $country)       
-            <option value="{{ $country->id }}" @if($country->id == $customer_onboarding->nationality) selected @endif >{{ $country->country_name }}</option>
-        @endforeach     
-    </select>
-    </div> -->
- <!--  <div class="col-md-12">
-    <label style="margin-top: 15px;font-size: 15px;font-weight: 500;">Passport Details</label>
-  </div> -->
   
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Nationality*</label>
-            <input name="nationality" class="form-control" value="{{ $customer_onboarding->nationality }}" type="text" required="true">
+            <select name="nationality" class="form-control" required="true">
+            @foreach($country as $country)       
+            <option value="{{ $country->id }}" @if($country->id == $customer_onboarding->nationality) selected @endif >{{ $country->country_name }}</option>
+            @endforeach  
+            </select>
+           <!--  <input name="nationality" class="form-control" value="{{ $customer_onboarding->nationality }}" type="text" required="true"> -->
         </div>
     </div>
 
@@ -304,7 +291,7 @@
 
     <div class="col-md-6">
         <div class="form-group">
-            <label class="sub-label">Officer E-mail ID</label>
+            <label class="sub-label">Official mail ID</label>
             <input name="officer_email" class="form-control" value="{{ $customer_onboarding->officer_email }}" type="text">
         </div>
     </div>
@@ -346,7 +333,14 @@
                     <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
-      <input name="company_name" class="form-control" value="{{ $cm_salaried_details->company_name }}" type="text" required="true">
+
+      <!-- <input name="company_name" class="form-control" value="{{ $cm_salaried_details->company_name }}" type="text" required="true"> -->
+      <select name="company_name" class="form-control" required="true">
+        @foreach($company as $com)
+        <option value="{{ $com->id }}" @if($cm_salaried_details->company_name == $com->id) selected @endif >{{ $com->name }}</option> 
+        @endforeach
+      </select>
+
       @if($errors->has('company_name'))
       <span class="text-danger">{{$errors->first('company_name')}}</span>
       @endif
@@ -383,10 +377,6 @@
       @endif
     </div>
   </div>
-
-
-
-
 
 <!--   <div class="col-md-6">
     <div class="form-group">
@@ -458,7 +448,12 @@
 <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
-      <input name="self_company_name" class="form-control" required="true" value="{{ $self_emp_details->self_company_name }}" type="text">
+      <!-- <input name="self_company_name" class="form-control" required="true" value="{{ $self_emp_details->self_company_name }}" type="text"> -->
+       <select name="self_company_name" class="form-control" required="true">
+        @foreach($company as $comp)
+        <option value="{{ $comp->id }}" @if($self_emp_details->self_company_name == $comp->id) selected @endif >{{ $comp->name }}</option> 
+        @endforeach
+      </select>
       @if($errors->has('self_company_name'))
       <span class="text-danger">{{$errors->first('self_company_name')}}</span>
       @endif
@@ -988,15 +983,13 @@
             <div class="card custom-card">
             <div class="card-body">
             <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
-                    <div class="forms">
-                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
-                                <div class="form-title">
-                                    <h4>Type Of Product Requested</h4>                        
-                                </div>
-                                <div class="form-body">   
-                             <div class="row">
-
-
+                <div class="forms">
+                <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                <div class="form-title">
+                    <h4>Type Of Product Requested</h4>                        
+                </div>
+                <div class="form-body">   
+                <div class="row">
                 @if(in_array(3,  $sel_services))
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Credit Card</label>
@@ -1025,7 +1018,12 @@
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Bank Name</label>
-                      <input name="credit_bank_name" class="form-control" value="{{ $product_requested->credit_bank_name }}" type="text" required="true">
+                      <select name="credit_bank_name" class="form-control">
+                            @foreach($banks as $bank)
+                                <option value="$bank->id" @if($bank->id == $product_requested->credit_bank_name ) selected @endif>{{ $bank->name }}</option>
+                            @endforeach
+                      </select>
+
                       @if($errors->has('credit_bank_name'))
                       <span class="text-danger">{{$errors->first('credit_bank_name')}}</span>
                       @endif
@@ -1040,6 +1038,112 @@
                       @endif
                     </div>
                 </div>
+
+                @if($product_requested->credit_bank_name2)
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Details of Cards</label>
+                      <input name="details_of_cards2" class="form-control" value="{{ $product_requested->details_of_cards2 }}" type="text" required="true">
+                      @if($errors->has('details_of_cards2'))
+                      <span class="text-danger">{{$errors->first('details_of_cards2')}}</span>
+                      @endif
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Bank Name</label>
+                      <select name="credit_bank_name2" class="form-control">
+                            @foreach($banks as $bank)
+                                <option value="$bank->id" @if($bank->id == $product_requested->credit_bank_name2 ) selected @endif>{{ $bank->name }}</option>
+                            @endforeach
+                      </select>
+                      @if($errors->has('credit_bank_name2'))
+                      <span class="text-danger">{{$errors->first('credit_bank_name2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Card Limit</label>
+                      <input name="card_limit2" class="form-control" value="{{ $product_requested->card_limit2 }}" type="text" required="true">
+                      @if($errors->has('card_limit2'))
+                      <span class="text-danger">{{$errors->first('card_limit2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+                @if($product_requested->credit_bank_name3)
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Details of Cards</label>
+                      <input name="details_of_cards3" class="form-control" value="{{ $product_requested->details_of_cards3 }}" type="text" required="true">
+                      @if($errors->has('details_of_cards3'))
+                      <span class="text-danger">{{$errors->first('details_of_cards3')}}</span>
+                      @endif
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Bank Name</label>
+                      <select name="credit_bank_name3" class="form-control">
+                            @foreach($banks as $bank)
+                                <option value="$bank->id" @if($bank->id == $product_requested->credit_bank_name3 ) selected @endif>{{ $bank->name }}</option>
+                            @endforeach
+                      </select>
+                      @if($errors->has('credit_bank_name3'))
+                      <span class="text-danger">{{$errors->first('credit_bank_name3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Card Limit</label>
+                      <input name="card_limit3" class="form-control" value="{{ $product_requested->card_limit3 }}" type="text" required="true">
+                      @if($errors->has('card_limit3'))
+                      <span class="text-danger">{{$errors->first('card_limit3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+                @if($product_requested->credit_bank_name4)
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Details of Cards</label>
+                      <input name="details_of_cards4" class="form-control" value="{{ $product_requested->details_of_cards4 }}" type="text" required="true">
+                      @if($errors->has('details_of_cards4'))
+                      <span class="text-danger">{{$errors->first('details_of_cards4')}}</span>
+                      @endif
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Bank Name</label>
+                      <select name="credit_bank_name4" class="form-control">
+                            @foreach($banks as $bank)
+                                <option value="$bank->id" @if($bank->id == $product_requested->credit_bank_name4 ) selected @endif>{{ $bank->name }}</option>
+                            @endforeach
+                      </select>
+                      @if($errors->has('credit_bank_name4'))
+                      <span class="text-danger">{{$errors->first('credit_bank_name4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Card Limit</label>
+                      <input name="card_limit4" class="form-control" value="{{ $product_requested->card_limit4 }}" type="text" required="true">
+                      @if($errors->has('card_limit4'))
+                      <span class="text-danger">{{$errors->first('card_limit4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
                 @endif
 
                 @if(in_array(1,  $sel_services))
@@ -1058,10 +1162,16 @@
                 <div class="col-md-12">                            
                     <label style="font-size: 15px; margin-top: 0px;">Details of Existing Loans</label>
                 </div>
+
+
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Bank Name</label>
-                      <input name="loan_bank_name" class="form-control" value="{{ $product_requested->loan_bank_name }}" type="text">
+                      <select name="loan_bank_name" class="form-control">
+                            @foreach($banks as $bank)
+                                <option value="$bank->id" @if($bank->id == $product_requested->loan_bank_name ) selected @endif>{{ $bank->name }}</option>
+                            @endforeach
+                      </select>
                       @if($errors->has('loan_bank_name'))
                       <span class="text-danger">{{$errors->first('loan_bank_name')}}</span>
                       @endif
@@ -1076,12 +1186,130 @@
                       @endif
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="loan_emi" class="form-control" value="{{ $product_requested->loan_emi }}" type="text">
+                      @if($errors->has('loan_emi'))
+                      <span class="text-danger">{{$errors->first('loan_emi')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                @if($product_requested->loan_bank_name2)
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Bank Name</label>
+                          <select name="loan_bank_name2" class="form-control">
+                                @foreach($banks as $bank)
+                                    <option value="$bank->id" @if($bank->id == $product_requested->loan_bank_name2) selected @endif>{{ $bank->name }}</option>
+                                @endforeach
+                          </select>
+                          @if($errors->has('loan_bank_name2'))
+                          <span class="text-danger">{{$errors->first('loan_bank_name2')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Original Loan amount</label>
+                          <input name="original_loan_amount2" class="form-control" value="{{ $product_requested->original_loan_amount2 }}" type="text">
+                          @if($errors->has('original_loan_amount2'))
+                          <span class="text-danger">{{$errors->first('original_loan_amount2')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">EMI</label>
+                          <input name="loan_emi2" class="form-control" value="{{ $product_requested->loan_emi2 }}" type="text">
+                          @if($errors->has('loan_emi2'))
+                          <span class="text-danger">{{$errors->first('loan_emi2')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                @endif
+
+                @if($product_requested->loan_bank_name3)
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Bank Name</label>
+                          <select name="loan_bank_name3" class="form-control">
+                                @foreach($banks as $bank)
+                                    <option value="$bank->id" @if($bank->id == $product_requested->loan_bank_name3) selected @endif>{{ $bank->name }}</option>
+                                @endforeach
+                          </select>
+                          @if($errors->has('loan_bank_name3'))
+                          <span class="text-danger">{{$errors->first('loan_bank_name3')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Original Loan amount</label>
+                          <input name="original_loan_amount3" class="form-control" value="{{ $product_requested->original_loan_amount3 }}" type="text">
+                          @if($errors->has('original_loan_amount3'))
+                          <span class="text-danger">{{$errors->first('original_loan_amount3')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">EMI</label>
+                          <input name="loan_emi3" class="form-control" value="{{ $product_requested->loan_emi3 }}" type="text">
+                          @if($errors->has('loan_emi3'))
+                          <span class="text-danger">{{$errors->first('loan_emi3')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                @endif
+
+                @if($product_requested->loan_bank_name4)
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                        <label class="sub-label">Bank Name</label>
+                          <select name="loan_bank_name4" class="form-control">
+                                @foreach($banks as $bank)
+                                    <option value="$bank->id" @if($bank->id == $product_requested->loan_bank_name4) selected @endif>{{ $bank->name }}</option>
+                                @endforeach
+                          </select>
+                          @if($errors->has('loan_bank_name4'))
+                          <span class="text-danger">{{$errors->first('loan_bank_name4')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Original Loan amount</label>
+                          <input name="original_loan_amount4" class="form-control" value="{{ $product_requested->original_loan_amount4 }}" type="text">
+                          @if($errors->has('original_loan_amount4'))
+                          <span class="text-danger">{{$errors->first('original_loan_amount4')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">EMI</label>
+                          <input name="loan_emi4" class="form-control" value="{{ $product_requested->loan_emi4 }}" type="text">
+                          @if($errors->has('loan_emi4'))
+                          <span class="text-danger">{{$errors->first('loan_emi4')}}</span>
+                          @endif
+                        </div>
+                    </div>
+                @endif 
+
+
                 @endif
 
                 @if(in_array(4,  $sel_services))
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Business Loan</label>
                 </div>
+
+
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Loan Amount</label>
@@ -1091,12 +1319,86 @@
                       @endif
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="business_loan_emi" class="form-control" value="{{ $product_requested->business_loan_emi }}" type="text">
+                      @if($errors->has('business_loan_emi'))
+                      <span class="text-danger">{{$errors->first('business_loan_emi')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                @if($product_requested->business_loan_amount2)
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="business_loan_amount2" class="form-control" value="{{ $product_requested->business_loan_amount2 }}" type="text">
+                      @if($errors->has('business_loan_amount2'))
+                      <span class="text-danger">{{$errors->first('business_loan_amount2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="business_loan_emi2" class="form-control" value="{{ $product_requested->business_loan_emi2 }}" type="text">
+                      @if($errors->has('business_loan_emi2'))
+                      <span class="text-danger">{{$errors->first('business_loan_emi2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+                @if($product_requested->business_loan_amount3)
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="business_loan_amount3" class="form-control" value="{{ $product_requested->business_loan_amount3 }}" type="text">
+                      @if($errors->has('business_loan_amount3'))
+                      <span class="text-danger">{{$errors->first('business_loan_amount3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="business_loan_emi3" class="form-control" value="{{ $product_requested->business_loan_emi3 }}" type="text">
+                      @if($errors->has('business_loan_emi3'))
+                      <span class="text-danger">{{$errors->first('business_loan_emi3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+                @if($product_requested->business_loan_amount4)
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="business_loan_amount4" class="form-control" value="{{ $product_requested->business_loan_amount4 }}" type="text">
+                      @if($errors->has('business_loan_amount4'))
+                      <span class="text-danger">{{$errors->first('business_loan_amount4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="business_loan_emi4" class="form-control" value="{{ $product_requested->business_loan_emi4 }}" type="text">
+                      @if($errors->has('business_loan_emi4'))
+                      <span class="text-danger">{{$errors->first('business_loan_emi4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
                 @endif
 
                 @if(in_array(5,  $sel_services))
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Mortgage Loan</label>
                 </div>
+
+
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Loan Amount</label>
@@ -1135,7 +1437,6 @@
                       @endif
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">End use of property</label>
@@ -1155,6 +1456,220 @@
                       @endif
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="mortgage_emi" class="form-control" value="{{ $product_requested->mortgage_emi }}" type="text">
+                      @if($errors->has('mortgage_emi'))
+                      <span class="text-danger">{{$errors->first('mortgage_emi')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                @if($product_requested->mortgage_loan_amount2)
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="mortgage_loan_amount2" class="form-control" value="{{ $product_requested->mortgage_loan_amount2 }}" type="text">
+                      @if($errors->has('mortgage_loan_amount2'))
+                      <span class="text-danger">{{$errors->first('mortgage_loan_amount2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Purchase price/ current market valuation</label>
+                      <input name="purchase_price2" class="form-control" value="{{ $product_requested->purchase_price2 }}" type="text">
+                      @if($errors->has('purchase_price2'))
+                      <span class="text-danger">{{$errors->first('purchase_price2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Type of loan</label>
+                      <input name="type_of_loan2" class="form-control" value="{{ $product_requested->type_of_loan2 }}" type="text">
+                      @if($errors->has('type_of_loan2'))
+                      <span class="text-danger">{{$errors->first('type_of_loan2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Term of loan</label>
+                      <input name="term_of_loan2" class="form-control" value="{{ $product_requested->term_of_loan2 }}" type="text">
+                      @if($errors->has('term_of_loan2'))
+                      <span class="text-danger">{{$errors->first('term_of_loan2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">End use of property</label>
+                      <input name="end_use_of_property2" class="form-control" value="{{ $product_requested->end_use_of_property2 }}" type="text">
+                      @if($errors->has('end_use_of_property2'))
+                      <span class="text-danger">{{$errors->first('end_use_of_property2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Interest Rate</label>
+                      <input name="interest_rate2" class="form-control" value="{{ $product_requested->interest_rate2 }}" type="text">
+                      @if($errors->has('interest_rate2'))
+                      <span class="text-danger">{{$errors->first('interest_rate2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="mortgage_emi2" class="form-control" value="{{ $product_requested->mortgage_emi2 }}" type="text">
+                      @if($errors->has('mortgage_emi2'))
+                      <span class="text-danger">{{$errors->first('mortgage_emi2')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+                @if($product_requested->mortgage_loan_amount3)
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="mortgage_loan_amount3" class="form-control" value="{{ $product_requested->mortgage_loan_amount3 }}" type="text">
+                      @if($errors->has('mortgage_loan_amount3'))
+                      <span class="text-danger">{{$errors->first('mortgage_loan_amount3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Purchase price/ current market valuation</label>
+                      <input name="purchase_price3" class="form-control" value="{{ $product_requested->purchase_price3 }}" type="text">
+                      @if($errors->has('purchase_price3'))
+                      <span class="text-danger">{{$errors->first('purchase_price3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Type of loan</label>
+                      <input name="type_of_loan3" class="form-control" value="{{ $product_requested->type_of_loan3 }}" type="text">
+                      @if($errors->has('type_of_loan3'))
+                      <span class="text-danger">{{$errors->first('type_of_loan3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Term of loan</label>
+                      <input name="term_of_loan3" class="form-control" value="{{ $product_requested->term_of_loan3 }}" type="text">
+                      @if($errors->has('term_of_loan3'))
+                      <span class="text-danger">{{$errors->first('term_of_loan3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">End use of property</label>
+                      <input name="end_use_of_property3" class="form-control" value="{{ $product_requested->end_use_of_property3 }}" type="text">
+                      @if($errors->has('end_use_of_property3'))
+                      <span class="text-danger">{{$errors->first('end_use_of_property3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Interest Rate</label>
+                      <input name="interest_rate3" class="form-control" value="{{ $product_requested->interest_rate3 }}" type="text">
+                      @if($errors->has('interest_rate3'))
+                      <span class="text-danger">{{$errors->first('interest_rate3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="mortgage_emi3" class="form-control" value="{{ $product_requested->mortgage_emi3 }}" type="text">
+                      @if($errors->has('mortgage_emi3'))
+                      <span class="text-danger">{{$errors->first('mortgage_emi3')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+
+                @if($product_requested->mortgage_loan_amount4)
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="mortgage_loan_amount4" class="form-control" value="{{ $product_requested->mortgage_loan_amount4 }}" type="text">
+                      @if($errors->has('mortgage_loan_amount4'))
+                      <span class="text-danger">{{$errors->first('mortgage_loan_amount4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Purchase price/ current market valuation</label>
+                      <input name="purchase_price4" class="form-control" value="{{ $product_requested->purchase_price4 }}" type="text">
+                      @if($errors->has('purchase_price4'))
+                      <span class="text-danger">{{$errors->first('purchase_price4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Type of loan</label>
+                      <input name="type_of_loan4" class="form-control" value="{{ $product_requested->type_of_loan4 }}" type="text">
+                      @if($errors->has('type_of_loan4'))
+                      <span class="text-danger">{{$errors->first('type_of_loan4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Term of loan</label>
+                      <input name="term_of_loan4" class="form-control" value="{{ $product_requested->term_of_loan4 }}" type="text">
+                      @if($errors->has('term_of_loan4'))
+                      <span class="text-danger">{{$errors->first('term_of_loan4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">End use of property</label>
+                      <input name="end_use_of_property4" class="form-control" value="{{ $product_requested->end_use_of_property4 }}" type="text">
+                      @if($errors->has('end_use_of_property4'))
+                      <span class="text-danger">{{$errors->first('end_use_of_property4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Interest Rate</label>
+                      <input name="interest_rate4" class="form-control" value="{{ $product_requested->interest_rate4 }}" type="text">
+                      @if($errors->has('interest_rate4'))
+                      <span class="text-danger">{{$errors->first('interest_rate4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">EMI</label>
+                      <input name="mortgage_emi4" class="form-control" value="{{ $product_requested->mortgage_emi4 }}" type="text">
+                      @if($errors->has('mortgage_emi4'))
+                      <span class="text-danger">{{$errors->first('mortgage_emi4')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+
                 @endif
             </div>
             </div>           

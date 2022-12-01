@@ -1021,7 +1021,7 @@ class UserController extends Controller
     public function show_basic_information(Request $request){
       try {
         if($request->api_key){
-          $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation')->first();
+          $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation', 'eid_number', 'eid_status')->first();
           if($user) {
               $home = route('get-started');
               $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents')->first();
@@ -1088,11 +1088,16 @@ class UserController extends Controller
               } else {
                 $data['officer_email'] = null;
               }
-              if(isset($datas->eid_number)){
-                $data['eid_number'] = $datas->eid_number;
+              if(isset($user->eid_number)){
+                $data['eid_number'] = $user->eid_number;
               } else {
                 $data['eid_number'] = null;
               }
+
+              if(isset($user->eid_status)){
+                $data['eid_status'] = $user->eid_status;
+              } 
+
               if(isset($datas->no_of_dependents)){
                 $data['no_of_dependents'] = $datas->no_of_dependents;
               } else {
@@ -1198,12 +1203,108 @@ class UserController extends Controller
       if($request->api_key){
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user) {
+
+            $credit_card_limit = '';
+
+            $details_of_cards = '';
+            $credit_bank_name = '';
+            $card_limit = '';
+
+            $details_of_cards2 = '';
+            $credit_bank_name2 = '';
+            $card_limit2 = '';
+
+            $details_of_cards3 = '';
+            $credit_bank_name3 = '';
+            $card_limit3 = '';
+
+            $details_of_cards4 = '';
+            $credit_bank_name4 = '';
+            $card_limit4 = '';
+
+            $loan_amount = '';
+
+            $loan_bank_name = '';
+            $original_loan_amount = '';
+            $loan_emi = '';
+
+            $loan_bank_name2 = '';
+            $original_loan_amount2 = '';
+            $loan_emi2 = '';
+
+            $loan_bank_name3 = '';
+            $original_loan_amount3 = '';
+            $loan_emi3 = '';
+
+            $loan_bank_name4 = '';
+            $original_loan_amount4 = '';
+            $loan_emi4 = '';
+
+            $business_loan_amount = '';
+            $business_loan_emi = '';
+
+            $business_loan_amount2 = '';
+            $business_loan_emi2 = '';
+
+            $business_loan_amount3 = '';
+            $business_loan_emi3 = '';
+
+            $business_loan_amount4 = '';
+            $business_loan_emi4 = '';
+
+            $mortgage_loan_amount = '';
+            $purchase_price = '';
+            $type_of_loan = '';
+            $term_of_loan = '';
+            $end_use_of_property = '';
+            $interest_rate = '';
+            $mortgage_emi = '';
+
+            $mortgage_loan_amount2 = '';
+            $purchase_price2 = '';
+            $type_of_loan2 = '';
+            $term_of_loan2 = '';
+            $end_use_of_property2 = '';
+            $interest_rate2 = '';
+            $mortgage_emi2 = '';
+
+            $mortgage_loan_amount3 = '';
+            $purchase_price3 = '';
+            $type_of_loan3 = '';
+            $term_of_loan3 = '';
+            $end_use_of_property3 = '';
+            $interest_rate3 = '';
+            $mortgage_emi3 = '';
+
+            $mortgage_loan_amount4 = '';
+            $purchase_price4 = '';
+            $type_of_loan4 = '';
+            $term_of_loan4 = '';
+            $end_use_of_property4 = '';
+            $interest_rate4 = '';
+            $mortgage_emi4 = '';
+
             $inputs = $request->all();
             $user_id = $user->id;
             $inputs['user_id'] = $user_id;
             $cm_sal = ProductRequest::where('user_id', $user_id)->select('id')->first();
             if($cm_sal){
                 $id = $cm_sal->id;
+
+                foreach($inputs['gallery'] as $file1){
+                                  
+
+                  ProductRequest::create([
+
+
+                      'product_image'  =>  '/uploads/product_images/'.$fileName1,
+                      'user_id' => $user_id,
+
+                  ]);
+                }
+
+
+
                 (new ProductRequest)->store($inputs, $id); 
                 $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
             $ser = 1300;

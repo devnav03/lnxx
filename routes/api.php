@@ -54,7 +54,7 @@ Route::any('v1/consent-form-status', ['as' => 'consent-form-status','uses' => 'A
 Route::any('v1/bank-list', ['as' => 'bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@bank_list']);
 Route::any('v1/company-list', ['as' => 'company-list','uses' => 'App\Http\Controllers\API\V1\UserController@company_list']);
 
-Route::any('v1/verify-emirates', ['as' => 'verify-emirates','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
+Route::any('v1/verify-emirates-id', ['as' => 'verify-emirates-id','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
 
 
 
