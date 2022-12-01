@@ -9,41 +9,37 @@ $user_base = 'Customer';
 @if($user_base == 'Customer')
 
 <section class="slider">
-<div class="main-slider owl-theme owl-carousel">    
-<div class="item">
-<img src="{!! asset('assets/frontend/images/slider_1.png')  !!}" alt="slider" class="img-responsive">
-</div>
-<div class="item">
-<img src="{!! asset('assets/frontend/images/slider_2.png')  !!}" alt="slider" class="img-responsive">
-</div>
-</div>
+	<div class="main-slider owl-theme owl-carousel">    
+        @foreach($sliders as $slider)
+		<div class="item">
+		   @if(\Auth::check()) @if($slider->link) <a href="{{ $slider->link }}"> @else <a href="#">   @endif  @else  <a href="{{ route('sign-in') }}"> @endif <img src="{!! asset($slider->image)  !!}" alt="slider" class="img-responsive"> </a>
+		</div>
+        @endforeach 
+	</div>
 </section>  
 
 <div class="logo_back">     
 <section class="product-index">
 <div class="container">
-<h2><span>Bringing you the</span> Best Products</h2>    
+<h2><span>Bringing you the</span> our Products</h2>    
 <div class="product-slider row owl-theme owl-carousel">
-
 @foreach($services as $service)
 <div class="col-md-12">
 @if(\Auth::check())
 <div class="item">
 	<h3>{{ $service->name }}</h3>
-	<img src="{!! asset($service->image) !!}" class="img-responsive">
+	<img src="{!! asset($service->blue_icon) !!}" class="img-responsive">
 </div>
 @else
 <a href="{{ route('sign-in') }}">
 <div class="item">
 	<h3>{{ $service->name }}</h3>
-	<img src="{!! asset($service->image)  !!}" class="img-responsive">
+	<img src="{!! asset($service->blue_icon)  !!}" class="img-responsive">
 </div>
 </a>
 @endif
 </div>
 @endforeach
-
-
 </div>
 </div>
 </section>
@@ -53,11 +49,11 @@ $user_base = 'Customer';
 <h2>How does <span>lnxx</span> work?</h2>
 <div class="row">
 <div class="col-md-6">
-<img src="{!! asset('assets/frontend/images/Demo_Box_pro.png')  !!}" class="img-responsive">
+<img src="{!! asset('assets/frontend/images/about_usimg.jpg')  !!}" class="img-responsive">
 </div>
 <div class="col-md-5">
-<h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+<h3>New generation digital Neobank that integrates products/services from multiple providers, improving and simplifying customer experiences based on the insights using data.</h3>
+<p>To be a leading financial services player that focuses on the needs of the resident UAE SME/Small Business and Consumer Mass Market/Mass Affluent population, including the migrant workforce, through an empowered platform that provides access to a host of financial services and related products for their best interest through an open architecture system by riding on the existing rail road provides by multiple banks, financial services institutions, ecommerce organizations, etc.<!--  both in UAE as well as through linkages with banks in respective home countries for additional products relevant to the ethnically diverse UAE population. --></p>
 @if(\Auth::check())
 <a href="{{ route('sign-in') }}">Get Started</a>
 @else
@@ -76,12 +72,12 @@ $user_base = 'Customer';
 <div class="row">
 <div class="col-md-6">
 <h2>Get the Lnxx app</h2>
-<h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
+<h3>Get control of all your loan needs anywhere, anytime</h3>
 <ul>
-<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+<li>Compare different bank policies</li>
+<li>Apply your loan application</li>
+<li>Track your loan application status on the go</li>
+<li>Download your loan with a single tap</li>
 </ul>
 <p style="margin-bottom: 4px;">Download our app from</p>
 <div class="row" style="margin-bottom: 30px;">
@@ -98,8 +94,8 @@ $user_base = 'Customer';
 <img src="{!! asset('assets/frontend/images/found_qr_code.png')  !!}" alt="scan" class="img-responsive">
 </div>
 <div class="col-md-6">
-   <h4>Scan QR to download the Lnxx app.</h4>
-   <p class="app_des">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+   <h4>Download the Lnxx mobile app.</h4>
+   <p class="app_des">Get exclusive offers & enjoy a seamless experience.</p>
 </div>
 </div>
 </div>
@@ -116,42 +112,11 @@ $user_base = 'Customer';
 <h2>Our Partners</h2>   
 <p>We collaborate with the biggest and best names in banking and<br> finance to bring you relevant items at competitive prices.</p>
 <div class="row">
+@foreach($banks as $bank)	
 <div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo1.jpg')  !!}" class="img-responsive"></a>
+<img src="{!! asset($bank->image)  !!}" class="img-responsive">
 </div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo2.jpg')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo3.jpg')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo4.jpg')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo5.jpg')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo6.jpg')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/logo7.jpg')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
-</div>
-<div class="col-md-2">
-<a href="#"><img src="{!! asset('assets/frontend/images/partners.png')  !!}" class="img-responsive"></a>
-</div>
+@endforeach
 
 </div>
 </div>
@@ -177,54 +142,23 @@ $user_base = 'Customer';
 </div>
 </div>
 </section>
+</section>
 
 
 <section class="testimonials" style="border-top: 1px solid; margin-top: 75px;">
 <div class="container"> 
-<h2>Testimonial</h2>
-<div class="testimonials-slider owl-theme owl-carousel">
-<div class="item">
-<div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
-<h4>A happy Lnxx customer</h4>
-<p>Lnxx helped me consolidate all my outstanding balances in a single loan at the right interest rate. I want to thank Lnxx for making my finances more manageable as well as more affordable.</p>
-</div>
-</div>
-
-<div class="item">
-<div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
-<h4>A Lnxx repeat customer from Dubai</h4>
-<p>I have been a Lnxx customer for over 2 years now. Both my credit cards and my personal loan have been so ably facilitated by Lnxx that now I love referring my friends to them for seeking help with their financial needs!</p>
-</div>
-</div>
-
-<div class="item">
-<div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
-<h4>Lnxx customer in Abu Dhabi</h4>
-<p>The services provided by Lnxx were very useful in helping me make the right choice of credit card to best suit my needs!</p>
-</div>
-</div>
-
-<div class="item">
-<div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
-<h4>A satisfied Lnxx customer</h4>
-<p>I was very impressed by the Lnxx representative’s knowledge of the various credit cards available in the market. It was a pleasure that unlike other sales companies, she did not push me unnecessarily and yet provided me with all the information required for me to make a good decision!</p>
-</div>
-</div>
-
-<div class="item">
-<div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
-<h4>Lnxx customer in Sharjah</h4>
-<p>The representative from Lnxx was not only very professional but also made the documentation and process for my loan extremely simple!</p>
-</div>
-</div>
-
-
-</div>
+    <h2>Testimonial</h2>
+	<div class="testimonials-slider owl-theme owl-carousel">
+		@foreach($testimonials as $testimonial)	
+			<div class="item">
+				<div class="testimonials-slide">
+					<img src="{!! asset($testimonial->image)  !!}" class="img-responsive text-center"> 
+					<h4>{{ $testimonial->title }}</h4>
+					<p>{!! $testimonial->comment !!}</p>
+				</div>
+			</div>
+		@endforeach
+	</div>
 </section>
 </div>
 
@@ -356,7 +290,7 @@ $user_base = 'Customer';
 <h2><span>Bringing you the</span> Best Products</h2>  
 <div class="row">
 <div class="col-md-6">
-<img src="{!! asset('assets/frontend/images/Demo_Box_pro.png')  !!}" class="img-responsive">
+<img src="{!! asset('assets/frontend/images/about_usimg.jpg')  !!}" class="img-responsive">
 </div>
 <div class="col-md-5">
 <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h3>
@@ -518,13 +452,15 @@ $user_base = 'Customer';
 <div class="container"> 
 <h2>Testimonial</h2>
 <div class="testimonials-slider owl-theme owl-carousel">
-<div class="item">
-<div class="testimonials-slide">
-<img src="{!! asset('assets/frontend/images/profile.png')  !!}" class="img-responsive text-center"> 
-<h4>Customer Name</h4>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nisi quisque leo mi nibh. Fermentum turpis id nullam arcu, massa dignissim dis felis, dictum. Tristique sagittis lobortis neque iaculis pellentesque sagittis, pellentesque amet a. At aliquet vel nibh id gravida natoque tempor. Eget tristique sem nunc, velit magna sed. Pellentesque tellus tortor massa sem elit.</p>
-</div>
-</div>
+@foreach($testimonials as $testimonial)	
+	<div class="item">
+		<div class="testimonials-slide">
+			<img src="{!! asset($testimonial->image)  !!}" class="img-responsive text-center"> 
+			<h4>{{ $testimonial->title }}</h4>
+			<p>{!! $testimonial->comment !!}</p>
+		</div>
+	</div>
+@endforeach
 </div>
 </div>
 </section>

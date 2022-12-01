@@ -9,7 +9,7 @@
 <h2>Address Details</h2>
 <h6>Please enter your information to check the Offer.</h6>
 
-<form action="{{ route('select-services') }}" method="post">
+<form action="{{ route('thank-you') }}" method="post">
 {{ csrf_field() }}  
 
 <div class="row">

@@ -63,7 +63,7 @@
                     {!! Form::open(['url' => 'admin/login', 'method' => 'post', 'class' => '']) !!} 
                      @include('admin.layouts.messages')
                     {{ csrf_field() }}
-                        <h5 class="text-start mb-2 mb-4">Signin to Your Account</h5>
+                        <h5 class="text-start mb-2 mb-4">Sign in to your account</h5>
                         <div class="form-group text-start">
                             <label>Email</label>
                             <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" placeholder="Enter your email">

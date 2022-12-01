@@ -64,7 +64,7 @@
 
 </div>
 <div class="col-md-6 sign_up_field">
-<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
+<!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->
 <h3>Sign Up</h3>
 <p>Please enter your correct information.</p>
 <form action="{{ route('email-otp') }}" method="post">
@@ -74,6 +74,10 @@
 	<img src="{!! asset('assets/frontend/images/email.png')  !!}" alt="logo" class="input-img">
 	<div class="valid_no">Enter your valid email id</div>
 	<input type="hidden" name="mobile" value="{{ $mobile }}">
+	<input type="hidden" name="salutation" value="{{ $salutation }}">
+	<input type="hidden" name="name" value="{{ $name }}">
+	<input type="hidden" name="middle_name" value="{{ $middle_name }}">
+	<input type="hidden" name="last_name" value="{{ $last_name }}">
 	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 
 	@if($errors->has('email'))
        <span class="text-danger">{{$errors->first('email')}}</span>

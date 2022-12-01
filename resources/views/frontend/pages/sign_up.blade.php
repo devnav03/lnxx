@@ -64,12 +64,53 @@
 
 </div>
 <div class="col-md-6 sign_up_field">
-<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>	
+<!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->	
 <h3>Sign Up</h3>
 <p>Please enter your correct information.</p>
+<form action="{{ route('register-email') }}" class="sn_form" method="post">
+{{ csrf_field() }}
+<div class="row">	
+	<div class="col-md-3">
+	  <select name="salutation" class="form-control" style="padding-left: 4px;" required="true">
+	    <option value="Mr.">Mr.</option>
+	    <option value="Mrs.">Mrs.</option>
+	    <option value="Miss.">Miss</option>
+	    <option value="Dr.">Dr.</option>
+	    <option value="Prof.">Prof.</option>
+	    <option value="Rev.">Rev.</option>
+	    <option value="Other">Other</option>
+	  </select>
+	</div>
+    <div class="col-md-9">
+		<div class="form-group">
+			<input type="text" class="form-control" style="padding-left: 10px;" required="true" placeholder="First name" name="name">
+			@if($errors->has('name'))
+		       <span class="text-danger">{{$errors->first('name')}}</span>
+		    @endif
+			 
+		</div>
+    </div>
 
-<form action="{{ route('register-email') }}" method="post">
-{{ csrf_field() }}	
+    <div class="col-md-6">
+		<div class="form-group">
+			<input type="text" class="form-control" style="padding-left: 10px;" placeholder="Middle name" name="middle_name">
+			@if($errors->has('middle_name'))
+		       <span class="text-danger">{{$errors->first('middle_name')}}</span>
+		    @endif
+		</div>
+    </div>
+    <div class="col-md-6">
+		<div class="form-group">
+			<input type="text" class="form-control" style="padding-left: 10px;" required="true" placeholder="Last name" name="last_name">
+			@if($errors->has('last_name'))
+		       <span class="text-danger">{{$errors->first('last_name')}}</span>
+		    @endif
+		</div>
+    </div>
+
+
+
+</div>
 <div class="form-group mob_input">
 	<input type="number" class="form-control" required="true" placeholder="Enter mobile number" name="mobile">
 	<img src="{!! asset('assets/frontend/images/mobile_register.png')  !!}" alt="logo" class="input-img">

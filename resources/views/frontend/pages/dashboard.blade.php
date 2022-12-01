@@ -5,10 +5,45 @@
 <div class="container">  
 <div class="row"> 
 <div class="col-md-9">
-<div class="our_assistance">
-<h2>Do you want to avail our services?</h2>
-<a href="{{ route('personal-details') }}" class="yes_assistance">Yes</a>
-<a href="#" class="no_assistance">No</a>
+<div class="our_assistance ser_dt">
+<h2>Select Services</h2>
+<h6 style="font-size: 14px;">You can select multiple products from the below list</h6>
+
+<form action="{{ route('personal-details') }}" class="personal_details_box" method="post">
+{{ csrf_field() }}  
+
+<div class="row">
+  <div class="col-md-12">
+
+    @if(session()->has('select_service'))
+      <p style="color: #f00;margin-bottom: 10px;">Kindly select a service</p>
+    @endif
+    <input type="hidden" name="page" value="service">
+  <ul>
+  @foreach($service as $service)
+@php
+$services = get_service_status($service->id);
+@endphp
+
+    <li>
+      <input @if($services == 1) checked="" @endif id="{{ $service->url }}" type="checkbox" value="{{ $service->id }}" name="service[]"/>
+      <label class="ser_label" for="{{ $service->url }}"> 
+        <div class="service-sel @if($services == 1) active_ser @endif">
+          <img src="{!! asset($service->image) !!}" alt="img">
+          <h5>{{ $service->name }}</h5>
+        </div>
+      </label>
+    </li>
+    @endforeach
+  </ul>
+  </div>
+
+  <div class="col-md-12 text-center">
+<!--     <a href="{{ route('address-details') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
+    <button type="submit" style="margin-top: 20px;">Proceed</button>
+  </div>
+</div>
+</form>
 </div>
 
 <div class="lorem_dashboard">

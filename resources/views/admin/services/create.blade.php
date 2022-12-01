@@ -36,7 +36,7 @@
                                         </div> 
                                     </div>  
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group"> 
                                             {!! Form::label('image', lang('Icon'), array('class' => '')) !!}
                                             @if(!empty($result->image))
@@ -53,6 +53,26 @@
                                             </div>
                                         @endif
                                     </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group"> 
+                                            {!! Form::label('image', lang('Color Icon'), array('class' => '')) !!}
+                                            @if(!empty($result->image))
+                                            <input name="blue_icon" type='file' class="form-control" accept="image/png, image/jpeg" id="imgInp1" style="padding-top: 6px; border: 0px;" />
+                                            @else
+                                            <input name="blue_icon" type='file' class="form-control" accept="image/png, image/jpeg" required="true" id="imgInp1" style="padding-top: 6px; border: 0px;" />
+                                            @endif
+                                            <img id="blah1" style="max-width: 55%;margin-top:10px;" src="#" alt="" />
+                                        </div>
+                                        @if(!empty($result->blue_icon))
+                                            <div class="form-group"> 
+                                                 {!! Html::image(asset($result->blue_icon),'' ,array('width' => 80 ,'class'=>'img-responsive') ) !!}
+           
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    
                                  
                                     <div class="col-md-6">
                                          <button type="submit" class="btn btn-default w3ls-button">Submit</button> 
@@ -80,6 +100,13 @@ imgInp.onchange = evt => {
     blah.src = URL.createObjectURL(file)
   }
 }    
+
+imgInp1.onchange = evt => {
+  const [file] = imgInp1.files
+  if (file) {
+    blah1.src = URL.createObjectURL(file)
+  }
+}
 
 </script>
 

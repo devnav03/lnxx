@@ -11,7 +11,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'user_type', 'name', 'email', 'password', 'mobile', 'login_otp', 'emirates_id', 'emirates_id_back', 'profile_image', 'gender', 'status', 'updated_at', 'api_key', 'created_at'
+        'user_type', 'name', 'middle_name', 'last_name', 'salutation', 'email', 'password', 'mobile', 'login_otp', 'emirates_id', 'emirates_id_back', 'eid_number', 'eid_status', 'profile_image', 'date_of_birth', 'gender', 'status', 'updated_at', 'api_key', 'created_at'
     ];
 
   
@@ -91,12 +91,13 @@ class User extends Authenticatable
                 'users.user_type', 
                 'users.mobile', 
                 'users.status',
+                'users.profile_image',
+                'users.salutation',
+                'customer_onboardings.video',
+                'customer_onboardings.consent_form',
                 'customer_onboardings.cm_type',
-                'other_cm_details.source_name',
-                'cm_salaried_details.designation',
-                'self_emp_details.org_name',
-                'user_education.education',
-                'addresses.permanent_address_home_country_line_1',
+                'customer_onboardings.first_name_as_per_passport',
+                'product_requests.id as pr_id',
             ];
          $sortBy = [
              'name' => 'name',
@@ -123,13 +124,7 @@ class User extends Authenticatable
             $filter .= $f1 . $f2 . $f3 . $f4;
         }
          return $this->leftjoin('customer_onboardings', "customer_onboardings.user_id", "=", 'users.id')
-            ->leftjoin('other_cm_details', "other_cm_details.customer_id", "=", 'users.id')
-            ->leftjoin('cm_salaried_details', "cm_salaried_details.customer_id", "=", 'users.id')
-            ->leftjoin('self_emp_details', "self_emp_details.customer_id", "=", 'users.id')
-            ->leftjoin('addresses', "addresses.customer_id", "=", 'users.id')
-            ->leftjoin('user_education', "user_education.user_id", "=", 'users.id')
-
-
+            ->leftjoin('product_requests', "product_requests.user_id", "=", 'users.id')
             ->whereRaw($filter)
             ->where('users.user_type', 2)
              // ->where('deleted_at', null)

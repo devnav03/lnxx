@@ -15,10 +15,10 @@
 </ul>   
 <div style="width: 100%;float: left;height: 1px;"></div>
 <ul class="footer-menu">
-<li><a href="#">Community</a></li>
-<li><a href="#">Disclaimer</a></li>
-<li><a href="#">Privacy Policy</a></li>
-<li><a href="#">Terms & Conditions</a></li>
+<li><a href="{{ route('community') }}">Community</a></li> 
+<li><a href="{{ route('disclaimer') }}">Disclaimer</a></li>
+<li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
+<li><a href="{{ route('terms-and-conditions') }}">Terms & Conditions</a></li>
 </ul>
 
 </div>

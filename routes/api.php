@@ -41,12 +41,20 @@ Route::any('v1/select-service', ['as' => 'select-service','uses' => 'App\Http\Co
 
 Route::any('v1/country', ['as' => 'country','uses' => 'App\Http\Controllers\API\V1\UserController@country']);
 
+Route::any('v1/emirates-id', ['as' => 'emirates-id','uses' => 'App\Http\Controllers\API\V1\UserController@emirates_id']);
 
+Route::any('v1/profile-image', ['as' => 'profile-image','uses' => 'App\Http\Controllers\API\V1\UserController@profile_image']);
 
+Route::any('v1/selected-services', ['as' => 'selected-services','uses' => 'App\Http\Controllers\API\V1\UserController@selected_services']);
+Route::any('v1/save-product-requested', ['as' => 'save-product-requested','uses' => 'App\Http\Controllers\API\V1\UserController@save_product_requested']);
+Route::any('v1/show-product-requested', ['as' => 'show-product-requested','uses' => 'App\Http\Controllers\API\V1\UserController@show_product_requested']);
+Route::any('v1/upload-video', ['as' => 'upload-video','uses' => 'App\Http\Controllers\API\V1\UserController@upload_video']);
+Route::any('v1/consent-form-status', ['as' => 'consent-form-status','uses' => 'App\Http\Controllers\API\V1\UserController@consent_form_status']);
 
+Route::any('v1/bank-list', ['as' => 'bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@bank_list']);
+Route::any('v1/company-list', ['as' => 'company-list','uses' => 'App\Http\Controllers\API\V1\UserController@company_list']);
 
-
-
+Route::any('v1/verify-emirates', ['as' => 'verify-emirates','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
 
 
 

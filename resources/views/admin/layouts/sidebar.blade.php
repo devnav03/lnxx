@@ -26,7 +26,7 @@
                                 <span class="shape1"></span>
                                 <span class="shape2"></span>
                                 <i class="ti-user sidemenu-icon menu-icon "></i>
-                                <span class="sidemenu-label">Onboarding</span>
+                                <span class="sidemenu-label">Application Request</span>
                             <!--     <span class="badge bg-danger side-badge">5</span> -->
                             </a>
                             <ul class="nav-sub">
@@ -46,10 +46,100 @@
                             <ul class="nav-sub">
                                 <li class="side-menu-label1"><a href="javascript:void(0)">Masters</a></li>
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('services.index') }}">Services</a></li>
-                            
-
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('banks.index') }}">Banks</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('testimonials.index') }}">Testimonials</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('sliders.index') }}">Sliders</a></li> 
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('company.index') }}">Company</a></li> 
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('landing-sliders.index') }}">Landing Page Sliders</a></li>
                             </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-zoom-in sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">LMS</span>
+                            </a>
+                           <!--  <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                            </ul> -->
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-light-bulb sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">HRMS</span>
+                            </a>
+                           <!--  <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                            </ul> -->
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-money sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">Bank Communication</span>
+                            </a>
+                           <!--  <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                            </ul> -->
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-settings sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">Operational</span>
+                            </a>
+                           <!--  <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                            </ul> -->
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-rss-alt sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">Campaign</span>
+                            </a>
+                           <!--  <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                            </ul> -->
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-email sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">Email Campaign</span>
+                            </a>
+                           <!--  <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                            </ul> -->
+                        </li>
+
+
+                        
+  
+
 
                         
                         <li class="nav-item"><a href="{{ route('logout-admin') }}" class="nav-link with-sub"> <i class="ti-power-off sidemenu-icon menu-icon "></i><span class="sidemenu-label">Log Out</span></a></li>

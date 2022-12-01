@@ -66,9 +66,26 @@ class ServiceController extends  Controller{
             else{
                 $image = '';
             }
-            
             unset($inputs['image']);
             $inputs['image'] = $image;
+
+            if(isset($inputs['blue_icon']) or !empty($inputs['blue_icon'])) {
+                $image_name = rand(100000, 999999);
+                $fileName = '';
+                if($file = $request->hasFile('blue_icon')) {
+                    $file = $request->file('blue_icon') ;
+                    $img_name = $file->getClientOriginalName();
+                    $fileName = $image_name.$img_name;
+                    $destinationPath = public_path().'/uploads/services/' ;
+                    $file->move($destinationPath, $fileName);
+                }
+                $fname ='/uploads/services/';
+                $image = $fname.$fileName;
+            } else{
+                $image = '';
+            }
+            unset($inputs['blue_icon']);
+            $inputs['blue_icon'] = $image;
 
             (new Service)->store($inputs);
             return redirect()->route('services.index')
@@ -102,10 +119,30 @@ class ServiceController extends  Controller{
                 $fname ='/uploads/services/';
                 $image = $fname.$fileName;
             } else{
-                $image = $result->icon;
+                $image = $result->image;
             }
             unset($inputs['image']);
             $inputs['image'] = $image;
+
+            if(isset($inputs['blue_icon']) or !empty($inputs['blue_icon'])) {
+                $image_name = rand(100000, 999999);
+                $fileName = '';
+                if($file = $request->hasFile('blue_icon')) {
+                    $file = $request->file('blue_icon') ;
+                    $img_name = $file->getClientOriginalName();
+                    $fileName = $image_name.$img_name;
+                    $destinationPath = public_path().'/uploads/services/' ;
+                    $file->move($destinationPath, $fileName);
+                }
+                $fname ='/uploads/services/';
+                $image = $fname.$fileName;
+            } else{
+                $image = '';
+            }
+            unset($inputs['blue_icon']);
+            $inputs['blue_icon'] = $image;
+
+
             (new Service)->store($inputs, $id);
 
             return redirect()->route('services.index')

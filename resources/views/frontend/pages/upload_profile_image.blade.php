@@ -62,12 +62,12 @@
 
 </div>
 <div class="col-md-6 sign_up_field">
-<a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
+<!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->
 <h3>Sign Up</h3>
 <p>Please upload your profile image.</p>
 <form action="{{ route('save-profile-image') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}	
-<label style="font-size: 14px;">Upload your photo</label>
+<label style="font-size: 14px;">Upload your photo <span style="font-size: 13px;"> (300x300 px / .png, .jpg, .jpeg)</span></label>
 <div class="form-group emirates_front">
 	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" required="true" id="imgInp" name="profile_image">
 	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah" class="img-responsive">

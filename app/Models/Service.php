@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Service extends Model
-{
+class Service extends Model {
     use SoftDeletes;
     protected $table = 'services';
    
     protected $fillable = [
-        'name', 'status', 'image', 'url', 'created_at', 'updated_at', 'deleted_at'
+        'name', 'blue_icon', 'status', 'image', 'url', 'created_at', 'updated_at', 'deleted_at'
     ];
 
     public function validate($inputs, $id = null){

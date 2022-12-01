@@ -169,7 +169,7 @@ body a:hover{
     padding: 20px 80px 8px 20px;
     border: 1px solid #61B69C;
     position: relative;
-    margin-top: 25px;
+    margin-top: 5px;
 }
 
 @media(min-width: 1030px){
@@ -363,11 +363,12 @@ body{
 }
 .testimonials-slide p{
     text-align: justify;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 23px;
+    min-height: 161px;
 }
 .testimonials-slide h4 {
-    font-size: 19px;
+    font-size: 17px;
     font-family: 'Open Sans', sans-serif;
     margin-top: 20px;
     font-weight: 600;
@@ -549,20 +550,21 @@ footer ul.footer-menu li a:hover{
     color: #000;
     font-family: 'Open Sans', sans-serif;
     font-weight: 700;
-    font-size: 22px;
-    line-height: 31px;
-    margin-top: 30px;
+    font-size: 19px;
+    line-height: 26px;
+    margin-top: 0px;
 }
 .lnxx-work p {
-    margin-top: 12px;
-    line-height: 26px;
+    margin-top: 10px;
+    line-height: 24px;
+    font-size: 14px;
 }
 .lnxx-work a {
     background: #5EB495;
     color: #fff;
     padding: 10px 25px;
     border-radius: 20px;
-    margin-top: 10px;
+    margin-top: 0px;
     float: left;
 }
 .lnxx-app {
@@ -648,6 +650,7 @@ header.header{
     position: absolute;
     width: 100%;
     z-index: 999;
+    top: 0px;
 }
 .sign_up{
     background: url(../images/Overlay_blur.jpg);
@@ -695,7 +698,9 @@ input[type=number]::-webkit-outer-spin-button {
   left: 0px;
   top: 10px;
 }
-.mob_input input {
+.mob_input input,
+.sn_form input,
+.sn_form select {
     border: 0px;
     border-bottom: 1px solid rgba(9, 15, 5, 0.5);
     border-radius: 0px;
@@ -1228,6 +1233,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin-top: 10px;
     font-size: 16px;
     margin-bottom: 0px;
+    width: 100%;
 }
 .personal_details_box label.sub-label {
     color: #555;
@@ -1262,14 +1268,28 @@ input[type=number]::-webkit-outer-spin-button {
 .chk_bx a{
     color: #FF6722;
 }
-.personal_details_box button {
-    background: #FF6722;
+.by_signing {
+    color: rgba(9, 15, 5, 0.5);
+    font-size: 14px;
+    margin-top: 20px;
+    border: 1px solid rgba(9, 15, 5, 0.5);
+    padding: 15px;
+    border-radius: 12px;
+}
+.personal_details_box button,
+.upload_btn {
+    background: rgba(9, 15, 5, 0.5);
     color: #fff;
     border: 0px;
     padding: 9px 60px;
     font-weight: 500;
     margin-top: 10px;
     border-radius: 5px;
+    cursor: pointer;
+}
+.personal_details_box button:hover,
+.upload_btn:hover {
+    background: #000;
 }
 .service-step h3 {
     font-weight: 700;
@@ -1336,28 +1356,40 @@ input[type=number]::-webkit-outer-spin-button {
     background-size: 30px;
 }
 .service-sel{
-    background: #fff;
-    box-shadow: 1px 1px 12px rgb(0 0 0 / 10%);
-    text-align: center;
-    padding: 20px 30px;
-    margin-bottom: 12px;
+    background: #f3f3f3;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+}
+.cus_dashboard .our_assistance.ser_dt li {
+    list-style: none;
+    position: relative;
 }
 .service-sel img{
-    max-width: 55px;
-    margin: 0 auto;
+    width: 30px;
+    margin-right: 12px;
 }
 .service-sel h5{
-    font-size: 16px;
-    margin-bottom: 20px;
+    font-size: 14px;
     line-height: 24px;
-    min-height: 48px;
+    margin-bottom: 0px;
+    color: #000;
+    display: inline-block;
 }
 .personal_details_box .blog-slider{
     margin-top: 15px;
     margin-bottom: 20px;
 }
-
-.personal_details_box .blog-slider input[type="checkbox"] {
+.cus_dashboard .our_assistance.ser_dt li input[type=checkbox] {
+    position: absolute;
+    top: 24px;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+    box-shadow: none;
+    opacity: 0;
+}
+.personal_details_box .blog-slider-ser input[type="checkbox"] {
     bottom: 0px;
     left: 0;
     right: 0;
@@ -1372,36 +1404,20 @@ input[type=number]::-webkit-outer-spin-button {
 .icn_box{
     position: relative;
 }
-.personal_details_box .blog-slider input[type="checkbox"]:checked+label .service-sel{  
-    position: relative;
-} 
-.personal_details_box .blog-slider input[type="checkbox"]:checked+label .service-sel,
+.cus_dashboard input[type="checkbox"]:checked+label .service-sel,
 .active_ser {
-    background: #5EB495;
+    background: #ebf0e3;
     color: #fff;
-      /*  content: '';
-    width: 50px;
-    height: 50px;
-    z-index: 1;
-    position: absolute;*/
-/*    left: 0;
-    top: 59px;
-    right: 0;
-    margin: 0 auto;
-    background-image: url(../../../images/check_icon.png);
-    background-size: 100%;
-    background-color: transparent;
-    border: 0px;*/
 }
 
-.personal_details_box .blog-slider label:before{
+.personal_details_box .blog-slider-ser label:before{
     display: none;
 }
-.personal_details_box .blog-slider label{
+.personal_details_box .blog-slider-ser label{
     padding-left: 0px !important;
     cursor: pointer;
 }
-.personal_details_box .blog-slider label label{
+.personal_details_box .blog-slider-ser label label{
     width: 100%;
     height: 0px;
     line-height: 0px;
@@ -1444,6 +1460,10 @@ header.header .col-md-5 {
 
 }
 
+.blog-slider-ser .owl-item{
+    text-align: center;
+}
+
 .emirates_front{
     position: relative;
 }
@@ -1458,7 +1478,7 @@ header.header .col-md-5 {
     max-width: 340px;
 }
 .sign_up.upload_emr .col-md-8 {
-    margin-top: 50px;
+    margin-top: 25px;
     margin-bottom: 40px;
 }
 .testimonials .owl-prev{
@@ -1469,9 +1489,212 @@ header.header .col-md-5 {
     right: -20px;
     top: 45%;
 }
+.cus_dashboard .personal_details_box{
+    box-shadow: none;
+}
+.cus_dashboard .our_assistance.ser_dt {
+    padding-bottom: 30px;
+}
+.cus_dashboard .our_assistance.ser_dt h2{
+    padding-left: 35px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  right: 0;
+  background-color: #5EB495;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 14px;}
+}
+@media(min-width: 768px){
+.openNavbtn{
+    display: none;
+}
 
 
+}
 
+@media(max-width: 767px){
+.header .col-md-9 ul{
+    display: none;
+}
+.header .col-md-3{
+    width: 40%;
+}
+.header .col-md-9{
+    width: 60%;
+}
+.openNavbtn{
+    float: right;
+    margin-top: -9px;
+}
+.header {
+    padding-top: 8px;
+}
+.header .container{
+    padding-bottom: 8px;
+}
+.abs_banner_img {
+    position: static;
+    max-width: 94%;
+    margin-left: 3%;
+    margin-top: 10px;
+}
+.banner h3,
+.banner h3 span {
+    font-size: 36px;
+    line-height: 42px;
+}
+.banner {
+    padding-top: 30px;
+}
+.banner .col-md-6 .col-md-8 {
+    margin-top: 0px;
+}
+.banner .col-md-6 .col-md-4 {
+    margin-top: 20px;
+}
+.banner .col-md-6 .col-md-8 h4 {
+    margin-top: -65px;
+}
+.sec_banner_sec .col-md-4{
+    margin-bottom: 30px;
+}
+.about_index {
+    padding-top: 30px;
+}
+.about_index .col-md-5{
+    background-size: 90%;
+}
+.about_index .service-box {
+    width: 80%;
+    margin-left: 10%;
+    border-radius: 12px;
+}
+.about_index .service-box .col-md-6 {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.lnxx-partners .col-md-2 {
+    width: 50%;
+}
+footer ul.social {
+    float: left;
+    padding: 0px;
+}
+footer ul.social li:first-child i,
+footer ul.footer-menu li:first-child {
+    margin-left: 0px;
+}
+footer ul.footer-menu{
+    padding-left: 0px;
+}
+footer ul.footer-menu li {
+    margin-bottom: 14px;
+}
+.logo-main {
+    float: left;
+}
+.header .container {
+    border-bottom: 0px;
+}
+.sidenav li{
+    list-style: none;
+}
+.blog-articles .col-md-12 h4 {
+    margin-top: 20px;
+}
+.blog-articles {
+    margin-top: 35px;
+}
+.product-index {
+    margin-top: 60px;
+    margin-bottom: 45px;
+}
+
+}
+.header .col-md-9 ul li{
+    position: relative;
+}
+.header .col-md-9 ul li:hover ul{
+    display: block;
+}
+.header .col-md-9 ul li ul li {
+    padding: 8px 10px;
+}
+.header .col-md-9 ul li ul li a{
+    display: block;
+    font-size: 14px;
+}
+.terms_conditions {
+    margin-top: 130px;
+    margin-bottom: 60px;
+}
+.contact-main {
+    margin-top: 120px;
+    margin-bottom: 30px;
+}
+.contact-main input{
+    margin-bottom: 15px;
+}
+.contact-main h4 {
+    font-family: 'Open Sans', sans-serif;
+    color: #5EB495;
+    margin-bottom: 15px;
+}
+.contact-main input,
+.contact-main textarea,
+.contact-main select {
+    border: 1px solid #000;
+    color: #000;
+    font-size: 14px;
+    height: 40px;
+}
+.contact-main textarea {
+    height: 120px !important;
+    resize: none;
+}
+.contact-main button{
+    background: #5EB495;
+    color: #fff;
+    border: 0px;
+    padding: 9px 25px;
+    font-size: 18px;
+    font-weight: 500;
+}
 
 
 

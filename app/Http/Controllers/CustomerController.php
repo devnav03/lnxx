@@ -12,7 +12,9 @@ use App\Models\OtherCmDetail;
 use App\Models\CmSalariedDetail;
 use App\Models\SelfEmpDetail;
 use App\Models\Address;
+use App\Models\ProductRequest;
 use App\Models\UserEducation;
+use App\Models\ServiceApply;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -154,11 +156,18 @@ class CustomerController extends Controller {
         $cm_salaried_details = CmSalariedDetail::where('customer_id', $id)->first();
         $self_emp_details = SelfEmpDetail::where('customer_id', $id)->first();
         $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
+        $product_requested = ProductRequest::where('user_id', $id)->first();
+       // dd($customer_onboarding);
 
         $address_details = Address::where('customer_id', $id)->first();
         $UserEducation = UserEducation::where('user_id', $id)->first();
-
-        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding', 'other_cm_details', 'cm_salaried_details', 'self_emp_details', 'UserEducation', 'address_details', 'countries'));
+        $services = \DB::table('service_applies')
+                    ->join('services', 'services.id', '=', 'service_applies.service_id')
+                    ->select('service_applies.status', 'services.name', 'services.image')
+                    ->where('service_applies.customer_id', $id)->get();
+        $sel_services = ServiceApply::where('customer_id', $id)->pluck('service_id')->toArray();
+                    
+        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding', 'other_cm_details', 'cm_salaried_details', 'self_emp_details', 'UserEducation', 'address_details', 'countries', 'services', 'product_requested', 'sel_services'));
       } else {
         echo "404";
       }

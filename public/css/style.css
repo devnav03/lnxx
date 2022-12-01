@@ -76030,7 +76030,9 @@ input[type=number]::-webkit-outer-spin-button {
 .w3ls-button:hover {
     color: #fff !important;
 }
-
+.pagination.pagination-sm li {
+    padding: 2px 7px;
+}
 
 
 

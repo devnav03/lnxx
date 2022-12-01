@@ -7,7 +7,7 @@
     <div class="grids">       
         <div class="row">
             <div class="col-md-12">
-            <h1 class="page-header">Customer <a class="btn btn-sm btn-primary pull-right" href="{!! route('customer') !!}"> <i class="fa fa-arrow-left"></i> All Customers </a></h1>
+            <h1 class="page-header"> @if(isset($customer_onboarding->ref_id)) Application No #{{ $customer_onboarding->ref_id }} @else Customer @endif <a class="btn btn-sm btn-primary pull-right" href="{!! route('customer') !!}"> <i class="fa fa-arrow-left"></i> All Customers </a></h1>
             <div class="card custom-card">
             <div class="card-body">
             <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
@@ -119,7 +119,7 @@
                                     @if(isset($result->profile_image))
                                     <div class="col-md-6" style="margin-top: 20px;">
                                         <label>Profile Image</label><br>
-                                        <img id="blah" src="{{ $result->profile_image }}" style="max-width: 150px;margin-top: 10px;" alt="" />
+                                        <img id="blah" src="{!! asset($result->profile_image) !!}" style="max-width: 150px;margin-top: 10px;" alt="" />
                                     </div>    
                                     @endif
 
@@ -137,6 +137,32 @@
                 </div>
                 </div> 
                 </div>
+
+                @if($result->emirates_id)
+                <div class="card custom-card">
+                    <div class="card-body">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                        <div class="forms">
+                                <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                    <div class="form-title">
+                                        <h4>Emirates ID</h4>                        
+                                    </div>
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-6" style="margin-top: 10px;">
+                                               <img src="{!! asset($result->emirates_id) !!}">
+                                            </div>
+                                            <div class="col-md-6" style="margin-top: 10px;">
+                                               <img src="{!! asset($result->emirates_id_back) !!}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             
             @if($customer_onboarding)
             <div class="card custom-card">
@@ -145,7 +171,7 @@
                     <div class="forms">
                             <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
                                 <div class="form-title">
-                                    <h4>Basic Information</h4>                        
+                                    <h4>Personal Details</h4>                        
                                 </div>
                                 <div class="form-body">
                                     <div class="row">
@@ -159,7 +185,7 @@
                                         <div class="col-md-12">
                                             <label style="margin-top: 15px; font-size: 15px; font-weight: 500;">Name As Per Passport</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                               <label class="sub-label">Salutation</label>
                                               <select name="salutation" class="form-control" required="true">
                                                 <option @if($customer_onboarding->salutation == 'Mr.') selected @endif value="Mr.">Mr.</option>
@@ -171,9 +197,9 @@
                                                 <option @if($customer_onboarding->salutation == 'Other') selected @endif value="Other">Other</option>
                                               </select>
                                             </div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-9">
                                               <div class="row">  
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                   <div class="form-group">
                                                     <label class="sub-label">First Name</label>
                                                     <input name="first_name_as_per_passport" class="form-control" value="{{ $customer_onboarding->first_name_as_per_passport }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$" required="true">
@@ -182,7 +208,7 @@
                                                     @endif
                                                   </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                              <!--   <div class="col-md-4">
                                                   <div class="form-group">
                                                     <label class="sub-label">Middle Name</label>
                                                     <input name="middle_name" class="form-control" value="{{ $customer_onboarding->middle_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
@@ -190,8 +216,8 @@
                                                     <span class="text-danger">{{$errors->first('middle_name')}}</span>
                                                     @endif
                                                   </div>
-                                                </div>
-                                                <div class="col-md-4">
+                                                </div> -->
+                                                <div class="col-md-6">
                                                   <div class="form-group">
                                                     <label class="sub-label">Last Name</label>
                                                     <input name="last_name" class="form-control" value="{{ $customer_onboarding->last_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
@@ -207,14 +233,14 @@
                                 </div>
 
                                 <div class="row">
-    <div class="col-md-6">
+<!--     <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Embossing Name</label>
       <input name="embossing_name" class="form-control" value="{{ $customer_onboarding->embossing_name }}" type="text" required="true">
           </div>
-    </div>
+    </div> -->
 
-    <div class="col-md-6">
+<!--     <div class="col-md-6">
     <label class="sub-label">Country</label>
     <select name="nationality" class="form-control" required="true">
         <option value="">Select</option>
@@ -222,118 +248,86 @@
             <option value="{{ $country->id }}" @if($country->id == $customer_onboarding->nationality) selected @endif >{{ $country->country_name }}</option>
         @endforeach     
     </select>
-    </div>
-  <div class="col-md-12">
+    </div> -->
+ <!--  <div class="col-md-12">
     <label style="margin-top: 15px;font-size: 15px;font-weight: 500;">Passport Details</label>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Passport Number</label>
-      <input name="passport_number" class="form-control" value="{{ $customer_onboarding->passport_number }}" type="text" required="true">
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Passport Expiry Date</label>
-      <input name="passport_expiry_date" onfocus="(this.type='date')" class="form-control" @if($customer_onboarding->passport_expiry_date) value="{{ date('d M, Y', strtotime($customer_onboarding->passport_expiry_date)) }}" @endif type="text" required="true">
-          </div>
-  </div>
-
-
-  <div class="col-md-12">
-    <label style="margin-top: 15px;font-size: 15px;font-weight: 500;">Visa Details</label>
-  </div>
-  <div class="col-md-4">
-    <div class="form-group">
-      <label class="sub-label">Visa Sponsor</label>
-      <input name="visa_sponsor" class="form-control" value="{{ $customer_onboarding->visa_sponsor }}" type="text">
-          </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="form-group">
-      <label class="sub-label">Visa Number</label>
-      <input name="visa_number" class="form-control" value="{{ $customer_onboarding->visa_number }}" type="text">
-          </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="form-group">
-      <label class="sub-label">Visa Expiry Date</label>
-      <input name="visa_expiry_date" onfocus="(this.type='date')" class="form-control" @if($customer_onboarding->visa_number) value="{{ date('d M, Y', strtotime($customer_onboarding->visa_number)) }}" @endif type="text">
-          </div>
-  </div>
-
-  <div class="col-md-12">
-    <label style="margin-top: 15px;font-size: 15px;font-weight: 500;">Multiple Nationality Holder Details</label>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Nationality Name</label>
-      <input name="nationality_name" class="form-control" value="{{ $customer_onboarding->nationality_name }}" type="text">
-          </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Passport Number</label>
-      <input name="multiple_passport_number" class="form-control" value="{{ $customer_onboarding->multiple_passport_number }}" type="text">
-          </div>
-  </div>
-
-  <div class="col-md-12">
-    <label style="margin-top: 15px;font-size: 15px;font-weight: 500;">Emirates Id Details</label>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Eid Number</label>
-      <input name="eid_number" class="form-control" value="{{ $customer_onboarding->eid_number }}" required="true" type="text">
-          </div>
-  </div>
-
-  <div class="col-md-6">
-    <label class="sub-label">Marital Status</label>
-    <select name="marital_status" class="form-control" required="true">
-      <option value="Single">Single</option>
-      <option value="Married">Married</option>
-      <option value="Others">Others</option>
-    </select>
-  </div>
-
-  <div class="col-md-6">
-    <label class="sub-label">Years In Uae</label>
-    <select name="years_in_uae" class="form-control" required="true">
-      <option value="">Select</option>
-      <option @if($customer_onboarding->years_in_uae == 0) selected @endif value="0">0</option>
-      <option @if($customer_onboarding->years_in_uae == 1) selected @endif value="1">1</option>
-      <option @if($customer_onboarding->years_in_uae == 2) selected @endif value="2">2</option>
-      <option @if($customer_onboarding->years_in_uae == 3) selected @endif value="3">3</option>
-      <option @if($customer_onboarding->years_in_uae == 4) selected @endif value="4">4</option>
-      <option @if($customer_onboarding->years_in_uae == 5) selected @endif value="5">5</option>
-      <option @if($customer_onboarding->years_in_uae == 6) selected @endif value="6">6</option>
-      <option @if($customer_onboarding->years_in_uae == 7) selected @endif value="7">7</option>
-      <option @if($customer_onboarding->years_in_uae == 8) selected @endif value="8">8</option>
-      <option @if($customer_onboarding->years_in_uae == 9) selected @endif value="9">9</option>
-      <option @if($customer_onboarding->years_in_uae == 10) selected @endif value="10">10</option>
-      <option @if($customer_onboarding->years_in_uae == '10+') selected @endif value="10+">10+</option>
-    </select>
-  </div>
-
-  <div class="col-md-6">
-    <label class="sub-label">Favorite City <span>(As A Security Feature)</span></label>
-    <input name="favorite_city" class="form-control" value="{{ $customer_onboarding->favorite_city }}" required="true" type="text">
+  </div> -->
+  
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Nationality*</label>
+            <input name="nationality" class="form-control" value="{{ $customer_onboarding->nationality }}" type="text" required="true">
         </div>
+    </div>
 
-</div>
-         
-                                </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Years in UAE*</label>
+            <input name="years_in_uae" class="form-control" value="{{ $customer_onboarding->years_in_uae }}" type="text" required="true">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Marital Status*</label>
+            <input name="marital_status" class="form-control" value="{{ $customer_onboarding->marital_status }}" type="text" required="true">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+    <div class="form-group">
+    <label class="sub-label">No of Dependents*</label>
+    <input name="no_of_dependents" class="form-control" @if($customer_onboarding->no_of_dependents) value="{{ $customer_onboarding->no_of_dependents }}" @endif type="text" required="true">
+    </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Emirates ID Number*</label>
+            <input name="eid_number" class="form-control" value="{{ $customer_onboarding->eid_number }}" type="text">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Reference Number</label>
+            <input name="reference_number" class="form-control" value="{{ $customer_onboarding->reference_number }}" type="text">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Visa Number</label>
+            <input name="visa_number" class="form-control" @if($customer_onboarding->visa_number) value="{{ $customer_onboarding->visa_number }}" @endif type="text">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Officer E-mail ID</label>
+            <input name="officer_email" class="form-control" value="{{ $customer_onboarding->officer_email }}" type="text">
+        </div>
+    </div>
+    
+    @if($customer_onboarding->passport_photo)
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Passport Photo</label><br>
+            <img src="{!! asset($customer_onboarding->passport_photo) !!}" class="img-responsive">
+        </div>
+    </div>
+    @endif
+
+
+    </div>
+    </div>
                                 
-                            </div>
-                        </div>
-                    </div>
-                    </div> 
-                </div>
-                @endif
+    </div>
+    </div>
+    </div>
+    </div> 
+    </div>
+@endif
 
 
             @if($customer_onboarding)
@@ -342,26 +336,26 @@
             <div class="card custom-card">
                 <div class="card-body">
                 <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
-                    <div class="forms">
-                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
-                                <div class="form-title">
-                                    <h4>CM Details</h4>                        
-                                </div>
-                                <div class="form-body">
+                <div class="forms">
+                    <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                    <div class="form-title">
+                        <h4 style="margin-bottom: 20px;">Employment Details</h4>                     
+                    </div>
+                    <div class="form-body">
                     <div class="row">        
                     <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Designation</label>
-      <input name="designation" class="form-control" value="{{ $cm_salaried_details->designation }}" type="text" required="true">
-      @if($errors->has('designation'))
-      <span class="text-danger">{{$errors->first('designation')}}</span>
+      <label class="sub-label">Company Name*</label>
+      <input name="company_name" class="form-control" value="{{ $cm_salaried_details->company_name }}" type="text" required="true">
+      @if($errors->has('company_name'))
+      <span class="text-danger">{{$errors->first('company_name')}}</span>
       @endif
     </div>
   </div>
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Date Of Joining</label>
+      <label class="sub-label">Date Of Joining*</label>
       <input name="date_of_joining" class="form-control" value="{{ $cm_salaried_details->date_of_joining }}" type="date">
       @if($errors->has('date_of_joining'))
       <span class="text-danger">{{$errors->first('date_of_joining')}}</span>
@@ -372,18 +366,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Department</label>
-      <input name="department" class="form-control" value="{{ $cm_salaried_details->department }}" type="text">
-      @if($errors->has('department'))
-      <span class="text-danger">{{$errors->first('department')}}</span>
-      @endif
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Monthly Salary</label>
-      <input name="monthly_salary" class="form-control" value="{{ $cm_salaried_details->monthly_salary }}" type="number">
+      <label class="sub-label">Monthly Salary*</label>
+      <input name="monthly_salary" class="form-control" value="{{ $cm_salaried_details->monthly_salary }}" type="text">
       @if($errors->has('monthly_salary'))
       <span class="text-danger">{{$errors->first('monthly_salary')}}</span>
       @endif
@@ -392,45 +376,19 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Staff Id No.</label>
-      <input name="staff_id_no" class="form-control" value="{{ $cm_salaried_details->staff_id_no }}" type="text">
-      @if($errors->has('staff_id_no'))
-      <span class="text-danger">{{$errors->first('staff_id_no')}}</span>
+      <label class="sub-label">Last Three Salary Credits</label>
+      <input name="last_three_salary_credits" class="form-control" value="{{ $cm_salaried_details->last_three_salary_credits }}" type="number">
+      @if($errors->has('last_three_salary_credits'))
+      <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
       @endif
     </div>
   </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Name Of Previous Employer</label>
-      <input name="name_previous_emp" class="form-control" value="{{ $cm_salaried_details->name_previous_emp }}"  type="text">
-      @if($errors->has('name_previous_emp'))
-      <span class="text-danger">{{$errors->first('name_previous_emp')}}</span>
-      @endif
-    </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">No. Of Years With Previous Employer</label>
-      <input name="no_year_previous_emp" class="form-control" value="{{ $cm_salaried_details->no_year_previous_emp }}" type="number">
-      @if($errors->has('no_year_previous_emp'))
-      <span class="text-danger">{{$errors->first('no_year_previous_emp')}}</span>
-      @endif
-    </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Monthly Additional Income</label>
-      <input name="monthly_add_income" class="form-control" value="{{ $cm_salaried_details->monthly_add_income }}"  type="text">
-      @if($errors->has('monthly_add_income'))
-      <span class="text-danger">{{$errors->first('monthly_add_income')}}</span>
-      @endif
-    </div>
-  </div>
 
-  <div class="col-md-6">
+
+<!--   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Monthly Deductions</label>
       <input name="monthly_deductions" class="form-control" value="{{ $cm_salaried_details->monthly_deductions }}"  type="text">
@@ -438,9 +396,9 @@
       <span class="text-danger">{{$errors->first('monthly_deductions')}}</span>
       @endif
     </div>
-  </div>
+  </div> -->
 
-  <div class="col-md-6">
+<!--   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Salary Payment Date</label>
       <input name="salary_pay_date" class="form-control" value="{{ $cm_salaried_details->salary_pay_date }}" type="number">
@@ -448,24 +406,22 @@
       <span class="text-danger">{{$errors->first('salary_pay_date')}}</span>
       @endif
     </div>
-  </div>
+  </div> -->
 
-  <div class="col-md-6">
+<!--   <div class="col-md-6">
     <div class="form-group">
     <label class="sub-label" style="width: 100%;">Are You A Confirmed Employee?</label>
-    <label class="sub-label"> @if($cm_salaried_details->confirm_emp == 1) Yes @else No @endif  </label>
+    <label class="sub-label"> @if($cm_salaried_details->confirm_emp == 1) Yes @else No @endif  </label> -->
      <!--  <label class="sub-label" style="float: left; display: flex;"><input name="confirm_emp" class="form-control" value="1" @if($cm_salaried_details->confirm_emp == 1) checked="" @endif type="radio">Yes</label>
       <label class="sub-label" style="float: left; display: flex;"><input name="confirm_emp" class="form-control" value="0" @if($cm_salaried_details->confirm_emp == 0) checked="" @endif type="radio" style="margin-left: 25px;">No</label> -->
-
-     
-
+ <!--     
       @if($errors->has('confirm_emp'))
       <span class="text-danger">{{$errors->first('confirm_emp')}}</span>
       @endif
     </div>
-  </div>
+  </div> -->
 
-  <div class="col-md-6">
+<!--   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Total Work Experience (Years)</label>
       <input name="work_exp" class="form-control" value="{{ $cm_salaried_details->work_exp }}" type="number">
@@ -473,7 +429,7 @@
       <span class="text-danger">{{$errors->first('work_exp')}}</span>
       @endif
     </div>
-  </div>
+  </div> -->
     </div>                           
          
                                 </div>
@@ -490,108 +446,57 @@
             @if($self_emp_details)
 
             <div class="card custom-card">
-                <div class="card-body">
-                <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
-                    <div class="forms">
-                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
-                                <div class="form-title">
-                                    <h4>CM Details</h4>                        
-                                </div>
-                                <div class="form-body">
-                    <div class="row">        
-
-
+            <div class="card-body">
+            <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                <div class="forms">
+                <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                    <div class="form-title">
+                        <h4>Employment Details</h4>                        
+                    </div>
+            <div class="form-body">
+            <div class="row">        
 <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Organisation Name</label>
-      <input name="org_name" class="form-control" required="true" value="{{ $self_emp_details->org_name }}" type="text">
-      @if($errors->has('org_name'))
-      <span class="text-danger">{{$errors->first('org_name')}}</span>
+      <label class="sub-label">Company Name*</label>
+      <input name="self_company_name" class="form-control" required="true" value="{{ $self_emp_details->self_company_name }}" type="text">
+      @if($errors->has('self_company_name'))
+      <span class="text-danger">{{$errors->first('self_company_name')}}</span>
       @endif
     </div>
   </div>
 
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Percentage Ownership*</label>
+          <input name="percentage_ownership" class="form-control" value="{{ $self_emp_details->percentage_ownership }}" type="text">
+          @if($errors->has('percentage_ownership'))
+          <span class="text-danger">{{$errors->first('percentage_ownership')}}</span>
+          @endif
+        </div>
+    </div>
+
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Nature Of Business</label>
-      <input name="nature_business" class="form-control" value="{{ $self_emp_details->nature_business }}" type="text">
-      @if($errors->has('nature_business'))
-      <span class="text-danger">{{$errors->first('nature_business')}}</span>
+      <label class="sub-label">Type of profession/business*</label>
+      <input name="profession_business" class="form-control" required="true" value="{{ $self_emp_details->profession_business }}" type="text">
+      @if($errors->has('profession_business'))
+      <span class="text-danger">{{$errors->first('profession_business')}}</span>
       @endif
     </div>
   </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Year Of Business In Uae</label>
-      <input name="year_business" class="form-control" required="true" value="{{ $self_emp_details->year_business }}" type="number">
-      @if($errors->has('year_business'))
-      <span class="text-danger">{{$errors->first('year_business')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Annual Business Income*</label>
+          <input name="annual_business_income" class="form-control" value="{{ $self_emp_details->annual_business_income }}" type="number">
+          @if($errors->has('annual_business_income'))
+          <span class="text-danger">{{$errors->first('annual_business_income')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Annual Gross Income</label>
-      <input name="annual_gross_income" class="form-control" value="{{ $self_emp_details->annual_gross_income }}" type="number">
-      @if($errors->has('annual_gross_income'))
-      <span class="text-danger">{{$errors->first('annual_gross_income')}}</span>
-      @endif
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Annual Gross Expenses</label>
-      <input name="annual_gross_expenses" class="form-control" value="{{ $self_emp_details->annual_gross_expenses }}" type="number">
-      @if($errors->has('annual_gross_expenses'))
-      <span class="text-danger">{{$errors->first('annual_gross_expenses')}}</span>
-      @endif
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Annual Net Income</label>
-      <input name="annaul_net_income" class="form-control" value="{{ $self_emp_details->annaul_net_income }}"  type="number">
-      @if($errors->has('annaul_net_income'))
-      <span class="text-danger">{{$errors->first('annaul_net_income')}}</span>
-      @endif
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Trade Licence No.</label>
-      <input name="trade_licence_no" class="form-control" value="{{ $self_emp_details->trade_licence_no }}" type="text">
-      @if($errors->has('trade_licence_no'))
-      <span class="text-danger">{{$errors->first('trade_licence_no')}}</span>
-      @endif
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Insurance Date</label>
-      <input name="insurance_date" class="form-control" value="{{ $self_emp_details->insurance_date }}" type="date">
-      @if($errors->has('insurance_date'))
-      <span class="text-danger">{{$errors->first('insurance_date')}}</span>
-      @endif
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Expire Date</label>
-      <input name="exp_date" class="form-control" value="{{ $self_emp_details->insurance_date }}" type="date">
-      @if($errors->has('exp_date'))
-      <span class="text-danger">{{$errors->first('exp_date')}}</span>
-      @endif
-    </div>
-  </div>
-
-
-
     </div>                           
          
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -609,21 +514,21 @@
                     <div class="forms">
                             <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
                                 <div class="form-title">
-                                    <h4>CM Details</h4>                        
+                                    <h4>Employment Details</h4>                        
                                 </div>
                                 <div class="form-body">
                     <div class="row">        
 <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Source Name</label>
-      <input name="source_name" class="form-control" required="true" value="{{ $other_cm_details->source_name }}"  type="text">
-      @if($errors->has('source_name'))
-      <span class="text-danger">{{$errors->first('source_name')}}</span>
+      <label class="sub-label">Monthly Pension*</label>
+      <input name="monthly_pension" class="form-control" required="true" value="{{ $other_cm_details->monthly_pension }}"  type="text">
+      @if($errors->has('monthly_pension'))
+      <span class="text-danger">{{$errors->first('monthly_pension')}}</span>
       @endif
     </div>
   </div>
 
-  <div class="col-md-6">
+<!--   <div class="col-md-6">
   <div class="form-group">
   <label class="sub-label">Source Of Income</label>
   <input name="source_income" class="form-control" required="true" value="{{ $other_cm_details->source_income }}"  type="text">
@@ -631,8 +536,8 @@
     <span class="text-danger">{{$errors->first('source_income')}}</span>
     @endif
   </div>
-  </div>
-
+  </div> -->
+<!-- 
   <div class="col-md-6">
   <div class="form-group">
   <label class="sub-label">Monthly Income</label>
@@ -641,9 +546,9 @@
     <span class="text-danger">{{$errors->first('month_income')}}</span>
     @endif
   </div>
-  </div>
+  </div> -->
 
-  <div class="col-md-6">
+<!--   <div class="col-md-6">
   <div class="form-group">
   <label class="sub-label">Additional Income</label>
   <input name="add_income" class="form-control"value="{{ $other_cm_details->add_income }}" type="number">
@@ -651,8 +556,8 @@
     <span class="text-danger">{{$errors->first('add_income')}}</span>
     @endif
   </div>
-  </div>
-
+  </div> -->
+<!-- 
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Total Income</label>
@@ -661,7 +566,7 @@
         <span class="text-danger">{{$errors->first('total_income')}}</span>
         @endif
     </div>
-  </div>
+  </div> -->
     </div>                           
          
                                 </div>
@@ -1039,9 +944,236 @@
                 </div>
                 @endif
 
+            @if(count($services) != 0)
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                    <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                    <div class="form-title">
+                    <h4>Services</h4>                        
+                    </div>
+                    <div class="form-body">
+                        <table style="width: 100%; border: 1px solid #888; margin-top: 20px;">
+                            <tr style="background: #5EB495; color: #fff;">
+                                <th style="border-right: 1px solid #fff;text-align: center;padding: 10px;width: 70px;">#</th>
+                                <th style="padding: 10px;border-right: 1px solid #fff;">Name</th>
+                                <th style="padding: 10px;">Status</th>
+                            </tr>
+                            @php
+                                $i = 0;
+                            @endphp
+                            @foreach($services as $service)
+                            @php
+                                $i++;
+                            @endphp
+                            <tr style="border-bottom: 1px solid #888;">
+                                <td style="text-align: center;padding: 10px;border-right: 1px solid #888;">{{ $i }}</td>
+                                <td style="padding: 10px;;border-right: 1px solid #888;">{{ $service->name }}</td>
+                                <td style="padding: 10px;">@if($service->status == 0) Pending @endif</td>
+                            </tr> 
+                            @endforeach
+
+                        </table>
+
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+             @if($product_requested)
+            <div class="card custom-card">
+            <div class="card-body">
+            <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                            <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
+                                <div class="form-title">
+                                    <h4>Type Of Product Requested</h4>                        
+                                </div>
+                                <div class="form-body">   
+                             <div class="row">
 
 
+                @if(in_array(3,  $sel_services))
+                <div class="col-md-12">                            
+                    <label style="font-size: 18px; margin-top: 15px;">Details For Credit Card</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Credit Card Limit</label>
+                      <input name="credit_card_limit" class="form-control" value="{{ $product_requested->credit_card_limit }}" type="text">
+                      @if($errors->has('credit_card_limit'))
+                      <span class="text-danger">{{$errors->first('credit_card_limit')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-12">                            
+                    <label style="font-size: 15px; margin-top: 0px;">Existing Financial Products</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Details of Cards</label>
+                      <input name="details_of_cards" class="form-control" value="{{ $product_requested->details_of_cards }}" type="text" required="true">
+                      @if($errors->has('details_of_cards'))
+                      <span class="text-danger">{{$errors->first('details_of_cards')}}</span>
+                      @endif
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Bank Name</label>
+                      <input name="credit_bank_name" class="form-control" value="{{ $product_requested->credit_bank_name }}" type="text" required="true">
+                      @if($errors->has('credit_bank_name'))
+                      <span class="text-danger">{{$errors->first('credit_bank_name')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Card Limit</label>
+                      <input name="card_limit" class="form-control" value="{{ $product_requested->card_limit }}" type="text" required="true">
+                      @if($errors->has('card_limit'))
+                      <span class="text-danger">{{$errors->first('card_limit')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
 
+                @if(in_array(1,  $sel_services))
+                <div class="col-md-12">                            
+                    <label style="font-size: 18px; margin-top: 15px;">Details For Personal Loan</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="loan_amount" class="form-control" value="{{ $product_requested->loan_amount }}" type="text">
+                      @if($errors->has('loan_amount'))
+                      <span class="text-danger">{{$errors->first('loan_amount')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-12">                            
+                    <label style="font-size: 15px; margin-top: 0px;">Details of Existing Loans</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Bank Name</label>
+                      <input name="loan_bank_name" class="form-control" value="{{ $product_requested->loan_bank_name }}" type="text">
+                      @if($errors->has('loan_bank_name'))
+                      <span class="text-danger">{{$errors->first('loan_bank_name')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Original Loan amount</label>
+                      <input name="original_loan_amount" class="form-control" value="{{ $product_requested->original_loan_amount }}" type="text">
+                      @if($errors->has('original_loan_amount'))
+                      <span class="text-danger">{{$errors->first('original_loan_amount')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+                @if(in_array(4,  $sel_services))
+                <div class="col-md-12">                            
+                    <label style="font-size: 18px; margin-top: 15px;">Details For Business Loan</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="business_loan_amount" class="form-control" value="{{ $product_requested->business_loan_amount }}" type="text">
+                      @if($errors->has('business_loan_amount'))
+                      <span class="text-danger">{{$errors->first('business_loan_amount')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+
+                @if(in_array(5,  $sel_services))
+                <div class="col-md-12">                            
+                    <label style="font-size: 18px; margin-top: 15px;">Details For Mortgage Loan</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Loan Amount</label>
+                      <input name="mortgage_loan_amount" class="form-control" value="{{ $product_requested->mortgage_loan_amount }}" type="text">
+                      @if($errors->has('mortgage_loan_amount'))
+                      <span class="text-danger">{{$errors->first('mortgage_loan_amount')}}</span>
+                      @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Purchase price/ current market valuation</label>
+                      <input name="purchase_price" class="form-control" value="{{ $product_requested->purchase_price }}" type="text">
+                      @if($errors->has('purchase_price'))
+                      <span class="text-danger">{{$errors->first('purchase_price')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Type of loan</label>
+                      <input name="type_of_loan" class="form-control" value="{{ $product_requested->type_of_loan }}" type="text">
+                      @if($errors->has('type_of_loan'))
+                      <span class="text-danger">{{$errors->first('type_of_loan')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Term of loan</label>
+                      <input name="term_of_loan" class="form-control" value="{{ $product_requested->term_of_loan }}" type="text">
+                      @if($errors->has('term_of_loan'))
+                      <span class="text-danger">{{$errors->first('term_of_loan')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">End use of property</label>
+                      <input name="end_use_of_property" class="form-control" value="{{ $product_requested->end_use_of_property }}" type="text">
+                      @if($errors->has('end_use_of_property'))
+                      <span class="text-danger">{{$errors->first('end_use_of_property')}}</span>
+                      @endif
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Interest Rate</label>
+                      <input name="interest_rate" class="form-control" value="{{ $product_requested->interest_rate }}" type="text">
+                      @if($errors->has('interest_rate'))
+                      <span class="text-danger">{{$errors->first('interest_rate')}}</span>
+                      @endif
+                    </div>
+                </div>
+                @endif
+            </div>
+            </div>           
+            </div>
+            </div>
+            </div>
+        </div> 
+                
+            @if(isset($customer_onboarding->video))  
+            <div class="col-md-6">
+            <h3 style="margin-top: -20px; font-size: 20px; margin-bottom: -15px;">Upload Video</h3>    
+            <video width="420" height="300" controls style="margin-bottom: 20px;">
+              <source src="{!! asset($customer_onboarding->video) !!}" type="video/mp4">
+            </video>
+            </div>
+            
+            @endif
+            </div>
+            @endif
             </div>
         </div>
     </div>
