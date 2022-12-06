@@ -10,7 +10,7 @@ class Service extends Model {
     protected $table = 'services';
    
     protected $fillable = [
-        'name', 'blue_icon', 'status', 'image', 'url', 'created_at', 'updated_at', 'deleted_at'
+        'name', 'blue_icon', 'status', 'image', 'url', 'sort_order', 'created_at', 'updated_at', 'deleted_at'
     ];
 
     public function validate($inputs, $id = null){

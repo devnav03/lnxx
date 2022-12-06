@@ -76034,6 +76034,29 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 2px 7px;
 }
 
+.pagination.pagination-sm li.active{
+    background: #5EB495;
+}
+.pagination.pagination-sm li.active a{
+    color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

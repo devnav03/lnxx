@@ -16,14 +16,14 @@
 <div class="row">
 
   <div class="col-md-12">
-    <label style="font-weight: 400; font-size: 15px;"><input type="checkbox" name="consultation" value="1" style="margin-top: 2px; width: 20px; height: 20px; box-shadow: none; float: left; margin-right: 10px;" required="true"> By checking the box, you agree to provide your consultation.</label> 
+    <label style="font-weight: 400; font-size: 15px;"><input type="checkbox" @if($consent_form == 1) checked="" @endif name="consultation" value="1" style="margin-top: 2px; width: 20px; height: 20px; box-shadow: none; float: left; margin-right: 10px;" required="true"> By checking the box, you agree to provide your consultation.</label> 
   </div>
   <div class="col-md-12">
   <p class="by_signing">By signing this form, you consent (permission) to Emirates Islamic to request for your statement of account through the Central Bank of the United Arab Emirates, from your bank (as can be identified by the account number IBAN) and also for your bank to provide this information through the Central Bank of the United Arab Emirates, without taking additional consent. ....</p>
   </div>
  
   <div class="col-md-12">
-    <label style="font-weight: 400; font-size: 15px;"><input type="checkbox" name="consultation" value="1" style="margin-top: 2px; width: 20px; height: 20px; box-shadow: none; float: left; margin-right: 10px;" required="true"> By checking the box, you agree to provide your consultation.</label> 
+    <label style="font-weight: 400; font-size: 15px;"><input type="checkbox" @if($consent_form == 1) checked="" @endif name="consultation" value="1" style="margin-top: 2px; width: 20px; height: 20px; box-shadow: none; float: left; margin-right: 10px;" required="true"> By checking the box, you agree to provide your consultation.</label> 
   </div>
 
   <div class="col-md-12 text-center">

@@ -176,13 +176,6 @@
                                 <div class="form-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                        <h6 id="salaried" class="cm_type @if($customer_onboarding->cm_type == 1) active @endif">Salaried</h6>
-                                        <h6 id="self_employed" class="cm_type @if($customer_onboarding->cm_type == 2) active @endif">Self Employed</h6>
-                                        <h6 id="other_employed"  class="cm_type @if($customer_onboarding->cm_type == 3) active @endif">Other</h6>
-                                        <input type="hidden" id="cm_type" name="cm_type" value="{{ $customer_onboarding->cm_type }}">
-                                        </div>
-
-                                        <div class="col-md-12">
                                             <label style="margin-top: 15px; font-size: 15px; font-weight: 500;">Name As Per Passport</label>
                                             </div>
                                             <div class="col-md-3">
@@ -305,6 +298,13 @@
     </div>
     @endif
 
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Credit Score</label>
+            <input name="credit_score" class="form-control" value="{{ $customer_onboarding->credit_score }}" type="text">
+        </div>
+    </div>
+
 
     </div>
     </div>
@@ -329,7 +329,13 @@
                         <h4 style="margin-bottom: 20px;">Employment Details</h4>                     
                     </div>
                     <div class="form-body">
-                    <div class="row">        
+                    <div class="row">  
+                    <div class="col-md-12">
+                                        <h6 id="salaried" class="cm_type @if($customer_onboarding->cm_type == 1) active @endif">Salaried</h6>
+                                        <h6 id="self_employed" class="cm_type @if($customer_onboarding->cm_type == 2) active @endif">Self Employed</h6>
+                                        <h6 id="other_employed"  class="cm_type @if($customer_onboarding->cm_type == 3) active @endif">Other</h6>
+                                        <input type="hidden" id="cm_type" name="cm_type" value="{{ $customer_onboarding->cm_type }}">
+                                        </div>      
                     <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
@@ -444,51 +450,54 @@
                         <h4>Employment Details</h4>                        
                     </div>
             <div class="form-body">
-            <div class="row">        
-<div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Company Name*</label>
-      <!-- <input name="self_company_name" class="form-control" required="true" value="{{ $self_emp_details->self_company_name }}" type="text"> -->
-       <select name="self_company_name" class="form-control" required="true">
-        @foreach($company as $comp)
-        <option value="{{ $comp->id }}" @if($self_emp_details->self_company_name == $comp->id) selected @endif >{{ $comp->name }}</option> 
-        @endforeach
-      </select>
-      @if($errors->has('self_company_name'))
-      <span class="text-danger">{{$errors->first('self_company_name')}}</span>
-      @endif
-    </div>
-  </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-          <label class="sub-label">Percentage Ownership*</label>
-          <input name="percentage_ownership" class="form-control" value="{{ $self_emp_details->percentage_ownership }}" type="text">
-          @if($errors->has('percentage_ownership'))
-          <span class="text-danger">{{$errors->first('percentage_ownership')}}</span>
-          @endif
-        </div>
-    </div>
-
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Type of profession/business*</label>
-      <input name="profession_business" class="form-control" required="true" value="{{ $self_emp_details->profession_business }}" type="text">
-      @if($errors->has('profession_business'))
-      <span class="text-danger">{{$errors->first('profession_business')}}</span>
-      @endif
-    </div>
-  </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-          <label class="sub-label">Annual Business Income*</label>
-          <input name="annual_business_income" class="form-control" value="{{ $self_emp_details->annual_business_income }}" type="number">
-          @if($errors->has('annual_business_income'))
-          <span class="text-danger">{{$errors->first('annual_business_income')}}</span>
-          @endif
-        </div>
-    </div>
+            <div class="row">    
+            <div class="col-md-12">
+                <h6 id="salaried" class="cm_type @if($customer_onboarding->cm_type == 1) active @endif">Salaried</h6>
+                <h6 id="self_employed" class="cm_type @if($customer_onboarding->cm_type == 2) active @endif">Self Employed</h6>
+                <h6 id="other_employed"  class="cm_type @if($customer_onboarding->cm_type == 3) active @endif">Other</h6>
+                <input type="hidden" id="cm_type" name="cm_type" value="{{ $customer_onboarding->cm_type }}">
+            </div>    
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label class="sub-label">Company Name*</label>
+                  <!-- <input name="self_company_name" class="form-control" required="true" value="{{ $self_emp_details->self_company_name }}" type="text"> -->
+                   <select name="self_company_name" class="form-control" required="true">
+                    @foreach($company as $comp)
+                    <option value="{{ $comp->id }}" @if($self_emp_details->self_company_name == $comp->id) selected @endif >{{ $comp->name }}</option> 
+                    @endforeach
+                  </select>
+                  @if($errors->has('self_company_name'))
+                  <span class="text-danger">{{$errors->first('self_company_name')}}</span>
+                  @endif
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label class="sub-label">Percentage Ownership*</label>
+                  <input name="percentage_ownership" class="form-control" value="{{ $self_emp_details->percentage_ownership }}" type="text">
+                  @if($errors->has('percentage_ownership'))
+                  <span class="text-danger">{{$errors->first('percentage_ownership')}}</span>
+                  @endif
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label class="sub-label">Type of profession/business*</label>
+                  <input name="profession_business" class="form-control" required="true" value="{{ $self_emp_details->profession_business }}" type="text">
+                  @if($errors->has('profession_business'))
+                  <span class="text-danger">{{$errors->first('profession_business')}}</span>
+                  @endif
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label class="sub-label">Annual Business Income*</label>
+                  <input name="annual_business_income" class="form-control" value="{{ $self_emp_details->annual_business_income }}" type="number">
+                  @if($errors->has('annual_business_income'))
+                  <span class="text-danger">{{$errors->first('annual_business_income')}}</span>
+                  @endif
+                </div>
+            </div>
     </div>                           
          
                                 </div>
@@ -512,7 +521,13 @@
                                     <h4>Employment Details</h4>                        
                                 </div>
                                 <div class="form-body">
-                    <div class="row">        
+                    <div class="row"> 
+                    <div class="col-md-12">
+                        <h6 id="salaried" class="cm_type @if($customer_onboarding->cm_type == 1) active @endif">Salaried</h6>
+                        <h6 id="self_employed" class="cm_type @if($customer_onboarding->cm_type == 2) active @endif">Self Employed</h6>
+                        <h6 id="other_employed"  class="cm_type @if($customer_onboarding->cm_type == 3) active @endif">Other</h6>
+                        <input type="hidden" id="cm_type" name="cm_type" value="{{ $customer_onboarding->cm_type }}">
+                    </div>       
 <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Monthly Pension*</label>
@@ -730,49 +745,48 @@
     </div>
   </div>
 
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Resdence Type</label>
+            <select name="resdence_type" class="form-control" required="true">
+                @if($address_details)
+                <option value="Shared" @if($address_details->resdence_type == 'Shared') selected @endif >Shared</option>
+                <option value="Rented" @if($address_details->resdence_type == 'Rented') selected @endif >Rented</option>
+                <option value="Owned" @if($address_details->resdence_type == 'Owned') selected @endif >Owned</option>
+                <option value="Employer Provided" @if($address_details->resdence_type == 'mployer Provided') selected @endif >Employer Provided</option>
+                <option value="Living With Parents" @if($address_details->resdence_type == 'Living With Parents') selected @endif >Living With Parents</option>
+                @else
+                <option value="Shared">Shared</option>
+                <option value="Rented">Rented</option>
+                <option value="Owned">Owned</option>
+                <option value="Employer Provided">Employer Provided</option>
+                <option value="Living With Parents">Living With Parents</option>
+                @endif
+            </select>
+            @if($errors->has('resdence_type'))
+                <span class="text-danger">{{$errors->first('resdence_type')}}</span>
+            @endif
+        </div>
+    </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Resdence Type</label>
-      <select name="resdence_type" class="form-control" required="true">
-        @if($address_details)
-        <option value="Shared" @if($address_details->resdence_type == 'Shared') selected @endif >Shared</option>
-        <option value="Rented" @if($address_details->resdence_type == 'Rented') selected @endif >Rented</option>
-        <option value="Owned" @if($address_details->resdence_type == 'Owned') selected @endif >Owned</option>
-        <option value="Employer Provided" @if($address_details->resdence_type == 'mployer Provided') selected @endif >Employer Provided</option>
-        <option value="Living With Parents" @if($address_details->resdence_type == 'Living With Parents') selected @endif >Living With Parents</option>
-        @else
-        <option value="Shared">Shared</option>
-        <option value="Rented">Rented</option>
-        <option value="Owned">Owned</option>
-        <option value="Employer Provided">Employer Provided</option>
-        <option value="Living With Parents">Living With Parents</option>
-        @endif
-      </select>
-      @if($errors->has('resdence_type'))
-      <span class="text-danger">{{$errors->first('resdence_type')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Annual Rent</label>
+          <input name="annual_rent" value="{{ $address_details->annual_rent }}" class="form-control" type="number">
+          @if($errors->has('annual_rent'))
+          <span class="text-danger">{{$errors->first('annual_rent')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Annual Rent</label>
-      <input name="annual_rent" value="{{ $address_details->annual_rent }}" class="form-control" type="number">
-      @if($errors->has('annual_rent'))
-      <span class="text-danger">{{$errors->first('annual_rent')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Duration At Current Address</label>
+          <input name="duration_at_current_address" value="{{ $address_details->duration_at_current_address }}" class="form-control" type="number">
+          @if($errors->has('duration_at_current_address'))
+          <span class="text-danger">{{$errors->first('duration_at_current_address')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Duration At Current Address</label>
-      <input name="duration_at_current_address" value="{{ $address_details->duration_at_current_address }}" class="form-control" type="number">
-      @if($errors->has('duration_at_current_address'))
-      <span class="text-danger">{{$errors->first('duration_at_current_address')}}</span>
-      @endif
-    </div>
-  </div>
 
   <div class="col-md-12">
     <label style="margin-top: 15px; font-size: 15px; font-weight: 500;">Office Address</label>
@@ -787,55 +801,55 @@
     </div>
   </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Company Phone No</label>
-      <input name="company_phone_no" value="{{ $address_details->company_phone_no }}" class="form-control" type="text">
-      @if($errors->has('company_phone_no'))
-      <span class="text-danger">{{$errors->first('company_phone_no')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Company Phone No</label>
+          <input name="company_phone_no" value="{{ $address_details->company_phone_no }}" class="form-control" type="text">
+          @if($errors->has('company_phone_no'))
+          <span class="text-danger">{{$errors->first('company_phone_no')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Address Line 1</label>
-      <input name="company_address_line_1" value="{{ $address_details->company_address_line_1 }}" class="form-control" type="text">
-      @if($errors->has('company_address_line_1'))
-      <span class="text-danger">{{$errors->first('company_address_line_1')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Address Line 1</label>
+          <input name="company_address_line_1" value="{{ $address_details->company_address_line_1 }}" class="form-control" type="text">
+          @if($errors->has('company_address_line_1'))
+          <span class="text-danger">{{$errors->first('company_address_line_1')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Address Line 2</label>
-      <input name="company_address_line_2" value="{{ $address_details->company_address_line_2 }}" class="form-control" type="text">
-      @if($errors->has('company_address_line_2'))
-      <span class="text-danger">{{$errors->first('company_address_line_2')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Address Line 2</label>
+          <input name="company_address_line_2" value="{{ $address_details->company_address_line_2 }}" class="form-control" type="text">
+          @if($errors->has('company_address_line_2'))
+          <span class="text-danger">{{$errors->first('company_address_line_2')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Address Line 3</label>
-      <input name="company_address_line_3" value="{{ $address_details->company_address_line_3 }}" class="form-control" type="text">
-      @if($errors->has('company_address_line_3'))
-      <span class="text-danger">{{$errors->first('company_address_line_3')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Address Line 3</label>
+          <input name="company_address_line_3" value="{{ $address_details->company_address_line_3 }}" class="form-control" type="text">
+          @if($errors->has('company_address_line_3'))
+          <span class="text-danger">{{$errors->first('company_address_line_3')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Po Box No</label>
-      <input name="company_po_box" value="{{ $address_details->company_po_box }}" class="form-control" type="text">
-      @if($errors->has('company_po_box'))
-      <span class="text-danger">{{$errors->first('company_po_box')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Po Box No</label>
+          <input name="company_po_box" value="{{ $address_details->company_po_box }}" class="form-control" type="text">
+          @if($errors->has('company_po_box'))
+          <span class="text-danger">{{$errors->first('company_po_box')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -895,14 +909,14 @@
     <div class="form-group">
       <label class="sub-label">Country</label>
       <select name="permanent_address_country" class="form-control" required="true">
-      <option value="">Select</option>
-      @foreach($countries as $country)
+        <option value="">Select</option>
+        @foreach($countries as $country)
         <option value="{{ $country->id }}" @if(isset($address_details->permanent_address_country)) @if($address_details->permanent_address_country == $country->id) selected  @endif @endif >{{ $country->country_name }}</option>
-      @endforeach
-    </select>
-      @if($errors->has('permanent_address_country'))
-      <span class="text-danger">{{$errors->first('permanent_address_country')}}</span>
-      @endif
+        @endforeach
+        </select>
+        @if($errors->has('permanent_address_country'))
+        <span class="text-danger">{{$errors->first('permanent_address_country')}}</span>
+        @endif
     </div>
   </div>
 
@@ -1713,8 +1727,8 @@
     margin-right: 25px;
     font-size: 14px;
     /*cursor: pointer;*/
-    margin-bottom: 10px;
-    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-top: 0px;
 }
 .cm_type.active {
     background: #FF6722;

@@ -55,7 +55,8 @@ class UserController extends Controller
               $user = User::where('api_key', $request->api_key)->select('id', 'login_otp')->first();
               if($user){
 
-                 
+                $user_id = $user->id;
+                
                 if($user->login_otp == $request->otp){
                   User::where('id', $user_id)
                   ->update([
@@ -153,7 +154,23 @@ class UserController extends Controller
         return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
     }
 
+    public function my_relations(Request $request){
 
+      if($request->api_key){
+        $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+
+            $data = \DB::table('service_applies')
+                    ->join('services', 'services.id', '=', 'service_applies.service_id')
+                    ->select('service_applies.status', 'services.name', 'services.image')
+                    ->where('service_applies.customer_id', $user->id)->get();
+
+            return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
+
+          }
+      }
+
+    }
 
     public function upload_video(Request $request){
       try {
@@ -1179,8 +1196,7 @@ class UserController extends Controller
         }
 
       } catch(\Exception $e){
-
-        dd($e);
+       // dd($e);
           return back();
         }
     }
@@ -1190,7 +1206,175 @@ class UserController extends Controller
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user) {
 
-          $data = ProductRequest::where('user_id', $user->id)->select('credit_card_limit', 'details_of_cards', 'credit_bank_name', 'card_limit', 'loan_amount', 'loan_bank_name', 'original_loan_amount', 'business_loan_amount', 'mortgage_loan_amount', 'purchase_price', 'type_of_loan', 'term_of_loan', 'end_use_of_property', 'interest_rate')->first();
+          $datas = ProductRequest::where('user_id', $user->id)->first();
+          if($datas->credit_card_limit){
+            $data['credit_card_limit'] = $datas->credit_card_limit;
+          } else {
+            $data['credit_card_limit'] = null;
+          }
+          
+          if($datas->loan_amount){
+            $data['loan_amount'] = $datas->loan_amount;
+          } else {
+            $data['loan_amount'] = null;
+          }
+
+          $credit_card_existing_financials  = [];
+          $business_loan_amount = [];
+          $loan_bank_name = [];
+          $mortgage_loan_amount = [];
+          if($datas->mortgage_loan_amount) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount,
+                'purchase_price' => $datas->purchase_price,
+                'type_of_loan' => $datas->type_of_loan,
+                'term_of_loan' => $datas->term_of_loan,
+                'end_use_of_property' => $datas->end_use_of_property,
+                'interest_rate' => $datas->interest_rate,
+                'mortgage_emi' => $datas->mortgage_emi,
+              );
+          }
+          if($datas->mortgage_loan_amount2) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount2,
+                'purchase_price' => $datas->purchase_price2,
+                'type_of_loan' => $datas->type_of_loan2,
+                'term_of_loan' => $datas->term_of_loan2,
+                'end_use_of_property' => $datas->end_use_of_property2,
+                'interest_rate' => $datas->interest_rate2,
+                'mortgage_emi' => $datas->mortgage_emi2,
+              );
+          }
+          if($datas->mortgage_loan_amount3) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount3,
+                'purchase_price' => $datas->purchase_price3,
+                'type_of_loan' => $datas->type_of_loan3,
+                'term_of_loan' => $datas->term_of_loan3,
+                'end_use_of_property' => $datas->end_use_of_property3,
+                'interest_rate' => $datas->interest_rate3,
+                'mortgage_emi' => $datas->mortgage_emi3,
+              );
+          }
+          if($datas->mortgage_loan_amount4) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount4,
+                'purchase_price' => $datas->purchase_price3,
+                'type_of_loan' => $datas->type_of_loan4,
+                'term_of_loan' => $datas->term_of_loan4,
+                'end_use_of_property' => $datas->end_use_of_property4,
+                'interest_rate' => $datas->interest_rate4,
+                'mortgage_emi' => $datas->mortgage_emi4,
+              );
+          }
+
+          if($datas->loan_bank_name) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_name,
+                'original_loan_amount' => $datas->original_loan_amount,
+                'loan_emi' => $datas->loan_emi,
+              );
+          }
+          if($datas->loan_bank_name2) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_nam2,
+                'original_loan_amount' => $datas->original_loan_amount2,
+                'loan_emi' => $datas->loan_emi2,
+              );
+          }
+          if($datas->loan_bank_nam3) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_nam3,
+                'original_loan_amount' => $datas->original_loan_amount3,
+                'loan_emi' => $datas->loan_emi3,
+              );
+          }
+          if($datas->loan_bank_name4) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_name4,
+                'original_loan_amount' => $datas->original_loan_amount4,
+                'loan_emi' => $datas->loan_emi4,
+              );
+          }
+
+          if($datas->details_of_cards) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards,
+                'credit_bank_name' => $datas->credit_bank_name,
+                'card_limit' => $datas->card_limit,
+              );
+          }
+          if($datas->details_of_cards2) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards2,
+                'credit_bank_name' => $datas->credit_bank_name2,
+                'card_limit' => $datas->card_limit2,
+              );
+          }
+          if($datas->details_of_cards3) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards3,
+                'credit_bank_name' => $datas->credit_bank_name3,
+                'card_limit' => $datas->card_limit3,
+              );
+          }
+          if($datas->details_of_cards4) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards4,
+                'credit_bank_name' => $datas->credit_bank_name4,
+                'card_limit' => $datas->card_limit4,
+              );
+          }
+
+
+
+          if($datas->business_loan_amount) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount,
+                'business_loan_emi' => $datas->business_loan_emi,
+              );
+          }
+          if($datas->business_loan_amount2) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount2,
+                'business_loan_emi' => $datas->business_loan_emi2,
+              );
+          }
+          if($datas->business_loan_amount3) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount3,
+                'business_loan_emi' => $datas->business_loan_emi3,
+              );
+          }
+          if($datas->business_loan_amount4) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount4,
+                'business_loan_emi' => $datas->business_loan_emi4,
+              );
+          }
+
+
+
+          $data['credit_card_existing_financials'] = $credit_card_existing_financials;
+          $data['business_loan_amount'] = $business_loan_amount;
+          $data['loan_bank_name'] = $loan_bank_name;
+          $data['mortgage_loan_amount'] = $mortgage_loan_amount; 
 
           return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
 
@@ -1200,55 +1384,48 @@ class UserController extends Controller
     }
 
     public function save_product_requested(Request $request){
+
       if($request->api_key){
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user) {
-
             $credit_card_limit = '';
-
+            if(isset($request->credit_card_limit)){
+              $credit_card_limit = $request->credit_card_limit;
+            }
             $details_of_cards = '';
             $credit_bank_name = '';
             $card_limit = '';
-
             $details_of_cards2 = '';
             $credit_bank_name2 = '';
             $card_limit2 = '';
-
             $details_of_cards3 = '';
             $credit_bank_name3 = '';
             $card_limit3 = '';
-
             $details_of_cards4 = '';
             $credit_bank_name4 = '';
             $card_limit4 = '';
-
             $loan_amount = '';
-
+            if(isset($request->loan_amount)){
+              $loan_amount = $request->loan_amount;
+            }
             $loan_bank_name = '';
             $original_loan_amount = '';
             $loan_emi = '';
-
             $loan_bank_name2 = '';
             $original_loan_amount2 = '';
             $loan_emi2 = '';
-
             $loan_bank_name3 = '';
             $original_loan_amount3 = '';
             $loan_emi3 = '';
-
             $loan_bank_name4 = '';
             $original_loan_amount4 = '';
             $loan_emi4 = '';
-
             $business_loan_amount = '';
             $business_loan_emi = '';
-
             $business_loan_amount2 = '';
             $business_loan_emi2 = '';
-
             $business_loan_amount3 = '';
             $business_loan_emi3 = '';
-
             $business_loan_amount4 = '';
             $business_loan_emi4 = '';
 
@@ -1275,7 +1452,6 @@ class UserController extends Controller
             $end_use_of_property3 = '';
             $interest_rate3 = '';
             $mortgage_emi3 = '';
-
             $mortgage_loan_amount4 = '';
             $purchase_price4 = '';
             $type_of_loan4 = '';
@@ -1283,29 +1459,197 @@ class UserController extends Controller
             $end_use_of_property4 = '';
             $interest_rate4 = '';
             $mortgage_emi4 = '';
-
-            $inputs = $request->all();
+            // $inputs = $request->all();
             $user_id = $user->id;
+            // $inputs['user_id'] = $user_id;
+
+            if($request->details_of_cards){
+              $i = 1;
+              $bus_data = json_decode($request->details_of_cards);
+              foreach($bus_data as $key => $details_of_card) {
+                  if($i == 1){
+                    $details_of_cards = $details_of_card->details_of_cards;
+                    $credit_bank_name = $details_of_card->credit_bank_name;
+                    $card_limit = $details_of_card->card_limit;
+                  } elseif ($i == 2) {
+                    $details_of_cards2 = $details_of_card->details_of_cards;
+                    $credit_bank_name2 = $details_of_card->credit_bank_name;
+                    $card_limit2 = $details_of_card->card_limit;
+                  } elseif ($i == 3) {
+                    $details_of_cards3 = $details_of_card->details_of_cards;
+                    $credit_bank_name3 = $details_of_card->credit_bank_name;
+                    $card_limit3 = $details_of_card->card_limit;
+                  } else {
+                    $details_of_cards4 = $details_of_card->details_of_cards;
+                    $credit_bank_name4 = $details_of_card->credit_bank_name;
+                    $card_limit4 = $details_of_card->card_limit;
+                  }
+                $i++;
+              } 
+            }
+        
+            if($request->loan_bank_name){ 
+              $i = 1;
+              $bus_data = json_decode($request->loan_bank_name);
+              foreach($bus_data as $loan_bank_nam) {
+                  if($i == 1){
+                    $loan_bank_name = $loan_bank_nam->loan_bank_name;
+                    $original_loan_amount = $loan_bank_nam->original_loan_amount;
+                    $loan_emi = $loan_bank_nam->loan_emi;
+                  } elseif ($i == 2) {
+                    $loan_bank_name2 = $loan_bank_nam->loan_bank_name;
+                    $original_loan_amount2 = $loan_bank_nam->original_loan_amount;
+                    $loan_emi2 = $loan_bank_nam->loan_emi;
+                  } elseif ($i == 3) {
+                    $loan_bank_name3 = $loan_bank_nam->loan_bank_name;
+                    $original_loan_amount3 = $loan_bank_nam->original_loan_amount;
+                    $loan_emi3 = $loan_bank_nam->loan_emi;
+                  } else {
+                    $loan_bank_name4 = $loan_bank_nam->loan_bank_name; 
+                    $original_loan_amount4 = $loan_bank_nam->original_loan_amount;
+                    $loan_emi4 = $loan_bank_nam->loan_emi;
+                  }
+                $i++;
+              }
+            }
+          
+            
+            if($request->business_loan_amount){ 
+              $i = 1;
+              $bus_data = json_decode($request->business_loan_amount);
+              foreach($bus_data as $businessLoan) {
+                  //dd($businessLoan->businessLoan);
+                  if($i == 1){
+                    $business_loan_amount = $businessLoan->business_loan_amount;
+                    $business_loan_emi = $businessLoan->business_loan_emi; 
+                  } elseif ($i == 2) {
+                    $business_loan_amount2 = $businessLoan->business_loan_amount;
+                    $business_loan_emi2 = $businessLoan->business_loan_emi; 
+                  } elseif ($i == 3) {
+                    $business_loan_amount3 = $businessLoan->business_loan_amount;
+                    $business_loan_emi3 = $businessLoan->business_loan_emi; 
+                  } else {
+                    $business_loan_amount4 = $businessLoan->business_loan_amount; 
+                    $business_loan_emi4 = $businessLoan->business_loan_emi; 
+                  }
+                $i++;
+              }
+            }
+
+          if($request->mortgage_loan_amount){ 
+            $i = 1;
+            $bus_data = json_decode($request->mortgage_loan_amount);
+            foreach($bus_data as $mortgage_loan_amoun) {
+                if($i == 1){
+                  $mortgage_loan_amount = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate = $mortgage_loan_amoun->interest_rate;
+                  $mortgage_emi = $mortgage_loan_amoun->mortgage_emi;
+                } elseif ($i == 2) {
+                  $mortgage_loan_amount2 = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price2 = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan2 = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan2 = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property2 = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate2 = $mortgage_loan_amoun->interest_rate;
+                  $mortgage_emi2 = $mortgage_loan_amoun->mortgage_emi;
+                } elseif ($i == 3) {
+                  $mortgage_loan_amount3 = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price3 = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan3 = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan3 = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property3 = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate3 = $mortgage_loan_amoun->interest_rate;
+                  $mortgage_emi3 = $mortgage_loan_amoun->mortgage_emi;
+                } else {
+                  $mortgage_loan_amount4 = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price4 = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan4 = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan4 = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property4 = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate4 = $mortgage_loan_amoun->interest_rate; 
+                  $mortgage_emi4 = $mortgage_loan_amoun->mortgage_emi; 
+                }
+              $i++;
+            }
+          }
+           
+
+            $inputs['credit_card_limit'] =  $credit_card_limit;
             $inputs['user_id'] = $user_id;
+            $inputs['details_of_cards'] =  $details_of_cards;
+            $inputs['credit_bank_name'] = $credit_bank_name;
+            $inputs['card_limit'] =  $card_limit;
+            $inputs['details_of_cards2'] = $details_of_cards2;
+            $inputs['credit_bank_name2'] =  $credit_bank_name2;
+            $inputs['card_limit2'] = $card_limit2;
+            $inputs['details_of_cards3'] =  $details_of_cards3;
+            $inputs['credit_bank_name3'] = $credit_bank_name3;
+            $inputs['card_limit3'] =  $card_limit3;
+            $inputs['details_of_cards4'] = $details_of_cards4;
+            $inputs['credit_bank_name4'] =  $credit_bank_name4;
+            $inputs['card_limit4'] = $card_limit4;
+            $inputs['loan_amount'] =  $loan_amount;
+            $inputs['loan_bank_name'] = $loan_bank_name;
+            $inputs['original_loan_amount'] =  $original_loan_amount;
+            $inputs['loan_emi'] = $loan_emi;
+            $inputs['loan_bank_name2'] =  $loan_bank_name2;
+            $inputs['original_loan_amount2'] = $original_loan_amount2;
+            $inputs['loan_emi2'] =  $loan_emi2;
+            $inputs['loan_bank_name3'] = $loan_bank_name3;
+            $inputs['original_loan_amount3'] =  $original_loan_amount3;
+            $inputs['loan_emi3'] = $loan_emi3;
+            $inputs['loan_bank_name4'] =  $loan_bank_name4;
+            $inputs['original_loan_amount4'] = $original_loan_amount4;
+            $inputs['loan_emi4'] =  $loan_emi4;
+            $inputs['business_loan_amount'] = $business_loan_amount;
+            $inputs['business_loan_emi'] =  $business_loan_emi;
+            $inputs['business_loan_amount2'] = $business_loan_amount2;
+            $inputs['business_loan_emi2'] = $business_loan_emi2;
+            $inputs['business_loan_amount3'] = $business_loan_amount3;
+            $inputs['business_loan_emi3'] =  $business_loan_emi3;
+            $inputs['business_loan_amount4'] = $business_loan_amount4;
+            $inputs['business_loan_emi4'] =  $business_loan_emi4;
+            $inputs['mortgage_loan_amount'] = $mortgage_loan_amount;
+            $inputs['purchase_price'] =  $purchase_price;
+            $inputs['type_of_loan'] = $type_of_loan;
+            $inputs['term_of_loan'] = $term_of_loan;
+            $inputs['end_use_of_property'] = $end_use_of_property;
+            $inputs['interest_rate'] =  $interest_rate;
+            $inputs['mortgage_emi'] = $mortgage_emi;
+            $inputs['mortgage_loan_amount2']  =  $mortgage_loan_amount2;
+            $inputs['purchase_price2'] = $purchase_price2;
+            $inputs['type_of_loan2'] =  $type_of_loan2;
+            $inputs['term_of_loan2'] = $term_of_loan2;
+            $inputs['end_use_of_property2'] =  $end_use_of_property2;
+            $inputs['interest_rate2'] = $interest_rate2;
+            $inputs['mortgage_emi2'] =  $mortgage_emi2;
+            $inputs['mortgage_loan_amount3'] = $mortgage_loan_amount3;
+            $inputs['purchase_price3'] =  $purchase_price3;
+            $inputs['type_of_loan3'] = $type_of_loan3;
+            $inputs['term_of_loan3'] =  $term_of_loan3;
+            $inputs['end_use_of_property3'] = $end_use_of_property3;
+            $inputs['interest_rate3'] = $interest_rate3;
+            $inputs['mortgage_emi3'] = $mortgage_emi3;
+            $inputs['mortgage_loan_amount4'] = $mortgage_loan_amount4;
+            $inputs['purchase_price4'] = $purchase_price4;
+            $inputs['type_of_loan4'] =  $type_of_loan4;
+            $inputs['term_of_loan4'] = $term_of_loan4;
+            $inputs['end_use_of_property4'] =  $end_use_of_property4;
+            $inputs['interest_rate4'] = $interest_rate4;
+            $inputs['mortgage_emi4'] = $mortgage_emi4;
+
+            //dd($inputs);
+
             $cm_sal = ProductRequest::where('user_id', $user_id)->select('id')->first();
             if($cm_sal){
                 $id = $cm_sal->id;
+                      
+                (new ProductRequest)->store($inputs, $id);
 
-                foreach($inputs['gallery'] as $file1){
-                                  
-
-                  ProductRequest::create([
-
-
-                      'product_image'  =>  '/uploads/product_images/'.$fileName1,
-                      'user_id' => $user_id,
-
-                  ]);
-                }
-
-
-
-                (new ProductRequest)->store($inputs, $id); 
                 $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
             $ser = 1300;
             $ref_id = $ser.$result->id;

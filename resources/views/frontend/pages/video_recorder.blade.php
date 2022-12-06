@@ -41,7 +41,7 @@
 <!--     <h3>Services is only a few step away from you</h3> -->
 <!--     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
-    <img src="{!! asset('assets/frontend/images/video_record.png') !!}" style="max-width: 83%;" class="img-responsive">
+    <img src="{!! asset('assets/frontend/images/video_record.png') !!}" style="max-width: 83%;" class="img-responsive const_vid_img">
     
   </div>
 

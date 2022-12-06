@@ -34,6 +34,22 @@
                                             {!! Form::label('name', lang('Name'), array('class' => '')) !!}
                                             {!! Form::text('name', null, array('class' => 'form-control', 'required' => 'true')) !!}
                                         </div> 
+                                        <div class="row">
+                                        <div class="col-md-12">
+                                        <div class="form-group"> 
+                                            <ul style="padding: 0px; list-style: none;">
+                                                @foreach($services as $service)   
+                                                    <li style="margin-bottom: 6px;"><input @if(isset($service_id)) @if(in_array($service->id, $service_id)) checked="" @endif @endif style="float: left; margin-top: 3px; margin-right: 7px;" type="checkbox" value="{{ $service->id }}" name="service[]"> {{ $service->name }} </li>
+                                                @endforeach
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="col-md-12">
+                                         <button type="submit" class="btn btn-default w3ls-button">Submit</button> 
+                                    </div>
+                                </div>
                                     </div>  
 
                                     <div class="col-md-6">
@@ -53,10 +69,8 @@
                                             </div>
                                         @endif
                                     </div>
-                                 
-                                    <div class="col-md-6">
-                                         <button type="submit" class="btn btn-default w3ls-button">Submit</button> 
-                                    </div>
+
+                                    
                                 </div>
                                     
                                 {!! Form::close() !!}

@@ -51,6 +51,8 @@
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('sliders.index') }}">Sliders</a></li> 
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('company.index') }}">Company</a></li> 
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('landing-sliders.index') }}">Landing Page Sliders</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('blogs.index') }}">Blogs</a></li>
+                                
                             </ul>
                         </li>
 
@@ -136,9 +138,14 @@
                             </ul> -->
                         </li>
 
-
-                        
-  
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="{{ route('contact-enquiry.index') }}">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-email sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">Contact Enquiry</span>
+                            </a>
+                        </li>                     
 
 
                         

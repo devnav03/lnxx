@@ -213,6 +213,16 @@
     </div>
   </div>
 
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Credit Score</label>
+      <input name="credit_score" class="form-control" @if($result) value="{{ $result->credit_score }}" @else value="{{ old('credit_score') }}" @endif type="number">
+      @if($errors->has('credit_score'))
+      <span class="text-danger">{{$errors->first('credit_score')}}</span>
+      @endif
+    </div>
+  </div>
+
 
 
 

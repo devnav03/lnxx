@@ -11,6 +11,8 @@ use Auth;
 use Files;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Bank;
+use App\Models\BankService;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class BankController extends  Controller{
@@ -20,13 +22,15 @@ class BankController extends  Controller{
     }
   
     public function create() {
-        return view('admin.banks.create');
+        $services = Service::where('status', 1)->orderBy('sort_order', 'ASC')->select('id', 'name')->get();
+        return view('admin.banks.create', compact('services'));
     }
 
     public function  store(Request $request) {
         $inputs = $request->all();
        // dd($request);
         try {
+
             $validator = (new Bank)->validate($inputs);
             if( $validator->fails() ) {
                 return back()->withErrors($validator)->withInput();
@@ -57,7 +61,21 @@ class BankController extends  Controller{
             unset($inputs['image']);
             $inputs['image'] = $image;
 
-            (new Bank)->store($inputs);
+            $id = (new Bank)->store($inputs);
+
+             if(isset($request->service)){
+                foreach($request->service as $service_id){
+                    $apply_ser = BankService::where('service_id', $service_id)->where('bank_id', $id)->count();
+                    if($apply_ser == 0) {
+                        BankService::create([
+                            'service_id'  =>  $service_id,
+                            'bank_id'  => $id,
+                            'created_by'  => \Auth::user()->user_type,
+                        ]);
+                    }
+                }
+            }
+
             return redirect()->route('banks.index')
                 ->with('success', 'Bank successfully created');
         } catch (\Exception $exception) {
@@ -95,6 +113,24 @@ class BankController extends  Controller{
             $inputs['image'] = $image;
             (new Bank)->store($inputs, $id);
 
+            $count = BankService::where('bank_id', $id)->count();
+            if($count != 0){
+                \DB::table('bank_services')->where('bank_id', $id)->delete();
+            }
+
+            if(isset($request->service)){
+                foreach($request->service as $service_id){
+                    $apply_ser = BankService::where('service_id', $service_id)->where('bank_id', $id)->count();
+                    if($apply_ser == 0) {
+                        BankService::create([
+                            'service_id'  =>  $service_id,
+                            'bank_id'  => $id,
+                            'created_by'  => \Auth::user()->user_type,
+                        ]);
+                    }
+                }
+            }
+
             return redirect()->route('banks.index')
                 ->with('success', 'Bank successfully updated');
 
@@ -111,7 +147,9 @@ class BankController extends  Controller{
         if (!$result) {
             abort(401);
         }
-        return view('admin.banks.create', compact('result'));
+        $services = Service::where('status', 1)->orderBy('sort_order', 'ASC')->select('id', 'name')->get();
+        $service_id = BankService::where('bank_id', $id)->pluck('service_id')->toArray();
+        return view('admin.banks.create', compact('result', 'services', 'service_id'));
     }
 
 

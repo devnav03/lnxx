@@ -176,6 +176,52 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'landing-sliders@drop']);
             // small sliders
 
+            // Contact route start
+            Route::resource('contact-enquiry','App\Http\Controllers\ContactController', [
+                'names' => [
+                    'index'     => 'contact-enquiry.index',
+                    'create'    => 'contact-enquiry.create',
+                    'store'     => 'contact-enquiry.store',
+                    'edit'      => 'contact-enquiry.edit',
+                    'update'    => 'contact-enquiry.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('contact-enquiry/paginate/{page?}', ['as' => 'contact-enquiry.paginate',
+                'uses' => 'App\Http\Controllers\ContactController@ContactPaginate']);
+            Route::any('contact-enquiry/action', ['as' => 'contact-enquiry.action',
+                'uses' => 'App\Http\Controllers\ContactController@ContactAction']);
+            Route::any('contact-enquiry/toggle/{id?}', ['as' => 'contact-enquiry.toggle',
+                'uses' => 'App\Http\Controllers\ContactController@ContactToggle']);
+            Route::any('contact-enquiry/drop/{id?}', ['as' => 'contact-enquiry.drop',
+                'uses' => 'App\Http\Controllers\ContactController@drop']);
+
+            Route::any('export-enquiry', 'CustomerController@export_enquiry')->name('export-enquiry');
+            // Contact route end
+
+
+            // Blogs Master route start
+            Route::resource('blogs', 'App\Http\Controllers\BlogController', [
+                'names' => [
+                    'index'     => 'blogs.index',
+                    'create'    => 'blogs.create',
+                    'store'     => 'blogs.store',
+                    'edit'      => 'blogs.edit',
+                    'update'    => 'blogs.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('blogs/paginate/{page?}', ['as' => 'blogs.paginate',
+                'uses' => 'App\Http\Controllers\BlogController@Paginate']);
+            Route::any('blogs/action', ['as' => 'blogs.action',
+                'uses' => 'App\Http\Controllers\BlogController@Action']);
+            Route::any('blogs/toggle/{id?}', ['as' => 'blogs.toggle',
+                'uses' => 'App\Http\Controllers\BlogController@Toggle']);
+            Route::any('blogs/drop/{id?}', ['as' => 'blogs.drop',
+                'uses' => 'blogs@drop']);
+            // Blogs
 
             // company Master route start
             Route::resource('company', 'App\Http\Controllers\CompanyController', [

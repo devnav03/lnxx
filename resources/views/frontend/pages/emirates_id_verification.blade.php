@@ -88,6 +88,7 @@
 </div>
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Verify</button>
+<p style="margin-bottom: 0px;"><a href="{{ route('upload-profile-image') }}">Skip for now</a></p>
 </div>
 </form>
 

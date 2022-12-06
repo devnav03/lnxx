@@ -30,7 +30,7 @@ class HomeController extends Controller {
    
     public function index() {
         $banks = Bank::where('status', 1)->select('name', 'image')->get();
-        $services = Service::where('status', 1)->select('name', 'image', 'blue_icon')->get();
+        $services = Service::where('status', 1)->select('name', 'image', 'blue_icon')->orderBy('sort_order', 'ASC')->get();
         $testimonials = Testimonial::where('status', 1)->select('title', 'image', 'comment')->get();
         $smallSliders = SmallSlider::where('status', 1)->select('title', 'image', 'link')->get();
         return view('frontend.pages.get_started', compact('banks', 'services', 'testimonials', 'smallSliders'));
@@ -39,7 +39,7 @@ class HomeController extends Controller {
     public function home(){
         try{
 
-            $services = Service::where('status', 1)->select('id', 'name', 'url', 'image', 'blue_icon')->get(); 
+            $services = Service::where('status', 1)->select('id', 'name', 'url', 'image', 'blue_icon')->orderBy('sort_order', 'ASC')->get(); 
             $banks = Bank::where('status', 1)->select('name', 'image')->get();
             $testimonials = Testimonial::where('status', 1)->select('title', 'image', 'comment')->get(); 
             $sliders = Slider::where('status', 1)->select('title', 'image', 'link')->get(); 
@@ -200,12 +200,10 @@ class HomeController extends Controller {
 
     public function consent_approval(Request $request){
         try {
-
             $user_id =  Auth::id();
             $inputs = $request->all();
             $inputs['user_id'] = $user_id;
             $result = '';
-
             $cm_sal = ProductRequest::where('user_id', $user_id)->select('id')->first();
             if($cm_sal){
                 $id = $cm_sal->id;
@@ -213,13 +211,12 @@ class HomeController extends Controller {
             } else {
                 (new ProductRequest)->store($inputs); 
             }
-
-            $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
+            $result = CustomerOnboarding::where('user_id', $user_id)->select('id', 'consent_form')->first();
             $ser = 1300;
             $ref_id = $ser.$result->id;
             CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
-
-            return view('frontend.pages.consent_approval');
+            $consent_form = $result->consent_form;
+            return view('frontend.pages.consent_approval', compact('consent_form'));
         } catch (\Exception $exception) {
           // dd($exception);
             return back();    
@@ -227,7 +224,7 @@ class HomeController extends Controller {
     }
 
     public function consent_form(Request $request){
-         try {
+        try {
             
             $inputs = $request->all();
             $user_id =  Auth::id();
@@ -251,7 +248,7 @@ class HomeController extends Controller {
             CustomerOnboarding::where('user_id', $user_id)->update(['video' => $image]);
             $status = 1;
             return $status;
-         } catch(Exception $exception){
+        } catch(Exception $exception){
             return back();
         }
     }
@@ -900,7 +897,7 @@ public function enter_name(Request $request){
                 $inputs['customer_id'] = $user_id;
                 $result = '';
                 
-                $service = Service::where('status', 1)->select('name', 'url', 'image', 'id')->get();
+                $service = Service::where('status', 1)->select('name', 'url', 'image', 'id')->orderBy('sort_order', 'ASC')->get();
 
                 $cm_sal = Address::where('customer_id', $user_id)->select('id')->first();
 
@@ -1217,10 +1214,16 @@ public function enter_name(Request $request){
         try{
             $user_id =  Auth::id();
             $user = User::where('id', $user_id)->first();
+            $selected_services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
 
-            $service = Service::where('status', 1)->select('name', 'url', 'image', 'id')->get();
+            $service = Service::where('status', 1)->whereNotIn('id', $selected_services)->select('name', 'url', 'image', 'id')->orderBy('sort_order', 'ASC')->get();
+            
+            $relations = \DB::table('service_applies')
+                    ->join('services', 'services.id', '=', 'service_applies.service_id')
+                    ->select('service_applies.status', 'services.name', 'services.image')
+                    ->where('service_applies.customer_id', $user_id)->get();
 
-            return view('frontend.pages.dashboard', compact('user', 'service'));
+            return view('frontend.pages.dashboard', compact('user', 'service', 'relations'));
         } catch (Exception $e) {
             return back();
         }
