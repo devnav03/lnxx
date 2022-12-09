@@ -3,7 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 class ServiceApply extends Model {
 	
-    protected $fillable = [ 'customer_id', 'service_id', 'status', 'created_at', 'updated_at' ];
+    protected $fillable = [ 'customer_id', 'service_id', 'app_status', 'app_no', 'bank_id', 'status', 'created_at', 'updated_at' ];
 
     public function store($inputs, $id = null)  {
         if ($id) {

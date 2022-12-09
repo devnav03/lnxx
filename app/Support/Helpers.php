@@ -168,8 +168,18 @@ function get_service_details($id){
             $services[] = $slide;   
     }
     
-        
     return $services;
+}
+
+function get_prefer_bank($id){
+    return \DB::table('bank_services')
+            ->join('banks', 'banks.id', '=', 'bank_services.bank_id')
+            ->select('banks.name', 'banks.id')->where('bank_services.service_id', $id)->get(); 
+}
+
+function get_sel_bank($id){
+    $result =  App\Models\ServiceApply::where('id', $id)->select('bank_id')->first();
+    return @$result->bank_id;
 }
 
 function authUserId() {

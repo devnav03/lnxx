@@ -58,6 +58,12 @@ Route::any('v1/verify-emirate-id', ['as' => 'verify-emirate-id','uses' => 'App\H
 
 Route::any('v1/my-relations', ['as' => 'my-relations','uses' => 'App\Http\Controllers\API\V1\UserController@my_relations']);
 
+Route::any('v1/bank-preference', ['as' => 'bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@bank_preference']);
+
+Route::any('v1/save-bank-preference', ['as' => 'save-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_bank_preference']);
+
+
+
 
 
 

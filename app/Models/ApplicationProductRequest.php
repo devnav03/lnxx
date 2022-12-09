@@ -2,26 +2,26 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductRequest extends Model {
-
+class ApplicationProductRequest extends Model {
+	
     protected $fillable = [ 
-    	'user_id', 
-    	'credit_card_limit', 
-    	'details_of_cards', 
-    	'credit_bank_name', 
-    	'card_limit', 
+        'application_id', 
+        'credit_card_limit', 
+        'details_of_cards', 
+        'credit_bank_name', 
+        'card_limit', 
 
-    	'details_of_cards2',
-    	'credit_bank_name2',
-    	'card_limit2',
+        'details_of_cards2',
+        'credit_bank_name2',
+        'card_limit2',
 
-    	'details_of_cards3',
-    	'credit_bank_name3',
-    	'card_limit3',
+        'details_of_cards3',
+        'credit_bank_name3',
+        'card_limit3',
 
-    	'details_of_cards4',
-    	'credit_bank_name4',
-    	'card_limit4',
+        'details_of_cards4',
+        'credit_bank_name4',
+        'card_limit4',
 
         'loan_amount', 
         'loan_bank_name', 
@@ -87,15 +87,13 @@ class ProductRequest extends Model {
         'updated_at' 
     ];
 
-
     public function store($inputs, $id = null)  {
-        if ($id) {
+        if ($id){
             return $this->find($id)->update($inputs);
         } else {
             return $this->create($inputs)->id;
         }
     }
-
 
 }
 

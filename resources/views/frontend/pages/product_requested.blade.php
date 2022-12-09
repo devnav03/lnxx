@@ -7,7 +7,7 @@
 <div class="col-md-7">
 <div class="personal_details_box">
 <h2>Type Of Product Requested</h2>
-<h6>Please enter your information to check the Offer.</h6>
+<h6>Please enter your information to check the offer.</h6>
 
 <form action="{{ route('consent-approval') }}" method="post">
 {{ csrf_field() }}  
@@ -270,7 +270,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Original Loan amount</label>
+      <label class="sub-label">Original Loan Amount</label>
       <input name="original_loan_amount" class="form-control" @if($result) value="{{ $result->original_loan_amount }}" @else value="{{ old('original_loan_amount') }}" @endif type="text">
       @if($errors->has('original_loan_amount'))
       <span class="text-danger">{{$errors->first('original_loan_amount')}}</span>

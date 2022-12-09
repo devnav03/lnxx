@@ -85,6 +85,28 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'services@drop']);
             // Service
 
+            // Application Master route start
+            Route::resource('applications', 'App\Http\Controllers\ApplicationController', [
+                'names' => [
+                    'index'     => 'applications.index',
+                    'create'    => 'applications.create',
+                    'store'     => 'applications.store',
+                    'edit'      => 'applications.edit',
+                    'update'    => 'applications.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('applications/paginate/{page?}', ['as' => 'applications.paginate',
+                'uses' => 'App\Http\Controllers\ApplicationController@Paginate']);
+            Route::any('applications/action', ['as' => 'applications.action',
+                'uses' => 'App\Http\Controllers\ApplicationController@Action']);
+            Route::any('applications/toggle/{id?}', ['as' => 'applications.toggle',
+                'uses' => 'App\Http\Controllers\ApplicationController@Toggle']);
+            Route::any('applications/drop/{id?}', ['as' => 'applications.drop',
+                'uses' => 'applications@drop']);
+            // Application
+
 
             // banks Master route start
             Route::resource('banks', 'App\Http\Controllers\BankController', [
@@ -285,7 +307,6 @@ Route::any('contact-us', [App\Http\Controllers\Frontend\HomeController::class, '
 Route::any('contact-enquiry', [App\Http\Controllers\Frontend\HomeController::class, 'contact_enquiry'])->name('contact-enquiry');
 
 
-
 Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
 
 Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
@@ -308,12 +329,11 @@ Route::any('upload-emirates-id', [App\Http\Controllers\Frontend\HomeController::
 Route::any('upload-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'upload_profile_image'])->name('upload-profile-image');
 
 Route::any('emirates-id-verification', [App\Http\Controllers\Frontend\HomeController::class, 'emirates_id_verification'])->name('emirates-id-verification');
-
 Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'save_profile_image'])->name('save-profile-image');
-
 Route::any('verify-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates_id'])->name('verify-emirates-id');
-
 Route::any('verify-emirates', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates'])->name('verify-emirates');
+Route::any('preference', [App\Http\Controllers\Frontend\HomeController::class, 'preference'])->name('preference');
+
 
 });
 

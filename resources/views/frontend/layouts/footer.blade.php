@@ -3,15 +3,15 @@
 <div class="row">
 <div class="col-md-4">
 <img src="{!! asset('assets/frontend/images/lnxx_logo.png')  !!}" class="img-responsive">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+<p>An online financial services platform for UAE's citizens.</p>
 </div>
 <div class="col-md-8">
  
 <ul class="social">
 <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+<li><a href="https://twitter.com/LnxxUAE" target="_blank"><i class="fa fa-twitter"></i></a></li>
 <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-<li><a href="#"><i class="fa fa-instagram"></i></a></li>
+<li><a target="_blank" href="https://www.youtube.com/channel/UCogdDueCxjhSHoFq88No7pw"><i class="fa fa-youtube"></i></a></li>
 </ul>   
 <div style="width: 100%;float: left;height: 1px;"></div>
 <ul class="footer-menu">

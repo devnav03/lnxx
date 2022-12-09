@@ -7,7 +7,7 @@
 <div class="col-md-7">
 <div class="personal_details_box cm_dt">
 <h2>Employment Details</h2>
-<h6>Please enter your information to check the Offer.</h6>
+<h6>Please enter your information to check the offer.</h6>
 
 <form action="{{ route('product-requested') }}" method="post">
 {{ csrf_field() }}  
@@ -43,7 +43,7 @@
 
   <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;"  @endif>
     <div class="form-group">
-      <label class="sub-label">Date Of Joining*</label>
+      <label class="sub-label">Date of Joining*</label>
       <input name="date_of_joining" id="date_of_joining" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif class="form-control" @if($result) value="{{ $result->date_of_joining }}" @else value="{{ old('date_of_joining') }}" @endif type="date">
       @if($errors->has('date_of_joining'))
       <span class="text-danger">{{$errors->first('date_of_joining')}}</span>

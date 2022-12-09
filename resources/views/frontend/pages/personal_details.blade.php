@@ -7,13 +7,11 @@
 <div class="col-md-7">
 <div class="personal_details_box">
 <h2>Personal Details</h2>
-<h6>Please enter your information to check the Offer.</h6>
+<h6>Please enter your information to check the offer.</h6>
 
 <form action="{{ route('cm-details') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}  
-
 <div class="row">  
-
 <div class="col-md-12">
 <label>Name As Per Passport</label>
 </div>
@@ -150,11 +148,12 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)</span></label>
-      <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
+      <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)*</span></label>
       @if(\Auth::user()->emirates_id)
-         <img src="{!! asset(\Auth::user()->emirates_id) !!}" id="blah" class="img-responsive">
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
+        <img src="{!! asset(\Auth::user()->emirates_id) !!}" id="blah" class="img-responsive">
       @else
+          <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
           <img src="" id="blah" class="img-responsive">
       @endif
       @if($errors->has('emirates_id_front'))
@@ -165,12 +164,13 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Emirates id back side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)</span></label>
-      <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
+      <label class="sub-label">Upload Emirates id back side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)*</span></label>
       @if(\Auth::user()->emirates_id_back)
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
          <img src="{!! asset(\Auth::user()->emirates_id_back) !!}" id="blah1" class="img-responsive">
       @else
-          <img src="" id="blah1" class="img-responsive">
+        <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
+        <img src="" id="blah1" class="img-responsive">
       @endif
       @if($errors->has('emirates_id_back'))
         <span class="text-danger">{{$errors->first('emirates_id_back')}}</span>
@@ -190,7 +190,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Official mail ID</label>
+      <label class="sub-label">Official Mail ID</label>
       <input name="officer_email" class="form-control" @if($result) value="{{ $result->officer_email }}" @else value="{{ old('officer_email') }}" @endif type="email">
       @if($errors->has('officer_email'))
       <span class="text-danger">{{$errors->first('officer_email')}}</span>
@@ -200,12 +200,13 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(600x600 px / .png, .jpg, .jpeg)</span></label>
-      <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(600x600 px / .png, .jpg, .jpeg)*</span></label>
       @if(isset($result->passport_photo))
-         <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive">
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+        <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive">
       @else
-          <img src="" id="blah2" class="img-responsive">
+        <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+        <img src="" id="blah2" class="img-responsive">
       @endif
       @if($errors->has('passport_photo'))
         <span class="text-danger">{{$errors->first('passport_photo')}}</span>
@@ -273,6 +274,7 @@
   <p class="chk_bx"> @if($result) <input required="true" checked="" type="checkbox"> @else <input required="true" type="checkbox"> @endif By proceeding, you agree to the <a href="#">Terms and Conditions</a></p>
 </div>
   <div class="col-md-12 text-center">
+    <a href="{{ route('user-dashboard') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
   </div>
 </div>

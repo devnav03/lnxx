@@ -5,25 +5,22 @@
 <div class="container">  
 <div class="row"> 
 <div class="col-md-9">
+
+@if(session()->has('profile_update_message'))
+    <p style="color: green;margin-bottom: 10px;">Your profile has been successfully updated</p>
+@endif
+
 @if(count($relations) != 0)
 <div class="lorem_dashboard">
   <h2>My Relations</h2>
   <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
   <ul style="padding: 0px;list-style: none;">
     @foreach($relations as $relation)
-    <!-- <div class="col-md-6"> 
-      <div class="service-card">
-        <h4>{{ $relation->name }}</h4>
-        <div style="text-align: center;">
-          <img src="{!! asset($relation->image)  !!}" class="img-responsive">
-        </div>
-        <p>Status: @if($relation->status == 0)<span> Pending </span>@endif </p>
-      </div>
-    </div> -->
     <li>
         <div class="service-sel">
-          <h5 style="font-size: 18px; font-weight: 600;">{{ $relation->name }}</h5>
-          <p style="font-size: 14px;">Status: @if($relation->status == 0)<span style="font-size: 14px; color: #5EB495;"> Pending </span>@endif </p>
+          <h5 style="font-size: 17px; font-weight: 600;">{{ $relation->name }}</h5>
+          <p style="font-size: 14px;margin-bottom: 0px;">Status: @if($relation->status == 0)<span style="font-size: 14px; color: #5EB495;"> Pending </span>@endif </p>
+          <p style="font-size: 14px;">Reference No: #{{ $relation->ref_id }}</p>
         </div>
     </li>
     @endforeach
@@ -53,11 +50,11 @@ $services = get_service_status($service->id);
 @endphp
 
     <li>
-      <input @if($services == 1) checked="" @endif id="{{ $service->url }}" type="checkbox" value="{{ $service->id }}" name="service[]"/>
-      <label class="ser_label" for="{{ $service->url }}"> 
+      <label class="ser_label" for="{{ $service->url }}" style="width: 100%;"> 
+      <input id="{{ $service->url }}" type="checkbox" value="{{ $service->id }}" name="service[]"/>
         <div class="service-sel @if($services == 1) active_ser @endif">
         <!--   <img src="{!! asset($service->image) !!}" alt="img"> -->
-          <h5>{{ $service->name }}</h5>
+          <h5 style="margin-top: 2px; margin-left: 10px;">{{ $service->name }}</h5>
         </div>
       </label>
     </li>
@@ -74,19 +71,6 @@ $services = get_service_status($service->id);
 </div>
 @endif
 
-<!-- <div class="lorem_dashboard">
-  <h2>Lorem ipsum</h2>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-  <div class="row">  
-    <div class="col-md-6"> 
-      <img src="{!! asset('assets/frontend/images/dashboard_images.png')  !!}" class="img-responsive">
-    </div>
-    <div class="col-md-6"> 
-      <img src="{!! asset('assets/frontend/images/dashboard_images.png')  !!}" class="img-responsive">
-    </div>
-  </div>
-</div> -->
-
 <div class="scan_dashboard">
   <div class="row">
     <div class="col-md-6">
@@ -95,8 +79,8 @@ $services = get_service_status($service->id);
           <img src="{!! asset('assets/frontend/images/found_qr_code_dash.png')  !!}" alt="scan" class="img-responsive">
         </div>
         <div class="col-md-8">
-           <h4>Scan QR to download the Lnxx app.</h4>
-           <p class="app_des">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+           <h4>Download the Lnxx mobile app.</h4>
+           <p class="app_des">Get exclusive offers & enjoy a seamless experience.</p>
         </div>
       </div>
     </div>
@@ -122,7 +106,7 @@ $services = get_service_status($service->id);
       <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
     </div>
     <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
+      <h5 style="line-height: 21px; margin-top: 0px; font-weight: 500; font-size: 14px;">Application no #130092 approved</h5>
     </div>
   </div>
   <div class="row">
@@ -130,7 +114,7 @@ $services = get_service_status($service->id);
       <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
     </div>
     <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
+      <h5 style="line-height: 21px; margin-top: 0px; font-weight: 500; font-size: 14px;">Application no #130093 KYC is pending</h5>
     </div>
   </div>
   <div class="row">
@@ -138,15 +122,7 @@ $services = get_service_status($service->id);
       <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
     </div>
     <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
-      <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
-    </div>
-    <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
+      <h5 style="line-height: 21px; margin-top: 0px; font-weight: 500; font-size: 14px;">Application no #130094 employment details not match</h5>
     </div>
   </div>
 </div>
@@ -158,6 +134,11 @@ $services = get_service_status($service->id);
   <img src="{!! asset('assets/frontend/images/cal_side.png')  !!}" alt="scan" class="img-responsive">
   <h5>Information bulletin</h5>
   <p>Lnxx never requests any payment process loans through its agents.</p>
+</div>
+
+<div class="info_sidebar" style="padding-bottom: 30px;">
+  <h5 style="margin-bottom: 20px;">Share and Earn</h5>
+  <a href="#" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
 </div>
 
 </div>
