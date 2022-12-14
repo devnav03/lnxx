@@ -43,13 +43,14 @@ class Application extends Model {
 	    'date_of_joining',
 	    'monthly_salary',
         'last_three_salary_credits',
+        'last_two_salary_credits',
+        'last_one_salary_credits',
         'other_company',
         'self_company_name',
         'percentage_ownership',
         'profession_business',
         'annual_business_income',
         'monthly_pension',
-
 
 	    'created_at', 
 	    'updated_at' 

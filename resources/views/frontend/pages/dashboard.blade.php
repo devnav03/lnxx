@@ -44,16 +44,20 @@
     @endif
     <input type="hidden" name="page" value="service">
   <ul style="padding: 0px;">
+@php
+$button = 0;
+@endphp    
   @foreach($service as $service)
 @php
 $services = get_service_status($service->id);
+$button += $services;
 @endphp
 
     <li>
       <label class="ser_label" for="{{ $service->url }}" style="width: 100%;"> 
-      <input id="{{ $service->url }}" type="checkbox" value="{{ $service->id }}" name="service[]"/>
-        <div class="service-sel @if($services == 1) active_ser @endif">
-        <!--   <img src="{!! asset($service->image) !!}" alt="img"> -->
+      <input id="{{ $service->url }}" @if($services == 1) checked="" @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
+        <div class="service-sel">
+            <!--  <img src="{!! asset($service->image) !!}" alt="img"> -->
           <h5 style="margin-top: 2px; margin-left: 10px;">{{ $service->name }}</h5>
         </div>
       </label>
@@ -64,7 +68,7 @@ $services = get_service_status($service->id);
 
   <div class="col-md-12">
 <!--     <a href="{{ route('address-details') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
-    <button type="submit" style="margin-top: 20px;">Proceed</button>
+    <button type="submit" id="elementID" @if($button == 0) disabled="disabled" style="margin-top: 20px;" @else style="margin-top: 20px; background: #000;" @endif >Proceed</button>
   </div>
 </div>
 </form>
@@ -99,6 +103,10 @@ $services = get_service_status($service->id);
 </div>
 </div>
 <div class="col-md-3">
+<div class="info_sidebar" style="padding-bottom: 30px; margin-top: 0px; margin-bottom: 30px;">
+  <h5 style="margin-bottom: 20px;">Refer and Earn</h5>
+  <a href="#" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
+</div>  
 <div class="dashboard_sidebar">
 <h3>Application Update</h3> 
   <div class="row">
@@ -126,19 +134,11 @@ $services = get_service_status($service->id);
     </div>
   </div>
 </div>
-<!-- <div class="scan_sidebar">
-  <img src="{!! asset('assets/frontend/images/found_qr_code_dash.png')  !!}" alt="scan" class="img-responsive">
-  <p>Scan QR to download the Lnxx app.</p>
-</div> -->
+
 <div class="info_sidebar">
   <img src="{!! asset('assets/frontend/images/cal_side.png')  !!}" alt="scan" class="img-responsive">
   <h5>Information bulletin</h5>
   <p>Lnxx never requests any payment process loans through its agents.</p>
-</div>
-
-<div class="info_sidebar" style="padding-bottom: 30px;">
-  <h5 style="margin-bottom: 20px;">Share and Earn</h5>
-  <a href="#" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
 </div>
 
 </div>
@@ -149,3 +149,26 @@ $services = get_service_status($service->id);
 
 
 @endsection    
+
+<script type="text/javascript">
+  
+function Selectser() {
+  
+  var service_id = [];
+    $('input.ser_chk[type=checkbox]').each(function () {
+        if (this.checked)
+          service_id.push($(this).val());
+    });
+
+  if(service_id != ''){
+    $('#elementID').removeAttr('disabled');
+    document.getElementById("elementID").style.background = "#000";
+  } else {
+    $('#elementID').attr('disabled','disabled');
+    document.getElementById("elementID").style.background = "rgba(9, 15, 5, 0.5)";
+  }
+
+
+}
+
+</script>

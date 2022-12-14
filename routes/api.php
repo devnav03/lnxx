@@ -62,8 +62,7 @@ Route::any('v1/bank-preference', ['as' => 'bank-preference','uses' => 'App\Http\
 
 Route::any('v1/save-bank-preference', ['as' => 'save-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_bank_preference']);
 
-
-
+Route::any('v1/skip-video', ['as' => 'skip-video','uses' => 'App\Http\Controllers\API\V1\UserController@skipVideo']);
 
 
 

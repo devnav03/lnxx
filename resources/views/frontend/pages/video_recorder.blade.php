@@ -37,8 +37,9 @@ Make sure your ‘'location’' feature on your device is turned on</li>
     <a href="{{ route('consent-approval') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <!-- <button type="submit">Proceed</button>  -->
     <span onclick="SwitchButtons('download');"  id="download" class="upload_btn" style="display:none;">Upload</span>
-    
+   <a href="{{ route('thank-you') }}" id="skip" style="background: #EFF2F0; padding: 10px 35px; color: #000; border: 1px solid #000;">Skip</a>
   </div>
+
 </div>
 </form>
 </div>

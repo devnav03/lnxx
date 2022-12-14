@@ -7,7 +7,7 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Welcome Back to <br>Lnxx</h3> 
+<h3>Welcome Back to Lnxx</h3> 
 <h5>Sign up to continue your account</h5>
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px; margin-top: 40px;" class="img-responsive">
@@ -77,7 +77,7 @@
       <span class="text-danger">{{$errors->first('eid_number')}}</span>
       @endif
     </div>
-<label style="font-size: 14px;">Upload Emirates id front side <span style="font-size: 13px;">(recommended 750x400 px / .png, .jpg, .jpeg)</span></label>
+<label style="font-size: 14px;">Upload Emirates id front side <span style="font-size: 13px;">(recommended 750x400px / .png, .jpg, .jpeg, max size 2mb)</span></label>
 <div class="form-group emirates_front">
 	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" required="true" id="imgInp" name="emirates_id_front">
 	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah" class="img-responsive">
@@ -85,15 +85,14 @@
         <span class="text-danger">{{$errors->first('emirates_id_front')}}</span>
     @endif
 </div>
-<label style="font-size: 14px;">Upload Emirates id back side <span style="font-size: 13px;">(recommended 750x400 px / .png, .jpg, .jpeg)</span></label>
+<label style="font-size: 14px;">Upload Emirates id back side <span style="font-size: 13px;">(recommended  750x400px / .png, .jpg, .jpeg, max size 2mb)</span></label>
 <div class="form-group emirates_front">
 	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" required="true" id="imgInp1" name="emirates_id_back">
 	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah1" class="img-responsive">
-	@if($errors->has('emirates_id_back'))
+	  @if($errors->has('emirates_id_back'))
        <span class="text-danger">{{$errors->first('emirates_id_back')}}</span>
     @endif
 </div>
-
 
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Upload</button>

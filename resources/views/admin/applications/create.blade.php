@@ -207,11 +207,9 @@
                                               </div>
                                             </div>
 
-                                  
                                 </div>
 
                                 <div class="row">
-
   
     <div class="col-md-6">
         <div class="form-group">
@@ -240,10 +238,10 @@
     </div>
 
     <div class="col-md-6">
-    <div class="form-group">
-    <label class="sub-label">No of Dependents*</label>
-    <input name="no_of_dependents" class="form-control" @if($result->no_of_dependents) value="{{ $result->no_of_dependents }}" @endif type="text" required="true">
-    </div>
+        <div class="form-group">
+        <label class="sub-label">No of Dependents*</label>
+        <input name="no_of_dependents" class="form-control" @if($result->no_of_dependents) value="{{ $result->no_of_dependents }}" @endif type="text" required="true">
+        </div>
     </div>
 
     <div class="col-md-6">
@@ -321,13 +319,12 @@
                     <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
-
-      <!-- <input name="company_name" class="form-control" value="{{ $result->company_name }}" type="text" required="true"> -->
-      <select name="company_name" class="form-control" required="true">
+      <input name="company_name" class="form-control" value="{{ $result->company_name }}" type="text" required="true"> 
+      <!-- <select name="company_name" class="form-control" required="true">
         @foreach($company as $com)
         <option value="{{ $com->id }}" @if($result->company_name == $com->id) selected @endif >{{ $com->name }}</option> 
         @endforeach
-      </select>
+      </select> -->
 
       @if($errors->has('company_name'))
       <span class="text-danger">{{$errors->first('company_name')}}</span>
@@ -346,27 +343,52 @@
   </div>
 
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Monthly Salary*</label>
-      <input name="monthly_salary" class="form-control" value="{{ $result->monthly_salary }}" type="text">
-      @if($errors->has('monthly_salary'))
-      <span class="text-danger">{{$errors->first('monthly_salary')}}</span>
-      @endif
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Monthly Salary*</label>
+          <input name="monthly_salary" class="form-control" value="{{ $result->monthly_salary }}" type="text">
+          @if($errors->has('monthly_salary'))
+          <span class="text-danger">{{$errors->first('monthly_salary')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
+
+    <div class="col-md-12">
+        <label class="sub-label">Last Three Salary Credits</label>
+    </div>
   
-  @if($result->last_three_salary_credits)
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Last Three Salary Credits</label>
-      <input name="last_three_salary_credits" class="form-control" value="{{ $result->last_three_salary_credits }}" type="number">
-      @if($errors->has('last_three_salary_credits'))
-      <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
-      @endif
+    <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">First</label>
+          <input name="last_one_salary_credits" class="form-control" value="{{ $result->last_one_salary_credits }}" type="number">
+          @if($errors->has('last_one_salary_credits'))
+          <span class="text-danger">{{$errors->first('last_one_salary_credits')}}</span>
+          @endif
+        </div>
     </div>
-  </div>
-@endif
+
+    <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">Second</label>
+          <input name="last_two_salary_credits" class="form-control" value="{{ $result->last_two_salary_credits }}" type="number">
+          @if($errors->has('last_two_salary_credits'))
+          <span class="text-danger">{{$errors->first('last_two_salary_credits')}}</span>
+          @endif
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">Third</label>
+          <input name="last_three_salary_credits" class="form-control" value="{{ $result->last_three_salary_credits }}" type="number">
+          @if($errors->has('last_three_salary_credits'))
+          <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
+          @endif
+        </div>
+    </div>
+
+
+
     </div>                           
          
                                 </div>
@@ -399,11 +421,12 @@
             <div class="col-md-6">
                 <div class="form-group">
                   <label class="sub-label">Company Name*</label>
-                   <select name="self_company_name" class="form-control" required="true">
+                   <input name="self_company_name" class="form-control" value="{{ $result->self_company_name }}" type="text">
+                   <!-- <select name="self_company_name" class="form-control" required="true">
                     @foreach($company as $comp)
                     <option value="{{ $comp->id }}" @if($result->self_company_name == $comp->id) selected @endif >{{ $comp->name }}</option> 
                     @endforeach
-                  </select>
+                  </select> -->
                   @if($errors->has('self_company_name'))
                   <span class="text-danger">{{$errors->first('self_company_name')}}</span>
                   @endif
@@ -485,11 +508,36 @@
                 </div>
       
                 @endif
-           
-    
+            <div class="card custom-card">
+                <div class="card-body">
+            <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                <div class="forms">
+                <div class="form-title">
+                    <h4>Selected Service</h4>                        
+                </div>
+                <div class="row">
+            <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Service</label>
+                      <input name="ser_name" class="form-control" value="{{ $service->name }}" type="text" readonly="">
+                    </div>
+                </div>
+                @if($result->service_id == 3)
+                @if($bank)
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="sub-label">Preferred Bank</label>
+                      <input name="b_name" class="form-control" value="{{ $bank->name }}" type="text" readonly="">
+                    </div>
+                </div>
+                @endif 
+                @endif 
+            </div>
+            </div>
+                </div>
+            </div>
+            </div>
 
-
-       
             <div class="card custom-card">
             @if($Application_Request)    
             <div class="card-body">
@@ -497,11 +545,10 @@
                 <div class="forms">
                 <div class="form-grids widget-shadow" data-example-id="basic-forms"> 
                 <div class="form-title">
-                    <h4>Type Of Product Requested</h4>                        
+                    <h4>Details of existing financial products</h4>                        
                 </div>
                 <div class="form-body">   
                 <div class="row">
-                @if($result->service_id == 3)
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Credit Card</label>
                 </div>
@@ -514,6 +561,7 @@
                       @endif
                     </div>
                 </div>
+                @if($Application_Request->credit_bank_name)
                 <div class="col-md-12">                            
                     <label style="font-size: 15px; margin-top: 0px;">Existing Financial Products</label>
                 </div>
@@ -549,7 +597,7 @@
                       @endif
                     </div>
                 </div>
-
+                @endif
                 @if($Application_Request->credit_bank_name2)
                 <div class="col-md-6"></div>
                 <div class="col-md-6">
@@ -655,12 +703,10 @@
                 </div>
                 @endif
 
-                @endif
-
-                @if($result->service_id == 1)
+                @if($Application_Request->loan_amount)
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Personal Loan</label>
-                </div>
+                </div>  
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Loan Amount</label>
@@ -673,8 +719,6 @@
                 <div class="col-md-12">                            
                     <label style="font-size: 15px; margin-top: 0px;">Details of Existing Loans</label>
                 </div>
-
-
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Bank Name</label>
@@ -706,6 +750,7 @@
                       @endif
                     </div>
                 </div>
+                @endif
 
                 @if($Application_Request->loan_bank_name2)
                     <div class="col-md-6"></div>
@@ -811,14 +856,12 @@
                         </div>
                     </div>
                 @endif 
-                @endif
+                
 
-                @if($result->service_id == 4)
+                @if($Application_Request->business_loan_amount)
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Business Loan</label>
                 </div>
-
-
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Loan Amount</label>
@@ -837,6 +880,7 @@
                       @endif
                     </div>
                 </div>
+                @endif
 
                 @if($Application_Request->business_loan_amount2)
                 <div class="col-md-6">
@@ -900,10 +944,8 @@
                 </div>
                 @endif
 
-                @endif
 
-
-                @if($result->service_id == 5)
+                @if($Application_Request->mortgage_loan_amount)
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Mortgage Loan</label>
                 </div>
@@ -976,7 +1018,7 @@
                       @endif
                     </div>
                 </div>
-
+                @endif
                 @if($Application_Request->mortgage_loan_amount2)
                 <div class="col-md-6"></div>
                 <div class="col-md-6">
@@ -1178,7 +1220,7 @@
                     </div>
                 </div>
                 @endif
-                @endif
+                
             </div>
             </div>           
             </div>

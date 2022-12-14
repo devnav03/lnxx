@@ -59,12 +59,14 @@
   </div>
 </div>
 </div>
-
+@php
+$min_date = date('Y-m-d', strtotime('-18 years'));
+@endphp
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">DOB*</label>
-      <input name="date_of_birth" class="form-control" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="date" required="true">
+      <label class="sub-label">DOB*</label> 
+      <input name="date_of_birth" class="form-control" max="{{ $min_date }}" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="date" required="true">
       @if($errors->has('date_of_birth'))
       <span class="text-danger">{{$errors->first('date_of_birth')}}</span>
       @endif
@@ -89,10 +91,9 @@
       <select name="nationality" class="form-control" required="true">
         <option value="">select</option>
         @foreach($countries as $country)
-          <option value="{{ $country->id }}" @if($result) @if($result->nationality == $country->id) selected @endif @endif >{{ $country->country_name }}</option>
+          <option value="{{ $country->id }}" @if($result) @if($result->nationality == $country->id) selected @endif @else @if($country->id == 229) selected @endif @endif >{{ $country->country_name }}</option>
         @endforeach
       </select>
-
       @if($errors->has('nationality'))
       <span class="text-danger">{{$errors->first('nationality')}}</span>
       @endif
@@ -148,7 +149,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)*</span></label>
+      <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(recommended 750x400px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
       @if(\Auth::user()->emirates_id)
         <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
         <img src="{!! asset(\Auth::user()->emirates_id) !!}" id="blah" class="img-responsive">
@@ -164,7 +165,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Emirates id back side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)*</span></label>
+      <label class="sub-label">Upload Emirates id back side <span style="font-size: 13px;">(recommended 750x400px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
       @if(\Auth::user()->emirates_id_back)
         <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
          <img src="{!! asset(\Auth::user()->emirates_id_back) !!}" id="blah1" class="img-responsive">
@@ -200,7 +201,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(600x600 px / .png, .jpg, .jpeg)*</span></label>
+      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(recommended 600x600px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
       @if(isset($result->passport_photo))
         <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
         <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive">

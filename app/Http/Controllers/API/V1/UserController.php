@@ -169,10 +169,169 @@ class UserController extends Controller
                     ->where('applications.user_id', $user->id)->get();
 
             return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
-
           }
       }
+    }
 
+    public function skipVideo(Request $request){
+      try {
+
+            if($request->api_key){
+              $user = User::where('api_key', $request->api_key)->first();
+              if($user){
+
+              $user_id = $user->id;
+              $ref_id = [];
+
+              $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
+              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id')->get();
+
+              $app_base = 1300;
+                if($services){
+                        if($CustomerOnboarding->cm_type == 1){
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company')->first();
+                            $inputs['company_name'] = $employee->company_name;
+                            $inputs['date_of_joining'] = $employee->date_of_joining;
+                            $inputs['monthly_salary'] = $employee->monthly_salary;
+                            $inputs['last_three_salary_credits'] = $employee->last_three_salary_credits;
+                            $inputs['other_company'] = $employee->other_company;
+                        } elseif ($CustomerOnboarding->cm_type == 2){
+                            $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();
+                            $inputs['self_company_name'] = $employee->self_company_name;
+                            $inputs['percentage_ownership'] = $employee->percentage_ownership;
+                            $inputs['profession_business'] = $employee->profession_business;
+                            $inputs['annual_business_income'] = $employee->annual_business_income;
+                            $inputs['other_company'] = $employee->self_other_company;
+                        } else {
+                            $employee = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                            $inputs['monthly_pension'] = $employee->monthly_pension;
+                        }
+
+                        $inputs['nationality'] = $CustomerOnboarding->nationality;
+                        $inputs['passport_number'] = $CustomerOnboarding->passport_number;
+                        $inputs['passport_expiry_date'] = $CustomerOnboarding->passport_expiry_date;
+                        $inputs['officer_email'] = $CustomerOnboarding->officer_email;
+                        $inputs['visa_number'] = $CustomerOnboarding->visa_number;
+                        $inputs['marital_status'] = $CustomerOnboarding->marital_status;
+                        $inputs['years_in_uae'] = $CustomerOnboarding->years_in_uae;
+                        $inputs['reference_number'] = $CustomerOnboarding->reference_number;
+                        $inputs['passport_photo'] = $CustomerOnboarding->passport_photo;
+                        $inputs['video'] = $CustomerOnboarding->video;
+                        $inputs['no_of_dependents'] = $CustomerOnboarding->no_of_dependents;
+                        $inputs['consent_form'] = $CustomerOnboarding->consent_form;
+                        $inputs['cm_type'] = $CustomerOnboarding->cm_type;
+                        $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['user_id'] = $user_id;
+                        $inputs['salutation'] = $user->salutation;
+                        $inputs['name'] = $user->name;
+                        $inputs['middle_name'] = $user->middle_name;
+                        $inputs['last_name'] = $user->last_name;
+                        $inputs['email'] = $user->email;
+                        $inputs['gender'] = $user->gender;
+                        $inputs['date_of_birth'] = $user->date_of_birth;
+                        $inputs['profile_image'] = $user->profile_image;
+                        $inputs['emirates_id'] = $user->emirates_id;
+                        $inputs['emirates_id_back'] = $user->emirates_id_back;
+                        $inputs['eid_number'] = $user->eid_number;
+                        $inputs['eid_status'] = $user->eid_status;
+                        $inputs['mobile'] = $user->mobile;
+                        $inputs['status'] = 0;
+                        $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+                        $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
+                        $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
+                        $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
+                        $application_data['card_limit'] = $ProductRequest->card_limit;
+                        $application_data['details_of_cards2'] = $ProductRequest->details_of_cards2;
+                        $application_data['credit_bank_name2'] = $ProductRequest->credit_bank_name2;
+                        $application_data['card_limit2'] = $ProductRequest->card_limit2;
+                        $application_data['details_of_cards3'] = $ProductRequest->details_of_cards3;
+                        $application_data['credit_bank_name3'] = $ProductRequest->credit_bank_name3;
+                        $application_data['card_limit3'] = $ProductRequest->card_limit3;
+                        $application_data['details_of_cards4'] = $ProductRequest->details_of_cards4;
+                        $application_data['credit_bank_name4'] = $ProductRequest->credit_bank_name4;
+                        $application_data['card_limit4'] = $ProductRequest->card_limit4;
+                        $application_data['loan_amount'] = $ProductRequest->loan_amount;
+                        $application_data['loan_bank_name'] = $ProductRequest->loan_bank_name;
+                        $application_data['original_loan_amount'] = $ProductRequest->original_loan_amount;
+                        $application_data['loan_emi'] = $ProductRequest->loan_emi;
+                        $application_data['loan_bank_name2'] = $ProductRequest->loan_bank_name2;
+                        $application_data['original_loan_amount2'] = $ProductRequest->original_loan_amount2;
+                        $application_data['loan_emi2'] = $ProductRequest->loan_emi2;
+                        $application_data['loan_bank_name3'] = $ProductRequest->loan_bank_name3;
+                        $application_data['original_loan_amount3'] = $ProductRequest->original_loan_amount3;
+                        $application_data['loan_emi3'] = $ProductRequest->loan_emi3;
+                        $application_data['loan_bank_name4'] = $ProductRequest->loan_bank_name4;
+                        $application_data['original_loan_amount4'] = $ProductRequest->original_loan_amount4;
+                        $application_data['loan_emi4'] = $ProductRequest->loan_emi4;
+                        $application_data['business_loan_amount'] = $ProductRequest->business_loan_amount;
+                        $application_data['business_loan_emi'] = $ProductRequest->business_loan_emi;
+                        $application_data['business_loan_amount2'] = $ProductRequest->business_loan_amount2;
+                        $application_data['business_loan_emi2'] = $ProductRequest->business_loan_emi2;
+                        $application_data['business_loan_amount3'] = $ProductRequest->business_loan_amount3;
+                        $application_data['business_loan_emi3'] = $ProductRequest->business_loan_emi3;
+                        $application_data['business_loan_amount4    '] = $ProductRequest->business_loan_amount4;
+                        $application_data['business_loan_emi4'] = $ProductRequest->business_loan_emi4;
+                        $application_data['mortgage_loan_amount'] = $ProductRequest->mortgage_loan_amount;
+                        $application_data['purchase_price'] = $ProductRequest->purchase_price;
+                        $application_data['type_of_loan'] = $ProductRequest->type_of_loan;
+                        $application_data['term_of_loan'] = $ProductRequest->term_of_loan;
+                        $application_data['end_use_of_property'] = $ProductRequest->end_use_of_property;
+                        $application_data['interest_rate'] = $ProductRequest->interest_rate;
+                        $application_data['mortgage_emi'] = $ProductRequest->mortgage_emi;
+                        $application_data['mortgage_loan_amount2'] = $ProductRequest->mortgage_loan_amount2;
+                        $application_data['purchase_price2'] = $ProductRequest->purchase_price2;
+                        $application_data['type_of_loan2'] = $ProductRequest->type_of_loan2;
+                        $application_data['term_of_loan2'] = $ProductRequest->term_of_loan2;
+                        $application_data['end_use_of_property2'] = $ProductRequest->end_use_of_property2;
+                        $application_data['interest_rate2'] = $ProductRequest->interest_rate2;
+                        $application_data['mortgage_emi2'] = $ProductRequest->mortgage_emi2;
+                        $application_data['mortgage_loan_amount3'] = $ProductRequest->mortgage_loan_amount3;
+                        $application_data['purchase_price3'] = $ProductRequest->purchase_price3;
+                        $application_data['type_of_loan3'] = $ProductRequest->type_of_loan3;
+                        $application_data['term_of_loan3'] = $ProductRequest->term_of_loan3;
+                        $application_data['end_use_of_property3'] = $ProductRequest->end_use_of_property3;
+                        $application_data['interest_rate3'] = $ProductRequest->interest_rate3;
+                        $application_data['mortgage_emi3'] = $ProductRequest->mortgage_emi3;
+                        $application_data['mortgage_loan_amount4'] = $ProductRequest->mortgage_loan_amount4;
+                        $application_data['purchase_price4'] = $ProductRequest->purchase_price4;
+                        $application_data['type_of_loan4'] = $ProductRequest->type_of_loan4;
+                        $application_data['term_of_loan4'] = $ProductRequest->term_of_loan4;
+                        $application_data['end_use_of_property4'] = $ProductRequest->end_use_of_property4;
+                        $application_data['interest_rate4'] = $ProductRequest->interest_rate4;
+                        $application_data['mortgage_emi4'] = $ProductRequest->mortgage_emi4;
+
+                    foreach ($services as $service) {
+                        $a_no = $app_base+$service->id;
+                        $inputs['ref_id'] = $a_no;
+                        $inputs['service_id'] = $service->service_id;
+                        $inputs['preference_bank_id'] = $service->bank_id;
+                        $service_name = Service::where('id', $service->service_id)->select('name')->first();
+                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                         ServiceApply::where('id', $service->id)->update([
+                          'app_no' => $a_no, 
+                          'app_status' => 1,
+                        ]);
+                        $application_id = (new Application)->store($inputs); 
+                        $application_data['application_id'] = $application_id;
+
+                        (new ApplicationProductRequest)->store($application_data); 
+
+                        $ref_id[] = $slide;
+                    }
+                } 
+
+
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Application submited successfully', 'ref_id' => $ref_id]);
+
+
+
+              }
+
+            }
+
+      } catch(Exception $e){
+          return apiResponse(false, 500, lang('messages.server_error'));
+      }
     }
 
     public function upload_video(Request $request){
@@ -336,7 +495,6 @@ class UserController extends Controller
 
                         (new ApplicationProductRequest)->store($application_data); 
 
-                       
                         $ref_id[] = $slide;
                     }
                 } 
@@ -403,9 +561,11 @@ class UserController extends Controller
           $user = User::where('api_key', $request->api_key)->select('id')->first();
           if($user){
             $data = [];
-            $services = ServiceApply::where('customer_id', $user->id)->select('service_id', 'bank_id')->get();
-            if($services){
-              foreach($services as $service) {
+
+            $service = ServiceApply::where('customer_id', $user->id)->where('service_id', 3)->select('service_id', 'bank_id')->first();
+
+            if($service){
+         
                 $slide['service_id'] = $service->service_id;
                 $service_name = Service::where('id', $service->service_id)->select('name')->first();
                 $slide['service_name'] = $service_name->name;
@@ -423,8 +583,9 @@ class UserController extends Controller
                 }
               $slide['bank_data']  = $bank_data;
               $data[] = $slide;  
-              }
+        
             }
+
           return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
           }
       }
@@ -435,14 +596,13 @@ class UserController extends Controller
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user){
           $user_id = $user->id;
-          if($request->service_id){
-            foreach($request->service_id as $key => $service_id) {
-              ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->update([
-                'bank_id' => $bank_id[$key],
-              ]);
-            }
+  
+            ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
+              'bank_id' => $request->bank_id,
+            ]);
+
             return response()->json(['success' => true, 'status' => 200, 'message' => 'Preference successfully updated']);  
-          }
+       
         }
       } 
     }
@@ -561,19 +721,20 @@ class UserController extends Controller
           if($request->api_key){
             $user = User::where('api_key', $request->api_key)->select('id')->first();
             if($user) {
-                $user_id = $user->id;
+              $user_id = $user->id;
               if(isset($request->service)){
-
                 $ser_list = explode(',', $request->service);
 
+                \DB::table('service_applies')->where('customer_id', $user_id)->delete();
+
                 foreach($ser_list as $service_id){
-                    $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
-                 
+                    $apply_ser = ServiceApply::where('service_id', $service_id)->where('app_status', 0)->where('customer_id', $user_id)->count();
+                      if($apply_ser == 0){
                         ServiceApply::create([
                             'service_id'  =>  $service_id,
                             'customer_id'  => $user_id,
                         ]);
-                    
+                      }
                 }
 
                 return response()->json(['success' => true, 'status' => 200]);
@@ -2065,6 +2226,7 @@ class UserController extends Controller
                     'name' =>  $request->first_name_as_per_passport,
                     'middle_name' =>  $request->middle_name,
                     'last_name' => $request->last_name,
+                    'eid_number' => $request->eid_number,
                 ]); 
 
 

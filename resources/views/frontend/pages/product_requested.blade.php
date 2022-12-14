@@ -6,15 +6,12 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
-<h2>Type Of Product Requested</h2>
+<h2>Details of existing financial products</h2>
 <h6>Please enter your information to check the offer.</h6>
 
 <form action="{{ route('consent-approval') }}" method="post">
 {{ csrf_field() }}  
 
-
-
-  @if(in_array(3, $services))
   <div class="row">
   <div class="col-md-12">
     <h5 style="font-size: 17px; margin-top: 15px;">Details For Credit Card</h5>
@@ -31,7 +28,7 @@
   </div>
 
   <div class="col-md-12">
-    <label style="font-size: 14px; margin-top: -10px;">Existing Financial Products</label>
+    <!-- <label style="font-size: 14px; margin-top: -10px;">Existing Financial Products</label> -->
   </div>
 
   <div class="col-md-6">
@@ -82,7 +79,7 @@
   </div>
 
   <div class="col-md-12" @if(isset($result->credit_bank_name2)) @if($result->credit_bank_name2 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn credit_card1_open">Add More</a>
+    <a class="add_more_btn credit_card1_open"> + Add More</a>
   </div> 
   </div>
 
@@ -133,7 +130,7 @@
     </div>
   </div>
   <div class="col-md-12" @if(isset($result->credit_bank_name3)) @if($result->credit_bank_name3 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn credit_card2_open">Add More</a>
+    <a class="add_more_btn credit_card2_open"><span>+</span> Add More</a>
   </div> 
   </div>
 
@@ -182,7 +179,7 @@
     </div>
   </div>
   <div class="col-md-12" @if(isset($result->credit_bank_name4)) @if($result->credit_bank_name4 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn credit_card3_open">Add More</a>
+    <a class="add_more_btn credit_card3_open"><span>+</span> Add More</a>
   </div> 
   </div>
 
@@ -232,10 +229,8 @@
   </div>
   </div>
 
-   @endif
 
-  @if(in_array(1, $services))
-  <div class="row">
+  <div class="row" style="background: #f7f7f7; margin-top: 20px;">
   <div class="col-md-12">
     <h5 style="font-size: 17px; margin-top: 15px;">Details For Personal Loan</h5>
   </div>
@@ -289,11 +284,11 @@
   </div>
 
   <div class="col-md-12" @if(isset($result->loan_bank_name2)) @if($result->loan_bank_name2 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn loan_bus2_open">Add More</a>
+    <a class="add_more_btn loan_bus2_open"><span>+</span> Add More</a>
   </div> 
   </div>
 
-  <div class="row bus_lon2" @if(isset($result->loan_bank_name2)) @if($result->loan_bank_name2 == '') style="display:none;" @endif @else style="display:none;"  @endif>
+  <div class="row bus_lon2" @if(isset($result->loan_bank_name2)) @if($result->loan_bank_name2 == '') style="display:none; background: #f7f7f7;" @else style="background: #f7f7f7;" @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -332,11 +327,11 @@
   </div>
   
   <div class="col-md-12" @if(isset($result->loan_bank_name3)) @if($result->loan_bank_name3 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn loan_bus3_open">Add More</a>
+    <a class="add_more_btn loan_bus3_open"><span>+</span> Add More</a>
   </div>
   </div>
 
-  <div class="row bus_lon3" @if(isset($result->loan_bank_name3)) @if($result->loan_bank_name3 == '') style="display:none;" @endif @else style="display:none;"  @endif>
+  <div class="row bus_lon3"  @if(isset($result->loan_bank_name3)) @if($result->loan_bank_name3 == '') style="display:none;background: #f7f7f7;" @else style="background: #f7f7f7;"  @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -373,11 +368,11 @@
     </div>
   </div>
   <div class="col-md-12" @if(isset($result->loan_bank_name4)) @if($result->loan_bank_name4 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn loan_bus4_open">Add More</a>
+    <a class="add_more_btn loan_bus4_open"><span>+</span> Add More</a>
   </div>
   </div>
 
-  <div class="row bus_lon4" @if(isset($result->loan_bank_name4)) @if($result->loan_bank_name4 == '') style="display:none;" @endif @else style="display:none;"  @endif>
+  <div class="row bus_lon4" @if(isset($result->loan_bank_name4)) @if($result->loan_bank_name4 == '') style="display:none;background: #f7f7f7;" @else style="background: #f7f7f7;"  @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -415,9 +410,7 @@
   </div>
   </div>
 
-  @endif
 
-  @if(in_array(4, $services))
   <div class="row">
     <div class="col-md-12">
       <h5 style="font-size: 17px; margin-top: 15px;">Details For Business Loan</h5>
@@ -444,7 +437,7 @@
     </div>
 
     <div class="col-md-12" @if(isset($result->business_loan_amount2)) @if($result->business_loan_amount2 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn loan_busin2_open">Add More</a>
+    <a class="add_more_btn loan_busin2_open"><span>+</span> Add More</a>
     </div>
   </div>
 
@@ -468,7 +461,7 @@
       </div>
     </div>
     <div class="col-md-12" @if(isset($result->business_loan_amount3)) @if($result->business_loan_amount3 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn loan_busin3_open">Add More</a>
+    <a class="add_more_btn loan_busin3_open"><span>+</span> Add More</a>
     </div>
   </div>
 
@@ -492,7 +485,7 @@
       </div>
     </div>
     <div class="col-md-12" @if(isset($result->business_loan_amount3)) @if($result->business_loan_amount3 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn loan_busin4_open">Add More</a>
+    <a class="add_more_btn loan_busin4_open"><span>+</span> Add More</a>
     </div>
   </div>
 
@@ -517,10 +510,8 @@
     </div>
   </div>
 
-  @endif
 
-  @if(in_array(5, $services))
-  <div class="row">
+  <div class="row" style="background: #f7f7f7;">
   <div class="col-md-12">
     <h5 style="font-size: 17px; margin-top: 15px;">Details For Mortgage Loan</h5>
   </div>
@@ -613,11 +604,11 @@
   </div>
 
   <div class="col-md-12" @if(isset($result->mortgage_loan_amount2)) @if($result->mortgage_loan_amount2 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn mortgage_loan2_open">Add More</a>
+    <a class="add_more_btn mortgage_loan2_open"><span>+</span> Add More</a>
   </div> 
   </div>
 
-  <div class="row mortgage_loan2" @if(isset($result->mortgage_loan_amount2)) @if($result->mortgage_loan_amount2 == '') style="display:none;" @endif @else style="display:none;"  @endif>
+  <div class="row mortgage_loan2" @if(isset($result->mortgage_loan_amount2)) @if($result->mortgage_loan_amount2 == '') style="display:none;background: #f7f7f7;" @else style="background: #f7f7f7;" @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -705,11 +696,11 @@
     </div>
   </div>
   <div class="col-md-12" @if(isset($result->mortgage_loan_amount3)) @if($result->mortgage_loan_amount3 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn mortgage_loan3_open">Add More</a>
+    <a class="add_more_btn mortgage_loan3_open"><span>+</span> Add More</a>
   </div>
   </div>
 
-  <div class="row mortgage_loan3" @if(isset($result->mortgage_loan_amount3)) @if($result->mortgage_loan_amount3 == '') style="display:none;" @endif @else style="display:none;"  @endif>
+  <div class="row mortgage_loan3" @if(isset($result->mortgage_loan_amount3)) @if($result->mortgage_loan_amount3 == '') style="display:none;background: #f7f7f7;" @else style="background: #f7f7f7;" @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -797,12 +788,12 @@
     </div>
   </div>
   <div class="col-md-12" @if(isset($result->mortgage_loan_amount4)) @if($result->mortgage_loan_amount4 != '') style="display:none;" @endif @endif>
-    <a class="add_more_btn mortgage_loan4_open">Add More</a>
+    <a class="add_more_btn mortgage_loan4_open"><span>+</span> Add More</a>
   </div>
   </div>
 
 
-  <div class="row mortgage_loan4" @if(isset($result->mortgage_loan_amount4)) @if($result->mortgage_loan_amount4 == '') style="display:none;" @endif @else style="display:none;"  @endif>
+  <div class="row mortgage_loan4" @if(isset($result->mortgage_loan_amount4)) @if($result->mortgage_loan_amount4 == '') style="display:none;background: #f7f7f7;" @else style="background: #f7f7f7;" @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
@@ -891,7 +882,7 @@
   </div>
   </div>
 
-  @endif
+
 
   <div class="row">
   <div class="col-md-12 text-center">

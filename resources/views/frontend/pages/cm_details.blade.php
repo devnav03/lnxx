@@ -25,14 +25,16 @@
 </div>
 <div class="row">
   <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;"  @endif>
-    <div class="form-group">
+    <div class="form-group form-rel">
       <label class="sub-label">Company Name*</label>
-      <select name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true" @endif id="company_name" class="form-control">
+      <input type="text" @if($result) value="{{ $result->company_name }}" @else value="{{ old('company_name') }}" @endif @if($cm_type != 2 && $cm_type != 3) required="true" @endif name="company_name" id="company_name" class="form-control live_product_1 product_name">
+      <ul id="live_product_1"></ul> 
+      <!-- <select name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true" @endif id="company_name" class="form-control">
           <option value="">select</option>
           @foreach($company as $comp)
            <option @if($result) @if($comp->id ==  $result->company_name) selected @endif @endif value="{{ $comp->id }}">{{ $comp->name }}</option>
           @endforeach
-      </select>
+      </select> -->
     <!--   <input name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif  id="company_name" class="form-control" @if($result) value="{{ $result->company_name }}" @else value="{{ old('company_name') }}" @endif type="text"> -->
 
       @if($errors->has('company_name'))
@@ -61,13 +63,37 @@
     </div>
   </div>
 
-  <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;" @endif>
-    <div class="form-group">
-      <label class="sub-label">Last Three Salary credits</label>
-      <input name="last_three_salary_credits" class="form-control" @if($result) value="{{ $result->last_three_salary_credits }}" @else value="{{ old('last_three_salary_credits') }}" @endif type="text">
-      @if($errors->has('last_three_salary_credits'))
-      <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
-      @endif
+  <div class="col-md-12 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;" @endif>
+    <label class="sub-label" style="color: #000; font-size: 15px;">Last Three Salary credits</label>
+    <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="sub-label">First</label>
+        <input name="last_one_salary_credits" class="form-control" @if($result) value="{{ $result->last_one_salary_credits }}" @else value="{{ old('last_one_salary_credits') }}" @endif type="number">
+        @if($errors->has('last_one_salary_credits'))
+        <span class="text-danger">{{$errors->first('last_one_salary_credits')}}</span>
+        @endif
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="sub-label">Second</label>
+        <input name="last_two_salary_credits" class="form-control" @if($result) value="{{ $result->last_two_salary_credits }}" @else value="{{ old('last_two_salary_credits') }}" @endif type="number">
+        @if($errors->has('last_two_salary_credits'))
+        <span class="text-danger">{{$errors->first('last_two_salary_credits')}}</span>
+        @endif
+      </div>
+    </div>  
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="sub-label">Third</label>
+        <input name="last_three_salary_credits" class="form-control" @if($result) value="{{ $result->last_three_salary_credits }}" @else value="{{ old('last_three_salary_credits') }}" @endif type="number">
+        @if($errors->has('last_three_salary_credits'))
+        <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
+        @endif
+      </div>
+    </div>
+  
     </div>
   </div>
 
@@ -152,13 +178,15 @@
   <div class="col-md-6 self_employed_type" @if($cm_type != 2) style="display: none;" @endif>
     <div class="form-group">
       <label class="sub-label">Company Name*</label>
+      <input type="text" @if($result) value="{{ $result->self_company_name }}" @else value="{{ old('self_company_name') }}" @endif @if($cm_type == 2) required="true" @endif name="self_company_name" id="self_company_name" class="form-control live_product_2 product_name2">
+      <ul id="live_product_2"></ul> 
 
-      <select name="self_company_name" @if($cm_type == 2) required="true" @endif id="company_name_sec" class="form-control">
+      <!-- <select name="self_company_name" @if($cm_type == 2) required="true" @endif id="company_name_sec" class="form-control">
           <option value="">select</option>
           @foreach($company as $company)
            <option @if($result) @if($company->id ==  $result->self_company_name) selected @endif @endif value="{{ $company->id }}">{{ $company->name }}</option>
           @endforeach
-      </select>
+      </select> -->
 
   <!--     <input name="self_company_name" class="form-control" id="company_name_sec"  @if($result) value="{{ $result->self_company_name }}" @else value="{{ old('self_company_name') }}" @endif @if($cm_type == 2) required="true"  @endif type="text"> -->
 
@@ -336,5 +364,9 @@ function RelationChange(that) {
     }
    
 }
+
+
 </script>
+
+
 @endsection    

@@ -333,6 +333,18 @@ Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::
 Route::any('verify-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates_id'])->name('verify-emirates-id');
 Route::any('verify-emirates', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates'])->name('verify-emirates');
 Route::any('preference', [App\Http\Controllers\Frontend\HomeController::class, 'preference'])->name('preference');
+Route::any('save-preference', [App\Http\Controllers\Frontend\HomeController::class, 'save_preference'])->name('save-preference');
+Route::any('consent', [App\Http\Controllers\Frontend\HomeController::class, 'consent'])->name('consent');
+
+Route::any('live_product_1', [App\Http\Controllers\Frontend\HomeController::class, 'live_product_1'])->name('live_product_1');
+
+Route::get('check_product_code', [App\Http\Controllers\Frontend\HomeController::class, 'check_product_code'])->name('check_product_code');
+
+
+Route::any('live_product_2', [App\Http\Controllers\Frontend\HomeController::class, 'live_product_2'])->name('live_product_2');
+
+Route::get('check_product_code2', [App\Http\Controllers\Frontend\HomeController::class, 'check_product_code2'])->name('check_product_code2');
+
 
 
 });

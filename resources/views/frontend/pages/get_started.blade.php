@@ -25,6 +25,7 @@
 <div class="col-md-10 offset-md-1">	
 <div class="row">
 <div class="col-md-6 pdr50">	
+<a href="{{ route('customer-menu') }}">	
 <div class="con-box">
 <h4>Enroll as customer</h4>
 <p>Get exclusive offers on personal loans and credit cards.</p>
@@ -33,10 +34,11 @@
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
 </a>
 </div>
-
+</a>
 </div>
 
-<div class="col-md-6 pdl50">	
+<div class="col-md-6 pdl50">
+<a href="{{ route('agent-menu') }}">	
 <div class="con-box">
 <h4>Become an agent</h4>
 <p>Get job opportunities to enhance your income and enrich your lifestyle.</p>
@@ -45,6 +47,7 @@
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
 </a>
 </div>
+</a>
 </div>
 </div>
 </div>

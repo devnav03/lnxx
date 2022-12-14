@@ -13,6 +13,7 @@ use App\Models\SelfEmpDetail;
 use App\Models\Address;
 use App\Models\ProductRequest;
 use App\Models\UserEducation;
+use App\Models\Service;
 use App\Models\Company;
 use App\Models\ServiceApply;
 use App\Models\Application;
@@ -142,17 +143,13 @@ class ApplicationController extends Controller {
    
         $country = Country::all();
         $countries = Country::all();
-
-        // $other_cm_details = OtherCmDetail::where('customer_id', $id)->first();
-        // $cm_salaried_details = CmSalariedDetail::where('customer_id', $id)->first();
-        // $self_emp_details = SelfEmpDetail::where('customer_id', $id)->first();
-        // $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
-        // $product_requested = ProductRequest::where('user_id', $id)->first();
-
         $Application_Request = ApplicationProductRequest::where('application_id', $id)->first();
 
         $company = Company::where('status', 1)->select('id', 'name')->get();
         $banks = Bank::where('status', 1)->select('id', 'name')->get();
+
+        $bank = Bank::where('id', $result->preference_bank_id)->select('id', 'name')->first();
+        $service = Service::where('id', $result->service_id)->select('id', 'name')->first();
 
         $address_details = Address::where('customer_id', $id)->first();
         $UserEducation = UserEducation::where('user_id', $id)->first();
@@ -162,8 +159,7 @@ class ApplicationController extends Controller {
                     ->where('service_applies.customer_id', $id)->get();
         $sel_services = ServiceApply::where('customer_id', $id)->pluck('service_id')->toArray();
                     
-        return view('admin.applications.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks', 'Application_Request'));
- 
+        return view('admin.applications.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks', 'Application_Request', 'bank', 'service'));
     }
 
 

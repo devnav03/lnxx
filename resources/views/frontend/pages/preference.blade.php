@@ -6,30 +6,33 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box cm_dt">
-<h2>Preference</h2>
-<h6>Please select bank for preference</h6>
+<h2>Bank Preference</h2>
+<!-- <h6>Please select bank for preference</h6> -->
 
-<form action="{{ route('personal-details') }}" method="post">
+<form action="{{ route('save-preference') }}" method="post">
 {{ csrf_field() }}  
 
 <div class="row">
+  <div class="col-md-12">
+    <label><input type="radio"> Yes lnxx will decide</label>
 
+  </div>
   @if($service)
   <div class="col-md-12" style="margin-top: 15px;">
-    <label style="margin-bottom: 10px;">Select bank for {{ $service->name }}</label>
+    <!-- <label style="margin-bottom: 10px;">Select bank for {{ $service->name }}</label> -->
     <input type="hidden" name="apply_id[]" value="{{ $service->id }}">
 @php
   $sel_bank = get_sel_bank($service->id);
 @endphp    
       <ul style="padding: 0px; list-style: none;">
         @foreach(get_prefer_bank($service->service_id) as $bank)
-          <li style="float: left; width: 100%;"> <label style="font-weight: normal;font-size: 15px;"><input style="margin-top: 3px;margin-bottom: 10px;float: left;" type="radio" @if($sel_bank == $bank->id) checked @endif  name="bank_id[{{ $service->id }}]" value="{{ $bank->id }}"> {{ $bank->name }}</label> </li>
+          <li style="float: left; width: 100%;"> <label style="font-weight: normal;font-size: 15px;"><input style="margin-top: 3px;margin-bottom: 10px;float: left;" type="radio" @if($sel_bank == $bank->id) checked @endif  name="bank_id" value="{{ $bank->id }}"> {{ $bank->name }}</label> </li>
         @endforeach
       </ul>
   </div>
   @endif
   <div class="col-md-12 text-center">
-    <a href="{{ route('user-dashboard') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+    <a href="{{ route('product-requested') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
   </div>
 </div>

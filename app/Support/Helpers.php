@@ -149,7 +149,7 @@ function authUserIdNull() {
 function get_service_status($service_id){
 
     $id = \Auth::user()->id;
-    $apply_ser = App\Models\ServiceApply::where('service_id', $service_id)->where('customer_id', $id)->count();
+    $apply_ser = App\Models\ServiceApply::where('service_id', $service_id)->where('app_status', 0)->where('customer_id', $id)->count();
     
     if($apply_ser == 0){
         $value = 0;
