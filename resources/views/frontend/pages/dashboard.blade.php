@@ -105,7 +105,7 @@ $button += $services;
 <div class="col-md-3">
 <div class="info_sidebar" style="padding-bottom: 30px; margin-top: 0px; margin-bottom: 30px;">
   <h5 style="margin-bottom: 20px;">Refer and Earn</h5>
-  <a href="#" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
+  <a href="#" data-toggle="modal" data-target="#exampleModal" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
 </div>  
 <div class="dashboard_sidebar">
 <h3>Application Update</h3> 
@@ -147,6 +147,55 @@ $button += $services;
 </div>
 </section>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Refer a Friend</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+
+          <div class="form-group">
+            <label class="sub-label">Mobile Number*</label>
+            <input name="mobile" class="form-control" value="{{ old('mobile')}}" required="true" type="number">
+            @if($errors->has('mobile'))
+            <span class="text-danger">{{$errors->first('mobile')}}</span>
+            @endif
+          </div>
+
+          <div class="form-group">
+            <label class="sub-label">Name*</label>
+            <input name="name" class="form-control" value="{{ old('name')}}" required="true" type="text">
+            @if($errors->has('name'))
+            <span class="text-danger">{{$errors->first('name')}}</span>
+            @endif
+          </div>
+
+          <div class="form-group">
+            <label class="sub-label">Email ID*</label>
+            <input name="email" class="form-control" value="{{ old('email')}}" required="true" type="email">
+            @if($errors->has('email'))
+            <span class="text-danger">{{$errors->first('email')}}</span>
+            @endif
+          </div>
+
+          <div class="col-md-12 text-center">
+            <button type="submit">Submit</button>
+          </div>
+
+        </form>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 
 @endsection    
 

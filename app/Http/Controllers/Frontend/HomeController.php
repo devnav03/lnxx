@@ -106,16 +106,17 @@ class HomeController extends Controller {
 
     public function save_preference(Request $request){
         try {
-            if($request->bank_id){
+            // if($request->decide_by){
             $user_id = Auth::id();
             ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->where('service_id', 3)
             ->update([
-              'bank_id' => $request->bank_id,
+                'bank_id' => $request->bank_id,
+                'decide_by' => $request->decide_by,
             ]);
                 return redirect()->route('consent');
-            } else {
-                return back();
-            }
+            // } else {
+            //     return back();
+            // }
         }  catch (\Exception $exception) {
             return back();    
         }
@@ -621,7 +622,7 @@ public function enter_name(Request $request){
                 $inputs['user_id'] = $user_id;
                 $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
 
-                $services = ServiceApply::where('app_status', 0)->where('customer_id', $user_id)->select('id', 'service_id', 'bank_id')->get();
+                $services = ServiceApply::where('app_status', 0)->where('customer_id', $user_id)->select('id', 'service_id', 'bank_id', 'decide_by')->get();
                 $app_base = 1300;
                 if($services){
                         if($CustomerOnboarding->cm_type == 1){
@@ -745,13 +746,12 @@ public function enter_name(Request $request){
                         $inputs['ref_id'] = $a_no;
                         $inputs['service_id'] = $service->service_id;
                         $inputs['preference_bank_id'] = $service->bank_id;
+                        $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
                         $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
-
                         (new ApplicationProductRequest)->store($application_data); 
-
                         ServiceApply::where('id', $service->id)
                             ->update([
                             'app_no' => $a_no,
@@ -759,7 +759,6 @@ public function enter_name(Request $request){
                         ]);
                         $ref_id[] = $slide;
                     }
-
                 } else {
                     $ref_id = [];
                 }
@@ -903,7 +902,7 @@ public function enter_name(Request $request){
                 } else {
                 $service = \DB::table('service_applies')
                     ->join('services', 'services.id', '=', 'service_applies.service_id')
-                    ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
+                    ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id', 'service_applies.decide_by')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
                     // dd($services);   
                 return view('frontend.pages.preference', compact('service')); 
                 }

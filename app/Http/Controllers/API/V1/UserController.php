@@ -184,7 +184,7 @@ class UserController extends Controller
               $ref_id = [];
 
               $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
-              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id')->get();
+              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id', 'decide_by')->get();
 
               $app_base = 1300;
                 if($services){
@@ -305,6 +305,7 @@ class UserController extends Controller
                         $inputs['ref_id'] = $a_no;
                         $inputs['service_id'] = $service->service_id;
                         $inputs['preference_bank_id'] = $service->bank_id;
+                        $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
                         $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
                          ServiceApply::where('id', $service->id)->update([
@@ -361,7 +362,7 @@ class UserController extends Controller
               $ref_id = [];
                $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
 
-              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id')->get();
+              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id', 'decide_by')->get();
           
          //dd($services);
 
@@ -484,6 +485,7 @@ class UserController extends Controller
                         $inputs['ref_id'] = $a_no;
                         $inputs['service_id'] = $service->service_id;
                         $inputs['preference_bank_id'] = $service->bank_id;
+                        $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
                         $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
                          ServiceApply::where('id', $service->id)->update([
@@ -498,7 +500,6 @@ class UserController extends Controller
                         $ref_id[] = $slide;
                     }
                 } 
-
 
               return response()->json(['success' => true, 'status' => 200, 'message' => 'Video uploaded successfully', 'ref_id' => $ref_id]);
             }
@@ -599,6 +600,7 @@ class UserController extends Controller
   
             ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
               'bank_id' => $request->bank_id,
+              'decide_by' => $request->decide_by,
             ]);
 
             return response()->json(['success' => true, 'status' => 200, 'message' => 'Preference successfully updated']);  
@@ -1427,7 +1429,7 @@ class UserController extends Controller
           $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation', 'eid_number', 'eid_status')->first();
           if($user) {
               $home = route('get-started');
-              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score')->first();
+              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number')->first();
               //dd($data);
               if(isset($datas->passport_photo)){
                 $data['passport_photo'] = $home.$datas->passport_photo;
@@ -1444,6 +1446,17 @@ class UserController extends Controller
               } else {
                 $data['emirates_id_back'] = null;
               }
+              if($datas->passport_expiry_date){
+                $data['passport_expiry_date'] = $datas->passport_expiry_date;
+              } else {
+                $data['passport_expiry_date'] = null;
+              }
+              if($datas->passport_number){
+                $data['passport_number'] = $datas->passport_number;
+              } else {
+                $data['passport_number'] = null;
+              }
+
               $data['gender'] = $user->gender;
               $data['date_of_birth'] = $user->date_of_birth;
               if(isset($user->salutation)){
@@ -2077,7 +2090,7 @@ class UserController extends Controller
               if($cm_type){
                 $data = '';
                 if($cm_type->cm_type == 1){
-                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits')->first();
+                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits')->first();
                   
                   if(isset($data->company_name)){
                     $data['company_name'] = $data->company_name;
@@ -2098,6 +2111,16 @@ class UserController extends Controller
                     $data['last_three_salary_credits'] = $data->last_three_salary_credits;
                   } else {
                     $data['last_three_salary_credits'] = null;
+                  }
+                  if(isset($data->last_two_salary_credits)){
+                    $data['last_two_salary_credits'] = $data->last_two_salary_credits;
+                  } else {
+                    $data['last_two_salary_credits'] = null;
+                  }
+                  if(isset($data->last_one_salary_credits)){
+                    $data['last_one_salary_credits'] = $data->last_one_salary_credits;
+                  } else {
+                    $data['last_one_salary_credits'] = null;
                   }
 
 

@@ -59,7 +59,6 @@
                                             @if($errors->has('mobile'))
                                              <span class="text-danger">{{$errors->first('mobile')}}</span>
                                             @endif
-                                            
                                         </div> 
                                     </div>
                                     
@@ -100,7 +99,6 @@
                                     </div>
                                     @endif
             
-                                   
                                     @if(isset($result->profile_image))
                                     <div class="col-md-6" style="margin-top: 20px;">
                                         <label>Profile Image</label><br>
@@ -222,14 +220,14 @@
            <!--  <input name="nationality" class="form-control" value="{{ $result->nationality }}" type="text" required="true"> -->
         </div>
     </div>
-
+    @if($result->nationality != 229)
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Years in UAE*</label>
             <input name="years_in_uae" class="form-control" value="{{ $result->years_in_uae }}" type="text" required="true">
         </div>
     </div>
-
+    @endif
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Marital Status*</label>
@@ -271,7 +269,28 @@
             <input name="officer_email" class="form-control" value="{{ $result->officer_email }}" type="text">
         </div>
     </div>
-    
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Credit Score</label>
+            <input name="credit_score" class="form-control" value="{{ $result->credit_score }}" type="text">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Passport Number</label>
+            <input name="passport_number" class="form-control" value="{{ $result->passport_number }}" type="text">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Passport Expiry Date</label>
+            <input name="passport_expiry_date" class="form-control" value="{{ $result->passport_expiry_date }}" type="date">
+        </div>
+    </div>
+
     @if($result->passport_photo)
     <div class="col-md-6">
         <div class="form-group">
@@ -280,13 +299,6 @@
         </div>
     </div>
     @endif
-
-    <div class="col-md-6">
-        <div class="form-group">
-            <label class="sub-label">Credit Score</label>
-            <input name="credit_score" class="form-control" value="{{ $result->credit_score }}" type="text">
-        </div>
-    </div>
 
 
     </div>
@@ -523,14 +535,26 @@
                     </div>
                 </div>
                 @if($result->service_id == 3)
-                @if($bank)
-                <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="sub-label">Preferred Bank</label>
-                      <input name="b_name" class="form-control" value="{{ $bank->name }}" type="text" readonly="">
+
+                @if($result->decide_by == 0) 
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Preferred Bank</label>
+                          <input name="b_name" class="form-control" value="Lnxx will decide" type="text" readonly="">
+                        </div>
                     </div>
-                </div>
+                @else
+                    @if($bank)
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="sub-label">Preferred Bank</label>
+                          <input name="b_name" class="form-control" value="{{ $bank->name }}" type="text" readonly="">
+                        </div>
+                    </div>
+                    @endif 
                 @endif 
+
+
                 @endif 
             </div>
             </div>
@@ -549,9 +573,12 @@
                 </div>
                 <div class="form-body">   
                 <div class="row">
+                @if($Application_Request->credit_card_limit != '' ||  $Application_Request->credit_bank_name != '')    
                 <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Credit Card</label>
                 </div>
+                @endif
+                @if($Application_Request->credit_card_limit)
                 <div class="col-md-6">
                     <div class="form-group">
                       <label class="sub-label">Credit Card Limit</label>
@@ -561,6 +588,7 @@
                       @endif
                     </div>
                 </div>
+                @endif
                 @if($Application_Request->credit_bank_name)
                 <div class="col-md-12">                            
                     <label style="font-size: 15px; margin-top: 0px;">Existing Financial Products</label>

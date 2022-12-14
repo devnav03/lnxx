@@ -340,12 +340,9 @@ Route::any('live_product_1', [App\Http\Controllers\Frontend\HomeController::clas
 
 Route::get('check_product_code', [App\Http\Controllers\Frontend\HomeController::class, 'check_product_code'])->name('check_product_code');
 
-
 Route::any('live_product_2', [App\Http\Controllers\Frontend\HomeController::class, 'live_product_2'])->name('live_product_2');
 
 Route::get('check_product_code2', [App\Http\Controllers\Frontend\HomeController::class, 'check_product_code2'])->name('check_product_code2');
-
-
 
 });
 

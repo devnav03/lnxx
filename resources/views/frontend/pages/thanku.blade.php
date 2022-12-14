@@ -18,15 +18,10 @@
 <section class="thanku_sec">
 <div class="container">  
 <h5>One of our agent will get back to you shortly!</h5>
+<h5 style="margin-top: 20px; margin-bottom: 15px;">Refer and Earn</h5>
+<a href="#" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;" aria-hidden="true"></i> Share </a>
 </div>
 </section>
-
-
-
-
-
-
-
 
 
 

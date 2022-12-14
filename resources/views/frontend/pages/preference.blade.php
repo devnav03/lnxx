@@ -13,22 +13,24 @@
 {{ csrf_field() }}  
 
 <div class="row">
-  <div class="col-md-12">
-    <label><input type="radio"> Yes lnxx will decide</label>
-
+  <div class="col-md-12" style="margin-top: 20px;">
+    <label style="font-weight: normal; font-size: 15px;"><input type="radio" @if($service->decide_by == 0) checked @endif  onclick="javascript:yesnoCheck();" name="decide_by" id="yesCheck" value="0" style="margin-top: 3px; float: left; margin-right: 8px; width: 16px; margin-bottom: 8px;"> Yes lnxx will decide</label><br>
+    <label style="font-weight: normal; font-size: 15px;"><input type="radio" @if($service->decide_by == 1) checked @endif onclick="javascript:yesnoCheck();" name="decide_by" value="1" id="noCheck" style="margin-top: 3px; float: left; margin-right: 8px; width: 16px; margin-bottom: 5px;"> No i will decide</label>
   </div>
   @if($service)
-  <div class="col-md-12" style="margin-top: 15px;">
+  <div class="col-md-6" id="bank_select" @if($service->decide_by == 0) style="margin-top: 15px; display:none" @else style="margin-top: 15px;" @endif >
     <!-- <label style="margin-bottom: 10px;">Select bank for {{ $service->name }}</label> -->
     <input type="hidden" name="apply_id[]" value="{{ $service->id }}">
 @php
-  $sel_bank = get_sel_bank($service->id);
-@endphp    
-      <ul style="padding: 0px; list-style: none;">
+    $sel_bank = get_sel_bank($service->id);
+@endphp  
+      <label style="font-weight: normal; margin-bottom: 5px; font-size: 15px;">Bank</label>  
+      <select name="bank_id" class="form-control" id="bank_select_field" @if($service->decide_by == 1) required="true" @endif>
+        <option value="">Select</option>
         @foreach(get_prefer_bank($service->service_id) as $bank)
-          <li style="float: left; width: 100%;"> <label style="font-weight: normal;font-size: 15px;"><input style="margin-top: 3px;margin-bottom: 10px;float: left;" type="radio" @if($sel_bank == $bank->id) checked @endif  name="bank_id" value="{{ $bank->id }}"> {{ $bank->name }}</label> </li>
+          <option value="{{ $bank->id }}" @if($bank->id == $service->bank_id) selected @endif>{{ $bank->name }}</option>
         @endforeach
-      </ul>
+      </select>
   </div>
   @endif
   <div class="col-md-12 text-center">
@@ -59,56 +61,14 @@
 </section>
 
 <script type="text/javascript">
-function RelationChange(that) {
-    if (that.value == "2") {
-        $(".self_employed_type").show();
-        $(".salaried_type").hide();
-        $(".pension_type").hide();
-
-        $("#company_name").removeAttr('required');
-        $("#date_of_joining").removeAttr('required'); 
-        $("#monthly_salary").removeAttr('required'); 
-
-        $("#monthly_pension").removeAttr('required');
-        
-        $("#profession_business").attr("required", true);
-        $("#percentage_ownership").attr("required", true);
-        $("#company_name_sec").attr("required", true);
-        $("#annual_business_income").attr("required", true);
-        
-    } else if(that.value == "3") {
-        $(".salaried_type").hide();
-        $(".self_employed_type").hide();
-        $(".pension_type").show();
-
-        $("#company_name").removeAttr('required');
-        $("#date_of_joining").removeAttr('required'); 
-        $("#monthly_salary").removeAttr('required');
-
-        $("#profession_business").removeAttr('required');
-        $("#percentage_ownership").removeAttr('required');
-        $("#company_name_sec").removeAttr('required');
-        $("#annual_business_income").removeAttr('required');
-
-        $("#monthly_pension").attr("required", true);
-
+function yesnoCheck() {
+    if (document.getElementById('yesCheck').checked) {
+        document.getElementById('bank_select').style.display = 'none';
+        $("#bank_select_field").removeAttr('required');
     } else {
-        $(".salaried_type").show();
-        $(".self_employed_type").hide();
-        $(".pension_type").hide();
-
-        $("#company_name").attr("required", true);
-        $("#date_of_joining").attr("required", true); 
-        $("#monthly_salary").attr("required", true); 
-
-        $("#profession_business").removeAttr('required');
-        $("#percentage_ownership").removeAttr('required');
-        $("#company_name_sec").removeAttr('required');
-        $("#annual_business_income").removeAttr('required');
-
-        $("#monthly_pension").removeAttr('required');
+        document.getElementById('bank_select').style.display = 'block';
+        $("#bank_select_field").attr("required", true);
     }
-   
 }
 </script>
 @endsection    

@@ -37,6 +37,7 @@ class Application extends Model {
 	    'consent_form', 
 	    'cm_type', 
 	    'preference_bank_id', 
+        'decide_by',
 	    'credit_score', 
 
 	    'company_name',

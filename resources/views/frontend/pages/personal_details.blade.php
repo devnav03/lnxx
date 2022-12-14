@@ -1,6 +1,15 @@
 @extends('frontend.layouts.app')
 @section('content')
 
+@php
+if($result) {
+  $sel_country = $result->nationality;
+} else {
+  $sel_country = 229;
+}
+@endphp
+
+
 <section class="personal_details">
 <div class="container">  
 <div class="row">  
@@ -88,7 +97,7 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Nationality*</label>
-      <select name="nationality" class="form-control" required="true">
+      <select name="nationality" onChange="ChangeCountry(this);" class="form-control" required="true">
         <option value="">select</option>
         @foreach($countries as $country)
           <option value="{{ $country->id }}" @if($result) @if($result->nationality == $country->id) selected @endif @else @if($country->id == 229) selected @endif @endif >{{ $country->country_name }}</option>
@@ -100,9 +109,9 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
     </div>
   </div>
 
-  <div class="col-md-6">
+  <div class="col-md-6" id="years_in_uae_div" @if($sel_country == 229) style="display: none;" @endif>
     <label class="sub-label">Years In UAE*</label>
-      <input name="years_in_uae" class="form-control" required="true" @if($result) value="{{ $result->years_in_uae }}" @else value="{{ old('years_in_uae') }}" @endif type="number">
+      <input name="years_in_uae" id="years_in_uae" class="form-control" @if($sel_country != 229) required="true" @endif   @if($result) value="{{ $result->years_in_uae }}" @else value="{{ old('years_in_uae') }}" @endif type="number">
       @if($errors->has('years_in_uae'))
       <span class="text-danger">{{$errors->first('years_in_uae')}}</span>
       @endif
@@ -146,7 +155,7 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
       @endif
     </div>
   </div>
-
+  <div class="col-md-12"></div>
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(recommended 750x400px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
@@ -201,32 +210,19 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(recommended 600x600px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
+      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(recommended 600x600px / .png, .jpg, .jpeg, max size 2mb)* </span></label>
       @if(isset($result->passport_photo))
         <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
-        <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive">
+        <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive" style="max-height: 110px;">
       @else
         <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
-        <img src="" id="blah2" class="img-responsive">
+        <img src="" id="blah2" class="img-responsive" style="max-height: 110px;">
       @endif
       @if($errors->has('passport_photo'))
         <span class="text-danger">{{$errors->first('passport_photo')}}</span>
       @endif
     </div>
   </div>
-
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="sub-label">Credit Score</label>
-      <input name="credit_score" class="form-control" @if($result) value="{{ $result->credit_score }}" @else value="{{ old('credit_score') }}" @endif type="number">
-      @if($errors->has('credit_score'))
-      <span class="text-danger">{{$errors->first('credit_score')}}</span>
-      @endif
-    </div>
-  </div>
-
-
-
 
   <!-- <div class="col-md-6">
     <label class="sub-label">Country</label>
@@ -239,11 +235,11 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
   </div> -->
   <!-- <div class="col-md-12">
     <label>Passport Details</label>
-  </div>
+  </div> -->
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Passport Number</label>
-      <input name="passport_number" class="form-control" @if($result) value="{{ $result->passport_number }}" @else value="{{ old('passport_number') }}"  @endif type="text" required="true">
+      <label class="sub-label">Passport Number*</label>
+      <input name="passport_number" class="form-control" required="true" @if($result) value="{{ $result->passport_number }}" @else value="{{ old('passport_number') }}" @endif type="text">
       @if($errors->has('passport_number'))
       <span class="text-danger">{{$errors->first('passport_number')}}</span>
       @endif
@@ -251,14 +247,14 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Passport Expiry Date</label>
-      <input name="passport_expiry_date" class="form-control" onfocus="(this.type='date')" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text" required="true">
+      <label class="sub-label">Passport Expiry Date*</label>
+      <input name="passport_expiry_date" class="form-control" required="true" onfocus="(this.type='date')" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text">
       @if($errors->has('passport_expiry_date'))
       <span class="text-danger">{{$errors->first('passport_expiry_date')}}</span>
       @endif
     </div>
   </div>
-  <div class="col-md-12">
+  <!--<div class="col-md-12">
     <label>Visa Details</label>
   </div>
   <div class="col-md-4">
@@ -271,9 +267,19 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
     </div>
   </div> -->
 
-<div class="col-md-12">
-  <p class="chk_bx"> @if($result) <input required="true" checked="" type="checkbox"> @else <input required="true" type="checkbox"> @endif By proceeding, you agree to the <a href="#">Terms and Conditions</a></p>
-</div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Credit Score</label>
+      <input name="credit_score" class="form-control" @if($result) value="{{ $result->credit_score }}" @else value="{{ old('credit_score') }}" @endif type="number">
+      @if($errors->has('credit_score'))
+      <span class="text-danger">{{$errors->first('credit_score')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label class="chk_bx" style="width: 100%; font-weight: normal; margin-bottom: 15px;"> @if($result) <input required="true" checked="" type="checkbox"> @else <input required="true" type="checkbox"> @endif By proceeding, you agree to the <a href="#">Terms and Conditions</a></label>
+  </div>
   <div class="col-md-12 text-center">
     <a href="{{ route('user-dashboard') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
@@ -301,5 +307,25 @@ $min_date = date('Y-m-d', strtotime('-18 years'));
 </div>
 </section>
 
+<script type="text/javascript">
+  function ChangeCountry(that) {
+
+    if (that.value == "229") {
+        $("#years_in_uae_div").hide();
+        // $(".show_hide").hide();
+        $("#years_in_uae").removeAttr('required');
+        // $(".Passport_img").removeAttr('required');
+
+
+    } else {
+        $("#years_in_uae_div").show();
+        $("#years_in_uae").attr("required", true);
+        // $(".Passport_img").attr("required", true); 
+        // $(".show_hide").show();
+
+    }
+  }
+
+</script>
 
 @endsection    
