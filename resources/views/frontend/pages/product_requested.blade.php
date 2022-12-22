@@ -6,31 +6,35 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
-<h2>Details of existing financial products</h2>
+<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1> 
+<h2>Your Financial Details</h2>
 <h6>Please enter your information to check the offer.</h6>
 
 <form action="{{ route('consent-approval') }}" method="post">
 {{ csrf_field() }}  
 
   <div class="row">
+  
+
+  @if(in_array(3, $services))
   <div class="col-md-12">
     <h5 style="font-size: 17px; margin-top: 15px;">Details For Credit Card</h5>
   </div>
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Credit Card Limit</label>
-      <input name="credit_card_limit" class="form-control" @if($result) value="{{ $result->credit_card_limit }}" @else value="{{ old('credit_card_limit') }}" @endif type="number">
+      <label class="sub-label">Required Credit Card Limit (in AED)</label>
+      <input name="credit_card_limit" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->credit_card_limit }}" @else value="{{ old('credit_card_limit') }}" @endif type="text">
       @if($errors->has('credit_card_limit'))
       <span class="text-danger">{{$errors->first('credit_card_limit')}}</span>
       @endif
     </div>
   </div>
+  @endif
 
   <div class="col-md-12">
-    <!-- <label style="font-size: 14px; margin-top: -10px;">Existing Financial Products</label> -->
+    <label style="font-size: 14px; margin-top: -10px;">Details Of Existing Credit Card</label>
   </div>
-
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Details of Cards</label>
@@ -56,7 +60,7 @@
       <!-- <input name="credit_bank_name" class="form-control" @if($result) value="{{ $result->credit_bank_name }}" @else value="{{ old('credit_bank_name') }}" @endif type="text"> -->
 
       <select name="credit_bank_name" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->credit_bank_name == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -70,8 +74,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Card Limit</label>
-      <input name="card_limit" class="form-control" @if($result) value="{{ $result->card_limit }}" @else value="{{ old('card_limit') }}" @endif type="number">
+      <label class="sub-label">Card Limit (in AED)</label>
+      <input name="card_limit" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->card_limit }}" @else value="{{ old('card_limit') }}" @endif type="text">
       @if($errors->has('card_limit'))
       <span class="text-danger">{{$errors->first('card_limit')}}</span>
       @endif
@@ -105,10 +109,8 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Bank Name</label>
-      <!-- <input name="credit_bank_name2" class="form-control" @if($result) value="{{ $result->credit_bank_name2 }}" @else value="{{ old('credit_bank_name2') }}" @endif type="text"> -->
-
       <select name="credit_bank_name2" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->credit_bank_name2 == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -122,8 +124,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Card Limit</label>
-      <input name="card_limit2" class="form-control" @if($result) value="{{ $result->card_limit2 }}" @else value="{{ old('card_limit2') }}" @endif type="number">
+      <label class="sub-label">Card Limit (in AED)</label>
+      <input name="card_limit2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->card_limit2 }}" @else value="{{ old('card_limit2') }}" @endif type="text">
       @if($errors->has('card_limit2'))
       <span class="text-danger">{{$errors->first('card_limit2')}}</span>
       @endif
@@ -156,9 +158,8 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Bank Name</label>
-      <!-- <input name="credit_bank_name3" class="form-control" @if($result) value="{{ $result->credit_bank_name3 }}" @else value="{{ old('credit_bank_name3') }}" @endif type="text"> -->
       <select name="credit_bank_name3" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->credit_bank_name3 == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -171,8 +172,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Card Limit</label>
-      <input name="card_limit3" class="form-control" @if($result) value="{{ $result->card_limit3 }}" @else value="{{ old('card_limit3') }}" @endif type="number">
+      <label class="sub-label">Card Limit (in AED)</label>
+      <input name="card_limit3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->card_limit3 }}" @else value="{{ old('card_limit3') }}" @endif type="text">
       @if($errors->has('card_limit3'))
       <span class="text-danger">{{$errors->first('card_limit3')}}</span>
       @endif
@@ -205,9 +206,8 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Bank Name</label>
-      <!-- <input name="credit_bank_name4" class="form-control" @if($result) value="{{ $result->credit_bank_name4 }}" @else value="{{ old('credit_bank_name4') }}" @endif type="text"> -->
       <select name="credit_bank_name4" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->credit_bank_name4 == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -220,8 +220,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Card Limit</label>
-      <input name="card_limit4" class="form-control" @if($result) value="{{ $result->card_limit4 }}" @else value="{{ old('card_limit4') }}" @endif type="text">
+      <label class="sub-label">Card Limit (in AED)</label>
+      <input name="card_limit4" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->card_limit4 }}" @else value="{{ old('card_limit4') }}" @endif type="text">
       @if($errors->has('card_limit4'))
       <span class="text-danger">{{$errors->first('card_limit4')}}</span>
       @endif
@@ -229,30 +229,30 @@
   </div>
   </div>
 
-
   <div class="row" style="background: #f7f7f7; margin-top: 20px;">
   <div class="col-md-12">
     <h5 style="font-size: 17px; margin-top: 15px;">Details For Personal Loan</h5>
   </div>
+  @if(in_array(1, $services))
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Loan Amount</label>
-      <input name="loan_amount" class="form-control" @if($result) value="{{ $result->loan_amount }}" @else value="{{ old('loan_amount') }}" @endif type="text">
+      <label class="sub-label">Required Loan Amount (in AED)</label>
+      <input name="loan_amount" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->loan_amount }}" @else value="{{ old('loan_amount') }}" @endif type="text">
       @if($errors->has('loan_amount'))
       <span class="text-danger">{{$errors->first('loan_amount')}}</span>
       @endif
     </div>
   </div>
+  @endif
   <div class="col-md-12">
-    <label style="font-size: 14px; margin-top: -10px;">Details of Existing Loans</label>
+    <label style="font-size: 14px; margin-top: -10px;">Details Of Existing Financial Products</label>
   </div>
   
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Bank Name</label>
-      <!-- <input name="loan_bank_name" class="form-control" @if($result) value="{{ $result->loan_bank_name }}" @else value="{{ old('loan_bank_name') }}" @endif type="text"> -->
       <select name="loan_bank_name" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->loan_bank_name == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -265,8 +265,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Original Loan Amount</label>
-      <input name="original_loan_amount" class="form-control" @if($result) value="{{ $result->original_loan_amount }}" @else value="{{ old('original_loan_amount') }}" @endif type="text">
+      <label class="sub-label">Original Loan Amount (in AED)</label>
+      <input name="original_loan_amount" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->original_loan_amount }}" @else value="{{ old('original_loan_amount') }}" @endif type="text">
       @if($errors->has('original_loan_amount'))
       <span class="text-danger">{{$errors->first('original_loan_amount')}}</span>
       @endif
@@ -275,8 +275,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="loan_emi" class="form-control" @if($result) value="{{ $result->loan_emi }}" @else value="{{ old('loan_emi') }}" @endif type="number">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="loan_emi" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->loan_emi }}" @else value="{{ old('loan_emi') }}" @endif type="text">
       @if($errors->has('loan_emi'))
       <span class="text-danger">{{$errors->first('loan_emi')}}</span>
       @endif
@@ -295,7 +295,7 @@
       <label class="sub-label">Bank Name</label>
      <!--  <input name="loan_bank_name2" class="form-control" @if($result) value="{{ $result->loan_bank_name2 }}" @else value="{{ old('loan_bank_name2') }}" @endif type="text"> -->
       <select name="loan_bank_name2" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->loan_bank_name2 == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -308,8 +308,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Original Loan amount</label>
-      <input name="original_loan_amount2" class="form-control" @if($result) value="{{ $result->original_loan_amount2 }}" @else value="{{ old('original_loan_amount2') }}" @endif type="text">
+      <label class="sub-label">Original Loan Amount (in AED)</label>
+      <input name="original_loan_amount2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->original_loan_amount2 }}" @else value="{{ old('original_loan_amount2') }}" @endif type="text">
       @if($errors->has('original_loan_amount2'))
       <span class="text-danger">{{$errors->first('original_loan_amount2')}}</span>
       @endif
@@ -318,8 +318,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="loan_emi2" class="form-control" @if($result) value="{{ $result->loan_emi2 }}" @else value="{{ old('loan_emi2') }}" @endif type="number">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="loan_emi2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->loan_emi2 }}" @else value="{{ old('loan_emi2') }}" @endif type="text">
       @if($errors->has('loan_emi2'))
       <span class="text-danger">{{$errors->first('loan_emi2')}}</span>
       @endif
@@ -337,7 +337,7 @@
     <div class="form-group">
       <label class="sub-label">Bank Name</label>
       <select name="loan_bank_name3" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->loan_bank_name3 == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -350,8 +350,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Original Loan amount</label>
-      <input name="original_loan_amount3" class="form-control" @if($result) value="{{ $result->original_loan_amount3 }}" @else value="{{ old('original_loan_amount3') }}" @endif type="text">
+      <label class="sub-label">Original Loan Amount (in AED)</label>
+      <input name="original_loan_amount3" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->original_loan_amount3 }}" @else value="{{ old('original_loan_amount3') }}" @endif type="text">
       @if($errors->has('original_loan_amount3'))
       <span class="text-danger">{{$errors->first('original_loan_amount3')}}</span>
       @endif
@@ -360,8 +360,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="loan_emi3" class="form-control" @if($result) value="{{ $result->loan_emi3 }}" @else value="{{ old('loan_emi3') }}" @endif type="number">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="loan_emi3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->loan_emi3 }}" @else value="{{ old('loan_emi3') }}" @endif type="text">
       @if($errors->has('loan_emi3'))
       <span class="text-danger">{{$errors->first('loan_emi3')}}</span>
       @endif
@@ -378,7 +378,7 @@
     <div class="form-group">
       <label class="sub-label">Bank Name</label>
       <select name="loan_bank_name4" class="form-control">
-          <option value="">select</option>
+          <option value="">Select</option>
           @foreach($banks as $bank)
           <option value="{{ $bank->id }}" @if($result) @if($result->loan_bank_name4 == $bank->id) selected @endif @endif >{{ $bank->name }}</option>
           @endforeach
@@ -391,8 +391,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Original Loan amount</label>
-      <input name="original_loan_amount4" class="form-control" @if($result) value="{{ $result->original_loan_amount4 }}" @else value="{{ old('original_loan_amount4') }}" @endif type="text">
+      <label class="sub-label">Original Loan Amount (in AED)</label>
+      <input name="original_loan_amount4" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->original_loan_amount4 }}" @else value="{{ old('original_loan_amount4') }}" @endif type="text">
       @if($errors->has('original_loan_amount4'))
       <span class="text-danger">{{$errors->first('original_loan_amount4')}}</span>
       @endif
@@ -401,8 +401,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="loan_emi4" class="form-control" @if($result) value="{{ $result->loan_emi4 }}" @else value="{{ old('loan_emi3') }}" @endif type="number">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="loan_emi4" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->loan_emi4 }}" @else value="{{ old('loan_emi3') }}" @endif type="text">
       @if($errors->has('loan_emi4'))
       <span class="text-danger">{{$errors->first('loan_emi4')}}</span>
       @endif
@@ -413,13 +413,13 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h5 style="font-size: 17px; margin-top: 15px;">Details For Business Loan</h5>
+      <h5 style="font-size: 17px; margin-top: 15px;">Details Of Existing Business Loan</h5>
     </div>
 
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">Loan Amount</label>
-        <input name="business_loan_amount" class="form-control" @if($result) value="{{ $result->business_loan_amount }}" @else value="{{ old('business_loan_amount') }}" @endif type="number">
+        <label class="sub-label">Loan Amount (in AED)</label>
+        <input name="business_loan_amount" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->business_loan_amount }}" @else value="{{ old('business_loan_amount') }}" @endif type="text">
         @if($errors->has('business_loan_amount'))
         <span class="text-danger">{{$errors->first('business_loan_amount')}}</span>
         @endif
@@ -428,8 +428,8 @@
 
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">EMI</label>
-        <input name="business_loan_emi" class="form-control" @if($result) value="{{ $result->business_loan_emi }}" @else value="{{ old('business_loan_emi') }}" @endif type="number">
+        <label class="sub-label">EMI (in AED)</label>
+        <input name="business_loan_emi" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_emi }}" @else value="{{ old('business_loan_emi') }}" @endif type="text">
         @if($errors->has('business_loan_emi'))
         <span class="text-danger">{{$errors->first('business_loan_emi')}}</span>
         @endif
@@ -444,8 +444,8 @@
   <div class="row loan_busin2" @if(isset($result->business_loan_amount2)) @if($result->business_loan_amount2 == '') style="display:none;" @endif @else style="display:none;"  @endif>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">Loan Amount</label>
-        <input name="business_loan_amount2" class="form-control" @if($result) value="{{ $result->business_loan_amount2 }}" @else value="{{ old('business_loan_amount2') }}" @endif type="number">
+        <label class="sub-label">Loan Amount (in AED)</label>
+        <input name="business_loan_amount2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_amount2 }}" @else value="{{ old('business_loan_amount2') }}" @endif type="text">
         @if($errors->has('business_loan_amount2'))
         <span class="text-danger">{{$errors->first('business_loan_amount2')}}</span>
         @endif
@@ -453,8 +453,8 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">EMI</label>
-        <input name="business_loan_emi2" class="form-control" @if($result) value="{{ $result->business_loan_emi2 }}" @else value="{{ old('business_loan_emi2') }}" @endif type="number">
+        <label class="sub-label">EMI (in AED)</label>
+        <input name="business_loan_emi2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_emi2 }}" @else value="{{ old('business_loan_emi2') }}" @endif type="text">
         @if($errors->has('business_loan_emi2'))
         <span class="text-danger">{{$errors->first('business_loan_emi2')}}</span>
         @endif
@@ -468,8 +468,8 @@
   <div class="row loan_busin3" @if(isset($result->business_loan_amount3)) @if($result->business_loan_amount3 == '') style="display:none;" @endif @else style="display:none;"  @endif>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">Loan Amount</label>
-        <input name="business_loan_amount3" class="form-control" @if($result) value="{{ $result->business_loan_amount3 }}" @else value="{{ old('business_loan_amount3') }}" @endif type="number">
+        <label class="sub-label">Loan Amount (in AED)</label>
+        <input name="business_loan_amount3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_amount3 }}" @else value="{{ old('business_loan_amount3') }}" @endif type="text">
         @if($errors->has('business_loan_amount3'))
         <span class="text-danger">{{$errors->first('business_loan_amount3')}}</span>
         @endif
@@ -477,8 +477,8 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">EMI</label>
-        <input name="business_loan_emi3" class="form-control" @if($result) value="{{ $result->business_loan_emi3 }}" @else value="{{ old('business_loan_emi3') }}" @endif type="number">
+        <label class="sub-label">EMI (in AED)</label>
+        <input name="business_loan_emi3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_emi3 }}" @else value="{{ old('business_loan_emi3') }}" @endif type="text">
         @if($errors->has('business_loan_emi3'))
         <span class="text-danger">{{$errors->first('business_loan_emi3')}}</span>
         @endif
@@ -492,8 +492,8 @@
   <div class="row loan_busin4" @if(isset($result->business_loan_amount4)) @if($result->business_loan_amount4 == '') style="display:none;" @endif @else style="display:none;"  @endif>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">Loan Amount</label>
-        <input name="business_loan_amount4" class="form-control" @if($result) value="{{ $result->business_loan_amount4 }}" @else value="{{ old('business_loan_amount4') }}" @endif type="number">
+        <label class="sub-label">Loan Amount (in AED)</label>
+        <input name="business_loan_amount4" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_amount4 }}" @else value="{{ old('business_loan_amount4') }}" @endif type="text">
         @if($errors->has('business_loan_amount4'))
         <span class="text-danger">{{$errors->first('business_loan_amount4')}}</span>
         @endif
@@ -501,8 +501,8 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">EMI</label>
-        <input name="business_loan_emi4" class="form-control" @if($result) value="{{ $result->business_loan_emi4 }}" @else value="{{ old('business_loan_emi4') }}" @endif type="number">
+        <label class="sub-label">EMI (in AED)</label>
+        <input name="business_loan_emi4" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->business_loan_emi4 }}" @else value="{{ old('business_loan_emi4') }}" @endif type="text">
         @if($errors->has('business_loan_emi4'))
         <span class="text-danger">{{$errors->first('business_loan_emi4')}}</span>
         @endif
@@ -513,13 +513,13 @@
 
   <div class="row" style="background: #f7f7f7;">
   <div class="col-md-12">
-    <h5 style="font-size: 17px; margin-top: 15px;">Details For Mortgage Loan</h5>
+    <h5 style="font-size: 17px; margin-top: 15px;">Details Of Existing Mortgage Loan</h5>
   </div>
   
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Loan Amount</label>
-      <input name="mortgage_loan_amount" class="form-control" @if($result) value="{{ $result->mortgage_loan_amount }}" @else value="{{ old('mortgage_loan_amount') }}" @endif type="number">
+      <label class="sub-label">Loan Amount (in AED)</label>
+      <input name="mortgage_loan_amount" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->mortgage_loan_amount }}" @else value="{{ old('mortgage_loan_amount') }}" @endif type="text">
       @if($errors->has('mortgage_loan_amount'))
       <span class="text-danger">{{$errors->first('mortgage_loan_amount')}}</span>
       @endif
@@ -527,8 +527,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Purchase price/ current market valuation</label>
-      <input name="purchase_price" class="form-control" @if($result) value="{{ $result->purchase_price }}" @else value="{{ old('purchase_price') }}" @endif type="text">
+      <label class="sub-label">Purchase price/ current market valuation (in AED)</label>
+      <input name="purchase_price" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->purchase_price }}" @else value="{{ old('purchase_price') }}" @endif type="text">
       @if($errors->has('purchase_price'))
       <span class="text-danger">{{$errors->first('purchase_price')}}</span>
       @endif
@@ -586,7 +586,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Interest Rate</label>
-      <input name="interest_rate" class="form-control" @if($result) value="{{ $result->interest_rate }}" @else value="{{ old('interest_rate') }}" @endif type="text">
+      <input name="interest_rate" class="form-control" pattern="\d*" maxlength="3" @if($result) value="{{ $result->interest_rate }}" @else value="{{ old('interest_rate') }}" @endif type="text">
       @if($errors->has('interest_rate'))
       <span class="text-danger">{{$errors->first('interest_rate')}}</span>
       @endif
@@ -595,8 +595,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="mortgage_emi" class="form-control" @if($result) value="{{ $result->mortgage_emi }}" @else value="{{ old('mortgage_emi') }}" @endif type="text">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="mortgage_emi" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->mortgage_emi }}" @else value="{{ old('mortgage_emi') }}" @endif type="text">
       @if($errors->has('mortgage_emi'))
       <span class="text-danger">{{$errors->first('mortgage_emi')}}</span>
       @endif
@@ -612,8 +612,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Loan Amount</label>
-      <input name="mortgage_loan_amount2" class="form-control" @if($result) value="{{ $result->mortgage_loan_amount2 }}" @else value="{{ old('mortgage_loan_amount2') }}" @endif type="number">
+      <label class="sub-label">Loan Amount (in AED)</label>
+      <input name="mortgage_loan_amount2" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->mortgage_loan_amount2 }}" @else value="{{ old('mortgage_loan_amount2') }}" @endif type="text">
       @if($errors->has('mortgage_loan_amount2'))
       <span class="text-danger">{{$errors->first('mortgage_loan_amount2')}}</span>
       @endif
@@ -621,8 +621,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Purchase price/ current market valuation</label>
-      <input name="purchase_price2" class="form-control" @if($result) value="{{ $result->purchase_price2 }}" @else value="{{ old('purchase_price2') }}" @endif type="text">
+      <label class="sub-label">Purchase price/ current market valuation (in AED)</label>
+      <input name="purchase_price2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->purchase_price2 }}" @else value="{{ old('purchase_price2') }}" @endif type="text">
       @if($errors->has('purchase_price2'))
       <span class="text-danger">{{$errors->first('purchase_price2')}}</span>
       @endif
@@ -680,7 +680,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Interest Rate</label>
-      <input name="interest_rate2" class="form-control" @if($result) value="{{ $result->interest_rate2 }}" @else value="{{ old('interest_rate2') }}" @endif type="text">
+      <input name="interest_rate2" class="form-control" pattern="\d*" maxlength="3" @if($result) value="{{ $result->interest_rate2 }}" @else value="{{ old('interest_rate2') }}" @endif type="text">
       @if($errors->has('interest_rate2'))
       <span class="text-danger">{{$errors->first('interest_rate2')}}</span>
       @endif
@@ -688,8 +688,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="mortgage_emi2" class="form-control" @if($result) value="{{ $result->mortgage_emi2 }}" @else value="{{ old('mortgage_emi2') }}" @endif type="text">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="mortgage_emi2" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->mortgage_emi2 }}" @else value="{{ old('mortgage_emi2') }}" @endif type="text">
       @if($errors->has('mortgage_emi2'))
       <span class="text-danger">{{$errors->first('mortgage_emi2')}}</span>
       @endif
@@ -704,8 +704,8 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Loan Amount</label>
-      <input name="mortgage_loan_amount3" class="form-control" @if($result) value="{{ $result->mortgage_loan_amount3 }}" @else value="{{ old('mortgage_loan_amount3') }}" @endif type="number">
+      <label class="sub-label">Loan Amount (in AED)</label>
+      <input name="mortgage_loan_amount3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->mortgage_loan_amount3 }}" @else value="{{ old('mortgage_loan_amount3') }}" @endif type="text">
       @if($errors->has('mortgage_loan_amount3'))
       <span class="text-danger">{{$errors->first('mortgage_loan_amount3')}}</span>
       @endif
@@ -713,8 +713,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Purchase price/ current market valuation</label>
-      <input name="purchase_price3" class="form-control" @if($result) value="{{ $result->purchase_price3 }}" @else value="{{ old('purchase_price3') }}" @endif type="text">
+      <label class="sub-label">Purchase price/ current market valuation (in AED)</label>
+      <input name="purchase_price3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->purchase_price3 }}" @else value="{{ old('purchase_price3') }}" @endif type="text">
       @if($errors->has('purchase_price3'))
       <span class="text-danger">{{$errors->first('purchase_price3')}}</span>
       @endif
@@ -772,7 +772,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Interest Rate</label>
-      <input name="interest_rate3" class="form-control" @if($result) value="{{ $result->interest_rate3 }}" @else value="{{ old('interest_rate3') }}" @endif type="text">
+      <input name="interest_rate3" class="form-control" pattern="\d*" maxlength="3" @if($result) value="{{ $result->interest_rate3 }}" @else value="{{ old('interest_rate3') }}" @endif type="text">
       @if($errors->has('interest_rate3'))
       <span class="text-danger">{{$errors->first('interest_rate3')}}</span>
       @endif
@@ -780,8 +780,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="mortgage_emi3" class="form-control" @if($result) value="{{ $result->mortgage_emi3 }}" @else value="{{ old('mortgage_emi3') }}" @endif type="text">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="mortgage_emi3" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->mortgage_emi3 }}" @else value="{{ old('mortgage_emi3') }}" @endif type="text">
       @if($errors->has('mortgage_emi3'))
       <span class="text-danger">{{$errors->first('mortgage_emi3')}}</span>
       @endif
@@ -792,13 +792,12 @@
   </div>
   </div>
 
-
   <div class="row mortgage_loan4" @if(isset($result->mortgage_loan_amount4)) @if($result->mortgage_loan_amount4 == '') style="display:none;background: #f7f7f7;" @else style="background: #f7f7f7;" @endif @else style="display:none;background: #f7f7f7;"  @endif>
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Loan Amount</label>
-      <input name="mortgage_loan_amount4" class="form-control" @if($result) value="{{ $result->mortgage_loan_amount4 }}" @else value="{{ old('mortgage_loan_amount4') }}" @endif type="number">
+      <label class="sub-label">Loan Amount (in AED)</label>
+      <input name="mortgage_loan_amount4" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->mortgage_loan_amount4 }}" @else value="{{ old('mortgage_loan_amount4') }}" @endif type="text">
       @if($errors->has('mortgage_loan_amount4'))
       <span class="text-danger">{{$errors->first('mortgage_loan_amount4')}}</span>
       @endif
@@ -806,8 +805,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Purchase price/ current market valuation</label>
-      <input name="purchase_price4" class="form-control" @if($result) value="{{ $result->purchase_price4 }}" @else value="{{ old('purchase_price4') }}" @endif type="text">
+      <label class="sub-label">Purchase price/ current market valuation (in AED)</label>
+      <input name="purchase_price4" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->purchase_price4 }}" @else value="{{ old('purchase_price4') }}" @endif type="text">
       @if($errors->has('purchase_price4'))
       <span class="text-danger">{{$errors->first('purchase_price4')}}</span>
       @endif
@@ -865,7 +864,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Interest Rate</label>
-      <input name="interest_rate4" class="form-control" @if($result) value="{{ $result->interest_rate4 }}" @else value="{{ old('interest_rate4') }}" @endif type="text">
+      <input name="interest_rate4" class="form-control" pattern="\d*" maxlength="3" @if($result) value="{{ $result->interest_rate4 }}" @else value="{{ old('interest_rate4') }}" @endif type="text">
       @if($errors->has('interest_rate4'))
       <span class="text-danger">{{$errors->first('interest_rate4')}}</span>
       @endif
@@ -873,17 +872,14 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">EMI</label>
-      <input name="mortgage_emi4" class="form-control" @if($result) value="{{ $result->mortgage_emi4 }}" @else value="{{ old('mortgage_emi4') }}" @endif type="text">
+      <label class="sub-label">EMI (in AED)</label>
+      <input name="mortgage_emi4" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->mortgage_emi4 }}" @else value="{{ old('mortgage_emi4') }}" @endif type="text">
       @if($errors->has('mortgage_emi4'))
       <span class="text-danger">{{$errors->first('mortgage_emi4')}}</span>
       @endif
     </div>
   </div>
   </div>
-
-
-
   <div class="row">
   <div class="col-md-12 text-center">
     <a href="{{ route('cm-details') }}" class="back_btn">Back</a> &nbsp;&nbsp;
@@ -894,17 +890,20 @@
 </div>
 </div>
 <div class="col-md-5">
-  <div class="service-step">
-    <h3>Services is only a few step away from you</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+   <div class="service-step">
+    <h3>Please note that all fields marked with an asterisk (*) are required</h3>
+    <p>Thank you for taking the time to complete our form. In order to process your request, we need to collect certain information from you. Please make sure to fill out all of the required fields marked with an asterisk (*). These fields are essential for us to understand your needs and provide you with the best possible service.</p><br>
+    <p>If you have any questions about which fields are required, please don't hesitate to contact us. We're here to help you every step of the way.</p>
   </div>
 
-  <div class="service-step">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <h3>Get money in just a step way*</h3>
-    <p style="border-top: 1px solid rgba(0, 0, 0, 0.5);padding-top: 30px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Risus dis adipiscing ac, consectetur quis aenean. Semper viverra maecenas pharetra tristique tempus platea elit viverra. Proin mauris suspendisse risus sem. In diam odio commodo, sodales tellus convallis tortor. Neque amet eget amet morbi ac at habitant. Enim eget aliquam tempus duis amet. Sed amet sed bibendum ullamcorper. Nam bibendum eu magna in in eget ullamcorper ultrices. Faucibus gravida tristique erat quam tincidunt tincidunt ut morbi.</p>
-  </div>
+<div class="service-step">
+    <h3>Get money with just a few simple steps</h3>
+<ul style="padding-left: 15px; color: rgba(0, 0, 0, 0.5);">
+<li>Visit our website. This will help us understand your financial needs and determine which products and services are best for you.</li>
+<li>Submit your application and wait for a response. We'll review your information and get back to you as soon as possible with a decision.</li>
+<li>If your application for credit cards and loans is approved, you'll be able to access the limits that have been set for those products. The limits will likely be based on your credit score, income, and other financial information that you provided as part of the application process.</li>
+</ul>
+</div>
 
 </div>
 

@@ -7,64 +7,11 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Welcome Back to Lnxx</h3>
+<h3>Welcome back to Lnxx</h3>
 <h5>Login to continue your account</h5>
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_158.png')  !!}" style="padding-bottom: 20px; max-width: 300px;" class="img-responsive">
 </div>
-<!-- <ul>
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-
-</ul> -->
-
-
 </div>
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
@@ -87,8 +34,8 @@
 
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Sign In</button>
-<br>
-<p><a href="{{ route('sign_up') }}">Click here to Sign Up</a>
+<p style="margin-bottom: 0px; margin-top: 15px;">Or</p>
+<p><a style="margin-top: 10px;" href="{{ route('sign_up') }}">Create New Account</a></p>
 </div>
 </form>
 

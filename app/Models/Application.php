@@ -39,7 +39,7 @@ class Application extends Model {
 	    'preference_bank_id', 
         'decide_by',
 	    'credit_score', 
-
+        'aecb_date',
 	    'company_name',
 	    'date_of_joining',
 	    'monthly_salary',
@@ -52,19 +52,18 @@ class Application extends Model {
         'profession_business',
         'annual_business_income',
         'monthly_pension',
-
+        'accommodation_company',
 	    'created_at', 
 	    'updated_at' 
 	];
 
-    public function store($inputs, $id = null)  {
+    public function store($inputs, $id = null) {
         if ($id){
             return $this->find($id)->update($inputs);
         } else {
             return $this->create($inputs)->id;
         }
     }
-
 
     public function getApplication($search = null, $skip, $perPage) {
          $take = ((int)$perPage > 0) ? $perPage : 20;
@@ -101,7 +100,6 @@ class Application extends Model {
                 $search['status'] = 0;
             }
         }
-
 
         if(isset($search['from'])){
             $search['from'] = date('Y-m-d H:i:s', strtotime($search['from']));
@@ -148,11 +146,8 @@ class Application extends Model {
                  addslashes(trim($search['keyword'])) . "%' " : "";
              $filter .= $partyName;
          }
-         return $this->select(\DB::raw('count(*) as total'))
-                    ->whereRaw($filter)
-                    ->first();
+         return $this->select(\DB::raw('count(*) as total'))->whereRaw($filter)->first();
     }
-
 
 
 }

@@ -7,8 +7,8 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Welcome Back to <br>Lnxx</h3> 
-<h5>Sign up to continue your account</h5>
+<h3>OTP Verification Of Emirates ID </h3> 
+<!-- <h5>Sign up to continue your account</h5> -->
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px;" class="img-responsive">
 </div>

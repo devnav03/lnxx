@@ -31,7 +31,6 @@ class CustomerController extends Controller {
         return view('admin.customer.admin');
     }
 
-
     public function store( Request $request ){
 
         $request['unique_id'] = mt_rand(100000,999999);

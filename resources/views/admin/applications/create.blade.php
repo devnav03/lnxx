@@ -269,13 +269,21 @@
             <input name="officer_email" class="form-control" value="{{ $result->officer_email }}" type="text">
         </div>
     </div>
-
+    @if($result->credit_score)
     <div class="col-md-6">
         <div class="form-group">
-            <label class="sub-label">Credit Score</label>
+            <label class="sub-label">AECB Credit Score</label>
             <input name="credit_score" class="form-control" value="{{ $result->credit_score }}" type="text">
         </div>
     </div>
+    
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">Date (when the score was fetched)</label>
+            <input name="aecb_date" class="form-control" value="{{ $result->aecb_date }}" type="text" readonly="">
+        </div>
+    </div>
+    @endif
 
     <div class="col-md-6">
         <div class="form-group">
@@ -287,7 +295,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Passport Expiry Date</label>
-            <input name="passport_expiry_date" class="form-control" value="{{ $result->passport_expiry_date }}" type="date">
+            <input name="passport_expiry_date" class="form-control" value="{{ $result->passport_expiry_date }}" type="text" readonly="">
         </div>
     </div>
 
@@ -337,23 +345,21 @@
         <option value="{{ $com->id }}" @if($result->company_name == $com->id) selected @endif >{{ $com->name }}</option> 
         @endforeach
       </select> -->
-
       @if($errors->has('company_name'))
       <span class="text-danger">{{$errors->first('company_name')}}</span>
       @endif
     </div>
   </div>
 
-  <div class="col-md-6">
+    <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Date Of Joining*</label>
-      <input name="date_of_joining" class="form-control" value="{{ $result->date_of_joining }}" type="date">
+      <input name="date_of_joining" class="form-control" readonly="" value="{{ $result->date_of_joining }}" type="text">
       @if($errors->has('date_of_joining'))
       <span class="text-danger">{{$errors->first('date_of_joining')}}</span>
       @endif
     </div>
-  </div>
-
+    </div>
 
     <div class="col-md-6">
         <div class="form-group">
@@ -395,6 +401,16 @@
           <input name="last_three_salary_credits" class="form-control" value="{{ $result->last_three_salary_credits }}" type="number">
           @if($errors->has('last_three_salary_credits'))
           <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
+          @endif
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">I have company provided accommodation</label>
+          <input name="accommodation_company" class="form-control" value=" @if($result->accommodation_company == 0) No @else Yes @endif " type="text">
+          @if($errors->has('    accommodation_company'))
+          <span class="text-danger">{{$errors->first('  accommodation_company')}}</span>
           @endif
         </div>
     </div>

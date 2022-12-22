@@ -6,9 +6,9 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box cm_dt">
+<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>  
 <h2>Employment Details</h2>
-<h6>Please enter your information to check the offer.</h6>
-
+<h6>Please enter your employment information</h6>
 <form action="{{ route('product-requested') }}" method="post">
 {{ csrf_field() }}  
 
@@ -16,8 +16,8 @@
   <div class="col-md-6">
   <label class="sub-label">Employment Type*</label>
   <select name="cm_type" class="form-control" required="true" onChange="RelationChange(this);">
-    <option value="">select</option>
-    <option value="1" @if($cm_type == 1) selected @endif>Salaried</option>
+    <option value="">Select</option>
+    <option value="1" @if($cm_type == '') selected @endif @if($cm_type == 1) selected @endif>Salaried</option>
     <option value="2" @if($cm_type == 2) selected @endif>Self Employed</option>
     <option value="3" @if($cm_type == 3) selected @endif>Pension</option>
   </select>
@@ -36,7 +36,6 @@
           @endforeach
       </select> -->
     <!--   <input name="company_name" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif  id="company_name" class="form-control" @if($result) value="{{ $result->company_name }}" @else value="{{ old('company_name') }}" @endif type="text"> -->
-
       @if($errors->has('company_name'))
       <span class="text-danger">{{$errors->first('company_name')}}</span>
       @endif
@@ -46,7 +45,7 @@
   <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;"  @endif>
     <div class="form-group">
       <label class="sub-label">Date of Joining*</label>
-      <input name="date_of_joining" id="date_of_joining" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif class="form-control" @if($result) value="{{ $result->date_of_joining }}" @else value="{{ old('date_of_joining') }}" @endif type="date">
+      <input name="date_of_joining" id="date_of_joining" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif class="form-control" @if($result) value="{{ $result->date_of_joining }}" @else value="{{ old('date_of_joining') }}" @endif type="text">
       @if($errors->has('date_of_joining'))
       <span class="text-danger">{{$errors->first('date_of_joining')}}</span>
       @endif
@@ -55,8 +54,8 @@
 
   <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;" @endif>
     <div class="form-group">
-      <label class="sub-label">Monthly Salary*</label>
-      <input name="monthly_salary" class="form-control" id="monthly_salary" @if($result) value="{{ $result->monthly_salary }}" @else value="{{ old('monthly_salary') }}" @endif @if($cm_type != 2 && $cm_type != 3) required="true"  @endif type="number">
+      <label class="sub-label">Monthly Salary (in AED)*</label>
+      <input name="monthly_salary" pattern="\d*" maxlength="6" class="form-control" id="monthly_salary" @if($result) value="{{ $result->monthly_salary }}" @else value="{{ old('monthly_salary') }}" @endif @if($cm_type != 2 && $cm_type != 3) required="true"  @endif type="text">
       @if($errors->has('monthly_salary'))
       <span class="text-danger">{{ $errors->first('monthly_salary') }}</span>
       @endif
@@ -64,12 +63,12 @@
   </div>
 
   <div class="col-md-12 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;" @endif>
-    <label class="sub-label" style="color: #000; font-size: 15px;">Last Three Salary credits</label>
+    <label class="sub-label" style="color: #000; font-size: 15px;">Last Three Salary Credits (Start From Latest)</label>
     <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">First</label>
-        <input name="last_one_salary_credits" class="form-control" @if($result) value="{{ $result->last_one_salary_credits }}" @else value="{{ old('last_one_salary_credits') }}" @endif type="number">
+        <label class="sub-label">First (in AED)</label>
+        <input name="last_one_salary_credits" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->last_one_salary_credits }}" @else value="{{ old('last_one_salary_credits') }}" @endif type="text">
         @if($errors->has('last_one_salary_credits'))
         <span class="text-danger">{{$errors->first('last_one_salary_credits')}}</span>
         @endif
@@ -77,8 +76,8 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">Second</label>
-        <input name="last_two_salary_credits" class="form-control" @if($result) value="{{ $result->last_two_salary_credits }}" @else value="{{ old('last_two_salary_credits') }}" @endif type="number">
+        <label class="sub-label">Second (in AED)</label>
+        <input name="last_two_salary_credits" pattern="\d*" maxlength="6" class="form-control" @if($result) value="{{ $result->last_two_salary_credits }}" @else value="{{ old('last_two_salary_credits') }}" @endif type="text">
         @if($errors->has('last_two_salary_credits'))
         <span class="text-danger">{{$errors->first('last_two_salary_credits')}}</span>
         @endif
@@ -86,14 +85,21 @@
     </div>  
     <div class="col-md-6">
       <div class="form-group">
-        <label class="sub-label">Third</label>
-        <input name="last_three_salary_credits" class="form-control" @if($result) value="{{ $result->last_three_salary_credits }}" @else value="{{ old('last_three_salary_credits') }}" @endif type="number">
+        <label class="sub-label">Third (in AED)</label>
+        <input name="last_three_salary_credits" maxlength="6" pattern="\d*" class="form-control" @if($result) value="{{ $result->last_three_salary_credits }}" @else value="{{ old('last_three_salary_credits') }}" @endif type="text">
         @if($errors->has('last_three_salary_credits'))
         <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
         @endif
       </div>
     </div>
-  
+
+    <div class="col-md-12">
+      <div class="form-group">
+        <label style="font-weight: normal; font-size: 14px;"> <input style=" width: 18px;
+    height: 18px; margin-top: 2px; float: left; margin-right: 10px;" type="checkbox" value="1" name="accommodation_company" @if($result) @if($result->accommodation_company == 1) checked=""  @endif @endif  > I have company provided accommodation.</label>
+      </div>
+    </div>
+
     </div>
   </div>
 
@@ -106,7 +112,6 @@
       @endif
     </div>
   </div> -->
-
 <!--   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">No. Of Years With Previous Employer</label>
@@ -116,7 +121,6 @@
       @endif
     </div>
   </div> -->
-
 <!--   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Monthly Additional Income</label>
@@ -126,7 +130,6 @@
       @endif
     </div>
   </div> -->
-
  <!--  <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Monthly Deductions</label>
@@ -136,7 +139,6 @@
       @endif
     </div>
   </div> -->
-
  <!--  <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Salary Payment Date</label>
@@ -200,7 +202,7 @@
   <div class="col-md-6 self_employed_type" @if($cm_type != 2) style="display: none;" @endif>
     <div class="form-group">
       <label class="sub-label">Percentage Ownership*</label>
-      <input name="percentage_ownership" @if($cm_type == 2) required="true"  @endif id="percentage_ownership" class="form-control" @if($result) value="{{ $result->percentage_ownership }}" @else value="{{ old('percentage_ownership') }}" @endif type="text">
+      <input name="percentage_ownership" maxlength="3" pattern="\d*" @if($cm_type == 2) required="true"  @endif id="percentage_ownership" class="form-control" @if($result) value="{{ $result->percentage_ownership }}" @else value="{{ old('percentage_ownership') }}" @endif type="text">
       @if($errors->has('percentage_ownership'))
       <span class="text-danger">{{$errors->first('percentage_ownership')}}</span>
       @endif
@@ -211,7 +213,7 @@
     <div class="form-group">
       <label class="sub-label">Type of profession/business*</label>
       <select name="profession_business" id="profession_business" class="form-control" @if($cm_type == 2) required="true"  @endif>
-        <option>select</option>
+        <option>Select</option>
         <option value="Accounting" @if(isset($result->profession_business)) @if($result->profession_business == "Accounting") selected @endif @endif>Accounting</option>
         <option value="Consulting" @if(isset($result->profession_business)) @if($result->profession_business == 'Consulting') selected @endif @endif>Consulting</option>
         <option value="Event Planning" @if(isset($result->profession_business)) @if($result->profession_business == 'Event Planning') selected @endif @endif>Event Planning</option>
@@ -226,8 +228,8 @@
 
   <div class="col-md-6 self_employed_type" @if($cm_type != 2) style="display: none;" @endif>
     <div class="form-group">
-      <label class="sub-label">Annual Business Income*</label>
-      <input name="annual_business_income" id="annual_business_income" @if($cm_type == 2) required="true"  @endif class="form-control" @if($result) value="{{ $result->annual_business_income }}" @else value="{{ old('annual_business_income') }}" @endif type="number">
+      <label class="sub-label">Annual Business Income (in AED)*</label>
+      <input name="annual_business_income" id="annual_business_income" pattern="\d*" maxlength="6" @if($cm_type == 2) required="true"  @endif class="form-control" @if($result) value="{{ $result->annual_business_income }}" @else value="{{ old('annual_business_income') }}" @endif type="text">
       @if($errors->has('annual_business_income'))
       <span class="text-danger">{{$errors->first('annual_business_income')}}</span>
       @endif
@@ -236,8 +238,8 @@
 
   <div class="col-md-6 pension_type" @if($cm_type != 3) style="display: none;" @endif>
     <div class="form-group">
-      <label class="sub-label">Monthly Pension*</label>
-      <input name="monthly_pension" id="monthly_pension" class="form-control" @if($cm_type == 3) required="true"  @endif @if($result) value="{{ $result->monthly_pension }}" @else value="{{ old('monthly_pension') }}" @endif type="number">
+      <label class="sub-label">Monthly Pension (in AED)*</label>
+      <input name="monthly_pension" id="monthly_pension" pattern="\d*" maxlength="6" class="form-control" @if($cm_type == 3) required="true"  @endif @if($result) value="{{ $result->monthly_pension }}" @else value="{{ old('monthly_pension') }}" @endif type="text">
       @if($errors->has('monthly_pension'))
       <span class="text-danger">{{$errors->first('monthly_pension')}}</span>
       @endif
@@ -294,17 +296,20 @@
 </div>
 </div>
 <div class="col-md-5">
-  <div class="service-step">
-    <h3>Services is only a few step away from you</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+   <div class="service-step">
+    <h3>Please note that all fields marked with an asterisk (*) are required</h3>
+    <p>Thank you for taking the time to complete our form. In order to process your request, we need to collect certain information from you. Please make sure to fill out all of the required fields marked with an asterisk (*). These fields are essential for us to understand your needs and provide you with the best possible service.</p><br>
+    <p>If you have any questions about which fields are required, please don't hesitate to contact us. We're here to help you every step of the way.</p>
   </div>
 
-  <div class="service-step">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <h3>Get money in just a step way*</h3>
-    <p style="border-top: 1px solid rgba(0, 0, 0, 0.5);padding-top: 30px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Risus dis adipiscing ac, consectetur quis aenean. Semper viverra maecenas pharetra tristique tempus platea elit viverra. Proin mauris suspendisse risus sem. In diam odio commodo, sodales tellus convallis tortor. Neque amet eget amet morbi ac at habitant. Enim eget aliquam tempus duis amet. Sed amet sed bibendum ullamcorper. Nam bibendum eu magna in in eget ullamcorper ultrices. Faucibus gravida tristique erat quam tincidunt tincidunt ut morbi.</p>
-  </div>
+<div class="service-step">
+    <h3>Get money with just a few simple steps</h3>
+<ul style="padding-left: 15px; color: rgba(0, 0, 0, 0.5);">
+<li>Visit our website. This will help us understand your financial needs and determine which products and services are best for you.</li>
+<li>Submit your application and wait for a response. We'll review your information and get back to you as soon as possible with a decision.</li>
+<li>If your application for credit cards and loans is approved, you'll be able to access the limits that have been set for those products. The limits will likely be based on your credit score, income, and other financial information that you provided as part of the application process.</li>
+</ul>
+</div>
 
 </div>
 
@@ -327,7 +332,7 @@ function RelationChange(that) {
         
         $("#profession_business").attr("required", true);
         $("#percentage_ownership").attr("required", true);
-        $("#company_name_sec").attr("required", true);
+        $("#self_company_name").attr("required", true);
         $("#annual_business_income").attr("required", true);
         
     } else if(that.value == "3") {
@@ -338,6 +343,7 @@ function RelationChange(that) {
         $("#company_name").removeAttr('required');
         $("#date_of_joining").removeAttr('required'); 
         $("#monthly_salary").removeAttr('required');
+        $("#self_company_name").removeAttr('required');
 
         $("#profession_business").removeAttr('required');
         $("#percentage_ownership").removeAttr('required');
@@ -359,6 +365,7 @@ function RelationChange(that) {
         $("#percentage_ownership").removeAttr('required');
         $("#company_name_sec").removeAttr('required');
         $("#annual_business_income").removeAttr('required');
+        $("#self_company_name").removeAttr('required');
 
         $("#monthly_pension").removeAttr('required');
     }

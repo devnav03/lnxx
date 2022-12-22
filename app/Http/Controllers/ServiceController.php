@@ -139,7 +139,7 @@ class ServiceController extends  Controller{
                 $fname ='/uploads/services/';
                 $image = $fname.$fileName;
             } else{
-                $image = '';
+                $image = $result->blue_icon;
             }
             unset($inputs['blue_icon']);
             $inputs['blue_icon'] = $image;

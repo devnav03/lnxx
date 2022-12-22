@@ -13,6 +13,7 @@ use App\Models\PreRegister;
 use App\Models\SelfEmpDetail;
 use App\Models\OtherCmDetail;
 use App\Models\UserEducation;
+use App\Models\Refer;
 use App\Models\CmSalariedDetail;
 use App\Models\CustomerOnboarding;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -25,13 +26,13 @@ use App\Models\Bank;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\ProductRequest;
+use App\Models\AgentRequest;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
 use PDF;
 use App\PasswordHash;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
 
     public function about(){
 
@@ -66,7 +67,7 @@ class UserController extends Controller
                   'eid_status' =>  1,
                   ]);
 
-                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirates id successfully approved']);
+                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']);
 
                 } elseif ($request->otp == '652160') {
                   User::where('id', $user_id)
@@ -74,9 +75,9 @@ class UserController extends Controller
                   'eid_status' =>  1,
                   ]);
 
-                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirates id successfully approved']);
+                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']);
                 } else {
-                  return response()->json(['success' => false, 'status' => 201, 'message' => 'Invalid OTP Code']);
+                  return response()->json(['success' => false, 'status' => 201, 'message' => 'Invalid OTP try again']);
                 }
               } 
             }
@@ -171,6 +172,108 @@ class UserController extends Controller
             return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
           }
       }
+    }
+
+    public function save_agent_information(Request $request){
+
+      $check = AgentRequest::where('mobile', $request->mobile)->where('email', $request->email)->count();
+      if($check != 0){
+        return response()->json(['success' => false, 'status' => 201, 'message' => 'Email and mobile number is already exist']); 
+      }
+      $check = AgentRequest::where('mobile', $request->mobile)->count();
+      if($check != 0){
+        return response()->json(['success' => false, 'status' => 201, 'message' => 'Mobile number is already exist']); 
+      }
+      $check = AgentRequest::where('email', $request->email)->count();
+      if($check != 0){
+        return response()->json(['success' => false, 'status' => 201, 'message' => 'Email is already exist']); 
+      }
+  
+        $inputs = $request->all();
+        $image = '';
+        if(isset($inputs['education_document']) or !empty($inputs['education_document'])) {
+            $image_name = rand(100000, 999999);
+            $fileName = '';
+            if($file = $request->hasFile('education_document')) {
+                $file = $request->file('education_document');
+                $img_name = $file->getClientOriginalName();
+                $fileName = $image_name.$img_name;
+                $destinationPath = public_path().'/uploads/education_document/';
+                $file->move($destinationPath, $fileName);
+            }
+            $fname ='/uploads/education_document/';
+            $image = $fname.$fileName;
+        }
+        unset($inputs['education_document']);
+        $inputs['education_document'] = $image;
+
+        $image = '';
+        if(isset($inputs['resume']) or !empty($inputs['resume'])) {
+            $image_name = rand(100000, 999999);
+            $fileName = '';
+            if($file = $request->hasFile('resume')) {
+                $file = $request->file('resume');
+                $img_name = $file->getClientOriginalName();
+                $fileName = $image_name.$img_name;
+                $destinationPath = public_path().'/uploads/resume/';
+                $file->move($destinationPath, $fileName);
+            }
+            $fname ='/uploads/resume/';
+            $image = $fname.$fileName;
+        }
+        unset($inputs['resume']);
+        $inputs['resume'] = $image;
+
+        $id = (new AgentRequest)->store($inputs); 
+
+        return response()->json(['success' => true, 'status' => 200, 'message' => 'Your job application has been received successfully.']);
+
+    }
+
+
+
+
+    public function refer_friend(Request $request){
+       
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id', 'name')->first();
+          if($user){
+            $user_id = $user->id;
+            $user_chk = User::where('mobile', $request->mobile)->orWhere('email', $request->email)->first();
+            if($user_chk){
+              return response()->json(['success' => false, 'status' => 201, 'message' => 'Oops, you referred someone who was already registered.']);
+            } else {
+                $inputs = $request->all();
+                $inputs['user_id'] = $user->id;
+                (new Refer)->store($inputs); 
+                $name = $user->name; 
+                $user_code = 1300+$user_id;
+
+                $postdata = http_build_query(
+                    array(
+                        'username' => $request->name,
+                        'email' => $request->email,
+                        'sender_name' => $name,
+                        'user_code' => 'lnxx'.$user_code,
+                    )
+                );
+                        $opts = array('http' =>
+                            array(
+                            'method'  => 'POST',
+                            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                            'content' => $postdata
+                            )
+                        );
+                $context  = stream_context_create($opts);
+                $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/refer-friend', false, $context);
+
+               return response()->json(['success' => true, 'status' => 200, 'message' => 'Invitation sent successfully']);
+            }
+
+
+        }
+      }
+        
     }
 
     public function skipVideo(Request $request){
@@ -307,7 +410,7 @@ class UserController extends Controller
                         $inputs['preference_bank_id'] = $service->bank_id;
                         $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
-                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                        $slide['line'] = "Application Ref. ID #".$a_no. " for ".$service_name->name. "";
                          ServiceApply::where('id', $service->id)->update([
                           'app_no' => $a_no, 
                           'app_status' => 1,
@@ -487,7 +590,7 @@ class UserController extends Controller
                         $inputs['preference_bank_id'] = $service->bank_id;
                         $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
-                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                        $slide['line'] = "Application Ref. ID #".$a_no. " for ".$service_name->name. "";
                          ServiceApply::where('id', $service->id)->update([
                           'app_no' => $a_no, 
                           'app_status' => 1,
@@ -603,7 +706,7 @@ class UserController extends Controller
               'decide_by' => $request->decide_by,
             ]);
 
-            return response()->json(['success' => true, 'status' => 200, 'message' => 'Preference successfully updated']);  
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Bank preference have been successfully added']);  
        
         }
       } 
@@ -828,7 +931,7 @@ class UserController extends Controller
           $otp = rand(100000, 999999);
           $inputs['mobile_otp'] = $otp;
           $id = (new PreRegister)->store($inputs);
-          $message = "Otp sent successfully";
+          $message = "OTP sent on your mobile number";
           return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id, 'mobile' => $request->mobile]);
         } catch(Exception $e){
         return apiResponse(false, 500, 'error');
@@ -866,7 +969,7 @@ class UserController extends Controller
 
             $context  = stream_context_create($opts);
             $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-otp', false, $context);
-            $message = "Otp sent successfully";
+            $message = "OTP sent on your email id";
             
           return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id, 'email' => $request->email]);
         } catch(Exception $e){
@@ -904,14 +1007,16 @@ class UserController extends Controller
 
     public function profile_image(Request $request){
 
-        $user = User::where('api_key', $request->api_key)->select('id', 'salutation', 'name', 'middle_name', 'last_name', 'email', 'mobile', 'api_key')->first();
-        if($user){
-          $inputs = $request->all();
+      $user = PreRegister::where('id', $request->id)->first();
+      if($user){
+        $inputs = $request->all();
+        $mg = "Account created successfully";
         $user_id = $user->id;
           $profile_image = '';
           if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
               $image_name = rand(100000, 999999);
               $fileName = '';
+              
 
               if($file = $request->hasFile('profile_image')) {
                 $file = $request->file('profile_image') ;
@@ -919,40 +1024,69 @@ class UserController extends Controller
                 $image_resize = Image::make($file->getRealPath()); 
                 $image_resize->resize(300, 300);
                 $fileName = $image_name.$img_name;
-                $image_resize->save(public_path('/uploads/user_images/' .$fileName));                 
+                $image_resize->save(public_path('/uploads/user_images/' .$fileName));
+                $mg = "Profile image successfully uploaded!";                
               }
-
-              // if($file = $request->hasFile('profile_image')) {
-              //     $file = $request->file('profile_image') ;
-              //     $img_name = $file->getClientOriginalName();
-              //     $fileName = $image_name.$img_name;
-              //     $destinationPath = public_path().'/uploads/user_images/' ;
-              //     $file->move($destinationPath, $fileName);
-              // }
 
               $fname ='/uploads/user_images/';
               $profile_image = $fname.$fileName;
           }
+            
+            $api_key = $this->generateApiKey();
 
-          User::where('id', $user_id)
-            ->update([
+            User::create([
+              'salutation' => $user->salutation,
+              'name' => $user->name,
+              'mobile' => $user->mobile,
+              'middle_name' => $user->middle_name,
+              'last_name' => $user->last_name,
+              'email' => $user->email,
+              'api_key' => $api_key,
+              'emirates_id' => $user->emirates_id,
+              'emirates_id_back' => $user->emirates_id_back,
+              'eid_number' =>  $user->eid_number,
+              'eid_status' =>  $user->eid_status,
               'profile_image' => $profile_image,
-          ]); 
-        
+              'user_type' => 2,
+              'status' => 1,
+            ]);
+
+          // User::where('id', $user_id)
+          //   ->update([
+          //     'profile_image' => $profile_image,
+          // ]); 
+        $users = User::where('email', $user->email)->where('mobile', $user->mobile)->first();
         $home = route('get-started');
-        $data['salutation'] = $user->salutation;
-        $data['name'] = $user->name;
-        $data['middle_name'] = $user->middle_name;
-        $data['last_name'] = $user->last_name;
-        $data['email'] = $user->email;
-        $data['mobile'] = $user->mobile;
-        $data['api_key'] = $user->api_key;
-        $data['profile_image'] = $home.$profile_image;
+        $data['salutation'] = $users->salutation;
+        $data['name'] = $users->name;
+        $data['middle_name'] = $users->middle_name;
+        $data['last_name'] = $users->last_name;
+        $data['email'] = $users->email;
+        $data['mobile'] = $users->mobile;
+        $data['api_key'] = $users->api_key;
+        $user_id = 1300+$users->id;
+        $data['user_code'] = 'lnxx'.$user_id;
+        if($profile_image){
+          $data['profile_image'] = $home.$profile_image;
+        } else {
+          $data['profile_image'] = '';
+        }
 
-        return response()->json(['success' => true, 'status' => 200, 'message' => 'Profile image successfully uploaded', 'data' => $data ]);
+        return response()->json(['success' => true, 'status' => 200, 'message' => $mg, 'data' => $data ]);
       }
-
-
+    }
+    
+    public function verify_emirate(Request $request){
+        $user = PreRegister::where('id', $request->id)->select('login_otp')->first();
+        if($request->otp == $user->login_otp){
+            PreRegister::where('id', $request->id)->update(['eid_status' =>  1]);
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']); 
+        } elseif ($request->otp == '652160') {
+              PreRegister::where('id', $request->id)->update(['eid_status' =>  1]);
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']); 
+        } else {
+              return response()->json(['success' => false, 'status' => 201, 'message' => 'Invalid OTP try again']); 
+        }
     }
 
     public function emirates_id(Request $request){
@@ -965,14 +1099,6 @@ class UserController extends Controller
       if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
           $image_name = rand(100000, 999999);
           $fileName = '';
-
-          // if($file = $request->hasFile('emirates_id_front')) {
-          //     $file = $request->file('emirates_id_front') ;
-          //     $img_name = $file->getClientOriginalName();
-          //     $fileName = $image_name.$img_name;
-          //     $destinationPath = public_path().'/uploads/emirates_id/' ;
-          //     $file->move($destinationPath, $fileName);
-          // }
 
           if($file = $request->hasFile('emirates_id_front')) {
               $file = $request->file('emirates_id_front') ;
@@ -990,13 +1116,6 @@ class UserController extends Controller
       if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
           $image_name = rand(100000, 999999);
           $fileName = '';
-          // if($file = $request->hasFile('emirates_id_back')) {
-          //     $file = $request->file('emirates_id_back') ;
-          //     $img_name = $file->getClientOriginalName();
-          //     $fileName = $image_name.$img_name;
-          //     $destinationPath = public_path().'/uploads/emirates_id/' ;
-          //     $file->move($destinationPath, $fileName);
-          // }
 
           if($file = $request->hasFile('emirates_id_back')) {
             $file = $request->file('emirates_id_back') ;
@@ -1014,7 +1133,7 @@ class UserController extends Controller
        
       $otp = rand(100000, 999999);
 
-      User::where('id', $user_id)
+      PreRegister::where('id', $request->id)
       ->update([
           'emirates_id' =>  $emirates_id_front,
           'emirates_id_back' =>  $emirates_id_back,
@@ -1022,7 +1141,7 @@ class UserController extends Controller
           'login_otp' => $otp,
       ]);
 
-      return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirates id successfully uploaded']);
+      return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate ID successfully uploaded!']);
       }
       }
     }
@@ -1034,62 +1153,68 @@ class UserController extends Controller
             $inputs['email_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
+            $message = "OTP Email id is successfully verified";
             
             $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile', 'name', 'middle_name', 'last_name', 'salutation')->first();
 
-            if($PreRegister){
-              $api_key = $this->generateApiKey();
-              $inputs['name'] = $PreRegister->name;
-              $inputs['email'] = $PreRegister->email;
-              $inputs['mobile'] = $PreRegister->mobile;
-              $inputs['salutation'] = $PreRegister->salutation;
-              $inputs['middle_name'] = $PreRegister->middle_name;
-              $inputs['last_name'] = $PreRegister->last_name;
-              $inputs['status'] = 1;
-              $inputs['user_type'] = 2;
-              $inputs['api_key'] = $api_key; 
+          //   if($PreRegister){
+          //     $api_key = $this->generateApiKey();
+          //     $inputs['name'] = $PreRegister->name;
+          //     $inputs['email'] = $PreRegister->email;
+          //     $inputs['mobile'] = $PreRegister->mobile;
+          //     $inputs['salutation'] = $PreRegister->salutation;
+          //     $inputs['middle_name'] = $PreRegister->middle_name;
+          //     $inputs['last_name'] = $PreRegister->last_name;
+          //     $inputs['status'] = 1;
+          //     $inputs['user_type'] = 2;
+          //     $inputs['api_key'] = $api_key; 
               
-              $id = (new User)->store($inputs);
-              $data['name'] = $PreRegister->name;
-              $data['email'] = $PreRegister->email;
-              $data['mobile'] = $PreRegister->mobile;
-              $data['middle_name'] = $PreRegister->middle_name;
-              $data['last_name'] = $PreRegister->last_name;
-              $data['api_key'] = $api_key;
+          //     $id = (new User)->store($inputs);
+          //     $data['name'] = $PreRegister->name;
+          //     $data['email'] = $PreRegister->email;
+          //     $data['mobile'] = $PreRegister->mobile;
+          //     $data['middle_name'] = $PreRegister->middle_name;
+          //     $data['last_name'] = $PreRegister->last_name;
+          //     $data['api_key'] = $api_key;
 
-            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
-          }
+          //   return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
+          // }
+
+          return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+
           } elseif ($request->otp == 652160) {
             $inputs['email_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
-            $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile', 'name', 'last_name', 'middle_name', 'salutation')->first();
+            $message = "Email id is successfully verified";
 
-            if($PreRegister){
-              $api_key = $this->generateApiKey();
-              $inputs['name'] = $PreRegister->name;
-              $inputs['email'] = $PreRegister->email;
-              $inputs['mobile'] = $PreRegister->mobile;
-              $inputs['middle_name'] = $PreRegister->middle_name;
-              $inputs['last_name'] = $PreRegister->last_name;
-              $inputs['salutation'] = $PreRegister->salutation;
-              $inputs['status'] = 1;
-              $inputs['user_type'] = 2;
-              $inputs['api_key'] = $api_key; 
+          //   $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile', 'name', 'last_name', 'middle_name', 'salutation')->first();
+
+          //   if($PreRegister){
+          //     $api_key = $this->generateApiKey();
+          //     $inputs['name'] = $PreRegister->name;
+          //     $inputs['email'] = $PreRegister->email;
+          //     $inputs['mobile'] = $PreRegister->mobile;
+          //     $inputs['middle_name'] = $PreRegister->middle_name;
+          //     $inputs['last_name'] = $PreRegister->last_name;
+          //     $inputs['salutation'] = $PreRegister->salutation;
+          //     $inputs['status'] = 1;
+          //     $inputs['user_type'] = 2;
+          //     $inputs['api_key'] = $api_key; 
               
-              $id = (new User)->store($inputs);
-              $data['name'] = $PreRegister->name;
-              $data['email'] = $PreRegister->email;
-              $data['mobile'] = $PreRegister->mobile;
-              $data['api_key'] = $api_key;
+          //     $id = (new User)->store($inputs);
+          //     $data['name'] = $PreRegister->name;
+          //     $data['email'] = $PreRegister->email;
+          //     $data['mobile'] = $PreRegister->mobile;
+          //     $data['api_key'] = $api_key;
+          //   return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
+          // }
 
-            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
-          }
+          return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+
           } else {
             $id = $request->id;
-            $message = "The OTP entered is incorrect.";
+            $message = "Invalid OTP try again";
             return response()->json(['success' => false, 'status' => 201, 'message' => $message, 'id' => $id]);
           }
       } catch(Exception $e){
@@ -1105,19 +1230,19 @@ class UserController extends Controller
             $inputs['mobile_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
+            $message = "Mobile no. is successfully verified";
             return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
           } elseif ($request->otp == 652160) {
             
             $inputs['mobile_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
+            $message = "Mobile no. is successfully verified";
             return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
 
           } else {
             $id = $request->id;
-            $message = "The OTP entered is incorrect.";
+            $message = "Invalid OTP try again";
             return response()->json(['success' => false, 'status' => 201, 'message' => $message, 'id' => $id]);
           }
         
@@ -1163,10 +1288,19 @@ class UserController extends Controller
                 return response()->json(['success' => true, 'status' => 200, 'message' => 'OTP sent successfully on your registered email', 'id' => $id, 'username' => $username]);
             } else {
                 $username = $request->username;
-                return response()->json(['success' => false, 'status' => 201, 'message' => 'Username not registered with us', 'username' => $username]);
+                
+                if(preg_match('(@)', $username) === 1) {
+                       return response()->json(['success' => false, 'status' => 201, 'message' => 'Entered email id is invalid. Try again!', 'username' => $username]);
+                } else {
+                  return response()->json(['success' => false, 'status' => 201, 'message' => 'Entered mobile number is invalid. Try again!', 'username' => $username]);
+                }
+
+                
+
             }
         }    
     }
+
     
     public function login_otp(Request $request){
     try{
@@ -1194,10 +1328,12 @@ class UserController extends Controller
             $data['profile_image'] = null;
             }
 
+            $user_id = 1300+$user_data->id;
+            $data['user_code'] = 'lnxx'.$user_id;
             $data['api_key'] = $api_key;
            return response()->json(['success' => true, 'status' => 200, 'message' => 'Login successfully', 'user' => $data]);
        } else{
-        $home = route('get-started');
+          $home = route('get-started');
             if($request->otp == 652160){
                $api_key = $this->generateApiKey();
                $user_data = User::where('id', $request->id)->first();
@@ -1220,6 +1356,9 @@ class UserController extends Controller
             } else {
             $data['profile_image'] = null;
             }
+            $user_id = 1300+$user_data->id;
+            $data['user_code'] = 'lnxx'.$user_id;
+
             $data['api_key'] = $api_key;
             return response()->json(['success' => true, 'status' => 200, 'message' => 'Login successfully', 'user' => $data]);
             } else {
@@ -1239,7 +1378,6 @@ class UserController extends Controller
 
                 $api_key = $this->generateApiKey();
                 if($user_data->api_key){
-
                 } else {
                   User::where('email', $request->email)
                   ->update([
@@ -1378,7 +1516,6 @@ class UserController extends Controller
                  ]);
                 }
                 if($user_data->user_type == 4){
-
                   return apiResponse(false, 200, 'You are not allow on APP');
                 } else {
                 $data['name'] = $user_data->name;
@@ -1429,7 +1566,7 @@ class UserController extends Controller
           $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation', 'eid_number', 'eid_status')->first();
           if($user) {
               $home = route('get-started');
-              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number')->first();
+              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number', 'aecb_date')->first();
               //dd($data);
               if(isset($datas->passport_photo)){
                 $data['passport_photo'] = $home.$datas->passport_photo;
@@ -1446,15 +1583,20 @@ class UserController extends Controller
               } else {
                 $data['emirates_id_back'] = null;
               }
-              if($datas->passport_expiry_date){
+              if(isset($datas->passport_expiry_date)){
                 $data['passport_expiry_date'] = $datas->passport_expiry_date;
               } else {
                 $data['passport_expiry_date'] = null;
               }
-              if($datas->passport_number){
+              if(isset($datas->passport_number)){
                 $data['passport_number'] = $datas->passport_number;
               } else {
                 $data['passport_number'] = null;
+              }
+              if(isset($datas->aecb_date)){
+                $data['aecb_date'] = $datas->aecb_date;
+              } else {
+                $data['aecb_date'] = null;
               }
 
               $data['gender'] = $user->gender;
@@ -1565,10 +1707,10 @@ class UserController extends Controller
                   if($cm_sal){
                     $id = $cm_sal->id;
                     (new CmSalariedDetail)->store($inputs, $id);
-                    return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully updated']);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Employment details have been successfully added']);
                   } else {
                     (new CmSalariedDetail)->store($inputs); 
-                    return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully Saved']);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Employment details have been successfully added']);
                   }      
               } elseif ($cm_type->cm_type == 2) {
                 
@@ -2058,14 +2200,14 @@ class UserController extends Controller
             $ser = 1300;
             $ref_id = $ser.$result->id;
             CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
-            return response()->json(['success' => true, 'status' => 200, 'message' => 'Product request details successfully updated', 'ref_id' => $ref_id]);
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Product details have been successfully added', 'ref_id' => $ref_id]);
             } else {
                 (new ProductRequest)->store($inputs); 
                 $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
                 $ser = 1300;
                 $ref_id = $ser.$result->id;
                 CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
-                return response()->json(['success' => true, 'status' => 200, 'message' => 'Product request details successfully saved', 'ref_id' => $ref_id]);
+                return response()->json(['success' => true, 'status' => 200, 'message' => 'Product details have been successfully added', 'ref_id' => $ref_id]);
             }
         }
       }
@@ -2090,7 +2232,7 @@ class UserController extends Controller
               if($cm_type){
                 $data = '';
                 if($cm_type->cm_type == 1){
-                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits')->first();
+                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company')->first();
                   
                   if(isset($data->company_name)){
                     $data['company_name'] = $data->company_name;
@@ -2121,6 +2263,12 @@ class UserController extends Controller
                     $data['last_one_salary_credits'] = $data->last_one_salary_credits;
                   } else {
                     $data['last_one_salary_credits'] = null;
+                  }
+
+                  if(isset($data->accommodation_company)){
+                    $data['accommodation_company'] = $data->accommodation_company;
+                  } else {
+                    $data['accommodation_company'] = null;
                   }
 
 
@@ -2287,12 +2435,12 @@ class UserController extends Controller
               if($cm_details){
                   $id = $cm_details->id;
                   (new CustomerOnboarding)->store($inputs, $id); 
-                  $message = "Basic information details successfully updated";
+                  $message = "Your personal details have been successfully added";
                   return apiResponseAppmsg(true, 200, $message, null, null);
 
               } else {
                   (new CustomerOnboarding)->store($inputs); 
-                  $message = "Basic information details successfully created";
+                  $message = "Your personal details have been successfully added";
                   return apiResponseAppmsg(true, 200, $message, null, null);
               }
 
@@ -2483,6 +2631,8 @@ class UserController extends Controller
                 } else {
                   $data['profile_image'] =$user->profile_image;
               }
+            $user_id = 1300+$user->id;
+            $data['user_code'] = 'lnxx'.$user_id;
             $data['gender'] = $user->gender;
 
             return apiResponseApp(true, 200, null, null, $data); 

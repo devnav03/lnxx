@@ -31,7 +31,7 @@
 </div>
 <div class="col-md-6 mgn20">
 <label>Email</label>  
-<input type="email" value="{{ $user->email }}" name="email" required="true" class="form-control">
+<input type="email" value="{{ $user->email }}" name="email" required="true" class="form-control" readonly="">
 @if ($errors->has('email'))
 <span class="text-danger">{{$errors->first('email')}}</span>
 @endif
@@ -39,7 +39,7 @@
 
 <div class="col-md-6 mgn20">
 <label>Mobile</label>  
-<input type="number" value="{{ $user->mobile }}" name="mobile" required="true" class="form-control">
+<input type="number" value="{{ $user->mobile }}" name="mobile" required="true" class="form-control" readonly="">
 @if ($errors->has('mobile'))
 <span class="text-danger">{{$errors->first('mobile')}}</span>
 @endif

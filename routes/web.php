@@ -198,6 +198,52 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'landing-sliders@drop']);
             // small sliders
 
+            // Agent Requests route start
+            Route::resource('agent-request', 'App\Http\Controllers\AgentRequestController', [
+                'names' => [
+                    'index'     => 'agent-request.index',
+                    'create'    => 'agent-request.create',
+                    'store'     => 'agent-request.store',
+                    'edit'      => 'agent-request.edit',
+                    'update'    => 'agent-request.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('agent-request/paginate/{page?}', ['as' => 'agent-request.paginate',
+                'uses' => 'App\Http\Controllers\AgentRequestController@Paginate']);
+            Route::any('agent-request/action', ['as' => 'agent-request.action',
+                'uses' => 'App\Http\Controllers\AgentRequestController@Action']);
+            Route::any('agent-request/toggle/{id?}', ['as' => 'agent-request.toggle',
+                'uses' => 'App\Http\Controllers\AgentRequestController@Toggle']);
+            Route::any('agent-request/drop/{id?}', ['as' => 'agent-request.drop',
+                'uses' => 'agent-request@drop']);
+            // Agent Requests
+
+
+            // Refers Master route start
+            Route::resource('refers', 'App\Http\Controllers\ReferController', [
+                'names' => [
+                    'index'     => 'refers.index',
+                    'create'    => 'refers.create',
+                    'store'     => 'refers.store',
+                    'edit'      => 'refers.edit',
+                    'update'    => 'refers.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('refers/paginate/{page?}', ['as' => 'refers.paginate',
+                'uses' => 'App\Http\Controllers\ReferController@Paginate']);
+            Route::any('refers/action', ['as' => 'refers.action',
+                'uses' => 'App\Http\Controllers\ReferController@Action']);
+            Route::any('refers/toggle/{id?}', ['as' => 'refers.toggle',
+                'uses' => 'App\Http\Controllers\ReferController@Toggle']);
+            Route::any('refers/drop/{id?}', ['as' => 'refers.drop',
+                'uses' => 'refers@drop']);
+            // small refers
+
+
             // Contact route start
             Route::resource('contact-enquiry','App\Http\Controllers\ContactController', [
                 'names' => [
@@ -306,7 +352,6 @@ Route::any('community', [App\Http\Controllers\Frontend\HomeController::class, 'c
 Route::any('contact-us', [App\Http\Controllers\Frontend\HomeController::class, 'contact_us'])->name('contact-us');
 Route::any('contact-enquiry', [App\Http\Controllers\Frontend\HomeController::class, 'contact_enquiry'])->name('contact-enquiry');
 
-
 Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
 
 Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
@@ -325,11 +370,7 @@ Route::any('record-video', [App\Http\Controllers\Frontend\HomeController::class,
 Route::any('consent-form', [App\Http\Controllers\Frontend\HomeController::class, 'consent_form'])->name('consent-form');
 Route::any('consent-approval', [App\Http\Controllers\Frontend\HomeController::class, 'consent_approval'])->name('consent-approval');
 Route::any('thank-you', [App\Http\Controllers\Frontend\HomeController::class, 'ServiceApply'])->name('thank-you');
-Route::any('upload-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'upload_emirates'])->name('upload-emirates-id');
-Route::any('upload-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'upload_profile_image'])->name('upload-profile-image');
 
-Route::any('emirates-id-verification', [App\Http\Controllers\Frontend\HomeController::class, 'emirates_id_verification'])->name('emirates-id-verification');
-Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'save_profile_image'])->name('save-profile-image');
 Route::any('verify-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates_id'])->name('verify-emirates-id');
 Route::any('verify-emirates', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates'])->name('verify-emirates');
 Route::any('preference', [App\Http\Controllers\Frontend\HomeController::class, 'preference'])->name('preference');
@@ -344,7 +385,19 @@ Route::any('live_product_2', [App\Http\Controllers\Frontend\HomeController::clas
 
 Route::get('check_product_code2', [App\Http\Controllers\Frontend\HomeController::class, 'check_product_code2'])->name('check_product_code2');
 
+Route::any('refers', [App\Http\Controllers\Frontend\HomeController::class, 'refers'])->name('refers');
+Route::any('congratulations', [App\Http\Controllers\Frontend\HomeController::class, 'congratulations'])->name('congratulations');
+
 });
+
+Route::any('upload-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'upload_emirates'])->name('upload-emirates-id');
+Route::any('upload-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'upload_profile_image'])->name('upload-profile-image');
+
+Route::any('emirates-id-verification', [App\Http\Controllers\Frontend\HomeController::class, 'emirates_id_verification'])->name('emirates-id-verification');
+
+Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'save_profile_image'])->name('save-profile-image');
+
+Route::any('agent-apply', [App\Http\Controllers\Frontend\HomeController::class, 'agent_apply'])->name('agent-apply');
 
 
 Route::get('reset', function (){

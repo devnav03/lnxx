@@ -27,13 +27,14 @@
                                 <span class="shape2"></span>
                                 <i class="ti-user sidemenu-icon menu-icon "></i>
                                 <span class="sidemenu-label">Application Request</span>
-                            <!--     <span class="badge bg-danger side-badge">5</span> -->
+                            <i class="angle fe fe-chevron-right"></i>
                             </a>
                             <ul class="nav-sub">
                                 <li class="side-menu-label1"><a href="javascript:void(0)">Onboarding</a></li>
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('applications.index') }}">Applications</a></li>
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('customer') }}">Customers</a></li>
-                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Agents</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('agent-request.index') }}">Agents</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('refers.index') }}">Refers</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">

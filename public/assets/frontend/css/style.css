@@ -349,8 +349,9 @@ body{
     padding: 50px 0 30px 0;
 }
 .testimonials img{
-    width: 70px !important;
+    width: auto !important;
     margin: 0 auto;
+    max-height: 100px;
 }
 .testimonials-slide {
     max-width: 335px;
@@ -848,7 +849,7 @@ input[type=number]::-webkit-outer-spin-button {
 .agent_banner .mob_input input {
     box-shadow: 1px 1px 10px rgb(0 0 0 / 20%);
     border: 1px solid rgba(9, 15, 6, 0.1);
-    padding-left: 55px;
+    padding-left: 15px;
 }
 .agent_banner .input-img {
     left: 15px;
@@ -1210,12 +1211,12 @@ input[type=number]::-webkit-outer-spin-button {
     color: #5EB495;
     background: url(../images/Icon_Component.png);
     background-repeat: no-repeat;
-    padding-left: 50px;
+    padding-left: 35px;
     margin-bottom: 0px;
     background-position: left;
-    font-weight: 700;
-    font-size: 25px;
-    background-size: 33px;
+    font-weight: 600;
+    font-size: 22px;
+    background-size: 25px;
 }
 .personal_details_box {
     background: #fff;
@@ -1292,10 +1293,11 @@ input[type=number]::-webkit-outer-spin-button {
     background: #000;
 }
 .service-step h3 {
-    font-weight: 700;
+    font-weight: 600;
     color: #000;
-    font-size: 25px;
-    margin-bottom: 30px;
+    font-size: 22px;
+    margin-bottom: 15px;
+    line-height: 30px;
 }
 .personal_details .col-md-5 {
     padding-left: 40px;
@@ -1429,7 +1431,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .slider_background{
     background: url(../images/thanku_back.png);
-    padding: 100px 0;
+    padding: 20px 0 60px 0;
     text-align: center;
 }
 .thanku_sec {
@@ -1499,10 +1501,16 @@ header.header .col-md-5 {
 .cus_dashboard .our_assistance.ser_dt {
     padding-bottom: 30px;
 }
-.cus_dashboard .our_assistance.ser_dt h2{
+.cus_dashboard .our_assistance.ser_dt h2,
+.rel_head {
     padding-left: 35px;
     margin-top: 20px;
     margin-bottom: 10px;
+}
+.rel_head{
+    background: url(../images/rel_icon.png);
+    background-repeat: no-repeat;
+    background-size: 30px
 }
 
 .sidenav {
@@ -1954,6 +1962,54 @@ footer{
 .product-index h2{
     margin-bottom: 20px;
 }
+
+.ref_btn {
+    background: #5EB495;
+    color: #fff;
+    padding: 10px 60px;
+    border: 0px;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    font-weight: 500;
+}
+#exampleModal input{
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 40%);
+    height: 40px;
+}
+#exampleModal label{
+    margin-bottom: 1px;
+}
+.ui-widget-header{
+    background: #5EB495 !important;
+    border: 1px solid #5EB495 !important;
+}
+.ui-state-default, .ui-widget-content .ui-state-default {
+    color: #5EB495 !important;
+}
+.rel_head{
+    position: relative;
+}
+.agent_banner .form-control[readonly] {
+    background-color: #fff;
+}
+.agent_banner input[type="file"]{
+    padding: 0px;
+    height: 29px;
+    box-shadow: none;
+    border: 0px;
+}
+.agent_banner button {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    height: 42px;
+    font-size: 15px;
+}
+
+
+
+
+
 
 
 

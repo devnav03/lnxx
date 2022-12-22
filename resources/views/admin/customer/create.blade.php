@@ -29,7 +29,8 @@
                                         <div class="form-group"> 
                                             {!! Form::label('name', lang('Name'), array('class' => '')) !!}
                                             @if(!empty($result->id))
-                                                {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!}
+                                          <!--       {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!} -->
+                                          <input class="form-control" required="true" name="name" type="text" value="{{ $result->salutation  }} {{ $result->name }} {{ $result->middle_name  }} {{ $result->last_name  }}" id="name">
                                             @else
                                                 {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!}
                                             @endif 

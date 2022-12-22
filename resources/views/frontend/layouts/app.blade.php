@@ -34,7 +34,8 @@
         <meta name="twitter:title" content="{{$keyword->meta_tag}}" />
         @endif
     @else
-<title>LNXX</title>
+    <title>LNXX - An online financial services platform for UAE's citizens.</title>
+
 @endif
 <meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=1">
@@ -47,7 +48,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,500;1,700&display=swap" rel="stylesheet">
 
-    <script src="https://kit.fontawesome.com/956568d106.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/956568d106.js" crossorigin="anonymous"></script>
 {!! Html::style('assets/frontend/css/stellarnav.min.css') !!}
 
 <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
@@ -59,6 +60,10 @@
 {!! HTML::style('assets/frontend/fonts/flaticon/font/flaticon.css') !!}
 <!-- {!! HTML::style('assets/frontend/css/bootstrap.min1.css') !!} -->
 {!! HTML::style('assets/frontend/css/style.css') !!}
+<link href=
+'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/
+ui-lightness/jquery-ui.css'
+        rel='stylesheet'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 @yield('css')
 </head>
@@ -72,13 +77,13 @@
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
-    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
+    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations')
         @include('frontend.layouts.header_main')
     @endif    
     @endif
         <!-- Main Content -->
         @yield('content')
-        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
+        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations')
         @include('frontend.layouts.footer') 
         @endif
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -88,6 +93,129 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+    <script type="text/javascript">
+        const config = { 
+        apiKey: "AIzaSyAId-eClnqk-cjkGV5fYsDLbiGWl917jvA",
+        authDomain: "lnxx-ce1d9.firebaseapp.com",
+        databaseURL: "https://lnxx-ce1d9-default-rtdb.firebaseio.com",
+        projectId: "lnxx-ce1d9",
+        storageBucket: "lnxx-ce1d9.appspot.com",
+        messagingSenderId: "379200459861",
+        appId: "1:379200459861:web:63d87def3fc0f969a230dc",
+        measurementId: "G-8CVESVEF66"
+        };
+        
+        firebase.initializeApp(config);
+    </script>
+
+
+    <script type="text/javascript">  
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                onSignInSubmit();
+            }
+        });
+
+        function otpSend() {
+            var signInWithPhoneNumber = document.getElementById('phone').value;
+      
+            const appVerifier = window.recaptchaVerifier;
+            firebase.auth().signInWithPhoneNumber(signInWithPhoneNumber, appVerifier)
+                .then((confirmationResult) => {
+  
+                    window.confirmationResult = confirmationResult;
+                    document.getElementById("sent-message").innerHTML = "Message sent succesfully.";
+                    document.getElementById("sent-message").classList.add("d-block");
+                }).catch((error) => {
+
+                    document.getElementById("error-message").innerHTML = error.message;
+                    document.getElementById("error-message").classList.add("d-block");
+                });
+        }
+
+        function otpVerify() {
+            var code = document.getElementById('otp-code').value;
+            confirmationResult.confirm(code).then(function (result) {
+                var user = result.user;
+                document.getElementById("sent-message").innerHTML = "You are succesfully logged in.";
+                document.getElementById("sent-message").classList.add("d-block");
+      
+            }).catch(function (error) {
+                document.getElementById("error-message").innerHTML = error.message;
+                document.getElementById("error-message").classList.add("d-block");
+            });
+        }
+    </script>
+
+      
+    @if($route != 'record-video')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" ></script>
+       
+<script>
+    $(function() {
+        $( "#my_date_picker" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            minDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#emirates_expire_date" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            minDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+    
+
+    $(function() {
+        var maxBirthdayDate = new Date();
+        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18 );
+        $( "#my_date_picker_dob" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            dateFormat: 'dd/mm/yy', 
+            maxDate: maxBirthdayDate,
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#aecb_date" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#date_of_joining" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+
+</script>
+ @endif
+
+
+
 <script type="text/javascript">       
   var btn = $('#button2');
 
@@ -204,7 +332,7 @@ $('.main-slider').owlCarousel({
 $('.product-slider').owlCarousel({
     autoplay: true,
     smartSpeed: 900,
-    loop: true,
+    loop: false,
     margin: 20,
     nav: false,
     center:false,
@@ -228,7 +356,7 @@ $('.product-slider').owlCarousel({
             items:3,
         },
         1200:{
-            items:5
+            items:4
            
         }
     }
@@ -468,6 +596,28 @@ $('input[name=otp_code]').on('keyup' , function() {
     }
 }); 
 
+$('input[name=eid_number]').on('keyup' , function() { 
+    var id = $("input[name=eid_number]").val();
+    if( id.length == 15 ) {
+        $(".sh_emid").show();
+        $(".hide_text").hide();
+    } else {
+        $(".sh_emid").hide();
+        $(".hide_text").show(); 
+    }
+});
+    
+
+$('input[name=credit_score]').on('keyup' , function() { 
+    var id = $("input[name=credit_score]").val();
+    if( id.length == 0 ) {
+        $(".aecb_date").hide();
+    } else {
+        $(".aecb_date").show();
+    }
+    
+});
+
 
 $('input[name=login_otp]').on('keyup' , function() { 
     var id = $("input[name=id]").val();
@@ -501,7 +651,7 @@ $('input[name=login_otp]').on('keyup' , function() {
 
 $('input[name=mobile]').on('keyup' , function() { 
     var mobile = $("input[name=mobile]").val();
-    if( mobile.length == 7 ) {
+    if( mobile.length == 9 ) {
         $.ajax({
             type: "GET",
             url: "{{ route('otp-sent') }}",
@@ -913,8 +1063,19 @@ jQuery(function(){
         $("#live_product_2").slideUp();
     });
 
-
 </script>
 @endif
+
+@if(session()->has('already_refer_friend'))
+<script type="text/javascript">
+    $('#exampleModal').modal('show');
+</script>
+@endif
+@if(session()->has('refer_friend'))
+<script type="text/javascript">
+    $('#exampleModal').modal('show');
+</script>
+@endif
+
 </body>
 </html>
