@@ -60,7 +60,7 @@ if($result) {
         <label class="sub-label">Last Name*</label>
         <input name="last_name" required="true" maxlength="16" class="form-control" value="{{ $user->last_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
         @if($errors->has('last_name'))
-        <span class="text-danger">{{$errors->first('last_name')}}</span>
+          <span class="text-danger">{{$errors->first('last_name')}}</span>
         @endif
       </div>
     </div>
@@ -74,7 +74,7 @@ if($result) {
       <label class="sub-label">DOB*</label> 
       <input name="date_of_birth" class="form-control" id="my_date_picker_dob" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="text" required="true">
       @if($errors->has('date_of_birth'))
-      <span class="text-danger">{{$errors->first('date_of_birth')}}</span>
+        <span class="text-danger">{{$errors->first('date_of_birth')}}</span>
       @endif
     </div>
   </div>
@@ -107,7 +107,7 @@ if($result) {
   </div>
 
   <div class="col-md-6" id="years_in_uae_div" @if($sel_country == 229) style="display: none;" @endif>
-    <label class="sub-label">No. of Years in UAE*</label>
+      <label class="sub-label">No. of Years in UAE*</label>
       <input name="years_in_uae" maxlength="2" pattern="\d*" id="years_in_uae" class="form-control" @if($sel_country != 229) required="true" @endif   @if($result) value="{{ $result->years_in_uae }}" @else value="{{ old('years_in_uae') }}" @endif type="text">
       @if($errors->has('years_in_uae'))
       <span class="text-danger">{{$errors->first('years_in_uae')}}</span>

@@ -152,6 +152,27 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'testimonials@drop']);
             // testimonials
 
+            // Credit Card Engines Master route start
+            Route::resource('credit-card-engines', 'App\Http\Controllers\CreditCardEnginesController', [
+                'names' => [
+                    'index'     => 'credit-card-engines.index',
+                    'create'    => 'credit-card-engines.create',
+                    'store'     => 'credit-card-engines.store',
+                    'edit'      => 'credit-card-engines.edit',
+                    'update'    => 'credit-card-engines.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('credit-card-engines/paginate/{page?}', ['as' => 'credit-card-engines.paginate',
+                'uses' => 'App\Http\Controllers\CreditCardEnginesController@servicesPaginate']);
+            Route::any('credit-card-engines/action', ['as' => 'credit-card-engines.action',
+                'uses' => 'App\Http\Controllers\CreditCardEnginesController@servicesAction']);
+            Route::any('credit-card-engines/toggle/{id?}', ['as' => 'credit-card-engines.toggle',
+                'uses' => 'App\Http\Controllers\CreditCardEnginesController@servicesToggle']);
+            Route::any('credit-card-engines/drop/{id?}', ['as' => 'credit-card-engines.drop',
+                'uses' => 'credit-card-engines@drop']);
+            // Credit Card Engines end
 
             // sliders Master route start
             Route::resource('sliders', 'App\Http\Controllers\SliderController', [

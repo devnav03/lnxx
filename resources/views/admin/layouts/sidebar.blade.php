@@ -54,7 +54,23 @@
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('company.index') }}">Company</a></li> 
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('landing-sliders.index') }}">Landing Page Sliders</a></li>
                                 <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('blogs.index') }}">Blogs</a></li>
-                                
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="javascript:void(0)">
+                                <span class="shape1"></span>
+                                <span class="shape2"></span>
+                                <i class="ti-settings sidemenu-icon menu-icon "></i>
+                                <span class="sidemenu-label">Recommendation Rules</span>
+                            <i class="angle fe fe-chevron-right"></i>
+                            </a>
+                            <ul class="nav-sub">
+                                <li class="side-menu-label1"><a href="javascript:void(0)">Recommendation Rules</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('credit-card-engines.index') }}">Credit Card Engine</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Personal Loan Engine</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Business Loan Engine</a></li>
+                                <li class="nav-sub-item"><a class="nav-sub-link" href="#">Mortgage Loan Engine</a></li>
                             </ul>
                         </li>
 

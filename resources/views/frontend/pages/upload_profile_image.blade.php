@@ -19,16 +19,16 @@
 <!-- <p style="margin-bottom: 10px;">Please upload your profile image.</p> -->
 <form action="{{ route('save-profile-image') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}	
-<label style="font-size: 14px;">Upload your photo <span style="font-size: 13px;"> (allowed file types (*.jpg, *.jpeg, *.png only) with maximum size 2mb.)</span></label>
+<label style="font-size: 14px;">Upload your photo <span style="font-size: 13px;"> (allowed file types (*.jpg, *.jpeg, *.png only) with maximum size 2mb.)*</span></label>
 <div class="form-group emirates_front">
-	<input type="file" accept="image/png, image/jpg, image/jpeg" class="upload_file" id="imgInp" name="profile_image">
+	<input type="file" accept="image/png, image/jpg, image/jpeg" required="true" class="upload_file" id="imgInp" name="profile_image">
 	<img src="{!! asset('assets/frontend/images/upload_image.png') !!}" id="blah" class="img-responsive">
 	@if($errors->has('profile_image'))
         <span class="text-danger">{{$errors->first('profile_image')}}</span>
     @endif
 </div>
 <div class="form-group">
-<p style="margin-bottom: 10px;font-size: 12px;margin-top: -11px;">This will help you get a higher credit<br> You can skip this step and upload it later as well.</p>	
+<!-- <p style="margin-bottom: 10px;font-size: 12px;margin-top: -11px;">This will help you get a higher credit<br> You can skip this step and upload it later as well.</p> -->	
 <p><input type="checkbox" required="true" value="1" name="terms_conditions"> I accept the <a href="#">Terms and Conditions</a></p>
 </div> 
 
@@ -42,10 +42,8 @@
 
 </div>
 
-
 </div>
 </div>
-
 </div>
 </div>
 </section>
