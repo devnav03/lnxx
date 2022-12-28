@@ -51,7 +51,7 @@ $temp_id = \Session::get('temp_id');
 You can skip this step and verify it later as well.</p>
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Next</button>
-<p style="margin-bottom: 0px;"><a href="{{ route('upload-profile-image') }}">Skip for now</a></p>
+<p style="margin-bottom: 0px;"><a style="color: #ddd; font-size: 14px;" href="{{ route('upload-profile-image') }}">Skip for now</a></p>
 </div>
 </form>
 

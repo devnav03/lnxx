@@ -69,7 +69,7 @@
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
 <h3>Sign In</h3>
-<p>Please enter your correct information.</p>
+<p>Please enter the 6-digit OTP verification code</p>
 <form action="{{ route('log-in') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">

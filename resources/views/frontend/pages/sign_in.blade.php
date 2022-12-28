@@ -18,8 +18,11 @@
 <h3>Sign In</h3>
 <p>To proceed, verify your details.</p>
 
-@if(session()->has('username_not_exist'))
-<p style="color: #f00;margin-bottom: 25px;">Username not registered with us</p>
+@if(session()->has('username_mobile_not_exist'))
+<p style="color: #f00;margin-bottom: 25px;">Entered mobile no. not registered not with us</p>
+@endif
+@if(session()->has('username_email_not_exist'))
+<p style="color: #f00;margin-bottom: 25px;">Entered email not registered not with us</p>
 @endif
 
 <form action="{{ route('enter-login-otp') }}" method="post">

@@ -41,7 +41,7 @@
     <input type="hidden" name="page" value="service">
   <ul style="padding: 0px;">
 @php
-$button = 0;
+$button = 1;
 @endphp    
   @foreach($service as $service)
 @php
@@ -51,7 +51,7 @@ $button += $services;
 
     <li>
       <label class="ser_label" for="{{ $service->url }}" style="width: 100%;"> 
-      <input id="{{ $service->url }}" @if($services == 1) checked="" @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
+      <input id="{{ $service->url }}" @if($services == 1) checked="" @else @if($service->id == 1 || $service->id == 3) checked="" @endif   @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
         <div class="service-sel">
             <!-- <img src="{!! asset($service->image) !!}" alt="img"> -->
           <h5 style="margin-top: 2px; margin-left: 10px;">{{ $service->name }}</h5>
@@ -75,10 +75,10 @@ $button += $services;
   <h3 style="font-weight: 700; font-size: 24px; margin-top: 15px;">Offers For You</h3>
   <div class="row">
     <div class="col-md-6" style="margin-top: 7px;">
-      <img src="{!! asset('assets/frontend/images/placeholder5xxxxx.png')  !!}" alt="scan" class="img-responsive">
+      <img src="{!! asset('assets/frontend/images/placeholder5xxxxx.png') !!}" alt="scan" class="img-responsive">
     </div>
     <div class="col-md-6" style="margin-top: 7px;">
-      <img src="{!! asset('assets/frontend/images/5xxplaceholder.png')  !!}" class="img-responsive">
+      <img src="{!! asset('assets/frontend/images/5xxplaceholder.png') !!}" class="img-responsive">
     </div>
   </div>
 </div>

@@ -10,7 +10,7 @@
     <div class="grids">       
         <div class="row">
             <div class="col-md-12">                
-                <h1 class="page-header">Credit Cards Engine  <a style="background: #5EB495; border-color: #5EB495;" class="btn btn-sm btn-primary pull-right" href="{!! route('credit-card-engines.create') !!}"> <i class="fa fa-plus fa-fw"></i> Add New Credit Cards Engine</a></h1>
+                <h1 class="page-header">Credit Cards Engine  <a style="background: #5EB495; border-color: #5EB495;" class="btn btn-sm btn-primary pull-right" href="{!! route('credit-card-engines.create') !!}"> <i class="fa fa-plus fa-fw"></i> Add New Credit Cards Rule Engine</a></h1>
 
                 <div class="agile-tables">
                     <div class="w3l-table-info">
@@ -25,7 +25,7 @@
                             <div class="col-md-3 padding0" style="padding-left: 0px !important; margin-bottom: 15px;">
                                 {!! Form::hidden('page', 'search') !!}
                                 {!! Form::hidden('_token', csrf_token()) !!}
-                                {!! Form::text('name', null, array('class' => 'form-control live-search', 'placeholder' => 'Search service by name')) !!}
+                                {!! Form::text('name', null, array('class' => 'form-control live-search', 'placeholder' => 'Search bank by name')) !!}
                             </div>
                            <!--  </div> -->
                             <table id="paginate-load" data-route="{{ route('credit-card-engines.paginate') }}" class="table table-hover">

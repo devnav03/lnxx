@@ -15,13 +15,13 @@
 <div class="row">
   <div class="col-md-6">
   <label class="sub-label">Employment Type*</label>
-  <select name="cm_type" class="form-control" required="true" onChange="RelationChange(this);">
-    <option value="">Select</option>
-    <option value="1" @if($cm_type == '') selected @endif @if($cm_type == 1) selected @endif>Salaried</option>
-    <option value="2" @if($cm_type == 2) selected @endif>Self Employed</option>
-    <option value="3" @if($cm_type == 3) selected @endif>Pension</option>
-  </select>
-</div>
+    <select name="cm_type" class="form-control" required="true" onChange="RelationChange(this);">
+      <option value="">Select</option>
+      <option value="1" @if($cm_type == '') selected @endif @if($cm_type == 1) selected @endif>Salaried</option>
+      <option value="2" @if($cm_type == 2) selected @endif>Self Employed</option>
+      <option value="3" @if($cm_type == 3) selected @endif>Pension</option>
+    </select>
+  </div>
 </div>
 <div class="row">
   <div class="col-md-6 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;"  @endif>
@@ -63,7 +63,7 @@
   </div>
 
   <div class="col-md-12 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;" @endif>
-    <label class="sub-label" style="color: #000; font-size: 15px;">Last Three Salary Credits (Start From Latest)</label>
+    <label class="sub-label" style="color: #000; font-size: 15px;">The most three recent salary credit</label>
     <div class="row">
     <div class="col-md-6">
       <div class="form-group">

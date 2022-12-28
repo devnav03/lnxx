@@ -86,15 +86,17 @@ ui-lightness/jquery-ui.css'
         @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations')
         @include('frontend.layouts.footer') 
         @endif
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    @if($route != 'record-video')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    @endif
 
-        <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+       <!--  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
     <script type="text/javascript">
         const config = { 
@@ -149,7 +151,7 @@ ui-lightness/jquery-ui.css'
                 document.getElementById("error-message").classList.add("d-block");
             });
         }
-    </script>
+    </script> -->
 
       
     @if($route != 'record-video')
@@ -191,6 +193,18 @@ ui-lightness/jquery-ui.css'
     });
 
     $(function() {
+        var maxBirthdayDate = new Date();
+        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18 );
+        $( "#spouse_date_of_birth" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            dateFormat: 'dd/mm/yy', 
+            maxDate: maxBirthdayDate,
+            changeYear: true
+        });
+    });
+
+    $(function() {
         $( "#aecb_date" ).datepicker({
             "setDate": new Date(),
             "autoclose": true,
@@ -212,7 +226,7 @@ ui-lightness/jquery-ui.css'
 
 
 </script>
- @endif
+
 
 
 
@@ -235,6 +249,8 @@ ui-lightness/jquery-ui.css'
   });
 
 </script>  
+ @endif
+@if($route != 'record-video')
         {!! Html::script('assets/frontend/js/jquery-ui.js') !!}
         {!! Html::script('assets/frontend/js/popper.min.js') !!}
         {!! Html::script('assets/frontend/js/owl.carousel.min.js') !!}
@@ -476,7 +492,7 @@ $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
 });
 
 </script>
-
+@endif
 @if($route == 'my-profile')
 <script type="text/javascript">
 imgInp.onchange = evt => {
@@ -488,13 +504,42 @@ imgInp.onchange = evt => {
 </script>
 @endif
 @if($route == 'upload-profile-image')
+{!! Html::script('assets/frontend/js/webcam.js') !!}
 <script type="text/javascript">
-imgInp.onchange = evt => {
-  const [file] = imgInp.files
-  if (file) {
-    blah.src = URL.createObjectURL(file)
-  }
-} 
+    
+Webcam.set({ 
+    width: 300, 
+    height: 300, 
+    image_format: 'jpeg', 
+    jpeg_quality: 90 
+}); 
+
+
+Webcam.attach( '#my_camera' ); 
+//     setInterval(function take_snapshot() { 
+        
+//         Webcam.snap( function(data_uri) { 
+//             $(".image-tag").val(data_uri); 
+//             document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>'; 
+//     } ); 
+// },10000);
+
+     function take_snapshot() {
+            Webcam.snap( function(data_uri) {
+                $(".image-tag").val(data_uri);
+                $('.btn').removeAttr('disabled');
+                document.getElementById('results').innerHTML = '<div style="font-weight: 500; margin-bottom: 8px;">Captured photo</div><img src="'+data_uri+'" width = "300px" height= "300px" style="border:1px solid #333;"/>';
+            } );
+        }
+
+</script>
+<script type="text/javascript">
+// imgInp.onchange = evt => {
+//   const [file] = imgInp.files
+//   if (file) {
+//     blah.src = URL.createObjectURL(file)
+//   }
+// } 
 </script>
 @endif
 
@@ -734,6 +779,7 @@ function closeNav() {
 }
 
 </script>
+
 @if($route == 'product-requested')
 <script type="text/javascript">
 $(".credit_card1_open").click(function(){
@@ -789,184 +835,174 @@ $(".mortgage_loan4_open").click(function(){
 @endif
 @if($route == 'record-video')
 <script type="text/javascript">
-jQuery(function(){
-   jQuery('#start').click();
-});
 
-        'use strict';
 
-        /* globals MediaRecorder */
-        document.querySelector('#start').addEventListener('click', async () => {
-            $('#play').hide();
-            $('#download').hide();
-            $('#record').show();
-        
-           
+
+
+
+
+
+// jQuery(function(){
+//    jQuery('#start').click();
+// });
+//         'use strict';
+//         document.querySelector('#start').addEventListener('click', async () => {
+//             $('#play').hide();
+//             $('#download').hide();
+//             $('#record').show();
             
-            const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
-            const constraints = {
-                audio: {
-                    echoCancellation: {
-                        exact: hasEchoCancellation
-                    }
-                },
-                video: {
-                    width: 360,
-                    height: 200
-                }
-            };
+//             const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
+//             const constraints = {
+//                 audio: {
+//                     echoCancellation: {
+//                         exact: hasEchoCancellation
+//                     }
+//                 },
+//                 video: {
+//                     width: 360,
+//                     height: 200
+//                 }
+//             };
 
-            console.log('Using media constraints:', constraints);
-            await init(constraints);
-        });
+//             console.log('Using media constraints:', constraints);
+//             await init(constraints);
+//         });
 
-       
-      
-         let mediaRecorder;
-            let recordedBlobs;
-            let timerId = setInterval(() => document.getElementById("record").click(), 30000);
+//         let mediaRecorder;
+//         let recordedBlobs;
+//         let timerId = setInterval(() => document.getElementById("record").click(), 30000);
+//         const errorMsgElement = document.querySelector('span#errorMsg');
+//         const recordedVideo = document.querySelector('video#recorded');
+//         const recordButton = document.querySelector('#record');
+//         const playButton = document.querySelector('#play');
+//         const downloadButton = document.querySelector('#download');
+//         recordButton.addEventListener('click', () => {
+//             if (recordButton.textContent === 'Record') {
+//                 startRecording();
 
-        const errorMsgElement = document.querySelector('span#errorMsg');
-        const recordedVideo = document.querySelector('video#recorded');
-        const recordButton = document.querySelector('#record');
-        const playButton = document.querySelector('#play');
-        const downloadButton = document.querySelector('#download');
+//             } else {
+//                 stopRecording();
+//                 recordButton.textContent = 'Record';
+//                 playButton.disabled = false;
+//                 downloadButton.disabled = false;
+//             }
+//         });
 
-
-        recordButton.addEventListener('click', () => {
-            if (recordButton.textContent === 'Record') {
-                startRecording();
-
-            } else {
-                stopRecording();
-                recordButton.textContent = 'Record';
-                playButton.disabled = false;
-                downloadButton.disabled = false;
-            }
-        });
-
-
-        playButton.addEventListener('click', () => {
+//         playButton.addEventListener('click', () => {
            
-            $('#download').show();
-            $('#skip').hide();
-            const superBuffer = new Blob(recordedBlobs, {
-                type: 'video/webm'
-            });
-            recordedVideo.src = null;
-            recordedVideo.srcObject = null;
-            recordedVideo.src = window.URL.createObjectURL(superBuffer);
-            $('#videofile').val(recordedVideo.src);
-            recordedVideo.controls = true;
-            recordedVideo.play();
-        });
+//             $('#download').show();
+//             $('#skip').hide();
+//             const superBuffer = new Blob(recordedBlobs, {
+//                 type: 'video/webm'
+//             });
+//             recordedVideo.src = null;
+//             recordedVideo.srcObject = null;
+//             recordedVideo.src = window.URL.createObjectURL(superBuffer);
+//             $('#videofile').val(recordedVideo.src);
+//             recordedVideo.controls = true;
+//             recordedVideo.play();
+//         });
+//         downloadButton.addEventListener('click', () => {
+//             const blob = new Blob(recordedBlobs, {
+//                 type: 'video/mp4'
+//             });
+//             const url = window.URL.createObjectURL(blob);
+//             const a = document.createElement('a');
+//             a.style.display = 'none';
+//             // a.href = url;
+//             // a.download = 'test.mp4';
+//             document.body.appendChild(a);
+//             a.click();
+//             setTimeout(() => {
+//                 document.body.removeChild(a);
+//                 window.URL.revokeObjectURL(url);
+//             }, 100);
 
-
-        downloadButton.addEventListener('click', () => {
-            const blob = new Blob(recordedBlobs, {
-                type: 'video/mp4'
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            // a.href = url;
-            // a.download = 'test.mp4';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 100);
-
-            var formdata = new FormData();
-            formdata.append('blobFile', new Blob(recordedBlobs));
+//             var formdata = new FormData();
+//             formdata.append('blobFile', new Blob(recordedBlobs));
             
-            fetch('{{ route('consent-form') }}', {
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                method: 'POST',
-                body: formdata
-            }).then(() => {
-                window.location.href = 'https://sspl20.com/lnxx/thank-you';
-            })
+//             fetch('{{ route('consent-form') }}', {
+//                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+//                 method: 'POST',
+//                 body: formdata
+//             }).then(() => {
+//                 window.location.href = 'https://sspl20.com/lnxx/thank-you';
+//             })
+//         });
 
-            // $.ajax({
-            //     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            //     type: "POST",
-            //     url: "{{ route('consent-form') }}",
-            //     body: formdata,
-            //     // data: {'state_id' : val},
-            //     success: function(data){
-            //         $("#city").html(data);
-            //     }
-            // });
-        
-
-        });
-
-        function handleDataAvailable(event) {
-            console.log('handleDataAvailable', event);
-            if (event.data && event.data.size > 0) {
-                recordedBlobs.push(event.data);
-            }
-        }
-
-        function startRecording() {
-            recordedBlobs = [];
-            let options = {
-                mimeType: 'video/webm;codecs=vp9,opus',
+//         function handleDataAvailable(event) {
+//             console.log('handleDataAvailable', event);
+//             if (event.data && event.data.size > 0) {
+//                 recordedBlobs.push(event.data);
+//             }
+//         }
+//         function startRecording() {
+//             recordedBlobs = [];
+//             let options = {
+//                 mimeType: 'video/webm;codecs=vp9,opus',
                 
               
-            };
-            try {
-                mediaRecorder = new MediaRecorder(window.stream, options);
-            } catch (e) {
-                console.error('Exception while creating MediaRecorder:', e);
-                errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`;
-                return;
-            } 
-            console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-            recordButton.textContent = 'Stop Recording';
-            playButton.disabled = true;
-            downloadButton.disabled = true;
+//             };
+//             try {
+//                 mediaRecorder = new MediaRecorder(window.stream, options);
+//             } catch (e) {
+//                 console.error('Exception while creating MediaRecorder:', e);
+//                 errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`;
+//                 return;
+//             } 
+//             console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+//             recordButton.textContent = 'Stop Recording';
+//             playButton.disabled = true;
+//             downloadButton.disabled = true;
+//             mediaRecorder.onstop = (event) =>  {
+//                 $('#play').show();
+//                 $('#record').hide();
+//                 console.log('Recorder stopped: ', event);
+//                 console.log('Recorded Blobs: ', recordedBlobs);
+//             };
+//             mediaRecorder.ondataavailable = handleDataAvailable;
+//             mediaRecorder.start();
+//             console.log('MediaRecorder started', mediaRecorder);
+//         }
 
-            mediaRecorder.onstop = (event) =>  
-            {
-                $('#play').show();
-                $('#record').hide();
-                console.log('Recorder stopped: ', event);
-                console.log('Recorded Blobs: ', recordedBlobs);
-            };
-            mediaRecorder.ondataavailable = handleDataAvailable;
-            mediaRecorder.start();
-        
-            console.log('MediaRecorder started', mediaRecorder);
-        }
+//         function stopRecording() {
+//             mediaRecorder.stop();
+//         }
 
-        function stopRecording() {
-            mediaRecorder.stop();
-        }
+//         function handleSuccess(stream) {
+//             recordButton.disabled = false;
+//             console.log('getUserMedia() got stream:', stream);
+//             window.stream = stream;
+//             const gumVideo = document.querySelector('video#gum');
+//             gumVideo.srcObject = stream;
+//         }
 
-        function handleSuccess(stream) {
-            recordButton.disabled = false;
-            console.log('getUserMedia() got stream:', stream);
-            window.stream = stream;
-            const gumVideo = document.querySelector('video#gum');
-            gumVideo.srcObject = stream;
-        }
+//         async function init(constraints) {
+//             try {
+//                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
+//                 handleSuccess(stream);
+//             } catch (e) {
+//                 console.error('navigator.getUserMedia error:', e);
+//                 errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+//             }
+//         }
 
-        async function init(constraints) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                handleSuccess(stream);
-            } catch (e) {
-                console.error('navigator.getUserMedia error:', e);
-                errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
-            }
-        }
 
-       
-       
 </script>
+<script>
+(function(i, s, o, g, r, a, m) {
+i['GoogleAnalyticsObject']=r; i[r]=i[r]||function() {
+  (i[r].q=i[r].q||[]).push(arguments);
+}, i[r].l=1*new Date(); a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0]; a.async=1; a.src=g; m.parentNode.insertBefore(a, m);
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+ga('create', 'UA-48530561-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="{{asset('assets/frontend/js/video.js')}}"></script>
+
 @endif
 @if($route == 'cm-details')
 <script type="text/javascript">
@@ -1076,6 +1112,9 @@ jQuery(function(){
     $('#exampleModal').modal('show');
 </script>
 @endif
+
+
+
 
 </body>
 </html>

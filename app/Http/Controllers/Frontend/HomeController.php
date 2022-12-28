@@ -23,10 +23,13 @@ use App\Models\Testimonial;
 use App\Models\ServiceApply;
 use App\Models\PreRegister;
 use App\Models\Address;
+use App\Models\ApplicationDependent;
 use App\Models\Refer;
 use App\Models\ApplicationProductRequest;
 use App\Models\ProductRequest;
 use App\Models\AgentRequest;
+use App\Models\ContentManagement;
+use App\Models\Dependent;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -798,6 +801,12 @@ public function enter_name(Request $request){
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
                         $inputs['aecb_date'] = $CustomerOnboarding->aecb_date;
+                        $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
+                        $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
+                        $inputs['aecb_image'] = $CustomerOnboarding->aecb_image;
+                        $inputs['wife_name'] = $CustomerOnboarding->wife_name;
+                        $inputs['wedding_anniversary_date'] = $CustomerOnboarding->wedding_anniversary_date;
+                        
                         $inputs['user_id'] = $user_id;
                         $inputs['salutation'] = \Auth::user()->salutation;
                         $inputs['name'] = \Auth::user()->name;
@@ -889,13 +898,23 @@ public function enter_name(Request $request){
                         $slide['line'] = "Application Ref. Id #".$a_no. " for ".$service_name->name. "";
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
-                        (new ApplicationProductRequest)->store($application_data); 
+                        $app_id = (new ApplicationProductRequest)->store($application_data); 
                         ServiceApply::where('id', $service->id)
                             ->update([
                             'app_no' => $a_no,
                             'app_status' =>  1,
                         ]);
                         $ref_id[] = $slide;
+
+                        $ApplicationDependent['app_id'] = $app_id;
+                        $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
+                        if($dependents){
+                            foreach($dependents as $dependent){    
+                                $ApplicationDependent['name'] = $dependent->name;
+                                $ApplicationDependent['relation'] = $dependent->relation;
+                                (new ApplicationDependent)->store($ApplicationDependent); 
+                            }
+                        }  
                     }
                 } else {
                     $ref_id = [];
@@ -1019,7 +1038,14 @@ public function enter_name(Request $request){
                     $id = $user->id;
                     return view('frontend.pages.sign_in_otp', compact('id', 'username'));
                 } else {
-                    return back()->with('username_not_exist', 'username_not_exist');
+
+                    if(preg_match('(@)', $request->username) === 1) {
+                        return back()->with('username_email_not_exist', 'username_email_not_exist');
+                    } else {
+                        return back()->with('username_mobile_not_exist', 'username_mobile_not_exist');
+                    }
+
+
                 }
             }
         } catch (\Exception $e) {
@@ -1207,7 +1233,7 @@ public function enter_name(Request $request){
             if($request->first_name_as_per_passport){
                 $inputs['user_id'] = $user_id;
                 $result = '';
-                $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo')->first();
+                $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo', 'aecb_image')->first();
 
                 if(isset($inputs['passport_photo']) or !empty($inputs['passport_photo'])) {
                     $image_name = rand(100000, 999999);
@@ -1219,7 +1245,7 @@ public function enter_name(Request $request){
                         $image_resize = Image::make($file->getRealPath()); 
                         $image_resize->resize(600, 600);
                         $fileName = $image_name.$img_name;
-                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));               
+                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));       
                     }
 
                     $fname ='/uploads/passport_images/';
@@ -1231,11 +1257,62 @@ public function enter_name(Request $request){
                 unset($inputs['passport_photo']);
                 $inputs['passport_photo'] = $passport_photo;
 
+                if(isset($inputs['aecb_image']) or !empty($inputs['aecb_image'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('aecb_image')) {
+                        $file = $request->file('aecb_image') ;
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/aecb_image/' ;
+                        $file->move($destinationPath, $fileName);
+                    }
+                        $fname ='/uploads/aecb_image/';
+                        $image = $fname.$fileName;
+                }
+                else{
+                    $image = @$cm_details->aecb_image;
+                }
+                unset($inputs['aecb_image']);
+                $inputs['aecb_image'] = $image; 
+
                 if($cm_details){
                     $id = $cm_details->id;
                     (new CustomerOnboarding)->store($inputs, $id); 
+                    
+                    \DB::table('dependents')->where('user_id', $user_id)->delete();
+
+                    if($request->no_of_dependents != 0){
+                        $ik = 0;
+                        foreach ($request->dependent_name as $key => $dependents) {
+                            $ik++;
+                            if($ik <= $request->no_of_dependents)
+                            if($dependents){
+                                Dependent::create([
+                                    'user_id' => $user_id,
+                                    'name' => $dependents,
+                                    'relation' => $request->dependent_relation[$key],
+                                ]);
+                            }
+                            
+                        }
+                    }
+
                 } else {
                     (new CustomerOnboarding)->store($inputs); 
+                    if($request->no_of_dependents != 0){
+                        $ik = 0;
+                        foreach ($request->dependent_name as $key => $dependents) {
+                            $ik++;
+                            if($ik <= $request->no_of_dependents)
+                            Dependent::create([
+                                'user_id' => $user_id,
+                                'name' => $dependents,
+                                'relation' => $request->dependent_relation[$key],
+                            ]);
+                            
+                        }
+                    }
                 }
                  
                 $cm_type = @$cm_details->cm_type;
@@ -1286,6 +1363,7 @@ public function enter_name(Request $request){
                 } else {
                     $emirates_id_back = @$user->emirates_id_back;
                 }
+
 
                 User::where('id', $user_id)
                 ->update([
@@ -1412,9 +1490,7 @@ public function enter_name(Request $request){
                 } else {
                     (new UserEducation)->store($inputs); 
                 }
-                
                 $result = Address::where('customer_id', $user_id)->first();
-
                 return view('frontend.pages.address_details', compact('result', 'countries'));
         } catch (Exception $e) {
             return back();
@@ -1542,6 +1618,9 @@ public function enter_name(Request $request){
             \Session::start();
             $temp_id = \Session::get('temp_id');
             if($temp_id){ 
+
+            $content = ContentManagement::where('id', 1)->select('terms_conditions')->first();     
+
             $user = PreRegister::where('id', $temp_id)->select('login_otp', 'emirates_id_back', 'emirates_id')->first();
             if(isset($request->emirates_otp)){
                 if($user->login_otp == $request->emirates_otp){
@@ -1549,30 +1628,27 @@ public function enter_name(Request $request){
                     ->update([
                         'eid_status' =>  1,
                     ]);
-
-                    return view('frontend.pages.upload_profile_image', compact('user'));
-
+                    return view('frontend.pages.upload_profile_image', compact('user', 'content'));
                 } elseif ($request->emirates_otp == '652160') {
                     PreRegister::where('id', $temp_id)
                     ->update([
                         'eid_status' =>  1,
                     ]);
 
-                    return view('frontend.pages.upload_profile_image', compact('user'));
+                    return view('frontend.pages.upload_profile_image', compact('user', 'content'));
                 } else {
                     return back()->with('otp_not_match', lang('messages.created', lang('comment_sub')));
                 }
             } else {
-                    return view('frontend.pages.upload_profile_image', compact('user'));
+                    return view('frontend.pages.upload_profile_image', compact('user', 'content'));
             } 
         }  else {
             return back();
         }
-
         } catch (Exception $e) {
             return back();
         }
-            }
+    }
      
 
     public function emirates_id_verification(Request $request){
@@ -1640,30 +1716,22 @@ public function enter_name(Request $request){
 
     public function save_profile_image(Request $request){
         try {
-
                 \Session::start();
                 $temp_id = \Session::get('temp_id');
-
                 $inputs = $request->all(); 
                 $user = PreRegister::where('id', $temp_id)->first();
-
-                if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
-                    $image_name = rand(100000, 999999);
-                    $fileName = '';
-
-                    if($file = $request->hasFile('profile_image')) {
-                        $file = $request->file('profile_image') ;
-                        $img_name = $file->getClientOriginalName();
-                        $image_resize = Image::make($file->getRealPath()); 
-                        $image_resize->resize(300, 300);
-                        $fileName = $image_name.$img_name;
-                        $image_resize->save(public_path('/uploads/user_images/' .$fileName));                 
+                $profile_image = '';
+                if($request->profile_image){
+                    $attachmant_base = $request->profile_image;
+                    $file_name_doc = 'img_' . time() . '.png'; //generating unique file name;
+                    @list($type, $attachmant_base) = explode(';', $attachmant_base);
+                    @list(, $attachmant_base) = explode(',', $attachmant_base);
+                    if ($attachmant_base != "") {
+                      $attachmant_base =   $attachmant_base;
+                      file_put_contents(public_path().'/uploads/user_images/'.$file_name_doc, base64_decode($attachmant_base));
+                      // $damin->image = $attachmant_base;
+                       $profile_image = '/uploads/user_images/'.$file_name_doc;
                     }
-
-                    $fname ='/uploads/user_images/';
-                    $profile_image = $fname.$fileName;
-                } else {
-                    $profile_image = '';
                 }
 
                 // User::where('id', $user_id)
@@ -1688,12 +1756,9 @@ public function enter_name(Request $request){
                 ]);
 
                 \Session::forget('temp_id');
-
                 $user_data = User::where('email', $user->email)->where('mobile', $user->mobile)->first();
                 \Auth::login($user_data);
-
                 return redirect()->route('congratulations');
-
         } catch (Exception $e) {
             return back();
         }

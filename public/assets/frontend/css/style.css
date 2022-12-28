@@ -713,8 +713,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .sign_up_field h3{
     color: #000;
-    font-weight: 700;
-    font-size: 22px;
+    font-weight: 600;
+    font-size: 18px;
     margin-top: 30px;
 }
 .sign_up_field p {
@@ -2005,9 +2005,17 @@ footer{
     height: 42px;
     font-size: 15px;
 }
+.terms_conditions_box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    max-height: 155px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 
-
-
+.form-control[readonly] {
+    background-color: #fff !important;
+}
 
 
 

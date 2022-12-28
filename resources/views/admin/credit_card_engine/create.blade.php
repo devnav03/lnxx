@@ -66,15 +66,50 @@
                                         <div class="form-group">
                                         {!! Form::label('existing_card', lang('Is Having Credit Card'), array('class' => '')) !!}
                                         <select onChange="ExistingCardChange(this);" class="form-control" required="true" name="existing_card">
-                                            <option value="0">No</option>
-                                            <option value="1">Yes</option>
+                                            <option @if(isset($result)) @if($result->existing_card == 0) selected @endif @endif value="0">No</option>
+                                            <option @if(isset($result)) @if($result->existing_card == 1) selected @endif @endif value="1">Yes</option>
                                         </select>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 bank_list" style="display: none;" >
+                                    <div class="col-md-12 bank_list" @if(isset($result)) @if($result->existing_card == 0) style="display: none;" @endif  @else style="display: none;" @endif >
+
+                                        @if(isset($result)) 
+                                        @if($result->existing_card == 1)
+                                            @php $i = 50; @endphp
+                                            @foreach($bank_credits as $bank_credit)
+                                            @php $i++; @endphp
+                                                <div class="row" id="bank_credits{{$i}}">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                        <label for="bank">Bank</label>
+                                                        <select id="bank_fil" required="true" name="bank[{{$i}}]" class="form-control">
+                                                        <option value="">Select</option>
+                                                        @foreach($bank_list as $bank_li)
+                                                        <option @if($bank_li->id == $bank_credit->bank_id) selected @endif value="{{ $bank_li->id }}">{{ $bank_li->name }}</option>
+                                                        @endforeach
+                                                        </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="credit_limit">Credit Limit</label>
+                                                            <input value="{{ $bank_credit->credit_limit }}" required="true" id="credit_fil" type="number" name="credit_limit[{{$i}}]" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <a onclick="remove_bank{{$i}}();" class="del_btn">Delete</a>
+                                                    </div>
+                                                </div>
+
+                                            @endforeach
+                                        @endif
+                                        @endif
+
 
                                         <div class="row" id="bank_fileds">
+                                            @if(isset($result))
+                                            @else
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="bank">Bank</label>
@@ -92,6 +127,7 @@
                                                     <input id="credit_fil" type="number" name="credit_limit[0]" class="form-control">
                                                 </div>
                                             </div>
+                                            @endif
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -100,9 +136,6 @@
                                             </div>
                                             </div>
                                         </div>
-
-                                
-
                                     </div>
 
                                     <div class="col-md-12" style="margin-top: 20px;">
@@ -130,10 +163,13 @@ function ExistingCardChange(that) {
         $(".bank_list").show();
         $("#credit_fil").attr("required", true);
         $("#bank_fil").attr("required", true);
+        $(".req_per").attr("required", true);
+        
     } else {
         $(".bank_list").hide();
         $("#credit_fil").removeAttr('required');
         $("#bank_fil").removeAttr('required');
+        $(".req_per").removeAttr('required');
     }
 }
 
@@ -142,7 +178,7 @@ function add_bank() {
     count++;
     var objTo = document.getElementById('bank_fileds')
     var divtest = document.createElement("div");
-    divtest.innerHTML = '<div class="row" id="remove_bank'+ count +'"><div class="col-md-4"><div class="form-group"><label for="bank">Bank</label><select name="bank['+ count +']" required="true" class="form-control"><option value="">Select</option><?php foreach($bank_list as $bank_li) { ?><option value="<?php echo $bank_li->id; ?>"><?php echo $bank_li->name; ?></option><?php } ?></select></div></div><div class="col-md-4"><div class="form-group"><label for="credit_limit">Credit Limit</label><input type="number" required="true" name="credit_limit['+ count +']" class="form-control"></div></div><div class="col-md-4"><a onclick="remove_bank'+ count +'();" class="del_btn">Delete</a></div></div>';
+    divtest.innerHTML = '<div class="row" id="remove_bank'+ count +'"><div class="col-md-4"><div class="form-group"><label for="bank">Bank</label><select name="bank['+ count +']" required="true" class="form-control req_per"><option value="">Select</option><?php foreach($bank_list as $bank_li) { ?><option value="<?php echo $bank_li->id; ?>"><?php echo $bank_li->name; ?></option><?php } ?></select></div></div><div class="col-md-4"><div class="form-group"><label for="credit_limit">Credit Limit</label><input type="number" required="true" name="credit_limit['+ count +']" class="form-control req_per"></div></div><div class="col-md-4"><a onclick="remove_bank'+ count +'();" class="del_btn">Delete</a></div></div>';
     
     objTo.appendChild(divtest)
 }
@@ -209,6 +245,32 @@ function remove_bank15() {
 }
 function remove_bank16() {
     const element = document.getElementById("remove_bank13");
+    element.remove();
+}
+
+
+function remove_bank51() {
+    const element = document.getElementById("bank_credits51");
+    element.remove();
+}
+function remove_bank52() {
+    const element = document.getElementById("bank_credits52");
+    element.remove();
+}
+function remove_bank53() {
+    const element = document.getElementById("bank_credits53");
+    element.remove();
+}
+function remove_bank54() {
+    const element = document.getElementById("bank_credits54");
+    element.remove();
+}
+function remove_bank55() {
+    const element = document.getElementById("bank_credits55");
+    element.remove();
+}
+function remove_bank56() {
+    const element = document.getElementById("bank_credits56");
     element.remove();
 }
 

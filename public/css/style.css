@@ -76040,7 +76040,9 @@ input[type=number]::-webkit-outer-spin-button {
 .pagination.pagination-sm li.active a{
     color: #fff;
 }
-
+#paginate-load td {
+    border: 1px solid #ddd;
+}
 
 
 

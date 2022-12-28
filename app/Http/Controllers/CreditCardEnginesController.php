@@ -12,6 +12,7 @@ use Files;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CreditCardEngine;
 use App\Models\Bank;
+use App\Models\ExistingCreditCardEngine;
 use App\Models\BankService;
 use Illuminate\Http\Request;
 
@@ -41,19 +42,18 @@ class CreditCardEnginesController extends Controller{
             //     return back()->withErrors($validator)->withInput();
             // }
 
-            (new CreditCardEngine)->store($inputs);
-            
-            if($request->bank){
-
-                foreach($request->bank as $key => $value) {
-                    
-
-
+            $id = (new CreditCardEngine)->store($inputs);
+            if($request->existing_card == 1){
+                if($request->bank){
+                    foreach($request->bank as $key => $value) {
+                        $ExistingCredit = new ExistingCreditCardEngine;
+                        $ExistingCredit->bank_id = $value;
+                        $ExistingCredit->engine_id = $id;
+                        $ExistingCredit->credit_limit = $request->credit_limit[$key];
+                        $ExistingCredit->save();
+                    }
                 }
-
-
             }
-
 
             return redirect()->route('credit-card-engines.index')
                 ->with('success', 'Credit card engine successfully created');
@@ -75,6 +75,19 @@ class CreditCardEnginesController extends Controller{
           
             (new CreditCardEngine)->store($inputs, $id);
 
+            \DB::table('existing_credit_card_engines')->where('engine_id', $id)->delete();
+            if($request->existing_card == 1){
+                if($request->bank){
+                    foreach($request->bank as $key => $value) {
+                        $ExistingCredit = new ExistingCreditCardEngine;
+                        $ExistingCredit->bank_id = $value;
+                        $ExistingCredit->engine_id = $id;
+                        $ExistingCredit->credit_limit = $request->credit_limit[$key];
+                        $ExistingCredit->save();
+                    }
+                }
+            }
+
             return redirect()->route('credit-card-engines.index')
                 ->with('success', 'Credit card engine successfully updated');
 
@@ -84,16 +97,15 @@ class CreditCardEnginesController extends Controller{
                 ->with('error', lang('messages.server_error'));
         }
     }
-
   
     public function edit($id = null) {
         $result = (new CreditCardEngine)->find($id);
         if (!$result) {
             abort(401);
         }
-
         $bank_list = Bank::where('status', 1)->select('name', 'id')->get();
-        return view('admin.credit_card_engine.create', compact('result', 'bank_list'));
+        $bank_credits = ExistingCreditCardEngine::where('engine_id', $id)->select('bank_id', 'credit_limit')->get();
+        return view('admin.credit_card_engine.create', compact('result', 'bank_list', 'bank_credits'));
     }
 
 

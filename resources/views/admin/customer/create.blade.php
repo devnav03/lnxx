@@ -25,17 +25,51 @@
                                     Nothing
                                 @endif
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group"> 
-                                            {!! Form::label('name', lang('Name'), array('class' => '')) !!}
+                                            {!! Form::label('name', lang('Salutation'), array('class' => '')) !!}
                                             @if(!empty($result->id))
-                                          <!--       {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!} -->
-                                          <input class="form-control" required="true" name="name" type="text" value="{{ $result->salutation  }} {{ $result->name }} {{ $result->middle_name  }} {{ $result->last_name  }}" id="name">
+                                          <input class="form-control" required="true" name="name" type="text" value="{{ $result->salutation }}" id="name">
                                             @else
                                                 {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!}
                                             @endif 
                                         </div> 
                                     </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group"> 
+                                            {!! Form::label('name', lang('First Name'), array('class' => '')) !!}
+                                            @if(!empty($result->id))
+                                          <input class="form-control" required="true" name="name" type="text" value="{{ $result->name }}" id="name">
+                                            @else
+                                                {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!}
+                                            @endif 
+                                        </div> 
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group"> 
+                                            {!! Form::label('middle_name', lang('Middle Name'), array('class' => '')) !!}
+                                            @if(!empty($result->id))
+                                          <input class="form-control" required="true" name="name" type="text" value="{{ $result->middle_name }}" id="name">
+                                            @else
+                                                {!! Form::text('middle_name', null, array('class' => 'form-control', 'required'=> 'true')) !!}
+                                            @endif 
+                                        </div> 
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group"> 
+                                            {!! Form::label('last_name', lang('Last Name'), array('class' => '')) !!}
+                                            @if(!empty($result->id))
+                                          <!--       {!! Form::text('name', null, array('class' => 'form-control', 'required'=> 'true')) !!} -->
+                                          <input class="form-control" required="true" name="last_name" type="text" value="{{ $result->last_name }}" id="last_name">
+                                            @else
+                                                {!! Form::text('last_name', null, array('class' => 'form-control', 'required'=> 'true')) !!}
+                                            @endif 
+                                        </div> 
+                                    </div>
+
                                     <div class="col-md-6">
                                         <div class="form-group"> 
                                             {!! Form::label('email', lang('Email'), array('class' => '')) !!}
@@ -49,7 +83,7 @@
                                             @endif
                                         </div> 
                                     </div>
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                             {!! Form::label('mobile', lang('Mobile'), array('class' => '')) !!}
                                             @if(!empty($result->id))
@@ -64,7 +98,7 @@
                                         </div> 
                                     </div>
                                     <input type="hidden" value="{{ $result->user_type }}" name="user_type">
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                         {!! Form::label('date_of_birth', lang('Date of Birth'), array('class' => '')) !!}
                                         @if($result->date_of_birth)
@@ -80,7 +114,7 @@
                                     </div> 
                                     
                                     @if($result->gender)
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                         {!! Form::label('gender', lang('Gender'), array('class' => '')) !!}
                                         <input type="text" value="{{ $result->gender }}" readonly="" class="form-control"> 
@@ -105,7 +139,7 @@
                                     @if(isset($result))
                                     @else
 
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                           {!! Form::label('password', lang('Password'), array('class' => '')) !!}
                                             {!! Form::password('password', null, array('class' => 'form-control', 'required'=> 'true')) !!}
@@ -118,7 +152,7 @@
                                     @endif
                                    
                                     @if(isset($result->profile_image))
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <label>Profile Image</label><br>
                                         <img id="blah" src="{!! asset($result->profile_image) !!}" style="max-width: 150px;margin-top: 10px;" alt="" />
                                     </div>    

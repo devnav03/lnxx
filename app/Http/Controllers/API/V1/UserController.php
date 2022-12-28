@@ -23,10 +23,13 @@ use App\Models\ApplicationProductRequest;
 use App\Models\Address;
 use App\Models\Application;
 use App\Models\Bank;
+use App\Models\ContentManagement;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\ProductRequest;
 use App\Models\AgentRequest;
+use App\Models\Dependent;
+use App\Models\ApplicationDependent;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
 use PDF;
@@ -172,6 +175,12 @@ class UserController extends Controller {
             return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
           }
       }
+    }
+
+    public function cms_content(Request $request){
+        $content =  ContentManagement::where('id', 1)->select('about', 'privacy', 'terms_conditions', 
+          'contact')->first();
+        return response()->json(['success' => true, 'status' => 200, 'data' => $content]);  
     }
 
     public function save_agent_information(Request $request){
@@ -324,6 +333,13 @@ class UserController extends Controller {
                         $inputs['consent_form'] = $CustomerOnboarding->consent_form;
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+
+                        $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
+                        $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
+                        $inputs['aecb_image'] = $CustomerOnboarding->aecb_image;
+                        $inputs['wife_name'] = $CustomerOnboarding->wife_name;
+                        $inputs['wedding_anniversary_date'] = $CustomerOnboarding->wedding_anniversary_date;
+
                         $inputs['user_id'] = $user_id;
                         $inputs['salutation'] = $user->salutation;
                         $inputs['name'] = $user->name;
@@ -418,9 +434,19 @@ class UserController extends Controller {
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
 
-                        (new ApplicationProductRequest)->store($application_data); 
+                        $app_id = (new ApplicationProductRequest)->store($application_data); 
 
                         $ref_id[] = $slide;
+
+                        $ApplicationDependent['app_id'] = $app_id;
+                        $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
+                        if($dependents){
+                            foreach($dependents as $dependent){    
+                                $ApplicationDependent['name'] = $dependent->name;
+                                $ApplicationDependent['relation'] = $dependent->relation;
+                                (new ApplicationDependent)->store($ApplicationDependent); 
+                            }
+                        }
                     }
                 } 
 
@@ -504,6 +530,13 @@ class UserController extends Controller {
                         $inputs['consent_form'] = $CustomerOnboarding->consent_form;
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+
+                        $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
+                        $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
+                        $inputs['aecb_image'] = $CustomerOnboarding->aecb_image;
+                        $inputs['wife_name'] = $CustomerOnboarding->wife_name;
+                        $inputs['wedding_anniversary_date'] = $CustomerOnboarding->wedding_anniversary_date;
+
                         $inputs['user_id'] = $user_id;
                         $inputs['salutation'] = $user->salutation;
                         $inputs['name'] = $user->name;
@@ -598,9 +631,19 @@ class UserController extends Controller {
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
 
-                        (new ApplicationProductRequest)->store($application_data); 
+                        $app_id = (new ApplicationProductRequest)->store($application_data); 
 
                         $ref_id[] = $slide;
+
+                        $ApplicationDependent['app_id'] = $app_id;
+                        $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
+                        if($dependents){
+                            foreach($dependents as $dependent){    
+                                $ApplicationDependent['name'] = $dependent->name;
+                                $ApplicationDependent['relation'] = $dependent->relation;
+                                (new ApplicationDependent)->store($ApplicationDependent); 
+                            }
+                        }
                     }
                 } 
 
@@ -1566,13 +1609,20 @@ class UserController extends Controller {
           $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation', 'eid_number', 'eid_status')->first();
           if($user) {
               $home = route('get-started');
-              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number', 'aecb_date')->first();
+              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number', 'aecb_date', 'agent_reference', 'aecb_image', 'wife_name', 'wedding_anniversary_date', 'spouse_date_of_birth')->first();
               //dd($data);
               if(isset($datas->passport_photo)){
                 $data['passport_photo'] = $home.$datas->passport_photo;
               } else {
                 $data['passport_photo'] = null;
               }
+
+              if(isset($datas->aecb_image)){
+                $data['aecb_image'] = $home.$datas->aecb_image;
+              } else {
+                $data['aecb_image'] = null;
+              }
+              
               if($user->emirates_id){
                 $data['emirates_id_front'] = $home.$user->emirates_id;
               } else {
@@ -1636,10 +1686,30 @@ class UserController extends Controller {
               } else {
                 $data['marital_status'] = null;
               }
+              if(isset($datas->wife_name)){
+                $data['wife_name'] = $datas->wife_name;
+              } else {
+                $data['wife_name'] = null;
+              }
+              if(isset($datas->wedding_anniversary_date)){
+                $data['wedding_anniversary_date'] = $datas->wedding_anniversary_date;
+              } else {
+                $data['wedding_anniversary_date'] = null;
+              }
+              if(isset($datas->spouse_date_of_birth)){
+                $data['spouse_date_of_birth'] = $datas->spouse_date_of_birth;
+              } else {
+                $data['spouse_date_of_birth'] = null;
+              }
               if(isset($datas->years_in_uae)){
                 $data['years_in_uae'] = $datas->years_in_uae;
               } else {
                 $data['years_in_uae'] = null;
+              }
+              if(isset($datas->agent_reference)){
+                $data['agent_reference'] = $datas->agent_reference;
+              } else {
+                $data['agent_reference'] = null;
               }
               if(isset($datas->reference_number)){
                 $data['reference_number'] = $datas->reference_number;
@@ -1673,11 +1743,14 @@ class UserController extends Controller {
                 $data['visa_number'] = null;
               }
 
+              $dependents = Dependent::where('user_id', $user->id)->select('name', 'relation')->get();
+              $data['dependents'] = $dependents;
+
               return apiResponseApp(true, 200, null, null, $data);
           }
         }
       } catch(\Exception $e){
-        // dd($e);
+         //dd($e);
           return back();
         }
     }
@@ -2012,6 +2085,7 @@ class UserController extends Controller {
             if($request->details_of_cards){
               $i = 1;
               $bus_data = json_decode($request->details_of_cards);
+
               foreach($bus_data as $key => $details_of_card) {
                   if($i == 1){
                     $details_of_cards = $details_of_card->details_of_cards;
@@ -2329,7 +2403,7 @@ class UserController extends Controller {
               $inputs = $request->all(); 
               $inputs['user_id'] = $user_id;
 
-              $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo')->first();
+              $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo', 'aecb_image')->first();
 
               $user = User::where('id', $user_id)->select('emirates_id', 'emirates_id_back')->first();
 
@@ -2337,11 +2411,11 @@ class UserController extends Controller {
                     $image_name = rand(100000, 999999);
                     $fileName = '';
                     // if($file = $request->hasFile('emirates_id_front')) {
-                    //     $file = $request->file('emirates_id_front') ;
-                    //     $img_name = $file->getClientOriginalName();
-                    //     $fileName = $image_name.$img_name;
-                    //     $destinationPath = public_path().'/uploads/emirates_id/' ;
-                    //     $file->move($destinationPath, $fileName);
+                    // $file = $request->file('emirates_id_front') ;
+                    // $img_name = $file->getClientOriginalName();
+                    // $fileName = $image_name.$img_name;
+                    // $destinationPath = public_path().'/uploads/emirates_id/' ;
+                    // $file->move($destinationPath, $fileName);
                     // }
 
                     if($file = $request->hasFile('emirates_id_front')) {
@@ -2352,7 +2426,6 @@ class UserController extends Controller {
                       $fileName = $image_name.$img_name;
                       $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
                     }
-
 
                     $fname ='/uploads/emirates_id/';
                     $emirates_id_front = $fname.$fileName;
@@ -2419,10 +2492,8 @@ class UserController extends Controller {
                         $image_resize = Image::make($file->getRealPath()); 
                         $image_resize->resize(600, 600);
                         $fileName = $image_name.$img_name;
-                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));               
+                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));      
                     }
-
-
 
                     $fname ='/uploads/passport_images/';
                     $passport_photo = $fname.$fileName;
@@ -2432,14 +2503,71 @@ class UserController extends Controller {
                 unset($inputs['passport_photo']);
                 $inputs['passport_photo'] = $passport_photo;
 
+                
+                if(isset($inputs['aecb_image']) or !empty($inputs['aecb_image'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('aecb_image')) {
+                        $file = $request->file('aecb_image') ;
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/aecb_image/' ;
+                        $file->move($destinationPath, $fileName);
+                    }
+                        $fname ='/uploads/aecb_image/';
+                        $image = $fname.$fileName;
+                } else{
+                    $image = @$cm_details->aecb_image;
+                }
+                unset($inputs['aecb_image']);
+                $inputs['aecb_image'] = $image;
+
+
+
               if($cm_details){
                   $id = $cm_details->id;
                   (new CustomerOnboarding)->store($inputs, $id); 
+
+                  \DB::table('dependents')->where('user_id', $user_id)->delete();
+                  if($request->no_of_dependents != 0){
+                      $ik = 0;
+                      if(isset($request->dependents)){
+                      $bus_data = json_decode($request->dependents);  
+                      foreach ($bus_data as $key => $dependents) {
+                            $ik++;
+                            if($ik <= $request->no_of_dependents)
+                            if($dependents){
+                                Dependent::create([
+                                    'user_id' => $user_id,
+                                    'name' => $dependents->dependent_name,
+                                    'relation' => $dependents->dependent_relation,
+                                ]);
+                            } 
+                          }
+                      }
+                  }
+
                   $message = "Your personal details have been successfully added";
                   return apiResponseAppmsg(true, 200, $message, null, null);
 
               } else {
                   (new CustomerOnboarding)->store($inputs); 
+                  if($request->no_of_dependents != 0){
+                        $ik = 0;
+                        if(isset($request->dependent_name)){
+                        $bus_data = json_decode($request->dependents);    
+                        foreach ($bus_data as $key => $dependents) {
+                            $ik++;
+                            if($ik <= $request->no_of_dependents)
+                            Dependent::create([
+                                'user_id' => $user_id,
+                                'name' => $dependents->dependent_name,
+                                'relation' => $dependents->dependent_relation,
+                            ]);
+                        }
+                      }
+                  }
+
                   $message = "Your personal details have been successfully added";
                   return apiResponseAppmsg(true, 200, $message, null, null);
               }

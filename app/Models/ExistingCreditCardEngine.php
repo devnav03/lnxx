@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExistingCreditCardEngine extends Model {
 
-    use SoftDeletes;
     protected $table = 'existing_credit_card_engines';
    
     protected $fillable = [

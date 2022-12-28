@@ -2,9 +2,9 @@
 <tr style="background: #5EB495;"> 
     <th class="text-center" style="width: 100px;color: #fff;">Sr. No.</th>
     <th style="color: #fff;">Bank Name</th>
-    <th style="color: #fff;">Min Salary</th>
-    <th style="color: #fff;">Max Salary</th>
-    <th style="color: #fff;">Already have a credit card</th>
+    <th class="text-center" style="color: #fff;">Min Salary</th>
+    <th class="text-center" style="color: #fff;">Max Salary</th>
+    <th class="text-center" style="color: #fff;">Already have a credit card</th>
     <th style="color: #fff;" width="6%" class="text-center">Status</th>
     <th style="color: #fff;" class="text-center">Action</th>
 </tr>
@@ -16,9 +16,9 @@
 <tr id="order_{{ $detail->id }}">
     <td class="text-center">{!! pageIndex($index++, $page, $perPage) !!}</td>
     <td>{!! $detail->name !!}</td>
-    <td>{!! $detail->min_salary !!}</td>
-    <td>{!! $detail->max_salary !!}</td>
-    <td> @if($detail->existing_card == 0) No @else Yes @endif </td>
+    <td class="text-center">{!! $detail->min_salary !!}</td>
+    <td class="text-center">{!! $detail->max_salary !!}</td>
+    <td class="text-center"> @if($detail->existing_card == 0) No @else Yes @endif </td>
     <td class="text-center">
         <a href="javascript:void(0);" class="toggle-status" data-message="{!! lang('messages.change_status') !!}" data-route="{!! route('credit-card-engines.toggle', $detail->id) !!}" title="@if($detail->status == 0) Deactive @else Active @endif"> {!! Html::image('img/' . $detail->status . '.gif') !!} </a>
     </td>

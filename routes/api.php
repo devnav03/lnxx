@@ -70,13 +70,7 @@ Route::any('v1/refer-friend', ['as' => 'refer-friend','uses' => 'App\Http\Contro
 
 Route::any('v1/save-agent-information', ['as' => 'save-agent-information','uses' => 'App\Http\Controllers\API\V1\UserController@save_agent_information']);
 
-
-
-
-
-
-
-
+Route::any('v1/cms-content', ['as' => 'cms-content','uses' => 'App\Http\Controllers\API\V1\UserController@cms_content']);
 
 
 
