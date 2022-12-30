@@ -132,6 +132,14 @@
                                     </div>
                                     <div class="form-body">
                                         <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="sub-label">Emirates ID Number*</label>
+                                                <input name="eid_number" class="form-control" value="{{ $result->eid_number }}" type="text">
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-6" style="margin-top: 10px;">
                                                <img src="{!! asset($result->emirates_id) !!}">
                                             </div>
@@ -207,8 +215,7 @@
 
                                 </div>
 
-                                <div class="row">
-  
+    <div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Nationality*</label>
@@ -235,6 +242,32 @@
         </div>
     </div>
 
+    @if($result->marital_status == 'Married')
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="sub-label">Spouse Name*</label>
+                <input name="wife_name" class="form-control" value="{{ $result->wife_name }}" type="text" required="true">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="sub-label">Spouse DOB*</label>
+                <input name="spouse_date_of_birth" class="form-control" value="{{ $result->spouse_date_of_birth }}" type="text" required="true">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="sub-label">Wedding Anniversary Date*</label>
+                <input name="wedding_anniversary_date" class="form-control" value="{{ $result->wedding_anniversary_date }}" type="text" required="true">
+            </div>
+        </div>
+
+
+    @endif 
+
     <div class="col-md-6">
         <div class="form-group">
         <label class="sub-label">No of Dependents*</label>
@@ -242,33 +275,75 @@
         </div>
     </div>
 
+    @if($dependents)
+    <div class="col-md-12"></div>
+        @foreach($dependents as $key => $dependent)
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label class="sub-label">Name</label>
+                  <input name="dependent_name[{{$key}}]" class="form-control" value="{{ $dependent->name }}" type="text">
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="form-group">
+                <label class="sub-label">Relation</label>
+                <select name="dependent_relation[{{$key}}]" class="form-control">
+                <option value="">Select</option>
+                <option value="Father" @if($dependent->relation == "Father") selected @endif >Father</option>
+                <option value="Mother" @if($dependent->relation == "Mother") selected @endif >Mother</option>
+                <option value="Son" @if($dependent->relation == "Son") selected @endif >Son</option>
+                <option value="Daughter" @if($dependent->relation == "Daughter") selected @endif >Daughter</option>
+                <option value="Brother" @if($dependent->relation == "Brother") selected @endif >Brother</option>
+                <option value="Sister" @if($dependent->relation == "Sister") selected @endif >Sister</option>
+                <option value="Grandfather" @if($dependent->relation == "Grandfather") selected @endif >Grandfather</option>
+                <option value="Grandmother" @if($dependent->relation == "Grandmother") selected @endif >Grandmother</option>
+                <option value="Uncle" @if($dependent->relation == "Uncle") selected @endif >Uncle</option>
+                <option value="Aunt" @if($dependent->relation == "Aunt") selected @endif >Aunt</option>
+                <option value="Cousin" @if($dependent->relation == "Cousin") selected @endif >Cousin</option>
+                <option value="Nephew" @if($dependent->relation == "Nephew") selected @endif >Nephew</option>
+                <option value="Niece" @if($dependent->relation == "Niece") selected @endif >Niece</option>
+                <option value="Husband" @if($dependent->relation == "Husband") selected @endif >Husband</option>
+                <option value="Wife" @if($dependent->relation == "Wife") selected @endif >Wife</option>
+                </select>
+                </div>
+            </div>
+
+        @endforeach
+    @endif
+
+
     <div class="col-md-6">
         <div class="form-group">
-            <label class="sub-label">Emirates ID Number*</label>
-            <input name="eid_number" class="form-control" value="{{ $result->eid_number }}" type="text">
+            <label class="sub-label">Are you assisted by an agent?</label>
+            <input name="agent_reference" class="form-control" value=" @if($result->agent_reference == 0) No @else Yes @endif " type="text">
         </div>
     </div>
-
+    @if($result->agent_reference == 1)
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Reference Number</label>
             <input name="reference_number" class="form-control" value="{{ $result->reference_number }}" type="text">
         </div>
     </div>
-
+    @endif
+    @if($result->visa_number)
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Visa Number</label>
             <input name="visa_number" class="form-control" @if($result->visa_number) value="{{ $result->visa_number }}" @endif type="text">
         </div>
     </div>
-
+    @endif
+    @if($result->officer_email)
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Official mail ID</label>
             <input name="officer_email" class="form-control" value="{{ $result->officer_email }}" type="text">
         </div>
     </div>
+    @endif
     @if($result->credit_score)
     <div class="col-md-6">
         <div class="form-group">
@@ -283,8 +358,18 @@
             <input name="aecb_date" class="form-control" value="{{ $result->aecb_date }}" type="text" readonly="">
         </div>
     </div>
+    @if($result->aecb_image)
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="sub-label">AECB credit score file</label><br>
+            <a href="{{ asset($result->aecb_image) }}" download>Download</a>
+        </div>
+    </div>
     @endif
 
+    
+    @endif
+    <div class="col-md-12"></div>
     <div class="col-md-6">
         <div class="form-group">
             <label class="sub-label">Passport Number</label>

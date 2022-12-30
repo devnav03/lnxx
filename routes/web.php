@@ -383,6 +383,13 @@ Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::clas
 Route::any('cm-details', [App\Http\Controllers\Frontend\HomeController::class, 'cm_details'])->name('cm-details');
 Route::any('education-detail', [App\Http\Controllers\Frontend\HomeController::class, 'education_detail'])->name('education-detail');
 
+Route::any('save-education-details', [App\Http\Controllers\Frontend\HomeController::class, 'save_education_details'])->name('save-education-details');
+
+Route::any('credit-card-information', [App\Http\Controllers\Frontend\HomeController::class, 'credit_card_information'])->name('credit-card-information');
+
+Route::any('save-credit-card-information', [App\Http\Controllers\Frontend\HomeController::class, 'save_credit_card_information'])->name('save-credit-card-information');
+
+
 Route::any('product-requested', [App\Http\Controllers\Frontend\HomeController::class, 'product_requested'])->name('product-requested');
 
 Route::any('address-details', [App\Http\Controllers\Frontend\HomeController::class, 'address_details'])->name('address-details');
@@ -420,12 +427,12 @@ Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::
 
 Route::any('agent-apply', [App\Http\Controllers\Frontend\HomeController::class, 'agent_apply'])->name('agent-apply');
 
-
 Route::get('reset', function (){
-    Artisan::call('route:clear');
-    Artisan::call('cache:clear');
-    Artisan::call('view:clear');
+    Artisan::call('optimize:clear');
     Artisan::call('config:cache');
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
 });
 
 

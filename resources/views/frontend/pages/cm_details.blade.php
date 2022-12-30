@@ -9,9 +9,8 @@
 <h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>  
 <h2>Employment Details</h2>
 <h6>Please enter your employment information</h6>
-<form action="{{ route('product-requested') }}" method="post">
+<form action="{{ route('product-requested') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}  
-
 <div class="row">
   <div class="col-md-6">
   <label class="sub-label">Employment Type*</label>
@@ -74,6 +73,22 @@
         @endif
       </div>
     </div>
+
+    <div class="col-md-6">
+      <div class="form-group" style="width: 70%; float: left;">
+        <label class="sub-label">Upload salary slip</label>
+        <input name="last_one_salary_file" style="box-shadow: none;padding-left: 0px;" class="form-control" type="file">
+        @if($errors->has('last_one_salary_file'))
+        <span class="text-danger">{{$errors->first('last_one_salary_file')}}</span>
+        @endif
+      </div>
+      @if($result)
+          @if($result->last_one_salary_file)
+            <a href="{{ asset($result->last_one_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="fa-solid fa-download"></i> Download</a> 
+          @endif
+      @endif
+    </div>
+
     <div class="col-md-6">
       <div class="form-group">
         <label class="sub-label">Second (in AED)</label>
@@ -82,7 +97,23 @@
         <span class="text-danger">{{$errors->first('last_two_salary_credits')}}</span>
         @endif
       </div>
-    </div>  
+    </div> 
+
+    <div class="col-md-6">
+      <div class="form-group" style="width: 70%; float: left;">
+        <label class="sub-label">Upload salary slip</label>
+        <input name="last_two_salary_file" style="box-shadow: none;padding-left: 0px; width: 70%; float: left;" class="form-control" type="file">
+        @if($errors->has('last_two_salary_file'))
+        <span class="text-danger">{{$errors->first('last_two_salary_file')}}</span>
+        @endif
+      </div>
+      @if($result)
+          @if($result->last_two_salary_file)
+            <a href="{{ asset($result->last_two_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="fa-solid fa-download"></i> Download</a> 
+          @endif
+      @endif
+    </div> 
+
     <div class="col-md-6">
       <div class="form-group">
         <label class="sub-label">Third (in AED)</label>
@@ -92,6 +123,21 @@
         @endif
       </div>
     </div>
+
+    <div class="col-md-6">
+      <div class="form-group" style="width: 70%; float: left;">
+        <label class="sub-label">Upload salary slip</label>
+        <input name="last_three_salary_file" style="box-shadow: none; padding-left: 0px; width: 70%; float: left;" class="form-control" type="file">
+        @if($errors->has('last_three_salary_file'))
+        <span class="text-danger">{{$errors->first('last_three_salary_file')}}</span>
+        @endif
+      </div>
+      @if($result)
+          @if($result->last_three_salary_file)
+            <a href="{{ asset($result->last_three_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="fa-solid fa-download"></i> Download</a> 
+          @endif
+      @endif
+    </div> 
 
     <div class="col-md-12">
       <div class="form-group">

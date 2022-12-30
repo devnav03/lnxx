@@ -333,6 +333,8 @@ class UserController extends Controller {
                         $inputs['consent_form'] = $CustomerOnboarding->consent_form;
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['aecb_date'] = $CustomerOnboarding->aecb_date;
+                        
 
                         $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
                         $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
@@ -530,6 +532,7 @@ class UserController extends Controller {
                         $inputs['consent_form'] = $CustomerOnboarding->consent_form;
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['aecb_date'] = $CustomerOnboarding->aecb_date;
 
                         $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
                         $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
@@ -1057,22 +1060,32 @@ class UserController extends Controller {
         $user_id = $user->id;
           $profile_image = '';
           if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
-              $image_name = rand(100000, 999999);
-              $fileName = '';
-              
 
-              if($file = $request->hasFile('profile_image')) {
-                $file = $request->file('profile_image') ;
-                $img_name = $file->getClientOriginalName();
-                $image_resize = Image::make($file->getRealPath()); 
-                $image_resize->resize(300, 300);
-                $fileName = $image_name.$img_name;
-                $image_resize->save(public_path('/uploads/user_images/' .$fileName));
-                $mg = "Profile image successfully uploaded!";                
-              }
+              // $image_name = rand(100000, 999999);
+              // $fileName = '';
+              // if($file = $request->hasFile('profile_image')) {
+              //   $file = $request->file('profile_image') ;
+              //   $img_name = $file->getClientOriginalName();
+              //   $image_resize = Image::make($file->getRealPath()); 
+              //   $image_resize->resize(300, 300);
+              //   $fileName = $image_name.$img_name;
+              //   $image_resize->save(public_path('/uploads/user_images/' .$fileName));
+              //   $mg = "Profile image successfully uploaded!";                
+              // }
 
-              $fname ='/uploads/user_images/';
-              $profile_image = $fname.$fileName;
+              // $fname ='/uploads/user_images/';
+              // $profile_image = $fname.$fileName;
+
+
+              $image1 = $request->file('profile_image');
+              $originalExtension1 = $image1->getClientOriginalExtension();
+              $image_s1 = Image::make($image1)->orientate();
+              $image_s1->resize(300, null, function ($constraint) {
+              $constraint->aspectRatio();
+              });
+              $filename1 = random_int(9, 999999999) + time() . '.' . $originalExtension1;
+              $image_s1->save(public_path('/uploads/user_images/'.$filename1));
+              $profile_image = '/uploads/user_images/'.$filename1;
           }
             
             $api_key = $this->generateApiKey();
@@ -1776,7 +1789,64 @@ class UserController extends Controller {
               $inputs['customer_id'] = $user->id;
               if($cm_type->cm_type == 1){
                 
-                  $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id')->first();
+                  $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
+
+                  if(isset($inputs['last_one_salary_file']) or !empty($inputs['last_one_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_one_salary_file')) {
+                                $file = $request->file('last_one_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_one_salary_file;
+                        }  
+                        unset($inputs['last_one_salary_file']);
+                        $inputs['last_one_salary_file'] = $image;
+
+                        if(isset($inputs['last_two_salary_file']) or !empty($inputs['last_two_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_two_salary_file')) {
+                                $file = $request->file('last_two_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_two_salary_file;
+                        }  
+                        unset($inputs['last_two_salary_file']);
+                        $inputs['last_two_salary_file'] = $image;
+
+
+                        if(isset($inputs['last_three_salary_file']) or !empty($inputs['last_three_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_three_salary_file')) {
+                                $file = $request->file('last_three_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_three_salary_file;
+                        }  
+                        unset($inputs['last_three_salary_file']);
+                        $inputs['last_three_salary_file'] = $image;
+
+
                   if($cm_sal){
                     $id = $cm_sal->id;
                     (new CmSalariedDetail)->store($inputs, $id);
@@ -2306,7 +2376,9 @@ class UserController extends Controller {
               if($cm_type){
                 $data = '';
                 if($cm_type->cm_type == 1){
-                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company')->first();
+                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
+
+                  $url = route('get-started');
                   
                   if(isset($data->company_name)){
                     $data['company_name'] = $data->company_name;
@@ -2328,23 +2400,36 @@ class UserController extends Controller {
                   } else {
                     $data['last_three_salary_credits'] = null;
                   }
+                  if(isset($data->last_three_salary_file)){
+                    $data['last_three_salary_file'] = $url.$data->last_three_salary_file;
+                  } else {
+                    $data['last_three_salary_file'] = null;
+                  }
                   if(isset($data->last_two_salary_credits)){
                     $data['last_two_salary_credits'] = $data->last_two_salary_credits;
                   } else {
                     $data['last_two_salary_credits'] = null;
+                  }
+                  if(isset($data->last_two_salary_file)){
+                    $data['last_two_salary_file'] = $url.$data->last_two_salary_file;
+                  } else {
+                    $data['last_two_salary_file'] = null;
                   }
                   if(isset($data->last_one_salary_credits)){
                     $data['last_one_salary_credits'] = $data->last_one_salary_credits;
                   } else {
                     $data['last_one_salary_credits'] = null;
                   }
-
+                  if(isset($data->last_one_salary_file)){
+                    $data['last_one_salary_file'] = $url.$data->last_one_salary_file;
+                  } else {
+                    $data['last_one_salary_file'] = null;
+                  }
                   if(isset($data->accommodation_company)){
                     $data['accommodation_company'] = $data->accommodation_company;
                   } else {
                     $data['accommodation_company'] = null;
                   }
-
 
                 } elseif ($cm_type->cm_type == 2) {
                     $data = SelfEmpDetail::where('customer_id', $user->id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income')->first();

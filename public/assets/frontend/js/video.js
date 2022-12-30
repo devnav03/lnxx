@@ -51,12 +51,12 @@ downloadButton.addEventListener('click', () => {
    var formdata = new FormData();
    formdata.append('blobFile', new Blob(recordedBlobs));
     
-    fetch('https://sspl20.com/lnxx/consent-form', {
+    fetch('https://43.205.95.192/consent-form', {
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         method: 'POST',
         body: formdata
     }).then(() => {
-        window.location.href = 'https://sspl20.com/lnxx/thank-you';
+        window.location.href = 'https://43.205.95.192/thank-you';
     });
 
   // const blob = new Blob(recordedBlobs, {type: 'video/webm'});

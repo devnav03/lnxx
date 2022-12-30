@@ -401,6 +401,20 @@ class HomeController extends Controller {
         }
     }
 
+    public function save_credit_card_information(Request $request){
+
+        try {
+
+
+
+
+
+
+        } catch(Exception $exception){
+            return back();
+        }
+    }
+
     public function consent_form(Request $request){
         try {
             
@@ -908,6 +922,7 @@ public function enter_name(Request $request){
 
                         $ApplicationDependent['app_id'] = $app_id;
                         $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
+                       // dd($dependents);
                         if($dependents){
                             foreach($dependents as $dependent){    
                                 $ApplicationDependent['name'] = $dependent->name;
@@ -1399,7 +1414,6 @@ public function enter_name(Request $request){
                     } else {
                         $result = '';  
                     }
-
                     return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
                 } else {
                     return redirect()->route('personal-details');
@@ -1449,6 +1463,60 @@ public function enter_name(Request $request){
             return back();
         }
     }
+    
+    public function credit_card_information(Request $request){
+        try {
+                return view('frontend.pages.credit_card_information');
+           } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function save_education_details(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all();
+                $result = UserEducation::where('user_id', $user_id)->first();
+                if($result){
+                    $id = $result->id;
+                    (new UserEducation)->store($inputs, $id);
+                } else {
+                    (new UserEducation)->store($inputs); 
+                }
+             
+                $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
+
+                if(in_array(3, $services)){
+                    return redirect()->route('credit-card-information');
+                }
+
+
+
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function education_detail(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all();
+                $inputs['customer_id'] = $user_id;
+                
+                $result = UserEducation::where('user_id', $user_id)->first();
+                $cm_sal = Address::where('customer_id', $user_id)->select('id')->first();
+
+                if($cm_sal){
+                    $id = $cm_sal->id;
+                    (new Address)->store($inputs, $id); 
+                } else {
+                    (new Address)->store($inputs); 
+                }
+                return view('frontend.pages.educations', compact('result'));
+        } catch (Exception $e) {
+            return back();
+        }
+    }
 
     
     public function select_services(Request $request){
@@ -1481,15 +1549,14 @@ public function enter_name(Request $request){
                 $user_id =  Auth::id();
                 $inputs = $request->all();
                 $inputs['user_id'] = $user_id;
-                
-                $cm_sal = UserEducation::where('user_id', $user_id)->select('id')->first();
+               
                 $countries = Country::all();
-                if($cm_sal){
-                    $id = $cm_sal->id;
-                    (new UserEducation)->store($inputs, $id);
-                } else {
-                    (new UserEducation)->store($inputs); 
-                }
+                // if($cm_sal){
+                //     $id = $cm_sal->id;
+                //     (new UserEducation)->store($inputs, $id);
+                // } else {
+                //     (new UserEducation)->store($inputs); 
+                // }
                 $result = Address::where('customer_id', $user_id)->first();
                 return view('frontend.pages.address_details', compact('result', 'countries'));
         } catch (Exception $e) {
@@ -1523,13 +1590,68 @@ public function enter_name(Request $request){
                     }
 
                     if($cm_type == 1){
-                        $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id')->first();
+                        $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
 
                         if(isset($request->accommodation_company)){
                             $inputs['accommodation_company'] = $request->accommodation_company;
                         } else {
                             $inputs['accommodation_company'] = 0;
                         }
+
+                        if(isset($inputs['last_one_salary_file']) or !empty($inputs['last_one_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_one_salary_file')) {
+                                $file = $request->file('last_one_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_one_salary_file;
+                        }  
+                        unset($inputs['last_one_salary_file']);
+                        $inputs['last_one_salary_file'] = $image;
+
+                        if(isset($inputs['last_two_salary_file']) or !empty($inputs['last_two_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_two_salary_file')) {
+                                $file = $request->file('last_two_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_two_salary_file;
+                        }  
+                        unset($inputs['last_two_salary_file']);
+                        $inputs['last_two_salary_file'] = $image;
+
+
+                        if(isset($inputs['last_three_salary_file']) or !empty($inputs['last_three_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_three_salary_file')) {
+                                $file = $request->file('last_three_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_three_salary_file;
+                        }  
+                        unset($inputs['last_three_salary_file']);
+                        $inputs['last_three_salary_file'] = $image;
 
                         if($cm_sal){
                             $id = $cm_sal->id;
@@ -1566,17 +1688,14 @@ public function enter_name(Request $request){
                     }
 
                 } else {
-
                     return redirect()->route('cm-details');
                 }
-
          } catch (Exception $e) {
             return back();
         }
     }
     
     public function verify_emirates(Request $request){
-
         try {
             $user_id =  Auth::id();
             $user = User::where('id', $user_id)->select('login_otp')->first();

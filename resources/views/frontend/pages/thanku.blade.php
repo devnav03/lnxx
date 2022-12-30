@@ -18,16 +18,16 @@
 <div class="col-md-8">
 <div class="row">
 <div class="col-md-3">
- <img src="{!! asset('assets/frontend/images/reco1.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive">  
+<a href="{{ route('address-details') }}"><img src="{!! asset('assets/frontend/images/reco1.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive"></a>
 </div>
 <div class="col-md-3">
- <img src="{!! asset('assets/frontend/images/reco2.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive">  
+<a href="{{ route('address-details') }}"><img src="{!! asset('assets/frontend/images/reco2.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive"></a> 
 </div>
 <div class="col-md-3">
- <img src="{!! asset('assets/frontend/images/reco3.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive">  
+<a href="{{ route('address-details') }}"><img src="{!! asset('assets/frontend/images/reco3.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive"></a>  
 </div>
 <div class="col-md-3">
- <img src="{!! asset('assets/frontend/images/reco4.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive">  
+<a href="{{ route('address-details') }}"><img src="{!! asset('assets/frontend/images/reco4.jpeg')  !!}" style="width: auto;margin-top: 10px;" class="img-responsive"></a>  
 </div>
 </div>
 </div>

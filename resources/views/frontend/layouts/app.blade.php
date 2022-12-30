@@ -60,10 +60,7 @@
 {!! HTML::style('assets/frontend/fonts/flaticon/font/flaticon.css') !!}
 <!-- {!! HTML::style('assets/frontend/css/bootstrap.min1.css') !!} -->
 {!! HTML::style('assets/frontend/css/style.css') !!}
-<link href=
-'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/
-ui-lightness/jquery-ui.css'
-        rel='stylesheet'>
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 @yield('css')
 </head>
@@ -154,10 +151,9 @@ ui-lightness/jquery-ui.css'
     </script> -->
 
       
-    @if($route != 'record-video')
+@if($route != 'record-video')
 
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" ></script>
-       
 <script>
     $(function() {
         $( "#my_date_picker" ).datepicker({
@@ -227,26 +223,23 @@ ui-lightness/jquery-ui.css'
 
 </script>
 
-
-
-
 <script type="text/javascript">       
-  var btn = $('#button2');
+    var btn = $('#button2');
 
-  $(window).scroll(function() {
+    $(window).scroll(function() {
     if ($(window).scrollTop() > 300) {
       //alert('here');
       btn.addClass('show');
     } else {
-      btn.removeClass('show');
-     // alert('here 1');
-    }
-  });
+        btn.removeClass('show');
+            // alert('here 1');
+        }
+    });
 
-  btn.on('click', function(e) {
-    e.preventDefault();
-    $('html, body').animate({scrollTop:0}, '300');
-  });
+    btn.on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({scrollTop:0}, '300');
+    });
 
 </script>  
  @endif
