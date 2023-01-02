@@ -19,12 +19,12 @@
                         @include('admin.layouts.messages')
                         <div class="panel panel-default">
 
-<div class="row row-sm">
+                        <div class="row row-sm">
                             <div class="col-lg-12 col-md-12">
                                 <div class="card custom-card">
                                     <div class="card-body">
                                     <div>
-                                        <h6 class="main-content-label mb-1">Users Filter</h6>
+                                        <h6 class="main-content-label mb-1">Customers Filter</h6>
                                     </div>
                                     <div class="panel-body row">
                                     <div class="col-md-12" style="margin-top: 15px;">

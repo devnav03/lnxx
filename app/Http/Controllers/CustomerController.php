@@ -14,7 +14,9 @@ use App\Models\SelfEmpDetail;
 use App\Models\Address;
 use App\Models\ProductRequest;
 use App\Models\UserEducation;
+use App\Models\Company;
 use App\Models\ServiceApply;
+use App\Models\Bank;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -22,27 +24,12 @@ use Illuminate\Support\Facades\Mail;
 class CustomerController extends Controller {
    
     public function index() {
-      
         return view('admin.customer.index');
     }
 
     public function admin_users() {
-      
         return view('admin.customer.admin');
-
     }
-    
-
-    public function customerdataentry() {
-  
-        return view('admin.customer.data_entry');
-    }
-
-
-    // public function create()
-    // {
-    //     return view('admin.customer.create');
-    // }
 
 
     public function store( Request $request ){
@@ -102,18 +89,13 @@ class CustomerController extends Controller {
                 ->with('error', lang('messages.invalid_id', string_manip(lang('customer.customer'))));
         }
 
-        $inputs = $request->all();
-        // $validator = (new User)->validate_update($inputs, $id);
-        // if ($validator->fails()) {
-        //     return redirect()->route('customer.edit',[$id])
-        //     ->withInput()->withErrors($validator);
-        // } 
+        $inputs = $request->all(); 
 
         try {
              
-             $inputs = $inputs + [
+            $inputs = $inputs + [
                 'updated_by'=> authUserId()
-              ];
+            ];
           
             (new User)->store($inputs, $id); 
 
@@ -130,7 +112,6 @@ class CustomerController extends Controller {
         } catch (\Exception $exception) {
 
         //  dd($exception);
-
             return redirect()->route('users.edit',[$id])
                 ->with('error', lang('messages.server_error'));
  
@@ -152,12 +133,14 @@ class CustomerController extends Controller {
         $country = Country::all();
         $countries = Country::all();
 
-        $other_cm_details = OtherCmDetail::where('customer_id', $id)->first();
-        $cm_salaried_details = CmSalariedDetail::where('customer_id', $id)->first();
-        $self_emp_details = SelfEmpDetail::where('customer_id', $id)->first();
-        $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
-        $product_requested = ProductRequest::where('user_id', $id)->first();
-       // dd($customer_onboarding);
+        // $other_cm_details = OtherCmDetail::where('customer_id', $id)->first();
+        // $cm_salaried_details = CmSalariedDetail::where('customer_id', $id)->first();
+        // $self_emp_details = SelfEmpDetail::where('customer_id', $id)->first();
+        // $customer_onboarding = CustomerOnboarding::where('user_id', $id)->first();
+        // $product_requested = ProductRequest::where('user_id', $id)->first();
+
+        $company = Company::where('status', 1)->select('id', 'name')->get();
+        $banks = Bank::where('status', 1)->select('id', 'name')->get();
 
         $address_details = Address::where('customer_id', $id)->first();
         $UserEducation = UserEducation::where('user_id', $id)->first();
@@ -167,7 +150,7 @@ class CustomerController extends Controller {
                     ->where('service_applies.customer_id', $id)->get();
         $sel_services = ServiceApply::where('customer_id', $id)->pluck('service_id')->toArray();
                     
-        return view('admin.customer.create', compact('result', 'country', 'customer_onboarding', 'other_cm_details', 'cm_salaried_details', 'self_emp_details', 'UserEducation', 'address_details', 'countries', 'services', 'product_requested', 'sel_services'));
+        return view('admin.customer.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks'));
       } else {
         echo "404";
       }
@@ -960,8 +943,11 @@ public function exportSubscribe(){
      }
 
 }
-
-
-
-   
+public function send_value(request $request){
+        \DB::table('leads')->where('id', $request->emp_id1)
+        ->update([
+            'alloted_to' => $request->emp_id
+         ]);
+        }
+    
 }

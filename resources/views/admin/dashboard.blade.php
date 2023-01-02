@@ -7,7 +7,13 @@
         <h2 class="main-content-title tx-24 mg-b-5">Welcome To Dashboard</h2>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            @if(auth()->user()->user_type == 3)
+                <li class="breadcrumb-item active" aria-current="page">Agent Dashboard</li>
+            @elseif(auth()->user()->user_type == 4)
+                <li class="breadcrumb-item active" aria-current="page">Employee Dashboard</li>
+            @elseif(auth()->user()->user_type == 1)
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            @endif
         </ol>
     </div>
    <!--  <div class="d-flex">

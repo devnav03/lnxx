@@ -54,10 +54,15 @@ Route::any('v1/consent-form-status', ['as' => 'consent-form-status','uses' => 'A
 Route::any('v1/bank-list', ['as' => 'bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@bank_list']);
 Route::any('v1/company-list', ['as' => 'company-list','uses' => 'App\Http\Controllers\API\V1\UserController@company_list']);
 
-Route::any('v1/verify-emirates', ['as' => 'verify-emirates','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
+Route::any('v1/verify-emirate-id', ['as' => 'verify-emirate-id','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
 
+Route::any('v1/my-relations', ['as' => 'my-relations','uses' => 'App\Http\Controllers\API\V1\UserController@my_relations']);
 
+Route::any('v1/bank-preference', ['as' => 'bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@bank_preference']);
 
+Route::any('v1/save-bank-preference', ['as' => 'save-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_bank_preference']);
+
+Route::any('v1/skip-video', ['as' => 'skip-video','uses' => 'App\Http\Controllers\API\V1\UserController@skipVideo']);
 
 
 

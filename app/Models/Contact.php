@@ -46,8 +46,10 @@ class Contact extends Model
 
          $fields = [
             'id',
+            'salutation',
             'first_name',
             'last_name',
+            'ip_address',
             'email',
             'phone',
             'subject',

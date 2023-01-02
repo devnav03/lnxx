@@ -15,9 +15,12 @@ use App\Models\OtherCmDetail;
 use App\Models\UserEducation;
 use App\Models\CmSalariedDetail;
 use App\Models\CustomerOnboarding;
+use Intervention\Image\ImageManagerStatic as Image;
 use App\Models\Service;
 use App\Models\ServiceApply;
+use App\Models\ApplicationProductRequest;
 use App\Models\Address;
+use App\Models\Application;
 use App\Models\Bank;
 use App\Models\Company;
 use App\Models\Country;
@@ -55,7 +58,8 @@ class UserController extends Controller
               $user = User::where('api_key', $request->api_key)->select('id', 'login_otp')->first();
               if($user){
 
-                 
+                $user_id = $user->id;
+                
                 if($user->login_otp == $request->otp){
                   User::where('id', $user_id)
                   ->update([
@@ -153,13 +157,189 @@ class UserController extends Controller
         return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
     }
 
+    public function my_relations(Request $request){
 
+      if($request->api_key){
+        $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+
+            $data = \DB::table('applications')
+                    ->join('services', 'services.id', '=', 'applications.service_id')
+                    ->select('applications.status', 'services.name', 'services.image', 'ref_id')
+                    ->where('applications.user_id', $user->id)->get();
+
+            return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
+          }
+      }
+    }
+
+    public function skipVideo(Request $request){
+      try {
+
+            if($request->api_key){
+              $user = User::where('api_key', $request->api_key)->first();
+              if($user){
+
+              $user_id = $user->id;
+              $ref_id = [];
+
+              $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
+              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id', 'decide_by')->get();
+
+              $app_base = 1300;
+                if($services){
+                        if($CustomerOnboarding->cm_type == 1){
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company')->first();
+                            $inputs['company_name'] = $employee->company_name;
+                            $inputs['date_of_joining'] = $employee->date_of_joining;
+                            $inputs['monthly_salary'] = $employee->monthly_salary;
+                            $inputs['last_three_salary_credits'] = $employee->last_three_salary_credits;
+                            $inputs['other_company'] = $employee->other_company;
+                        } elseif ($CustomerOnboarding->cm_type == 2){
+                            $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();
+                            $inputs['self_company_name'] = $employee->self_company_name;
+                            $inputs['percentage_ownership'] = $employee->percentage_ownership;
+                            $inputs['profession_business'] = $employee->profession_business;
+                            $inputs['annual_business_income'] = $employee->annual_business_income;
+                            $inputs['other_company'] = $employee->self_other_company;
+                        } else {
+                            $employee = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                            $inputs['monthly_pension'] = $employee->monthly_pension;
+                        }
+
+                        $inputs['nationality'] = $CustomerOnboarding->nationality;
+                        $inputs['passport_number'] = $CustomerOnboarding->passport_number;
+                        $inputs['passport_expiry_date'] = $CustomerOnboarding->passport_expiry_date;
+                        $inputs['officer_email'] = $CustomerOnboarding->officer_email;
+                        $inputs['visa_number'] = $CustomerOnboarding->visa_number;
+                        $inputs['marital_status'] = $CustomerOnboarding->marital_status;
+                        $inputs['years_in_uae'] = $CustomerOnboarding->years_in_uae;
+                        $inputs['reference_number'] = $CustomerOnboarding->reference_number;
+                        $inputs['passport_photo'] = $CustomerOnboarding->passport_photo;
+                        $inputs['video'] = $CustomerOnboarding->video;
+                        $inputs['no_of_dependents'] = $CustomerOnboarding->no_of_dependents;
+                        $inputs['consent_form'] = $CustomerOnboarding->consent_form;
+                        $inputs['cm_type'] = $CustomerOnboarding->cm_type;
+                        $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['user_id'] = $user_id;
+                        $inputs['salutation'] = $user->salutation;
+                        $inputs['name'] = $user->name;
+                        $inputs['middle_name'] = $user->middle_name;
+                        $inputs['last_name'] = $user->last_name;
+                        $inputs['email'] = $user->email;
+                        $inputs['gender'] = $user->gender;
+                        $inputs['date_of_birth'] = $user->date_of_birth;
+                        $inputs['profile_image'] = $user->profile_image;
+                        $inputs['emirates_id'] = $user->emirates_id;
+                        $inputs['emirates_id_back'] = $user->emirates_id_back;
+                        $inputs['eid_number'] = $user->eid_number;
+                        $inputs['eid_status'] = $user->eid_status;
+                        $inputs['mobile'] = $user->mobile;
+                        $inputs['status'] = 0;
+                        $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+                        $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
+                        $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
+                        $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
+                        $application_data['card_limit'] = $ProductRequest->card_limit;
+                        $application_data['details_of_cards2'] = $ProductRequest->details_of_cards2;
+                        $application_data['credit_bank_name2'] = $ProductRequest->credit_bank_name2;
+                        $application_data['card_limit2'] = $ProductRequest->card_limit2;
+                        $application_data['details_of_cards3'] = $ProductRequest->details_of_cards3;
+                        $application_data['credit_bank_name3'] = $ProductRequest->credit_bank_name3;
+                        $application_data['card_limit3'] = $ProductRequest->card_limit3;
+                        $application_data['details_of_cards4'] = $ProductRequest->details_of_cards4;
+                        $application_data['credit_bank_name4'] = $ProductRequest->credit_bank_name4;
+                        $application_data['card_limit4'] = $ProductRequest->card_limit4;
+                        $application_data['loan_amount'] = $ProductRequest->loan_amount;
+                        $application_data['loan_bank_name'] = $ProductRequest->loan_bank_name;
+                        $application_data['original_loan_amount'] = $ProductRequest->original_loan_amount;
+                        $application_data['loan_emi'] = $ProductRequest->loan_emi;
+                        $application_data['loan_bank_name2'] = $ProductRequest->loan_bank_name2;
+                        $application_data['original_loan_amount2'] = $ProductRequest->original_loan_amount2;
+                        $application_data['loan_emi2'] = $ProductRequest->loan_emi2;
+                        $application_data['loan_bank_name3'] = $ProductRequest->loan_bank_name3;
+                        $application_data['original_loan_amount3'] = $ProductRequest->original_loan_amount3;
+                        $application_data['loan_emi3'] = $ProductRequest->loan_emi3;
+                        $application_data['loan_bank_name4'] = $ProductRequest->loan_bank_name4;
+                        $application_data['original_loan_amount4'] = $ProductRequest->original_loan_amount4;
+                        $application_data['loan_emi4'] = $ProductRequest->loan_emi4;
+                        $application_data['business_loan_amount'] = $ProductRequest->business_loan_amount;
+                        $application_data['business_loan_emi'] = $ProductRequest->business_loan_emi;
+                        $application_data['business_loan_amount2'] = $ProductRequest->business_loan_amount2;
+                        $application_data['business_loan_emi2'] = $ProductRequest->business_loan_emi2;
+                        $application_data['business_loan_amount3'] = $ProductRequest->business_loan_amount3;
+                        $application_data['business_loan_emi3'] = $ProductRequest->business_loan_emi3;
+                        $application_data['business_loan_amount4    '] = $ProductRequest->business_loan_amount4;
+                        $application_data['business_loan_emi4'] = $ProductRequest->business_loan_emi4;
+                        $application_data['mortgage_loan_amount'] = $ProductRequest->mortgage_loan_amount;
+                        $application_data['purchase_price'] = $ProductRequest->purchase_price;
+                        $application_data['type_of_loan'] = $ProductRequest->type_of_loan;
+                        $application_data['term_of_loan'] = $ProductRequest->term_of_loan;
+                        $application_data['end_use_of_property'] = $ProductRequest->end_use_of_property;
+                        $application_data['interest_rate'] = $ProductRequest->interest_rate;
+                        $application_data['mortgage_emi'] = $ProductRequest->mortgage_emi;
+                        $application_data['mortgage_loan_amount2'] = $ProductRequest->mortgage_loan_amount2;
+                        $application_data['purchase_price2'] = $ProductRequest->purchase_price2;
+                        $application_data['type_of_loan2'] = $ProductRequest->type_of_loan2;
+                        $application_data['term_of_loan2'] = $ProductRequest->term_of_loan2;
+                        $application_data['end_use_of_property2'] = $ProductRequest->end_use_of_property2;
+                        $application_data['interest_rate2'] = $ProductRequest->interest_rate2;
+                        $application_data['mortgage_emi2'] = $ProductRequest->mortgage_emi2;
+                        $application_data['mortgage_loan_amount3'] = $ProductRequest->mortgage_loan_amount3;
+                        $application_data['purchase_price3'] = $ProductRequest->purchase_price3;
+                        $application_data['type_of_loan3'] = $ProductRequest->type_of_loan3;
+                        $application_data['term_of_loan3'] = $ProductRequest->term_of_loan3;
+                        $application_data['end_use_of_property3'] = $ProductRequest->end_use_of_property3;
+                        $application_data['interest_rate3'] = $ProductRequest->interest_rate3;
+                        $application_data['mortgage_emi3'] = $ProductRequest->mortgage_emi3;
+                        $application_data['mortgage_loan_amount4'] = $ProductRequest->mortgage_loan_amount4;
+                        $application_data['purchase_price4'] = $ProductRequest->purchase_price4;
+                        $application_data['type_of_loan4'] = $ProductRequest->type_of_loan4;
+                        $application_data['term_of_loan4'] = $ProductRequest->term_of_loan4;
+                        $application_data['end_use_of_property4'] = $ProductRequest->end_use_of_property4;
+                        $application_data['interest_rate4'] = $ProductRequest->interest_rate4;
+                        $application_data['mortgage_emi4'] = $ProductRequest->mortgage_emi4;
+
+                    foreach ($services as $service) {
+                        $a_no = $app_base+$service->id;
+                        $inputs['ref_id'] = $a_no;
+                        $inputs['service_id'] = $service->service_id;
+                        $inputs['preference_bank_id'] = $service->bank_id;
+                        $inputs['decide_by'] = $service->decide_by;
+                        $service_name = Service::where('id', $service->service_id)->select('name')->first();
+                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                         ServiceApply::where('id', $service->id)->update([
+                          'app_no' => $a_no, 
+                          'app_status' => 1,
+                        ]);
+                        $application_id = (new Application)->store($inputs); 
+                        $application_data['application_id'] = $application_id;
+
+                        (new ApplicationProductRequest)->store($application_data); 
+
+                        $ref_id[] = $slide;
+                    }
+                } 
+
+
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Application submited successfully', 'ref_id' => $ref_id]);
+
+
+
+              }
+
+            }
+
+      } catch(Exception $e){
+          return apiResponse(false, 500, lang('messages.server_error'));
+      }
+    }
 
     public function upload_video(Request $request){
       try {
           if($request->api_key){
             $inputs = $request->all();
-            $user = User::where('api_key', $request->api_key)->select('id', 'password')->first();
+            $user = User::where('api_key', $request->api_key)->first();
             if($user){
               $user_id = $user->id;
               $vid_dt = CustomerOnboarding::where('user_id', $user_id)->select('video')->first();
@@ -179,7 +359,149 @@ class UserController extends Controller
                   $image = $vid_dt->video;
               }
               CustomerOnboarding::where('user_id', $user_id)->update(['video' => $image]);
-              return response()->json(['success' => true, 'status' => 200, 'message' => 'Video uploaded successfully']);
+              $ref_id = [];
+               $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
+
+              $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->select('id','service_id', 'bank_id', 'decide_by')->get();
+          
+         //dd($services);
+
+                $app_base = 1300;
+                if($services){
+                        if($CustomerOnboarding->cm_type == 1){
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company')->first();
+                            $inputs['company_name'] = $employee->company_name;
+                            $inputs['date_of_joining'] = $employee->date_of_joining;
+                            $inputs['monthly_salary'] = $employee->monthly_salary;
+                            $inputs['last_three_salary_credits'] = $employee->last_three_salary_credits;
+                            $inputs['other_company'] = $employee->other_company;
+                        } elseif ($CustomerOnboarding->cm_type == 2){
+                            $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();
+                            $inputs['self_company_name'] = $employee->self_company_name;
+                            $inputs['percentage_ownership'] = $employee->percentage_ownership;
+                            $inputs['profession_business'] = $employee->profession_business;
+                            $inputs['annual_business_income'] = $employee->annual_business_income;
+                            $inputs['other_company'] = $employee->self_other_company;
+                        } else {
+                            $employee = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                            $inputs['monthly_pension'] = $employee->monthly_pension;
+                        }
+
+                        $inputs['nationality'] = $CustomerOnboarding->nationality;
+                        $inputs['passport_number'] = $CustomerOnboarding->passport_number;
+                        $inputs['passport_expiry_date'] = $CustomerOnboarding->passport_expiry_date;
+                        $inputs['officer_email'] = $CustomerOnboarding->officer_email;
+                        $inputs['visa_number'] = $CustomerOnboarding->visa_number;
+                        $inputs['marital_status'] = $CustomerOnboarding->marital_status;
+                        $inputs['years_in_uae'] = $CustomerOnboarding->years_in_uae;
+                        $inputs['reference_number'] = $CustomerOnboarding->reference_number;
+                        $inputs['passport_photo'] = $CustomerOnboarding->passport_photo;
+                        $inputs['video'] = $CustomerOnboarding->video;
+                        $inputs['no_of_dependents'] = $CustomerOnboarding->no_of_dependents;
+                        $inputs['consent_form'] = $CustomerOnboarding->consent_form;
+                        $inputs['cm_type'] = $CustomerOnboarding->cm_type;
+                        $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['user_id'] = $user_id;
+                        $inputs['salutation'] = $user->salutation;
+                        $inputs['name'] = $user->name;
+                        $inputs['middle_name'] = $user->middle_name;
+                        $inputs['last_name'] = $user->last_name;
+                        $inputs['email'] = $user->email;
+                        $inputs['gender'] = $user->gender;
+                        $inputs['date_of_birth'] = $user->date_of_birth;
+                        $inputs['profile_image'] = $user->profile_image;
+                        $inputs['emirates_id'] = $user->emirates_id;
+                        $inputs['emirates_id_back'] = $user->emirates_id_back;
+                        $inputs['eid_number'] = $user->eid_number;
+                        $inputs['eid_status'] = $user->eid_status;
+                        $inputs['mobile'] = $user->mobile;
+                        $inputs['status'] = 0;
+                        $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+                        $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
+                        $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
+                        $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
+                        $application_data['card_limit'] = $ProductRequest->card_limit;
+                        $application_data['details_of_cards2'] = $ProductRequest->details_of_cards2;
+                        $application_data['credit_bank_name2'] = $ProductRequest->credit_bank_name2;
+                        $application_data['card_limit2'] = $ProductRequest->card_limit2;
+                        $application_data['details_of_cards3'] = $ProductRequest->details_of_cards3;
+                        $application_data['credit_bank_name3'] = $ProductRequest->credit_bank_name3;
+                        $application_data['card_limit3'] = $ProductRequest->card_limit3;
+                        $application_data['details_of_cards4'] = $ProductRequest->details_of_cards4;
+                        $application_data['credit_bank_name4'] = $ProductRequest->credit_bank_name4;
+                        $application_data['card_limit4'] = $ProductRequest->card_limit4;
+                        $application_data['loan_amount'] = $ProductRequest->loan_amount;
+                        $application_data['loan_bank_name'] = $ProductRequest->loan_bank_name;
+                        $application_data['original_loan_amount'] = $ProductRequest->original_loan_amount;
+                        $application_data['loan_emi'] = $ProductRequest->loan_emi;
+                        $application_data['loan_bank_name2'] = $ProductRequest->loan_bank_name2;
+                        $application_data['original_loan_amount2'] = $ProductRequest->original_loan_amount2;
+                        $application_data['loan_emi2'] = $ProductRequest->loan_emi2;
+                        $application_data['loan_bank_name3'] = $ProductRequest->loan_bank_name3;
+                        $application_data['original_loan_amount3'] = $ProductRequest->original_loan_amount3;
+                        $application_data['loan_emi3'] = $ProductRequest->loan_emi3;
+                        $application_data['loan_bank_name4'] = $ProductRequest->loan_bank_name4;
+                        $application_data['original_loan_amount4'] = $ProductRequest->original_loan_amount4;
+                        $application_data['loan_emi4'] = $ProductRequest->loan_emi4;
+                        $application_data['business_loan_amount'] = $ProductRequest->business_loan_amount;
+                        $application_data['business_loan_emi'] = $ProductRequest->business_loan_emi;
+                        $application_data['business_loan_amount2'] = $ProductRequest->business_loan_amount2;
+                        $application_data['business_loan_emi2'] = $ProductRequest->business_loan_emi2;
+                        $application_data['business_loan_amount3'] = $ProductRequest->business_loan_amount3;
+                        $application_data['business_loan_emi3'] = $ProductRequest->business_loan_emi3;
+                        $application_data['business_loan_amount4    '] = $ProductRequest->business_loan_amount4;
+                        $application_data['business_loan_emi4'] = $ProductRequest->business_loan_emi4;
+                        $application_data['mortgage_loan_amount'] = $ProductRequest->mortgage_loan_amount;
+                        $application_data['purchase_price'] = $ProductRequest->purchase_price;
+                        $application_data['type_of_loan'] = $ProductRequest->type_of_loan;
+                        $application_data['term_of_loan'] = $ProductRequest->term_of_loan;
+                        $application_data['end_use_of_property'] = $ProductRequest->end_use_of_property;
+                        $application_data['interest_rate'] = $ProductRequest->interest_rate;
+                        $application_data['mortgage_emi'] = $ProductRequest->mortgage_emi;
+                        $application_data['mortgage_loan_amount2'] = $ProductRequest->mortgage_loan_amount2;
+                        $application_data['purchase_price2'] = $ProductRequest->purchase_price2;
+                        $application_data['type_of_loan2'] = $ProductRequest->type_of_loan2;
+                        $application_data['term_of_loan2'] = $ProductRequest->term_of_loan2;
+                        $application_data['end_use_of_property2'] = $ProductRequest->end_use_of_property2;
+                        $application_data['interest_rate2'] = $ProductRequest->interest_rate2;
+                        $application_data['mortgage_emi2'] = $ProductRequest->mortgage_emi2;
+                        $application_data['mortgage_loan_amount3'] = $ProductRequest->mortgage_loan_amount3;
+                        $application_data['purchase_price3'] = $ProductRequest->purchase_price3;
+                        $application_data['type_of_loan3'] = $ProductRequest->type_of_loan3;
+                        $application_data['term_of_loan3'] = $ProductRequest->term_of_loan3;
+                        $application_data['end_use_of_property3'] = $ProductRequest->end_use_of_property3;
+                        $application_data['interest_rate3'] = $ProductRequest->interest_rate3;
+                        $application_data['mortgage_emi3'] = $ProductRequest->mortgage_emi3;
+                        $application_data['mortgage_loan_amount4'] = $ProductRequest->mortgage_loan_amount4;
+                        $application_data['purchase_price4'] = $ProductRequest->purchase_price4;
+                        $application_data['type_of_loan4'] = $ProductRequest->type_of_loan4;
+                        $application_data['term_of_loan4'] = $ProductRequest->term_of_loan4;
+                        $application_data['end_use_of_property4'] = $ProductRequest->end_use_of_property4;
+                        $application_data['interest_rate4'] = $ProductRequest->interest_rate4;
+                        $application_data['mortgage_emi4'] = $ProductRequest->mortgage_emi4;
+
+                    foreach ($services as $service) {
+                        $a_no = $app_base+$service->id;
+                        $inputs['ref_id'] = $a_no;
+                        $inputs['service_id'] = $service->service_id;
+                        $inputs['preference_bank_id'] = $service->bank_id;
+                        $inputs['decide_by'] = $service->decide_by;
+                        $service_name = Service::where('id', $service->service_id)->select('name')->first();
+                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                         ServiceApply::where('id', $service->id)->update([
+                          'app_no' => $a_no, 
+                          'app_status' => 1,
+                        ]);
+                        $application_id = (new Application)->store($inputs); 
+                        $application_data['application_id'] = $application_id;
+
+                        (new ApplicationProductRequest)->store($application_data); 
+
+                        $ref_id[] = $slide;
+                    }
+                } 
+
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Video uploaded successfully', 'ref_id' => $ref_id]);
             }
           }
       } catch(Exception $e){
@@ -190,16 +512,14 @@ class UserController extends Controller
     public function consent_form_status(Request $request){
 
       if($request->api_key){
-        $user = User::where('api_key', $request->api_key)->select('id')->first();
+        $user = User::where('api_key', $request->api_key)->first();
         if($user) {
           
           $user_id = $user->id;
-          $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
-          $ser = 1300;
-          $ref_id = $ser.$result->id;
-          CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id, 'consent_form' => 1]);
-         
-          return response()->json(['success' => true, 'status' => 200, 'ref_id' => $ref_id]);
+          $ref_id = [];
+          CustomerOnboarding::where('user_id', $user_id)->update(['consent_form' => 1]);
+          
+          return response()->json(['success' => true, 'status' => 200, 'message' => 'save successfully']);
 
         }
       }
@@ -236,26 +556,78 @@ class UserController extends Controller
           return apiResponse(false, 500, lang('messages.server_error'));
       }
     }
+
+    public function bank_preference(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+            $data = [];
+
+            $service = ServiceApply::where('customer_id', $user->id)->where('service_id', 3)->select('service_id', 'bank_id')->first();
+
+            if($service){
+         
+                $slide['service_id'] = $service->service_id;
+                $service_name = Service::where('id', $service->service_id)->select('name')->first();
+                $slide['service_name'] = $service_name->name;
+                $bank_data = [];
+                foreach(get_prefer_bank($service->service_id) as $bank){
+                    $bank_slide['bank_id'] = $bank->id;
+                    $bank_slide['bank_name'] = $bank->name;
+
+                    if($service->bank_id == $bank->id){
+                      $bank_slide['selected'] = true;
+                    } else {
+                      $bank_slide['selected'] = false;
+                    }
+                    $bank_data[] = $bank_slide;
+                }
+              $slide['bank_data']  = $bank_data;
+              $data[] = $slide;  
+        
+            }
+
+          return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
+          }
+      }
+    }
+
+    public function save_bank_preference(Request $request){
+      if($request->api_key){
+        $user = User::where('api_key', $request->api_key)->select('id')->first();
+        if($user){
+          $user_id = $user->id;
+  
+            ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
+              'bank_id' => $request->bank_id,
+              'decide_by' => $request->decide_by,
+            ]);
+
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Preference successfully updated']);  
+       
+        }
+      } 
+    }
         
     public function service_list(Request $request){
       try {
             if($request->api_key){
               $user = User::where('api_key', $request->api_key)->select('id')->first();
               if($user){
-              $services = Service::where('status', 1)->select('id', 'name', 'image')->get();
+              $services = Service::where('status', 1)->select('id', 'name', 'image')->orderBy('sort_order', 'ASC')->get();
               $base = route('get-started');
               $data = [];
               foreach ($services as $service) {
+                $check = ServiceApply::where('service_id', $service->id)->where('app_status', 0)->where('customer_id', $user->id)->count();
+             
                 $slide['id'] = $service->id;
                 $slide['name'] = $service->name;
-                $slide['image'] = $base.$service->image;
-                $check = ServiceApply::where('service_id', $service->id)->where('customer_id', $user->id)->count();
+                $slide['image'] = $base.$service->image;  
                 if($check == 0){
-                $slide['selected'] = false;  
+                  $slide['selected'] = false;  
                 } else {
-                $slide['selected'] = true; 
+                  $slide['selected'] = true;  
                 }
-
                 $data[] = $slide;
               } 
                 return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
@@ -351,21 +723,20 @@ class UserController extends Controller
           if($request->api_key){
             $user = User::where('api_key', $request->api_key)->select('id')->first();
             if($user) {
-                $user_id = $user->id;
+              $user_id = $user->id;
               if(isset($request->service)){
-
                 $ser_list = explode(',', $request->service);
 
                 \DB::table('service_applies')->where('customer_id', $user_id)->delete();
 
                 foreach($ser_list as $service_id){
-                    $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
-                    if($apply_ser == 0) {
+                    $apply_ser = ServiceApply::where('service_id', $service_id)->where('app_status', 0)->where('customer_id', $user_id)->count();
+                      if($apply_ser == 0){
                         ServiceApply::create([
                             'service_id'  =>  $service_id,
                             'customer_id'  => $user_id,
                         ]);
-                    }
+                      }
                 }
 
                 return response()->json(['success' => true, 'status' => 200]);
@@ -541,13 +912,24 @@ class UserController extends Controller
           if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
               $image_name = rand(100000, 999999);
               $fileName = '';
+
               if($file = $request->hasFile('profile_image')) {
-                  $file = $request->file('profile_image') ;
-                  $img_name = $file->getClientOriginalName();
-                  $fileName = $image_name.$img_name;
-                  $destinationPath = public_path().'/uploads/user_images/' ;
-                  $file->move($destinationPath, $fileName);
+                $file = $request->file('profile_image') ;
+                $img_name = $file->getClientOriginalName();
+                $image_resize = Image::make($file->getRealPath()); 
+                $image_resize->resize(300, 300);
+                $fileName = $image_name.$img_name;
+                $image_resize->save(public_path('/uploads/user_images/' .$fileName));                 
               }
+
+              // if($file = $request->hasFile('profile_image')) {
+              //     $file = $request->file('profile_image') ;
+              //     $img_name = $file->getClientOriginalName();
+              //     $fileName = $image_name.$img_name;
+              //     $destinationPath = public_path().'/uploads/user_images/' ;
+              //     $file->move($destinationPath, $fileName);
+              // }
+
               $fname ='/uploads/user_images/';
               $profile_image = $fname.$fileName;
           }
@@ -583,26 +965,49 @@ class UserController extends Controller
       if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
           $image_name = rand(100000, 999999);
           $fileName = '';
+
+          // if($file = $request->hasFile('emirates_id_front')) {
+          //     $file = $request->file('emirates_id_front') ;
+          //     $img_name = $file->getClientOriginalName();
+          //     $fileName = $image_name.$img_name;
+          //     $destinationPath = public_path().'/uploads/emirates_id/' ;
+          //     $file->move($destinationPath, $fileName);
+          // }
+
           if($file = $request->hasFile('emirates_id_front')) {
               $file = $request->file('emirates_id_front') ;
               $img_name = $file->getClientOriginalName();
+              $image_resize = Image::make($file->getRealPath()); 
+              $image_resize->resize(750, 400);
               $fileName = $image_name.$img_name;
-              $destinationPath = public_path().'/uploads/emirates_id/' ;
-              $file->move($destinationPath, $fileName);
+              $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
           }
+
           $fname ='/uploads/emirates_id/';
           $emirates_id_front = $fname.$fileName;
       }
+
       if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
           $image_name = rand(100000, 999999);
           $fileName = '';
+          // if($file = $request->hasFile('emirates_id_back')) {
+          //     $file = $request->file('emirates_id_back') ;
+          //     $img_name = $file->getClientOriginalName();
+          //     $fileName = $image_name.$img_name;
+          //     $destinationPath = public_path().'/uploads/emirates_id/' ;
+          //     $file->move($destinationPath, $fileName);
+          // }
+
           if($file = $request->hasFile('emirates_id_back')) {
-              $file = $request->file('emirates_id_back') ;
-              $img_name = $file->getClientOriginalName();
-              $fileName = $image_name.$img_name;
-              $destinationPath = public_path().'/uploads/emirates_id/' ;
-              $file->move($destinationPath, $fileName);
+            $file = $request->file('emirates_id_back') ;
+            $img_name = $file->getClientOriginalName();
+            $image_resize = Image::make($file->getRealPath()); 
+            $image_resize->resize(750, 400);
+            $fileName = $image_name.$img_name;
+            $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
           }
+
+
           $fname ='/uploads/emirates_id/';
           $emirates_id_back = $fname.$fileName;
       }
@@ -1021,10 +1426,10 @@ class UserController extends Controller
     public function show_basic_information(Request $request){
       try {
         if($request->api_key){
-          $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation')->first();
+          $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation', 'eid_number', 'eid_status')->first();
           if($user) {
               $home = route('get-started');
-              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents')->first();
+              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number')->first();
               //dd($data);
               if(isset($datas->passport_photo)){
                 $data['passport_photo'] = $home.$datas->passport_photo;
@@ -1041,6 +1446,17 @@ class UserController extends Controller
               } else {
                 $data['emirates_id_back'] = null;
               }
+              if($datas->passport_expiry_date){
+                $data['passport_expiry_date'] = $datas->passport_expiry_date;
+              } else {
+                $data['passport_expiry_date'] = null;
+              }
+              if($datas->passport_number){
+                $data['passport_number'] = $datas->passport_number;
+              } else {
+                $data['passport_number'] = null;
+              }
+
               $data['gender'] = $user->gender;
               $data['date_of_birth'] = $user->date_of_birth;
               if(isset($user->salutation)){
@@ -1068,6 +1484,11 @@ class UserController extends Controller
               } else {
                 $data['nationality'] = null;
               }
+              if(isset($datas->credit_score)){
+                $data['credit_score'] = $datas->credit_score;
+              } else {
+                $data['credit_score'] = null;
+              }
               if(isset($datas->marital_status)){
                 $data['marital_status'] = $datas->marital_status;
               } else {
@@ -1088,11 +1509,16 @@ class UserController extends Controller
               } else {
                 $data['officer_email'] = null;
               }
-              if(isset($datas->eid_number)){
-                $data['eid_number'] = $datas->eid_number;
+              if(isset($user->eid_number)){
+                $data['eid_number'] = $user->eid_number;
               } else {
                 $data['eid_number'] = null;
               }
+
+              if(isset($user->eid_status)){
+                $data['eid_status'] = $user->eid_status;
+              } 
+
               if(isset($datas->no_of_dependents)){
                 $data['no_of_dependents'] = $datas->no_of_dependents;
               } else {
@@ -1174,8 +1600,7 @@ class UserController extends Controller
         }
 
       } catch(\Exception $e){
-
-        dd($e);
+       // dd($e);
           return back();
         }
     }
@@ -1185,7 +1610,175 @@ class UserController extends Controller
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user) {
 
-          $data = ProductRequest::where('user_id', $user->id)->select('credit_card_limit', 'details_of_cards', 'credit_bank_name', 'card_limit', 'loan_amount', 'loan_bank_name', 'original_loan_amount', 'business_loan_amount', 'mortgage_loan_amount', 'purchase_price', 'type_of_loan', 'term_of_loan', 'end_use_of_property', 'interest_rate')->first();
+          $datas = ProductRequest::where('user_id', $user->id)->first();
+          if($datas->credit_card_limit){
+            $data['credit_card_limit'] = $datas->credit_card_limit;
+          } else {
+            $data['credit_card_limit'] = null;
+          }
+          
+          if($datas->loan_amount){
+            $data['loan_amount'] = $datas->loan_amount;
+          } else {
+            $data['loan_amount'] = null;
+          }
+
+          $credit_card_existing_financials  = [];
+          $business_loan_amount = [];
+          $loan_bank_name = [];
+          $mortgage_loan_amount = [];
+          if($datas->mortgage_loan_amount) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount,
+                'purchase_price' => $datas->purchase_price,
+                'type_of_loan' => $datas->type_of_loan,
+                'term_of_loan' => $datas->term_of_loan,
+                'end_use_of_property' => $datas->end_use_of_property,
+                'interest_rate' => $datas->interest_rate,
+                'mortgage_emi' => $datas->mortgage_emi,
+              );
+          }
+          if($datas->mortgage_loan_amount2) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount2,
+                'purchase_price' => $datas->purchase_price2,
+                'type_of_loan' => $datas->type_of_loan2,
+                'term_of_loan' => $datas->term_of_loan2,
+                'end_use_of_property' => $datas->end_use_of_property2,
+                'interest_rate' => $datas->interest_rate2,
+                'mortgage_emi' => $datas->mortgage_emi2,
+              );
+          }
+          if($datas->mortgage_loan_amount3) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount3,
+                'purchase_price' => $datas->purchase_price3,
+                'type_of_loan' => $datas->type_of_loan3,
+                'term_of_loan' => $datas->term_of_loan3,
+                'end_use_of_property' => $datas->end_use_of_property3,
+                'interest_rate' => $datas->interest_rate3,
+                'mortgage_emi' => $datas->mortgage_emi3,
+              );
+          }
+          if($datas->mortgage_loan_amount4) {
+              $mortgage_loan_amount[] = 
+              array(
+                'mortgage_loan_amount' => $datas->mortgage_loan_amount4,
+                'purchase_price' => $datas->purchase_price3,
+                'type_of_loan' => $datas->type_of_loan4,
+                'term_of_loan' => $datas->term_of_loan4,
+                'end_use_of_property' => $datas->end_use_of_property4,
+                'interest_rate' => $datas->interest_rate4,
+                'mortgage_emi' => $datas->mortgage_emi4,
+              );
+          }
+
+          if($datas->loan_bank_name) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_name,
+                'original_loan_amount' => $datas->original_loan_amount,
+                'loan_emi' => $datas->loan_emi,
+              );
+          }
+          if($datas->loan_bank_name2) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_nam2,
+                'original_loan_amount' => $datas->original_loan_amount2,
+                'loan_emi' => $datas->loan_emi2,
+              );
+          }
+          if($datas->loan_bank_nam3) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_nam3,
+                'original_loan_amount' => $datas->original_loan_amount3,
+                'loan_emi' => $datas->loan_emi3,
+              );
+          }
+          if($datas->loan_bank_name4) {
+              $loan_bank_name[] = 
+              array(
+                'loan_bank_name' => $datas->loan_bank_name4,
+                'original_loan_amount' => $datas->original_loan_amount4,
+                'loan_emi' => $datas->loan_emi4,
+              );
+          }
+
+          if($datas->details_of_cards) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards,
+                'credit_bank_name' => $datas->credit_bank_name,
+                'card_limit' => $datas->card_limit,
+              );
+          }
+          if($datas->details_of_cards2) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards2,
+                'credit_bank_name' => $datas->credit_bank_name2,
+                'card_limit' => $datas->card_limit2,
+              );
+          }
+          if($datas->details_of_cards3) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards3,
+                'credit_bank_name' => $datas->credit_bank_name3,
+                'card_limit' => $datas->card_limit3,
+              );
+          }
+          if($datas->details_of_cards4) {
+              $credit_card_existing_financials[] = 
+              array(
+                'details_of_cards' => $datas->details_of_cards4,
+                'credit_bank_name' => $datas->credit_bank_name4,
+                'card_limit' => $datas->card_limit4,
+              );
+          }
+
+
+
+          if($datas->business_loan_amount) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount,
+                'business_loan_emi' => $datas->business_loan_emi,
+              );
+          }
+          if($datas->business_loan_amount2) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount2,
+                'business_loan_emi' => $datas->business_loan_emi2,
+              );
+          }
+          if($datas->business_loan_amount3) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount3,
+                'business_loan_emi' => $datas->business_loan_emi3,
+              );
+          }
+          if($datas->business_loan_amount4) {
+              $business_loan_amount[] = 
+              array(
+                'business_loan_amount' => $datas->business_loan_amount4,
+                'business_loan_emi' => $datas->business_loan_emi4,
+              );
+          }
+
+
+
+          $data['credit_card_existing_financials'] = $credit_card_existing_financials;
+          $data['business_loan_amount'] = $business_loan_amount;
+          $data['loan_bank_name'] = $loan_bank_name;
+          $data['mortgage_loan_amount'] = $mortgage_loan_amount; 
 
           return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
 
@@ -1195,16 +1788,272 @@ class UserController extends Controller
     }
 
     public function save_product_requested(Request $request){
+
       if($request->api_key){
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user) {
-            $inputs = $request->all();
+            $credit_card_limit = '';
+            if(isset($request->credit_card_limit)){
+              $credit_card_limit = $request->credit_card_limit;
+            }
+            $details_of_cards = '';
+            $credit_bank_name = '';
+            $card_limit = '';
+            $details_of_cards2 = '';
+            $credit_bank_name2 = '';
+            $card_limit2 = '';
+            $details_of_cards3 = '';
+            $credit_bank_name3 = '';
+            $card_limit3 = '';
+            $details_of_cards4 = '';
+            $credit_bank_name4 = '';
+            $card_limit4 = '';
+            $loan_amount = '';
+            if(isset($request->loan_amount)){
+              $loan_amount = $request->loan_amount;
+            }
+            $loan_bank_name = '';
+            $original_loan_amount = '';
+            $loan_emi = '';
+            $loan_bank_name2 = '';
+            $original_loan_amount2 = '';
+            $loan_emi2 = '';
+            $loan_bank_name3 = '';
+            $original_loan_amount3 = '';
+            $loan_emi3 = '';
+            $loan_bank_name4 = '';
+            $original_loan_amount4 = '';
+            $loan_emi4 = '';
+            $business_loan_amount = '';
+            $business_loan_emi = '';
+            $business_loan_amount2 = '';
+            $business_loan_emi2 = '';
+            $business_loan_amount3 = '';
+            $business_loan_emi3 = '';
+            $business_loan_amount4 = '';
+            $business_loan_emi4 = '';
+
+            $mortgage_loan_amount = '';
+            $purchase_price = '';
+            $type_of_loan = '';
+            $term_of_loan = '';
+            $end_use_of_property = '';
+            $interest_rate = '';
+            $mortgage_emi = '';
+
+            $mortgage_loan_amount2 = '';
+            $purchase_price2 = '';
+            $type_of_loan2 = '';
+            $term_of_loan2 = '';
+            $end_use_of_property2 = '';
+            $interest_rate2 = '';
+            $mortgage_emi2 = '';
+
+            $mortgage_loan_amount3 = '';
+            $purchase_price3 = '';
+            $type_of_loan3 = '';
+            $term_of_loan3 = '';
+            $end_use_of_property3 = '';
+            $interest_rate3 = '';
+            $mortgage_emi3 = '';
+            $mortgage_loan_amount4 = '';
+            $purchase_price4 = '';
+            $type_of_loan4 = '';
+            $term_of_loan4 = '';
+            $end_use_of_property4 = '';
+            $interest_rate4 = '';
+            $mortgage_emi4 = '';
+            // $inputs = $request->all();
             $user_id = $user->id;
+            // $inputs['user_id'] = $user_id;
+
+            if($request->details_of_cards){
+              $i = 1;
+              $bus_data = json_decode($request->details_of_cards);
+              foreach($bus_data as $key => $details_of_card) {
+                  if($i == 1){
+                    $details_of_cards = $details_of_card->details_of_cards;
+                    $credit_bank_name = $details_of_card->credit_bank_name;
+                    $card_limit = $details_of_card->card_limit;
+                  } elseif ($i == 2) {
+                    $details_of_cards2 = $details_of_card->details_of_cards;
+                    $credit_bank_name2 = $details_of_card->credit_bank_name;
+                    $card_limit2 = $details_of_card->card_limit;
+                  } elseif ($i == 3) {
+                    $details_of_cards3 = $details_of_card->details_of_cards;
+                    $credit_bank_name3 = $details_of_card->credit_bank_name;
+                    $card_limit3 = $details_of_card->card_limit;
+                  } else {
+                    $details_of_cards4 = $details_of_card->details_of_cards;
+                    $credit_bank_name4 = $details_of_card->credit_bank_name;
+                    $card_limit4 = $details_of_card->card_limit;
+                  }
+                $i++;
+              } 
+            }
+        
+            if($request->loan_bank_name){ 
+              $i = 1;
+              $bus_data = json_decode($request->loan_bank_name);
+              foreach($bus_data as $loan_bank_nam) {
+                  if($i == 1){
+                    $loan_bank_name = $loan_bank_nam->loan_bank_name;
+                    $original_loan_amount = $loan_bank_nam->original_loan_amount;
+                    $loan_emi = $loan_bank_nam->loan_emi;
+                  } elseif ($i == 2) {
+                    $loan_bank_name2 = $loan_bank_nam->loan_bank_name;
+                    $original_loan_amount2 = $loan_bank_nam->original_loan_amount;
+                    $loan_emi2 = $loan_bank_nam->loan_emi;
+                  } elseif ($i == 3) {
+                    $loan_bank_name3 = $loan_bank_nam->loan_bank_name;
+                    $original_loan_amount3 = $loan_bank_nam->original_loan_amount;
+                    $loan_emi3 = $loan_bank_nam->loan_emi;
+                  } else {
+                    $loan_bank_name4 = $loan_bank_nam->loan_bank_name; 
+                    $original_loan_amount4 = $loan_bank_nam->original_loan_amount;
+                    $loan_emi4 = $loan_bank_nam->loan_emi;
+                  }
+                $i++;
+              }
+            }
+          
+            
+            if($request->business_loan_amount){ 
+              $i = 1;
+              $bus_data = json_decode($request->business_loan_amount);
+              foreach($bus_data as $businessLoan) {
+                  //dd($businessLoan->businessLoan);
+                  if($i == 1){
+                    $business_loan_amount = $businessLoan->business_loan_amount;
+                    $business_loan_emi = $businessLoan->business_loan_emi; 
+                  } elseif ($i == 2) {
+                    $business_loan_amount2 = $businessLoan->business_loan_amount;
+                    $business_loan_emi2 = $businessLoan->business_loan_emi; 
+                  } elseif ($i == 3) {
+                    $business_loan_amount3 = $businessLoan->business_loan_amount;
+                    $business_loan_emi3 = $businessLoan->business_loan_emi; 
+                  } else {
+                    $business_loan_amount4 = $businessLoan->business_loan_amount; 
+                    $business_loan_emi4 = $businessLoan->business_loan_emi; 
+                  }
+                $i++;
+              }
+            }
+
+          if($request->mortgage_loan_amount){ 
+            $i = 1;
+            $bus_data = json_decode($request->mortgage_loan_amount);
+            foreach($bus_data as $mortgage_loan_amoun) {
+                if($i == 1){
+                  $mortgage_loan_amount = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate = $mortgage_loan_amoun->interest_rate;
+                  $mortgage_emi = $mortgage_loan_amoun->mortgage_emi;
+                } elseif ($i == 2) {
+                  $mortgage_loan_amount2 = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price2 = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan2 = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan2 = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property2 = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate2 = $mortgage_loan_amoun->interest_rate;
+                  $mortgage_emi2 = $mortgage_loan_amoun->mortgage_emi;
+                } elseif ($i == 3) {
+                  $mortgage_loan_amount3 = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price3 = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan3 = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan3 = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property3 = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate3 = $mortgage_loan_amoun->interest_rate;
+                  $mortgage_emi3 = $mortgage_loan_amoun->mortgage_emi;
+                } else {
+                  $mortgage_loan_amount4 = $mortgage_loan_amoun->mortgage_loan_amount;
+                  $purchase_price4 = $mortgage_loan_amoun->purchase_price;
+                  $type_of_loan4 = $mortgage_loan_amoun->type_of_loan;
+                  $term_of_loan4 = $mortgage_loan_amoun->term_of_loan;
+                  $end_use_of_property4 = $mortgage_loan_amoun->end_use_of_property;
+                  $interest_rate4 = $mortgage_loan_amoun->interest_rate; 
+                  $mortgage_emi4 = $mortgage_loan_amoun->mortgage_emi; 
+                }
+              $i++;
+            }
+          }
+           
+
+            $inputs['credit_card_limit'] =  $credit_card_limit;
             $inputs['user_id'] = $user_id;
+            $inputs['details_of_cards'] =  $details_of_cards;
+            $inputs['credit_bank_name'] = $credit_bank_name;
+            $inputs['card_limit'] =  $card_limit;
+            $inputs['details_of_cards2'] = $details_of_cards2;
+            $inputs['credit_bank_name2'] =  $credit_bank_name2;
+            $inputs['card_limit2'] = $card_limit2;
+            $inputs['details_of_cards3'] =  $details_of_cards3;
+            $inputs['credit_bank_name3'] = $credit_bank_name3;
+            $inputs['card_limit3'] =  $card_limit3;
+            $inputs['details_of_cards4'] = $details_of_cards4;
+            $inputs['credit_bank_name4'] =  $credit_bank_name4;
+            $inputs['card_limit4'] = $card_limit4;
+            $inputs['loan_amount'] =  $loan_amount;
+            $inputs['loan_bank_name'] = $loan_bank_name;
+            $inputs['original_loan_amount'] =  $original_loan_amount;
+            $inputs['loan_emi'] = $loan_emi;
+            $inputs['loan_bank_name2'] =  $loan_bank_name2;
+            $inputs['original_loan_amount2'] = $original_loan_amount2;
+            $inputs['loan_emi2'] =  $loan_emi2;
+            $inputs['loan_bank_name3'] = $loan_bank_name3;
+            $inputs['original_loan_amount3'] =  $original_loan_amount3;
+            $inputs['loan_emi3'] = $loan_emi3;
+            $inputs['loan_bank_name4'] =  $loan_bank_name4;
+            $inputs['original_loan_amount4'] = $original_loan_amount4;
+            $inputs['loan_emi4'] =  $loan_emi4;
+            $inputs['business_loan_amount'] = $business_loan_amount;
+            $inputs['business_loan_emi'] =  $business_loan_emi;
+            $inputs['business_loan_amount2'] = $business_loan_amount2;
+            $inputs['business_loan_emi2'] = $business_loan_emi2;
+            $inputs['business_loan_amount3'] = $business_loan_amount3;
+            $inputs['business_loan_emi3'] =  $business_loan_emi3;
+            $inputs['business_loan_amount4'] = $business_loan_amount4;
+            $inputs['business_loan_emi4'] =  $business_loan_emi4;
+            $inputs['mortgage_loan_amount'] = $mortgage_loan_amount;
+            $inputs['purchase_price'] =  $purchase_price;
+            $inputs['type_of_loan'] = $type_of_loan;
+            $inputs['term_of_loan'] = $term_of_loan;
+            $inputs['end_use_of_property'] = $end_use_of_property;
+            $inputs['interest_rate'] =  $interest_rate;
+            $inputs['mortgage_emi'] = $mortgage_emi;
+            $inputs['mortgage_loan_amount2']  =  $mortgage_loan_amount2;
+            $inputs['purchase_price2'] = $purchase_price2;
+            $inputs['type_of_loan2'] =  $type_of_loan2;
+            $inputs['term_of_loan2'] = $term_of_loan2;
+            $inputs['end_use_of_property2'] =  $end_use_of_property2;
+            $inputs['interest_rate2'] = $interest_rate2;
+            $inputs['mortgage_emi2'] =  $mortgage_emi2;
+            $inputs['mortgage_loan_amount3'] = $mortgage_loan_amount3;
+            $inputs['purchase_price3'] =  $purchase_price3;
+            $inputs['type_of_loan3'] = $type_of_loan3;
+            $inputs['term_of_loan3'] =  $term_of_loan3;
+            $inputs['end_use_of_property3'] = $end_use_of_property3;
+            $inputs['interest_rate3'] = $interest_rate3;
+            $inputs['mortgage_emi3'] = $mortgage_emi3;
+            $inputs['mortgage_loan_amount4'] = $mortgage_loan_amount4;
+            $inputs['purchase_price4'] = $purchase_price4;
+            $inputs['type_of_loan4'] =  $type_of_loan4;
+            $inputs['term_of_loan4'] = $term_of_loan4;
+            $inputs['end_use_of_property4'] =  $end_use_of_property4;
+            $inputs['interest_rate4'] = $interest_rate4;
+            $inputs['mortgage_emi4'] = $mortgage_emi4;
+
+            //dd($inputs);
+
             $cm_sal = ProductRequest::where('user_id', $user_id)->select('id')->first();
             if($cm_sal){
                 $id = $cm_sal->id;
-                (new ProductRequest)->store($inputs, $id); 
+                      
+                (new ProductRequest)->store($inputs, $id);
+
                 $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
             $ser = 1300;
             $ref_id = $ser.$result->id;
@@ -1226,7 +2075,7 @@ class UserController extends Controller
       if($request->api_key){
         $user = User::where('api_key', $request->api_key)->select('id')->first();
         if($user) {
-          $data = ServiceApply::where('customer_id', $user->id)->pluck('service_id')->toArray();
+          $data = ServiceApply::where('customer_id', $user->id)->where('app_status', 0)->pluck('service_id')->toArray();
           return response()->json(['success' => true, 'status' => 200, 'services' => $data]); 
         }
       }
@@ -1241,7 +2090,7 @@ class UserController extends Controller
               if($cm_type){
                 $data = '';
                 if($cm_type->cm_type == 1){
-                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits')->first();
+                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits')->first();
                   
                   if(isset($data->company_name)){
                     $data['company_name'] = $data->company_name;
@@ -1262,6 +2111,16 @@ class UserController extends Controller
                     $data['last_three_salary_credits'] = $data->last_three_salary_credits;
                   } else {
                     $data['last_three_salary_credits'] = null;
+                  }
+                  if(isset($data->last_two_salary_credits)){
+                    $data['last_two_salary_credits'] = $data->last_two_salary_credits;
+                  } else {
+                    $data['last_two_salary_credits'] = null;
+                  }
+                  if(isset($data->last_one_salary_credits)){
+                    $data['last_one_salary_credits'] = $data->last_one_salary_credits;
+                  } else {
+                    $data['last_one_salary_credits'] = null;
                   }
 
 
@@ -1329,13 +2188,24 @@ class UserController extends Controller
                 if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
                     $image_name = rand(100000, 999999);
                     $fileName = '';
+                    // if($file = $request->hasFile('emirates_id_front')) {
+                    //     $file = $request->file('emirates_id_front') ;
+                    //     $img_name = $file->getClientOriginalName();
+                    //     $fileName = $image_name.$img_name;
+                    //     $destinationPath = public_path().'/uploads/emirates_id/' ;
+                    //     $file->move($destinationPath, $fileName);
+                    // }
+
                     if($file = $request->hasFile('emirates_id_front')) {
-                        $file = $request->file('emirates_id_front') ;
-                        $img_name = $file->getClientOriginalName();
-                        $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/emirates_id/' ;
-                        $file->move($destinationPath, $fileName);
+                      $file = $request->file('emirates_id_front') ;
+                      $img_name = $file->getClientOriginalName();
+                      $image_resize = Image::make($file->getRealPath()); 
+                      $image_resize->resize(750, 400);
+                      $fileName = $image_name.$img_name;
+                      $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
                     }
+
+
                     $fname ='/uploads/emirates_id/';
                     $emirates_id_front = $fname.$fileName;
                 } else {
@@ -1345,13 +2215,24 @@ class UserController extends Controller
                 if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
                     $image_name = rand(100000, 999999);
                     $fileName = '';
+
+                    // if($file = $request->hasFile('emirates_id_back')) {
+                    //     $file = $request->file('emirates_id_back') ;
+                    //     $img_name = $file->getClientOriginalName();
+                    //     $fileName = $image_name.$img_name;
+                    //     $destinationPath = public_path().'/uploads/emirates_id/' ;
+                    //     $file->move($destinationPath, $fileName);
+                    // }
+
                     if($file = $request->hasFile('emirates_id_back')) {
-                        $file = $request->file('emirates_id_back') ;
-                        $img_name = $file->getClientOriginalName();
-                        $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/emirates_id/' ;
-                        $file->move($destinationPath, $fileName);
+                      $file = $request->file('emirates_id_back') ;
+                      $img_name = $file->getClientOriginalName();
+                      $image_resize = Image::make($file->getRealPath()); 
+                      $image_resize->resize(750, 400);
+                      $fileName = $image_name.$img_name;
+                      $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
                     }
+
                     $fname ='/uploads/emirates_id/';
                     $emirates_id_back = $fname.$fileName;
                 } else {
@@ -1368,19 +2249,33 @@ class UserController extends Controller
                     'name' =>  $request->first_name_as_per_passport,
                     'middle_name' =>  $request->middle_name,
                     'last_name' => $request->last_name,
+                    'eid_number' => $request->eid_number,
                 ]); 
 
 
                 if(isset($inputs['passport_photo']) or !empty($inputs['passport_photo'])) {
                     $image_name = rand(100000, 999999);
                     $fileName = '';
+
+                    // if($file = $request->hasFile('passport_photo')) {
+                    //     $file = $request->file('passport_photo') ;
+                    //     $img_name = $file->getClientOriginalName();
+                    //     $fileName = $image_name.$img_name;
+                    //     $destinationPath = public_path().'/uploads/passport_images/' ;
+                    //     $file->move($destinationPath, $fileName);
+                    // }
+
                     if($file = $request->hasFile('passport_photo')) {
-                        $file = $request->file('passport_photo') ;
+                        $file = $request->file('passport_photo');
                         $img_name = $file->getClientOriginalName();
+                        $image_resize = Image::make($file->getRealPath()); 
+                        $image_resize->resize(600, 600);
                         $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/passport_images/' ;
-                        $file->move($destinationPath, $fileName);
+                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));               
                     }
+
+
+
                     $fname ='/uploads/passport_images/';
                     $passport_photo = $fname.$fileName;
                 } else {

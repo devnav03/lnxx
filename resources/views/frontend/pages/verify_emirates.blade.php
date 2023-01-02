@@ -7,9 +7,12 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Lorem ipsum</h3>
-<h5>Lorem ipsum dolor sit amet elit.</h5>
-<ul>
+<h3>Welcome Back to <br>Lnxx</h3> 
+<h5>Sign up to continue your account</h5>
+<div style="text-align:center">
+<img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px;" class="img-responsive">
+</div>
+<!-- <ul>
 <li>
 <div class="row">
 <div class="col-md-2">
@@ -57,9 +60,7 @@
 </div>
 </div>
 </li>
-
-
-</ul>
+</ul> -->
 
 
 </div>
@@ -78,7 +79,7 @@
 	@if(session()->has('otp_not_match'))
 	<div class="errors_otp" style="color: #f00; font-size: 12px; padding-top: 2px;">Invalid OTP</div>
 	@else
-	<div class="otp_email" style="color:green; font-size: 14px;">OTP sent on your emirates id number </div>
+	<div class="otp_email" style="color:green; font-size: 14px;">OTP sent on your emirates id registered mobile number</div>
 	@endif
 	<div class="already_exist" style="color:#f00; font-size: 14px;"></div> 
 	@if($errors->has('emirates_otp'))
@@ -88,6 +89,7 @@
 </div>
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Verify</button>
+<p style="margin-bottom: 0px;"><a href="{{ route('cm-details') }}">Skip for now</a></p>
 </div>
 </form>
 

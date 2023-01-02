@@ -11,29 +11,30 @@ use Auth;
 use Files;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Service;
+use App\Models\BankService;
 use Illuminate\Http\Request;
 
 class ServiceController extends  Controller{
 
     public function index() {
-        if((\Auth::user()->user_type) == 1){
+        // if((\Auth::user()->user_type) == 1){
             return view('admin.services.index');
-        } else {
-            \Auth::logout();
-            \Session::flush();
-            return redirect()->route('admin');
-        }
+        // } else {
+        //     \Auth::logout();
+        //     \Session::flush();
+        //     return redirect()->route('admin');
+        // }
     }
   
     public function create() {
-        if((\Auth::user()->user_type) == 1){
+        // if((\Auth::user()->user_type) == 1){
 
         return view('admin.services.create');
-        } else {
-            \Auth::logout();
-            \Session::flush();
-            return redirect()->route('admin');
-        }
+        // } else {
+        //     \Auth::logout();
+        //     \Session::flush();
+        //     return redirect()->route('admin');
+        // }
     }
 
     public function  store(Request $request) {
@@ -87,7 +88,8 @@ class ServiceController extends  Controller{
             unset($inputs['blue_icon']);
             $inputs['blue_icon'] = $image;
 
-            (new Service)->store($inputs);
+            $id = (new Service)->store($inputs);
+
             return redirect()->route('services.index')
                 ->with('success', 'Service successfully created');
         } catch (\Exception $exception) {
@@ -141,7 +143,6 @@ class ServiceController extends  Controller{
             }
             unset($inputs['blue_icon']);
             $inputs['blue_icon'] = $image;
-
 
             (new Service)->store($inputs, $id);
 

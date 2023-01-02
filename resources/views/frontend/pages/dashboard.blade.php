@@ -5,9 +5,33 @@
 <div class="container">  
 <div class="row"> 
 <div class="col-md-9">
+
+@if(session()->has('profile_update_message'))
+    <p style="color: green;margin-bottom: 10px;">Your profile has been successfully updated</p>
+@endif
+
+@if(count($relations) != 0)
+<div class="lorem_dashboard">
+  <h2>My Relations</h2>
+  <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
+  <ul style="padding: 0px;list-style: none;">
+    @foreach($relations as $relation)
+    <li>
+        <div class="service-sel">
+          <h5 style="font-size: 17px; font-weight: 600;">{{ $relation->name }}</h5>
+          <p style="font-size: 14px;margin-bottom: 0px;">Status: @if($relation->status == 0)<span style="font-size: 14px; color: #5EB495;"> Pending </span>@endif </p>
+          <p style="font-size: 14px;">Reference No: #{{ $relation->ref_id }}</p>
+        </div>
+    </li>
+    @endforeach
+  </ul>
+</div>
+@endif
+
+@if(count($service) != 0)
 <div class="our_assistance ser_dt">
 <h2>Select Services</h2>
-<h6 style="font-size: 14px;">You can select multiple products from the below list</h6>
+<h6 style="font-size: 14px; margin-bottom: 0px;">You can select multiple products from the below list</h6>
 
 <form action="{{ route('personal-details') }}" class="personal_details_box" method="post">
 {{ csrf_field() }}  
@@ -19,18 +43,22 @@
       <p style="color: #f00;margin-bottom: 10px;">Kindly select a service</p>
     @endif
     <input type="hidden" name="page" value="service">
-  <ul>
+  <ul style="padding: 0px;">
+@php
+$button = 0;
+@endphp    
   @foreach($service as $service)
 @php
 $services = get_service_status($service->id);
+$button += $services;
 @endphp
 
     <li>
-      <input @if($services == 1) checked="" @endif id="{{ $service->url }}" type="checkbox" value="{{ $service->id }}" name="service[]"/>
-      <label class="ser_label" for="{{ $service->url }}"> 
-        <div class="service-sel @if($services == 1) active_ser @endif">
-          <img src="{!! asset($service->image) !!}" alt="img">
-          <h5>{{ $service->name }}</h5>
+      <label class="ser_label" for="{{ $service->url }}" style="width: 100%;"> 
+      <input id="{{ $service->url }}" @if($services == 1) checked="" @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
+        <div class="service-sel">
+            <!--  <img src="{!! asset($service->image) !!}" alt="img"> -->
+          <h5 style="margin-top: 2px; margin-left: 10px;">{{ $service->name }}</h5>
         </div>
       </label>
     </li>
@@ -38,39 +66,14 @@ $services = get_service_status($service->id);
   </ul>
   </div>
 
-  <div class="col-md-12 text-center">
+  <div class="col-md-12">
 <!--     <a href="{{ route('address-details') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
-    <button type="submit" style="margin-top: 20px;">Proceed</button>
+    <button type="submit" id="elementID" @if($button == 0) disabled="disabled" style="margin-top: 20px;" @else style="margin-top: 20px; background: #000;" @endif >Proceed</button>
   </div>
 </div>
 </form>
 </div>
-
-<div class="lorem_dashboard">
-  <h2>Lorem ipsum</h2>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-  <div class="row">  
-    <div class="col-md-6"> 
-      <img src="{!! asset('assets/frontend/images/dashboard_images.png')  !!}" class="img-responsive">
-    </div>
-    <div class="col-md-6"> 
-      <img src="{!! asset('assets/frontend/images/dashboard_images.png')  !!}" class="img-responsive">
-    </div>
-  </div>
-</div>
-
-<div class="lorem_dashboard">
-  <h2>Lorem ipsum</h2>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-  <div class="row">  
-    <div class="col-md-6"> 
-      <img src="{!! asset('assets/frontend/images/dash_board1.png')  !!}" class="img-responsive">
-    </div>
-    <div class="col-md-6"> 
-      <img src="{!! asset('assets/frontend/images/dash_board1.png')  !!}" class="img-responsive">
-    </div>
-  </div>
-</div>
+@endif
 
 <div class="scan_dashboard">
   <div class="row">
@@ -80,8 +83,8 @@ $services = get_service_status($service->id);
           <img src="{!! asset('assets/frontend/images/found_qr_code_dash.png')  !!}" alt="scan" class="img-responsive">
         </div>
         <div class="col-md-8">
-           <h4>Scan QR to download the Lnxx app.</h4>
-           <p class="app_des">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+           <h4>Download the Lnxx mobile app.</h4>
+           <p class="app_des">Get exclusive offers & enjoy a seamless experience.</p>
         </div>
       </div>
     </div>
@@ -100,14 +103,18 @@ $services = get_service_status($service->id);
 </div>
 </div>
 <div class="col-md-3">
+<div class="info_sidebar" style="padding-bottom: 30px; margin-top: 0px; margin-bottom: 30px;">
+  <h5 style="margin-bottom: 20px;">Refer and Earn</h5>
+  <a href="#" data-toggle="modal" data-target="#exampleModal" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
+</div>  
 <div class="dashboard_sidebar">
-<h3>Lorem ipsum</h3> 
+<h3>Application Update</h3> 
   <div class="row">
     <div class="col-md-3">
       <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
     </div>
     <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
+      <h5 style="line-height: 21px; margin-top: 0px; font-weight: 500; font-size: 14px;">Application no #130092 approved</h5>
     </div>
   </div>
   <div class="row">
@@ -115,7 +122,7 @@ $services = get_service_status($service->id);
       <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
     </div>
     <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
+      <h5 style="line-height: 21px; margin-top: 0px; font-weight: 500; font-size: 14px;">Application no #130093 KYC is pending</h5>
     </div>
   </div>
   <div class="row">
@@ -123,22 +130,11 @@ $services = get_service_status($service->id);
       <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
     </div>
     <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
-      <img src="{!! asset('assets/frontend/images/property_img.png')  !!}" class="img-responsive">
-    </div>
-    <div class="col-md-9">
-      <h5>Lorem ipsum</h5>
+      <h5 style="line-height: 21px; margin-top: 0px; font-weight: 500; font-size: 14px;">Application no #130094 employment details not match</h5>
     </div>
   </div>
 </div>
-<div class="scan_sidebar">
-  <img src="{!! asset('assets/frontend/images/found_qr_code_dash.png')  !!}" alt="scan" class="img-responsive">
-  <p>Scan QR to download the Lnxx app.</p>
-</div>
+
 <div class="info_sidebar">
   <img src="{!! asset('assets/frontend/images/cal_side.png')  !!}" alt="scan" class="img-responsive">
   <h5>Information bulletin</h5>
@@ -151,5 +147,77 @@ $services = get_service_status($service->id);
 </div>
 </section>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Refer a Friend</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+
+          <div class="form-group">
+            <label class="sub-label">Mobile Number*</label>
+            <input name="mobile" class="form-control" value="{{ old('mobile')}}" required="true" type="number">
+            @if($errors->has('mobile'))
+            <span class="text-danger">{{$errors->first('mobile')}}</span>
+            @endif
+          </div>
+
+          <div class="form-group">
+            <label class="sub-label">Name*</label>
+            <input name="name" class="form-control" value="{{ old('name')}}" required="true" type="text">
+            @if($errors->has('name'))
+            <span class="text-danger">{{$errors->first('name')}}</span>
+            @endif
+          </div>
+
+          <div class="form-group">
+            <label class="sub-label">Email ID*</label>
+            <input name="email" class="form-control" value="{{ old('email')}}" required="true" type="email">
+            @if($errors->has('email'))
+            <span class="text-danger">{{$errors->first('email')}}</span>
+            @endif
+          </div>
+
+          <div class="col-md-12 text-center">
+            <button type="submit">Submit</button>
+          </div>
+
+        </form>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 
 @endsection    
+
+<script type="text/javascript">
+  
+function Selectser() {
+  
+  var service_id = [];
+    $('input.ser_chk[type=checkbox]').each(function () {
+        if (this.checked)
+          service_id.push($(this).val());
+    });
+
+  if(service_id != ''){
+    $('#elementID').removeAttr('disabled');
+    document.getElementById("elementID").style.background = "#000";
+  } else {
+    $('#elementID').attr('disabled','disabled');
+    document.getElementById("elementID").style.background = "rgba(9, 15, 5, 0.5)";
+  }
+
+
+}
+
+</script>

@@ -584,7 +584,59 @@ function closeNav() {
 }
 
 </script>
+@if($route == 'product-requested')
+<script type="text/javascript">
+$(".credit_card1_open").click(function(){
+  $(".credit_card1").show();
+  $(".credit_card1_open").hide();
+});
+$(".credit_card2_open").click(function(){
+  $(".credit_card2").show();
+  $(".credit_card2_open").hide();
+});
+$(".credit_card3_open").click(function(){
+  $(".credit_card3").show();
+  $(".credit_card3_open").hide();
+});
+$(".loan_bus2_open").click(function(){
+  $(".bus_lon2").show();
+  $(".loan_bus2_open").hide();
+});
+$(".loan_bus3_open").click(function(){
+  $(".bus_lon3").show();
+  $(".loan_bus3_open").hide();
+});
+$(".loan_bus4_open").click(function(){
+  $(".bus_lon4").show();
+  $(".loan_bus4_open").hide();
+});
+$(".loan_busin2_open").click(function(){
+  $(".loan_busin2").show();
+  $(".loan_busin2_open").hide();
+});
+$(".loan_busin3_open").click(function(){
+  $(".loan_busin3").show();
+  $(".loan_busin3_open").hide();
+});
+$(".loan_busin4_open").click(function(){
+  $(".loan_busin4").show();
+  $(".loan_busin4_open").hide();
+});
+$(".mortgage_loan2_open").click(function(){
+  $(".mortgage_loan2").show();
+  $(".mortgage_loan2_open").hide();
+});
+$(".mortgage_loan3_open").click(function(){
+  $(".mortgage_loan3").show();
+  $(".mortgage_loan3_open").hide();
+});
+$(".mortgage_loan4_open").click(function(){
+  $(".mortgage_loan4").show();
+  $(".mortgage_loan4_open").hide();
+});
 
+</script>
+@endif
 @if($route == 'record-video')
 <script type="text/javascript">
 jQuery(function(){
@@ -647,6 +699,7 @@ jQuery(function(){
         playButton.addEventListener('click', () => {
            
             $('#download').show();
+            $('#skip').hide();
             const superBuffer = new Blob(recordedBlobs, {
                 type: 'video/webm'
             });
@@ -765,6 +818,103 @@ jQuery(function(){
        
 </script>
 @endif
+@if($route == 'cm-details')
+<script type="text/javascript">
+    $(document).ready(function(){
 
+      fetch_product_data1();
+      function fetch_product_data1(query = '') {
+      $.ajax({
+       url:"{{ route('live_product_1') }}",
+       method:'GET',
+       data:{query:query},
+       dataType:'json',
+       success:function(data) {
+        $('#live_product_1').html(data.table_data);
+       }
+      })
+     }
+
+     $(document).on('keyup', '.live_product_1', function(){
+      $("#live_product_1").show();    
+      var query = $(this).val();
+      fetch_product_data1(query);
+     });
+    });
+
+
+    function getProduct_Code_1(val) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('check_product_code') }}",
+            data: {'code' : val},
+            success: function(data){
+                if(data.status == 'Fail'){
+                } else{
+                    $(".product_id").val(data.product_id);
+                    $(".product_name").val(data.product_name);
+                }
+                $("#live_product_1").hide();   
+            }
+        });
+
+    }
+    
+    $(".form-rel").mouseenter(function(){
+    $("#live_product_1").slideDown();
+    }).mouseleave(function(){
+        $("#live_product_1").slideUp();
+    });
+
+
+    $(document).ready(function(){
+
+      fetch_product_data2();
+      function fetch_product_data2(query = '') {
+      $.ajax({
+       url:"{{ route('live_product_2') }}",
+       method:'GET',
+       data:{query:query},
+       dataType:'json',
+       success:function(data) {
+        $('#live_product_2').html(data.table_data);
+       }
+      })
+     }
+
+     $(document).on('keyup', '.live_product_2', function(){
+      $("#live_product_2").show();    
+      var query = $(this).val();
+      fetch_product_data2(query);
+     });
+    });
+
+
+    function getProduct_Code_2(val) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('check_product_code2') }}",
+            data: {'code' : val},
+            success: function(data){
+                if(data.status == 'Fail'){
+                } else{
+                    $(".product_id").val(data.product_id);
+                    $(".product_name2").val(data.product_name);
+                }
+                $("#live_product_2").hide();   
+            }
+        });
+
+    }
+    
+    $(".form-rel2").mouseenter(function(){
+    $("#live_product_2").slideDown();
+    }).mouseleave(function(){
+        $("#live_product_2").slideUp();
+    });
+
+
+</script>
+@endif
 </body>
 </html>

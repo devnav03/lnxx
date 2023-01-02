@@ -1,32 +1,26 @@
 @extends('frontend.layouts.app')
 @section('content')
 
+@php
+if($result) {
+  $sel_country = $result->nationality;
+} else {
+  $sel_country = 229;
+}
+@endphp
+
+
 <section class="personal_details">
 <div class="container">  
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
 <h2>Personal Details</h2>
-<h6>Please enter your information to check the Offer.</h6>
+<h6>Please enter your information to check the offer.</h6>
 
 <form action="{{ route('cm-details') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}  
-
 <div class="row">  
-<!-- <div class="col-md-12">
-@if($result)
-<h6 id="salaried" class="cm_type @if($result->cm_type == 1) active @endif">Salaried</h6>
-<h6 id="self_employed" class="cm_type @if($result->cm_type == 2) active @endif">Self Employed</h6>
-<h6 id="other_employed"  class="cm_type @if($result->cm_type == 3) active @endif">Other</h6>
-<input type="hidden" id="cm_type" name="cm_type" value="{{ $result->cm_type }}">
-@else
-<h6 id="salaried" class="cm_type active">Salaried</h6>
-<h6 id="self_employed" class="cm_type">Self Employed</h6>
-<h6 id="other_employed"  class="cm_type">Other</h6>
-<input type="hidden" id="cm_type" name="cm_type" value="1">
-@endif
-</div> -->
-
 <div class="col-md-12">
 <label>Name As Per Passport</label>
 </div>
@@ -74,12 +68,14 @@
   </div>
 </div>
 </div>
-
+@php
+$min_date = date('Y-m-d', strtotime('-18 years'));
+@endphp
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">DOB*</label>
-      <input name="date_of_birth" class="form-control" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="date" required="true">
+      <label class="sub-label">DOB*</label> 
+      <input name="date_of_birth" class="form-control" max="{{ $min_date }}" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="date" required="true">
       @if($errors->has('date_of_birth'))
       <span class="text-danger">{{$errors->first('date_of_birth')}}</span>
       @endif
@@ -101,16 +97,21 @@
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Nationality*</label>
-      <input name="nationality" class="form-control" required="true" @if($result) value="{{ $result->nationality }}" @else value="{{ old('nationality') }}" @endif type="text">
+      <select name="nationality" onChange="ChangeCountry(this);" class="form-control" required="true">
+        <option value="">select</option>
+        @foreach($countries as $country)
+          <option value="{{ $country->id }}" @if($result) @if($result->nationality == $country->id) selected @endif @else @if($country->id == 229) selected @endif @endif >{{ $country->country_name }}</option>
+        @endforeach
+      </select>
       @if($errors->has('nationality'))
       <span class="text-danger">{{$errors->first('nationality')}}</span>
       @endif
     </div>
   </div>
 
-  <div class="col-md-6">
+  <div class="col-md-6" id="years_in_uae_div" @if($sel_country == 229) style="display: none;" @endif>
     <label class="sub-label">Years In UAE*</label>
-      <input name="years_in_uae" class="form-control" required="true" @if($result) value="{{ $result->years_in_uae }}" @else value="{{ old('years_in_uae') }}" @endif type="number">
+      <input name="years_in_uae" id="years_in_uae" class="form-control" @if($sel_country != 229) required="true" @endif   @if($result) value="{{ $result->years_in_uae }}" @else value="{{ old('years_in_uae') }}" @endif type="number">
       @if($errors->has('years_in_uae'))
       <span class="text-danger">{{$errors->first('years_in_uae')}}</span>
       @endif
@@ -154,14 +155,15 @@
       @endif
     </div>
   </div>
-
+  <div class="col-md-12"></div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)</span></label>
-      <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
+      <label class="sub-label">Upload Emirates id front side <span style="font-size: 13px;">(recommended 750x400px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
       @if(\Auth::user()->emirates_id)
-         <img src="{!! asset(\Auth::user()->emirates_id) !!}" id="blah" class="img-responsive">
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
+        <img src="{!! asset(\Auth::user()->emirates_id) !!}" id="blah" class="img-responsive">
       @else
+          <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
           <img src="" id="blah" class="img-responsive">
       @endif
       @if($errors->has('emirates_id_front'))
@@ -172,12 +174,13 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Emirates id back side <span style="font-size: 13px;">(750x400 px / .png, .jpg, .jpeg)</span></label>
-      <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
+      <label class="sub-label">Upload Emirates id back side <span style="font-size: 13px;">(recommended 750x400px / .png, .jpg, .jpeg, max size 2mb)*</span></label>
       @if(\Auth::user()->emirates_id_back)
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
          <img src="{!! asset(\Auth::user()->emirates_id_back) !!}" id="blah1" class="img-responsive">
       @else
-          <img src="" id="blah1" class="img-responsive">
+        <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
+        <img src="" id="blah1" class="img-responsive">
       @endif
       @if($errors->has('emirates_id_back'))
         <span class="text-danger">{{$errors->first('emirates_id_back')}}</span>
@@ -197,7 +200,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Official E-mail ID</label>
+      <label class="sub-label">Official Mail ID</label>
       <input name="officer_email" class="form-control" @if($result) value="{{ $result->officer_email }}" @else value="{{ old('officer_email') }}" @endif type="email">
       @if($errors->has('officer_email'))
       <span class="text-danger">{{$errors->first('officer_email')}}</span>
@@ -207,21 +210,19 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(600x600 px / .png, .jpg, .jpeg)</span></label>
-      <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+      <label class="sub-label">Upload Passport <span style="font-size: 13px;">(recommended 600x600px / .png, .jpg, .jpeg, max size 2mb)* </span></label>
       @if(isset($result->passport_photo))
-         <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive">
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+        <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive" style="max-height: 110px;">
       @else
-          <img src="" id="blah2" class="img-responsive">
+        <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+        <img src="" id="blah2" class="img-responsive" style="max-height: 110px;">
       @endif
       @if($errors->has('passport_photo'))
         <span class="text-danger">{{$errors->first('passport_photo')}}</span>
       @endif
     </div>
   </div>
-
-
-
 
   <!-- <div class="col-md-6">
     <label class="sub-label">Country</label>
@@ -234,11 +235,11 @@
   </div> -->
   <!-- <div class="col-md-12">
     <label>Passport Details</label>
-  </div>
+  </div> -->
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Passport Number</label>
-      <input name="passport_number" class="form-control" @if($result) value="{{ $result->passport_number }}" @else value="{{ old('passport_number') }}"  @endif type="text" required="true">
+      <label class="sub-label">Passport Number*</label>
+      <input name="passport_number" class="form-control" required="true" @if($result) value="{{ $result->passport_number }}" @else value="{{ old('passport_number') }}" @endif type="text">
       @if($errors->has('passport_number'))
       <span class="text-danger">{{$errors->first('passport_number')}}</span>
       @endif
@@ -246,14 +247,14 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Passport Expiry Date</label>
-      <input name="passport_expiry_date" class="form-control" onfocus="(this.type='date')" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text" required="true">
+      <label class="sub-label">Passport Expiry Date*</label>
+      <input name="passport_expiry_date" class="form-control" required="true" onfocus="(this.type='date')" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text">
       @if($errors->has('passport_expiry_date'))
       <span class="text-danger">{{$errors->first('passport_expiry_date')}}</span>
       @endif
     </div>
   </div>
-  <div class="col-md-12">
+  <!--<div class="col-md-12">
     <label>Visa Details</label>
   </div>
   <div class="col-md-4">
@@ -266,10 +267,21 @@
     </div>
   </div> -->
 
-<div class="col-md-12">
-  <p class="chk_bx"> @if($result) <input required="true" checked="" type="checkbox"> @else <input required="true" type="checkbox"> @endif By proceeding, you agree to the <a href="#">Terms and Conditions</a></p>
-</div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Credit Score</label>
+      <input name="credit_score" class="form-control" @if($result) value="{{ $result->credit_score }}" @else value="{{ old('credit_score') }}" @endif type="number">
+      @if($errors->has('credit_score'))
+      <span class="text-danger">{{$errors->first('credit_score')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label class="chk_bx" style="width: 100%; font-weight: normal; margin-bottom: 15px;"> @if($result) <input required="true" checked="" type="checkbox"> @else <input required="true" type="checkbox"> @endif By proceeding, you agree to the <a href="#">Terms and Conditions</a></label>
+  </div>
   <div class="col-md-12 text-center">
+    <a href="{{ route('user-dashboard') }}" class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
   </div>
 </div>
@@ -295,5 +307,25 @@
 </div>
 </section>
 
+<script type="text/javascript">
+  function ChangeCountry(that) {
+
+    if (that.value == "229") {
+        $("#years_in_uae_div").hide();
+        // $(".show_hide").hide();
+        $("#years_in_uae").removeAttr('required');
+        // $(".Passport_img").removeAttr('required');
+
+
+    } else {
+        $("#years_in_uae_div").show();
+        $("#years_in_uae").attr("required", true);
+        // $(".Passport_img").attr("required", true); 
+        // $(".show_hide").show();
+
+    }
+  }
+
+</script>
 
 @endsection    
