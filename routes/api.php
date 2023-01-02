@@ -56,6 +56,8 @@ Route::any('v1/company-list', ['as' => 'company-list','uses' => 'App\Http\Contro
 
 Route::any('v1/verify-emirate-id', ['as' => 'verify-emirate-id','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
 
+Route::any('v1/verify-emirate', ['as' => 'verify-emirate','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirate']);
+
 Route::any('v1/my-relations', ['as' => 'my-relations','uses' => 'App\Http\Controllers\API\V1\UserController@my_relations']);
 
 Route::any('v1/bank-preference', ['as' => 'bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@bank_preference']);
@@ -63,6 +65,21 @@ Route::any('v1/bank-preference', ['as' => 'bank-preference','uses' => 'App\Http\
 Route::any('v1/save-bank-preference', ['as' => 'save-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_bank_preference']);
 
 Route::any('v1/skip-video', ['as' => 'skip-video','uses' => 'App\Http\Controllers\API\V1\UserController@skipVideo']);
+
+Route::any('v1/refer-friend', ['as' => 'refer-friend','uses' => 'App\Http\Controllers\API\V1\UserController@refer_friend']);
+
+Route::any('v1/save-agent-information', ['as' => 'save-agent-information','uses' => 'App\Http\Controllers\API\V1\UserController@save_agent_information']);
+
+Route::any('v1/cms-content', ['as' => 'cms-content','uses' => 'App\Http\Controllers\API\V1\UserController@cms_content']);
+
+
+
+
+
+
+
+
+
 
 
 

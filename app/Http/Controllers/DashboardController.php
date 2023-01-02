@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Models\Order;
+use App\Models\Application;
 use App\Models\Product;
+use App\Models\Service;
 use App\Models\ProductLot;
 use App\Models\Request as Makerequest;
 use App\Models\OrderProduct;
@@ -21,6 +23,16 @@ class DashboardController extends Controller {
         ->where('user_type', 2)
         ->whereRaw('MONTH(created_at) = ?', [$currentMonth])
         ->count();
+
+        $total_service = Service::where('status', 1)->count();
+
+        $total_appli = (new Application)->totalApplication();
+
+        $newappli = \DB::table("applications")
+        ->whereRaw('MONTH(created_at) = ?', [$currentMonth])
+        ->count();
+
+
         // $total_order = \DB::table('orders')->count(\DB::raw('DISTINCT id'));
         // $newproduct = \DB::table("products")
         // ->whereRaw('MONTH(created_at) = ?',[$currentMonth])
@@ -38,9 +50,8 @@ class DashboardController extends Controller {
         //   ->join('users', 'users.id', '=','orders.user_id')
         //   ->select('orders.id','orders.order_nr', 'users.name')->orderBy('id', 'DESC')->limit(10)->get();
         // $OrderProducts = OrderProduct::select(\DB::raw('sum(quantity) as max_qty'), 'product_id')->groupBy('product_id')->orderBy('max_qty','desc')->limit(10)->get();
-        
-        
-       return view('admin.dashboard', compact('newusers', 'total_user'));
+         
+       return view('admin.dashboard', compact('newusers', 'total_user', 'total_service', 'total_appli', 'newappli'));
        
     }  
 

@@ -6,7 +6,7 @@ $user_base = 'Customer';
 }
 @endphp
 
-@if($route == 'user-dashboard' || $route == 'personal-details' || $route == 'cm-details' || $route == 'product-requested' || $route == 'address-details' || $route ==  'select-services' || $route == 'thank-you' || $route == 'record-video' || $route == 'consent-approval' || $route == 'preference' || $route == 'consent') 
+@if($route == 'user-dashboard' || $route == 'personal-details' || $route == 'cm-details' || $route == 'product-requested' || $route == 'address-details' || $route ==  'select-services' || $route == 'thank-you' || $route == 'record-video' || $route == 'consent-approval' || $route == 'preference' || $route == 'consent' || $route == 'education-detail' || $route == 'credit-card-information' || $route == 'personal-loan-information' || $route == 'information-form') 
 
 <header class="header dashboard-header">
   <div class="container">
@@ -17,7 +17,7 @@ $user_base = 'Customer';
         </div> 
       </div>
       <div class="col-md-6">
-   <!--      <ul class="left_menu">
+        <!-- <ul class="left_menu">
           <li><a href="#">About Us</a></li>
           <li><a href="#">Products</a></li>
           @if($user_base == 'Agent')
@@ -99,17 +99,24 @@ $user_base = 'Customer';
 
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-7">
         <ul class="left_menu">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Products</a></li>
+          <li><a href="#abouttag">About Us</a></li>
+           @if($user_base != 'Agent')
+         
+          <li><a href="sign-in">Credit Cards</a></li>
+          <li><a href="sign-in">Personal Loan</a></li>
+          <li><a href="sign-in">Business Loan</a></li>
+          <li><a href="sign-in">Mortgage Loan</a></li>
+            @endif
+            
           @if($user_base == 'Agent')
           <li><a href="#">Career</a></li>
           @endif
           <li><a href="{{ route('contact-us') }}">Contact Us</a></li>
         </ul>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-4">
         <ul class="right_login">
           <li><a href="#">English <img src="{!! asset('assets/frontend/images/dropdown.png') !!}"></a></li>
         @if(\Auth::check())

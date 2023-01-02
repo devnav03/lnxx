@@ -127,8 +127,8 @@
 <div class="service-box">
 	<div class="row">	
 		@foreach($services as $service)
-		<div class="col-md-6 mx-auto" style="text-align: center;">	
-			<img src="{!! asset($service->blue_icon)  !!}" class="ser_img">
+		<div class="col-md-6 mx-auto" style="text-align: center; margin-top: 10px;">	
+			<img src="{!! asset($service->blue_icon)  !!}" style="max-height: 58px;" class="ser_img">
 			<h4 style="margin-top: 10px;">{{ $service->name }}</h4>
 		</div>
 		@endforeach

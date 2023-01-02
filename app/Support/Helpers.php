@@ -161,8 +161,12 @@ function authUserIdNull() {
     if (\Auth::check()) {
         $id = \Auth::user()->id;
     }
-
     return $id;
+}
+
+function get_family_info($id){
+    $user_id = \Auth::user()->id;
+    return App\Models\Dependent::where('user_id', $user_id)->skip($id)->select('name', 'relation')->first();
 }
 
 function get_service_status($service_id){

@@ -6,10 +6,11 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
-<h2>Address Details</h2>
-<h6>Please enter your information to check the Offer.</h6>
+<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>
+<h2 style="margin-bottom: 20px;">Address Details</h2>
+<!-- <h6>Please enter your information to check the Offer.</h6> -->
 
-<form action="{{ route('thank-you') }}" method="post">
+<form action="{{ route('education-detail') }}" method="post">
 {{ csrf_field() }}  
 
 <div class="row">
@@ -266,10 +267,85 @@
       @endif
     </div>
   </div>
+  
+  <div class="col-md-12">
+    <label>Mailing Address</label>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Po Box</label>
+      <input name="mailing_po_box" @if($result) value="{{ $result->mailing_po_box }}" @else value="{{ old('mailing_po_box') }}" @endif class="form-control" type="text">
+      @if($errors->has('mailing_po_box'))
+      <span class="text-danger">{{$errors->first('mailing_po_box')}}</span>
+      @endif
+    </div>
+  </div>
 
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address Line 1</label>
+      <input name="mailing_address_line" @if($result) value="{{ $result->mailing_address_line }}" @else value="{{ old('mailing_address_line') }}" @endif class="form-control" type="text">
+      @if($errors->has('mailing_address_line'))
+      <span class="text-danger">{{$errors->first('mailing_address_line')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Emirate</label>
+      <input name="mailing_emirate" @if($result) value="{{ $result->mailing_emirate }}" @else value="{{ old('mailing_emirate') }}" @endif class="form-control" type="text">
+      @if($errors->has('mailing_emirate'))
+      <span class="text-danger">{{$errors->first('mailing_emirate')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Preferred Mailing Address</label>
+      <select class="form-control" name="preferred_mailing_address">
+        <option value="">Select</option>
+        <option value="Residential" @if($result) @if($result->preferred_mailing_address == "Residential") selected @endif @endif >Residential</option>
+        <option value="Office" @if($result) @if($result->preferred_mailing_address == "Office") selected @endif @endif>Office</option>
+      </select>
+      @if($errors->has('preferred_mailing_address'))
+      <span class="text-danger">{{$errors->first('preferred_mailing_address')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Preferred Statement Mode</label>
+      <select class="form-control" name="preferred_statement_mode">
+        <option value="">Select</option>
+        <option value="E-Mail" @if($result) @if($result->preferred_statement_mode == "E-Mail") selected @endif @endif >E-Mail</option>
+        <option value="Post" @if($result) @if($result->preferred_statement_mode == "Post") selected @endif @endif>Post</option>
+      </select>
+      @if($errors->has('preferred_statement_mode'))
+      <span class="text-danger">{{$errors->first('preferred_statement_mode')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Preferred Contact Number</label>
+      <select class="form-control" name="preferred_contact_number">
+        <option value="">Select</option>
+        <option value="Home" @if($result) @if($result->preferred_contact_number == "Home") selected @endif @endif >Home</option>
+        <option value="Business" @if($result) @if($result->preferred_contact_number == "Business") selected @endif @endif>Business</option>
+        <option value="Mobile" @if($result) @if($result->preferred_contact_number == "Mobile") selected @endif @endif>Mobile</option>
+      </select>
+      @if($errors->has('preferred_contact_number'))
+      <span class="text-danger">{{$errors->first('preferred_contact_number')}}</span>
+      @endif
+    </div>
+  </div>
 
   <div class="col-md-12 text-center">
-    <a href="{{ route('education-detail') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+  <!--   <a href="{{ route('education-detail') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
     <button type="submit">Proceed</button>
   </div>
 </div>
@@ -277,18 +353,20 @@
 </div>
 </div>
 <div class="col-md-5">
-  <div class="service-step">
-    <h3>Services is only a few step away from you</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+   <div class="service-step">
+    <h3>Please note that all fields marked with an asterisk (*) are required</h3>
+    <p>Thank you for taking the time to complete our form. In order to process your request, we need to collect certain information from you. Please make sure to fill out all of the required fields marked with an asterisk (*). These fields are essential for us to understand your needs and provide you with the best possible service.</p><br>
+    <p>If you have any questions about which fields are required, please don't hesitate to contact us. We're here to help you every step of the way.</p>
   </div>
 
-  <div class="service-step">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <h3>Get money in just a step way*</h3>
-    <p style="border-top: 1px solid rgba(0, 0, 0, 0.5);padding-top: 30px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Risus dis adipiscing ac, consectetur quis aenean. Semper viverra maecenas pharetra tristique tempus platea elit viverra. Proin mauris suspendisse risus sem. In diam odio commodo, sodales tellus convallis tortor. Neque amet eget amet morbi ac at habitant. Enim eget aliquam tempus duis amet. Sed amet sed bibendum ullamcorper. Nam bibendum eu magna in in eget ullamcorper ultrices. Faucibus gravida tristique erat quam tincidunt tincidunt ut morbi.</p>
-  </div>
-
+<div class="service-step">
+    <h3>Get money with just a few simple steps</h3>
+<ul style="padding-left: 15px; color: rgba(0, 0, 0, 0.5);">
+<li>Visit our website. This will help us understand your financial needs and determine which products and services are best for you.</li>
+<li>Submit your application and wait for a response. We'll review your information and get back to you as soon as possible with a decision.</li>
+<li>If your application for credit cards and loans is approved, you'll be able to access the limits that have been set for those products. The limits will likely be based on your credit score, income, and other financial information that you provided as part of the application process.</li>
+</ul>
+</div>
 </div>
 
 </div>

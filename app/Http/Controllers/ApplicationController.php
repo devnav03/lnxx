@@ -19,6 +19,7 @@ use App\Models\ServiceApply;
 use App\Models\Application;
 use App\Models\ApplicationProductRequest;
 use App\Models\Bank;
+use App\Models\ApplicationDependent;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -158,8 +159,10 @@ class ApplicationController extends Controller {
                     ->select('service_applies.status', 'services.name', 'services.image')
                     ->where('service_applies.customer_id', $id)->get();
         $sel_services = ServiceApply::where('customer_id', $id)->pluck('service_id')->toArray();
+
+        $dependents = ApplicationDependent::where('app_id', $id)->select('name', 'relation')->get();
                     
-        return view('admin.applications.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks', 'Application_Request', 'bank', 'service'));
+        return view('admin.applications.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks', 'Application_Request', 'bank', 'service', 'dependents'));
     }
 
 

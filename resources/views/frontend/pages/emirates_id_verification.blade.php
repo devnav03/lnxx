@@ -7,64 +7,11 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Welcome Back to <br>Lnxx</h3> 
-<h5>Sign up to continue your account</h5>
-<div style="text-align:center">
-<img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px;" class="img-responsive">
-</div>
-<!-- <ul>
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-
-</ul> -->
-
-
+	<h3>Start your journey with Lnxx</h3> 
+<!-- 	<h5>Create new account</h5> -->
+	<div style="text-align:center">
+	<img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px;" class="img-responsive">
+	</div>
 </div>
 <div class="col-md-6 sign_up_field">
 <!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->
@@ -87,11 +34,10 @@
 	@if($errors->has('emirates_otp'))
        <span class="text-danger">{{$errors->first('emirates_otp')}}</span>
     @endif
-    
 </div>
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Verify</button>
-<p style="margin-bottom: 0px;"><a href="{{ route('upload-profile-image') }}">Skip for now</a></p>
+<p style="margin-bottom: 0px;"><a style="color: #ddd; font-size: 14px;" href="{{ route('upload-profile-image') }}">Skip for now</a></p>
 </div>
 </form>
 

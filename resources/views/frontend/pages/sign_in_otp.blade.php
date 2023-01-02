@@ -7,7 +7,7 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Welcome Back to Lnxx</h3>
+<h3>Welcome back to Lnxx</h3>
 <h5>Login to continue your account</h5>
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_158.png')  !!}" style="padding-bottom: 20px; max-width: 300px;" class="img-responsive">
@@ -69,7 +69,7 @@
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
 <h3>Sign In</h3>
-<p>Please enter your correct information.</p>
+<p>Please enter the 6-digit OTP verification code</p>
 <form action="{{ route('log-in') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">
