@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 	<head>
 
-		<meta charset="utf-8">
+		<meta charset="utf-8"> 
 		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 		<meta name="description" content="{{ config('app.name', 'Dashboard') }} - ">
 		<meta name="author" content="{{ config('app.name', 'Dashboard') }}">
@@ -23,10 +23,17 @@
         <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
         <!-- Mutipleselect css-->
         <link rel="stylesheet" href="{{ asset('plugins/multipleselect/multiple-select.css') }}">
-
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 	</head>
 
 	<body class="ltr main-body leftmenu">
+         <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <!-- toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
 <!-- Loader -->
 <div id="global-loader">
@@ -111,49 +118,42 @@
                             </div>
                             <!-- Full screen -->
                             <!-- Notification -->
+                            <?php $cDate = \DB::SELECT("SELECT count(id) as note_count FROM `leads` where f_date > (NOW() - interval 3 day) OR f_date > (NOW() + interval 3 day) OR f_date = (NOW())")[0]->note_count; ?>
+                            <?php $get_note_data = DB::SELECT("SELECT * FROM `leads` where f_date > (NOW() - interval 3 day) OR f_date > (NOW() + interval 3 day) OR f_date = (NOW())"); ?>
+                            @if($cDate > 0)
                             <div class="dropdown main-header-notification">
-                            
-                                <div class="dropdown-menu">
-                                    <div class="header-navheading">
-                                        <p class="main-notification-text">You have 1 unread notification<span
-                                                class="badge bg-pill bg-primary ms-3">View all</span></p>
-                                    </div>
+                                <a class="nav-link icon" href="">
+                                    <i class="fe fe-bell header-icons"></i>
+                                    <span class="badge bg-danger nav-link-badge">{{$cDate}}</span>
+                                </a>
+                               <div class="dropdown-menu">
+
                                     <div class="main-notification-list">
+                                        @foreach($get_note_data as $get_note_data)
                                         <div class="media new">
-                                            <div class="main-img-user online"><img alt="avatar"
-                                                    src="{{ asset('img/users/5.jpg') }}"></div>
                                             <div class="media-body">
-                                                <p>Congratulate <strong>Olivia James</strong> for New template
-                                                    start</p>
-                                                <span>Oct 15 12:32pm</span>
+                                                <p>Follow Up<strong> {{$get_note_data->name}} </strong> for {{$get_note_data->product}} </p>
+                                                <span>{{$get_note_data->f_date}} </span>
                                             </div>
                                         </div>
-                                        <div class="media">
-                                            <div class="main-img-user"><img alt="avatar"
-                                                    src="{{ asset('img/users/2.jpg') }}">
-                                            </div>
-                                            <div class="media-body">
-                                                <p><strong>Joshua Gray</strong> New Message Received</p>
-                                                <span>Oct 13
-                                                    02:56am</span>
-                                            </div>
-                                        </div>
-                                        <div class="media">
-                                            <div class="main-img-user online"><img alt="avatar"
-                                                    src="{{ asset('img/users/3.jpg') }}"></div>
-                                            <div class="media-body">
-                                                <p><strong>Elizabeth Lewis</strong> added new schedule realease
-                                                </p><span>Oct
-                                                    12 10:40pm</span>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
                                     <div class="dropdown-footer">
                                         <a href="javascript:void(0)">View All Notifications</a>
                                     </div>
                                 </div>
                             </div>
-                     
+                            @endif
+                            <!-- Notification -->
+                            <!-- Messages -->
+                          <!--   <div class="main-header-notification">
+                                <a class="nav-link icon" href="chat.html">
+                                    <i class="fe fe-message-square header-icons"></i>
+                                    <span class="badge bg-success nav-link-badge">6</span>
+                                </a>
+                            </div> -->
+                            <!-- Messages -->
+                            <!-- Profile -->
                             <div class="dropdown main-profile-menu">
                                 <a class="d-flex" href="javascript:void(0)">
                                     <span class="main-img-user"><img alt="avatar"
@@ -259,8 +259,45 @@
         <!-- Custom js -->
         <script src="{{ asset('js/custom.js') }}"></script>
         <script src="{{ asset('js/template.js') }}"></script>
+        @if(Auth()->user()->user_type == 1)
         <script>
-    //initSample();
-</script>
+            function sendvalue(emp_id,emp_id1) {
+                $.ajax({
+                    type:'GET',
+                    url:"{{url('admin/send-value')}}",
+                    data:{emp_id:emp_id,emp_id1:emp_id1},
+                    success:function(xhr){
+                        location.reload();
+                    }
+                }); 
+            }
+        </script>
+        @elseif(Auth()->user()->user_type == 3)
+        <script>
+            function sendvalue(emp_id,emp_id1) {
+                $.ajax({
+                    type:'GET',
+                    url:"{{url('agent/send-value')}}",
+                    data:{emp_id:emp_id,emp_id1:emp_id1},
+                    success:function(xhr){
+                        location.reload();
+                    }
+                }); 
+            }
+        </script>
+        @elseif(Auth()->user()->user_type == 4)
+        <script>
+            function sendvalue(emp_id,emp_id1) {
+                $.ajax({
+                    type:'GET',
+                    url:"{{url('employee/send-value')}}",
+                    data:{emp_id:emp_id,emp_id1:emp_id1},
+                    success:function(xhr){
+                        location.reload();
+                    }
+                }); 
+            }
+        </script>
+        @endif
 	</body>
 </html>

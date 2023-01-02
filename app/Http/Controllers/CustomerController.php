@@ -942,8 +942,11 @@ public function exportSubscribe(){
      }
 
 }
-
-
-
-   
+public function send_value(request $request){
+        \DB::table('leads')->where('id', $request->emp_id1)
+        ->update([
+            'alloted_to' => $request->emp_id
+         ]);
+        }
+    
 }

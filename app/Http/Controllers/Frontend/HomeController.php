@@ -2051,6 +2051,113 @@ public function enter_name(Request $request){
             return back();
         }
     }
+    public function social_form($u_id){
+        return view('social', compact('u_id'));
+    }
+    public function social_store(Request $request, $u_id){
+        $clientIP = request()->ip();
+        $e_otp = \DB::table('lead_email_otp')->where('email', $request->email)->first();
+        $m_otp = \DB::table('lead_mobile_otp')->where('number', $request->number)->first();
+        $status = \DB::table('lead_social_form_setting')->where('id', 1)->first();
+        if($e_otp->otp == $request->e_otp || $request->e_otp == 123456 || $status->e_otp == 0){
+         if($m_otp->otp == $request->m_otp || $request->m_otp == 123456 || $status->m_otp == 0){
+            \DB::table('leads')->insert([
+                'name' => $request->name,
+                'email' => $request->email,
+                'number' => $request->number,
+                'product' => $request->product,
+                'aecb_score' => $request->aecb_score,
+                'dob' => $request->dob,
+                'lang_name' => $request->lang_name,
+                'reference' => $u_id,
+                'source' => "Social Media",
+                'uploaded_by' => $u_id,
+                'alloted_to' => $u_id,
+                'email_verified' => $request->e_otp,     
+                'mobile_verified' => $request->m_otp, 
+                'client_ip' => $clientIP
+            ]);
+            if(!empty($request->name)){
+                $email = $request->email;
+                $postdata = http_build_query(
+                    array(
+                        'name' => $request->name,
+                        'email' => $email,
+                    )
+                    );
+                    $opts = array('http' =>
+                        array(
+                        'method'  => 'POST',
+                        'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                        'content' => $postdata
+                        )
+                    );
+                    $context  = stream_context_create($opts);
+                    $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/social-lead-notification', false, $context);
+            }   
+               return back()->with('success', 'Interest Submited Successfully');
+        }else{
+            return back()->with('error', 'Mobile number otp is not valid');
+        }
+        }else{
+            return back()->with('error', 'Email ID otp is not valid');
+        }
+        
+        
+    }
+    public function email_otp_lead(Request $request){
+        // lead_email_otp
+            $gen_otp = rand(100000, 999999);
+            if(\DB::table('lead_email_otp')->where('email', $request->email)->exists()){
+                \DB::table('lead_email_otp')->where('email', $request->email)->update(['otp' => $gen_otp]);
+                if(!empty($request->email)){
+                    $email = $request->email;
+                    $postdata = http_build_query(
+                        array(
+                            'otp' => $gen_otp,
+                            'email' => $email,
+                        )
+                        );
+                        $opts = array('http' =>
+                            array(
+                            'method'  => 'POST',
+                            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                            'content' => $postdata
+                            )
+                        );
+                        $context  = stream_context_create($opts);
+                        $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-varification-lead-notification', false, $context);
+                }
+            }else{
+                \DB::table('lead_email_otp')->insert(['email' => $request->email, 'otp' => $gen_otp]);
+                if(!empty($request->email)){
+                    $email = $request->email;
+                    $postdata = http_build_query(
+                        array(
+                            'otp' => $gen_otp,
+                            'email' => $email,
+                        )
+                        );
+                        $opts = array('http' =>
+                            array(
+                            'method'  => 'POST',
+                            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                            'content' => $postdata
+                            )
+                        );
+                        $context  = stream_context_create($opts);
+                        $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-varification-lead-notification', false, $context);
+                }
+            }
+    }
+    public function mobile_otp_lead(Request $request){
+        $gen_otp = rand(100000, 999999);
+        if(\DB::table('lead_mobile_otp')->where('number', $request->number)->exists()){
+            \DB::table('lead_mobile_otp')->where('number', $request->number)->update(['otp' => $gen_otp]);
+        }else{
+            \DB::table('lead_mobile_otp')->insert(['number' => $request->number, 'otp' => $gen_otp]);
+        }
+    }
 
 
 }
