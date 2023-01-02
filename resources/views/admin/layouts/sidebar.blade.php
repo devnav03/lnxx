@@ -49,6 +49,15 @@
                                         <span class="sidemenu-label">Dashboard</span>
                                     </a>
                                 </li>
+                            @elseif(auth()->user()->user_type == 4)
+                                <li class="nav-item {{ (request()->is('manager/dashboard')) ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('dashboard') }}">
+                                        <span class="shape1"></span>
+                                        <span class="shape2"></span>
+                                        <i class="ti-home sidemenu-icon menu-icon"></i>
+                                        <span class="sidemenu-label">Dashboard</span>
+                                    </a>
+                                </li>
                             @endif
                             @if(auth()->user()->user_type == 1)
                                 <li class="nav-item">
@@ -262,9 +271,6 @@
                                             <span class="sidemenu-label">Contact Enquiry</span>
                                         </a>
                                     </li>                     
-
-
-                        
                                     <li class="nav-item"><a href="{{ route('logout-admin') }}" class="nav-link with-sub"> <i class="ti-power-off sidemenu-icon menu-icon "></i><span class="sidemenu-label">Log Out</span></a></li>
                           @endif
                         

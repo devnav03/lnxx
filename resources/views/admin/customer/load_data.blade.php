@@ -8,7 +8,7 @@
     <th style="color: #fff;" width="6%" class="text-center">Status</th>
     <th style="color: #fff;" class="text-center">Action</th>
 </tr>
-</thead> 
+</thead>
 <tbody>
 <?php $index = 1; ?>
 
@@ -29,6 +29,7 @@
     <td><a style="color: #000;" href="{!! route('customer.edit', [$detail->id]) !!}">{!! $detail->name !!}</a></td>
     <td>{!! $detail->email !!}</td> 
     <td>{!! $detail->mobile !!}</td>
+
 
 
     <td class="text-center">
@@ -53,5 +54,4 @@
     </td>
 </tr>
 @endif
-    
 </tbody>

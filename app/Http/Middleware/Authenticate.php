@@ -14,6 +14,7 @@ class Authenticate
         $this->auth = $auth;
     }
 
+
     public function handle($request, Closure $next)
     {
         
