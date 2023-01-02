@@ -21,14 +21,17 @@ use App\Models\SmallSlider;
 use App\Models\UserEducation;
 use App\Models\Testimonial;
 use App\Models\ServiceApply;
+use App\Models\PersonalLoanInformation;
 use App\Models\PreRegister;
 use App\Models\Address;
 use App\Models\ApplicationDependent;
+use App\Models\CreditCardInformation;
 use App\Models\Refer;
 use App\Models\ApplicationProductRequest;
 use App\Models\ProductRequest;
 use App\Models\AgentRequest;
 use App\Models\ContentManagement;
+use App\Models\ComanInformation;
 use App\Models\Dependent;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -194,8 +197,6 @@ class HomeController extends Controller {
         }
     }
 
-
-
     public function consent(){
         try{
             $user_id = Auth::id();
@@ -254,6 +255,55 @@ class HomeController extends Controller {
             $two = mt_rand(1,9); 
             $three = mt_rand(100,999);
             return view('frontend.pages.contact_us', compact('two', 'three'));
+        } catch (\Exception $exception) {
+            return back();    
+        } 
+    }
+
+    public function save_information_form(Request $request){
+        try {
+
+            $user_id = Auth::id();
+            $inputs = $request->all();
+            $inputs['user_id'] = $user_id;
+
+            $info = ComanInformation::where('user_id', $user_id)->select('id')->first();
+            
+            if($info){
+                $id = $info->id;
+                (new ComanInformation)->store($inputs, $id); 
+            } else {
+                (new ComanInformation)->store($inputs);
+            }
+            
+
+
+
+
+
+
+        } catch (\Exception $exception) {
+            return back();    
+        } 
+    }
+
+    public function information_form(Request $request){
+        try {
+                $user_id = Auth::id();
+                $result = ComanInformation::where('user_id', $user_id)->first();
+                $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
+                $back = 0;
+                if(in_array(1, $services)){
+                    $back = 1;
+                } else if(in_array(3, $services)) {
+                    $back = 2;
+                } else {
+                    $back = 0;
+                }
+
+            $customer_info =  CustomerOnboarding::where('user_id', $user_id)->select('marital_status')->first();
+
+            return view('frontend.pages.information_form', compact('result', 'back', 'customer_info'));
         } catch (\Exception $exception) {
             return back();    
         } 
@@ -397,20 +447,6 @@ class HomeController extends Controller {
             return back()->with('resume_submit', 'resume_submit');
 
         }  catch(Exception $exception){
-            return back();
-        }
-    }
-
-    public function save_credit_card_information(Request $request){
-
-        try {
-
-
-
-
-
-
-        } catch(Exception $exception){
             return back();
         }
     }
@@ -1053,14 +1089,11 @@ public function enter_name(Request $request){
                     $id = $user->id;
                     return view('frontend.pages.sign_in_otp', compact('id', 'username'));
                 } else {
-
                     if(preg_match('(@)', $request->username) === 1) {
                         return back()->with('username_email_not_exist', 'username_email_not_exist');
                     } else {
                         return back()->with('username_mobile_not_exist', 'username_mobile_not_exist');
                     }
-
-
                 }
             }
         } catch (\Exception $e) {
@@ -1097,7 +1130,6 @@ public function enter_name(Request $request){
                             \Session::put('user_base', 'Customer');
                             return redirect()->route('user-dashboard');
                         }
-
                 } else {
                     return back()->with('otp_not_match', 'otp_not_match');
                 }
@@ -1424,6 +1456,70 @@ public function enter_name(Request $request){
         }
     }
 
+    public function save_credit_card_information(Request $request){
+        try {
+                $user_id =  Auth::id();
+                $inputs = $request->all();  
+                $info = CreditCardInformation::where('user_id', $user_id)->select('id')->first();
+                $inputs['user_id'] = $user_id;
+                if($info){
+                    $id = $info->id;
+                    (new CreditCardInformation)->store($inputs, $id);  
+                } else {
+                    (new CreditCardInformation)->store($inputs); 
+                }
+                $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
+                if(in_array(1, $services)){
+                    return redirect()->route('personal-loan-information');
+                } else {
+                    return redirect()->route('information-form');  
+                }
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+    
+    public function save_personal_loan_information(Request $request){
+        try {
+            
+           // dd($request);
+            $user_id = Auth::id();
+            $inputs = $request->all();  
+            $inputs['user_id'] = $user_id;
+
+            $info = PersonalLoanInformation::where('user_id', $user_id)->select('id')->first();
+            
+            if($info){
+                $id = $info->id;
+                (new PersonalLoanInformation)->store($inputs, $id);
+            } else {
+                (new PersonalLoanInformation)->store($inputs); 
+            }
+
+            return redirect()->route('information-form');
+
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
+    public function personal_loan_information(){
+        try {
+            $user_id = Auth::id();
+            $result = CreditCardInformation::where('user_id', $user_id)->select('id')->first();
+            $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
+            $cred = 0; 
+            if(in_array(3, $services)){
+                $cred = 1;
+            } 
+
+            return view('frontend.pages.personal_loan_information', compact('result', 'cred'));
+
+        } catch(Exception $e) {
+            return back();
+        }
+    }
+
     public function verify_emirates_id(){
         try {
                 $user_id =  Auth::id();
@@ -1466,7 +1562,10 @@ public function enter_name(Request $request){
     
     public function credit_card_information(Request $request){
         try {
-                return view('frontend.pages.credit_card_information');
+                $user_id =  Auth::id();
+                $result = CreditCardInformation::where('user_id', $user_id)->first();
+                return view('frontend.pages.credit_card_information', compact('result'));
+
            } catch (Exception $e) {
             return back();
         }
@@ -1477,6 +1576,7 @@ public function enter_name(Request $request){
                 $user_id =  Auth::id();
                 $inputs = $request->all();
                 $result = UserEducation::where('user_id', $user_id)->first();
+                $inputs['user_id'] = $user_id;
                 if($result){
                     $id = $result->id;
                     (new UserEducation)->store($inputs, $id);
@@ -1489,8 +1589,6 @@ public function enter_name(Request $request){
                 if(in_array(3, $services)){
                     return redirect()->route('credit-card-information');
                 }
-
-
 
         } catch (Exception $e) {
             return back();

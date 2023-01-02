@@ -2692,48 +2692,59 @@ class UserController extends Controller {
           if($request->api_key){
            $user = User::where('api_key', $request->api_key)->select('id', 'profile_image')->first();
           if($user) {  
-
             $inputs = $request->all();
+            if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
 
-            if(isset($inputs['user_image']) or !empty($inputs['user_image']))
-            {
+                // $image_name = rand(100000, 999999);
+                // $fileName = '';
 
-                $image_name = rand(100000, 999999);
-                $fileName = '';
+                // if($file = $request->hasFile('user_image')) 
+                // {
+                //     $file = $request->file('user_image') ;
+                //     $img_name = $file->getClientOriginalName();
+                //     $fileName = $image_name.$img_name;
+                //     $destinationPath = public_path().'/uploads/user_images/' ;
+                //     $file->move($destinationPath, $fileName);
+                // }
+                // $fname ='/uploads/user_images/';
+                // $profile_images = $fname.$fileName;
 
-                if($file = $request->hasFile('user_image')) 
-                {
-                    $file = $request->file('user_image') ;
-                    $img_name = $file->getClientOriginalName();
-                    $fileName = $image_name.$img_name;
-                    $destinationPath = public_path().'/uploads/user_images/' ;
-                    $file->move($destinationPath, $fileName);
-                }
-                $fname ='/uploads/user_images/';
-                $profile_images = $fname.$fileName;
+              $image1 = $request->file('profile_image');
+              $originalExtension1 = $image1->getClientOriginalExtension();
+              $image_s1 = Image::make($image1)->orientate();
+              $image_s1->resize(300, null, function ($constraint) {
+              $constraint->aspectRatio();
+              });
+              $filename1 = random_int(9, 999999999) + time() . '.' . $originalExtension1;
+              $image_s1->save(public_path('/uploads/user_images/'.$filename1));
+              $profile_images = '/uploads/user_images/'.$filename1;
        
-
             } else {
                 $profile_images = $user->profile_image;
             }
 
+             unset($inputs['profile_image']);
 
-            $inputs = $inputs + [ 'updated_by' => $user->id,  'profile_image' => $profile_images,];
+            $inputs = $inputs + [ 'updated_by' => $user->id, 'profile_image' => $profile_images,];
 
             (new User)->store($inputs, $user->id);
             $url = route('get-started'); 
             
-             $u_data = User::where('id', $user->id)->select('id', 'name', 'email', 'gender', 'mobile', 'profile_image', 'date_of_birth')->first();
+             $u_data = User::where('id', $user->id)->select('id', 'salutation', 'name', 'middle_name', 
+              'last_name', 'email', 'gender', 'mobile', 'profile_image', 'date_of_birth')->first();
 
-             $data['id'] = $u_data->id;
-             $data['name'] = $u_data->name;
-             $data['email'] = $u_data->email;
-             $data['mobile'] = $u_data->mobile;
-             $data['date_of_birth'] = $u_data->date_of_birth;
-             if($u_data->profile_image){
+              $data['id'] = $u_data->id;
+              $data['salutation'] = $u_data->salutation;
+              $data['name'] = $u_data->name;
+              $data['middle_name'] = $u_data->middle_name;
+              $data['last_name'] = $u_data->last_name;
+              $data['email'] = $u_data->email;
+              $data['mobile'] = $u_data->mobile;
+              $data['date_of_birth'] = $u_data->date_of_birth;
+              if($u_data->profile_image){
                   $data['profile_image'] = $url.$u_data->profile_image;
                 } else {
-                  $data['profile_image'] =$u_data->profile_image;
+                  $data['profile_image'] = $u_data->profile_image;
               }
              $data['gender'] = $u_data->gender;
 
@@ -2762,12 +2773,12 @@ class UserController extends Controller {
             $token_exist = UserDevice::where('device_token', $inputs['device_token'])->first();
             if (isset($token_exist)) {
                 (new UserDevice)->store($inputs, $token_exist['id']);
-            }else{
+            } else{
                 (new UserDevice)->store($inputs);
             }
             return apiResponse(true, 200, lang('User added successfully'));
 
-        }catch(Exception $e){
+        } catch(Exception $e){
            return apiResponse(false, 500, lang('messages.server_error'));
         }
     }
@@ -2830,12 +2841,16 @@ class UserController extends Controller {
         try{
 
           if($request->api_key){
-           $user = User::where('api_key', $request->api_key)->select('id', 'name', 'email', 'mobile', 'profile_image', 'gender', 'date_of_birth')->first();
+           $user = User::where('api_key', $request->api_key)->select('id', 'salutation', 'name', 
+            'middle_name', 'last_name', 'email', 'mobile', 'profile_image', 'gender', 'date_of_birth')->first();
             $url = route('get-started'); 
 
             if($user){
             $data['id'] = $user->id;
+            $data['salutation'] = $user->salutation;
             $data['name'] = $user->name;
+            $data['middle_name'] = $user->middle_name;
+            $data['last_name'] = $user->last_name;
             $data['email'] = $user->email;
             $data['mobile'] = $user->mobile;
             $data['date_of_birth'] = $user->date_of_birth;

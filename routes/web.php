@@ -382,13 +382,15 @@ Route::any('personal-details', [App\Http\Controllers\Frontend\HomeController::cl
 Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::class, 'update_profile'])->name('profile-update');
 Route::any('cm-details', [App\Http\Controllers\Frontend\HomeController::class, 'cm_details'])->name('cm-details');
 Route::any('education-detail', [App\Http\Controllers\Frontend\HomeController::class, 'education_detail'])->name('education-detail');
-
 Route::any('save-education-details', [App\Http\Controllers\Frontend\HomeController::class, 'save_education_details'])->name('save-education-details');
-
 Route::any('credit-card-information', [App\Http\Controllers\Frontend\HomeController::class, 'credit_card_information'])->name('credit-card-information');
-
 Route::any('save-credit-card-information', [App\Http\Controllers\Frontend\HomeController::class, 'save_credit_card_information'])->name('save-credit-card-information');
 
+Route::any('personal-loan-information', [App\Http\Controllers\Frontend\HomeController::class, 'personal_loan_information'])->name('personal-loan-information');
+
+Route::any('save-personal-loan-information', [App\Http\Controllers\Frontend\HomeController::class, 'save_personal_loan_information'])->name('save-personal-loan-information');
+Route::any('information-form', [App\Http\Controllers\Frontend\HomeController::class, 'information_form'])->name('information-form');
+Route::any('save-information-form', [App\Http\Controllers\Frontend\HomeController::class, 'save_information_form'])->name('save-information-form');
 
 Route::any('product-requested', [App\Http\Controllers\Frontend\HomeController::class, 'product_requested'])->name('product-requested');
 

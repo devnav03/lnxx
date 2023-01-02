@@ -8,41 +8,112 @@
 <div class="col-md-7">
 <div class="personal_details_box">
 <h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>
-<h2 style="margin-bottom: 15px;">Credit cards details</h2>
+<h2 style="margin-bottom: 15px;">Personal loan information</h2>
 <!-- <h6 style="margin-top: 12px;margin-bottom: 15px;">Please enter your information to check the offer.</h6> -->
-<form action="{{ route('save-credit-card-information') }}" enctype="multipart/form-data" method="post">
+<form action="{{ route('save-personal-loan-information') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}  
 
 <div class="row">
+
+  <div class="col-md-12">
+    <label>Reference Person In Home Country</label>
+  </div>
+  <div class="col-md-4">
+    <label class="sub-label">Salutation*</label>
+    <select name="reference_title" class="form-control" required="true">
+      <option value="Mr." @if($result) @if($result->reference_title == 'Mr.') selected @endif @endif >Mr.</option>
+      <option value="Mrs." @if($result) @if($result->reference_title == 'Mrs.') selected @endif @endif >Mrs.</option>
+      <option value="Miss." @if($result) @if($result->reference_title == 'Miss.') selected @endif @endif >Miss</option>
+      <option value="Dr." @if($result) @if($result->reference_title == 'Dr.') selected @endif @endif >Dr.</option>
+      <option value="Prof." @if($result) @if($result->reference_title == 'Prof.') selected @endif @endif >Prof.</option>
+      <option value="Rev." @if($result) @if($result->reference_title == 'Rev.') selected @endif @endif >Rev.</option>
+      <option value="Other" @if($result) @if($result->reference_title == 'Other') selected @endif @endif >Other</option>
+    </select>
+    @if($errors->has('reference_title'))
+      <span class="text-danger">{{$errors->first('reference_title')}}</span>
+    @endif
+  </div>
+
+
+  <div class="col-md-8">
+    <div class="form-group">
+      <label class="sub-label">Full Name*</label>
+      <input name="reference_full_name" class="form-control" @if($result) value="{{ $result->reference_full_name }}" @else value="{{ old('reference_full_name') }}" @endif required="true" type="text">
+      @if($errors->has('reference_full_name'))
+      <span class="text-danger">{{$errors->first('reference_full_name')}}</span>
+      @endif
+    </div>
+  </div>
+
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Card Type*</label> 
-      <select name="card_type" class="form-control" required="true">
+      <label class="sub-label">Relation*</label>
+      <select name="reference_relation" class="form-control" required="true">
         <option value="">Select</option>
-        <option value="Titanium" @if($result) @if($result->card_type == 'Titanium') selected @endif @endif >Titanium</option>
-        <option value="Platinum" @if($result) @if($result->card_type == 'Platinum') selected @endif @endif >Platinum</option>
-        <option value="Gold" @if($result) @if($result->card_type == 'Gold') selected @endif @endif >Gold</option>
-        <option value="Etc." @if($result) @if($result->card_type == 'Etc.') selected @endif @endif >Etc.</option>
+        <option value="Father" @if($result) @if($result->reference_relation == 'Father') selected @endif @endif >Father</option>
+        <option value="Mother" @if($result) @if($result->reference_relation == 'Mother') selected @endif @endif >Mother</option>
+        <option value="Son" @if($result) @if($result->reference_relation == 'Son') selected @endif @endif>Son</option>
+        <option value="Daughter" @if($result) @if($result->reference_relation == 'Daughter') selected @endif @endif>Daughter</option>
+        <option value="Brother" @if($result) @if($result->reference_relation == 'Brother') selected @endif @endif>Brother</option>
+        <option value="Sister" @if($result) @if($result->reference_relation == 'Sister') selected @endif @endif>Sister</option>
+        <option value="Grandfather" @if($result) @if($result->reference_relation == 'Grandfather') selected @endif @endif>Grandfather</option>
+        <option value="Grandmother" @if($result) @if($result->reference_relation == 'Grandmother') selected @endif @endif>Grandmother</option>
+        <option value="Uncle" @if($result) @if($result->reference_relation == 'Uncle') selected @endif @endif >Uncle</option>
+        <option value="Aunt" @if($result) @if($result->reference_relation == 'Aunt') selected @endif @endif>Aunt</option>
+        <option value="Cousin" @if($result) @if($result->reference_relation == 'Cousin') selected @endif @endif>Cousin</option>
+        <option value="Nephew" @if($result) @if($result->reference_relation == 'Nephew') selected @endif @endif>Nephew</option>
+        <option value="Niece" @if($result) @if($result->reference_relation == 'Niece') selected @endif @endif>Niece</option>
+        <option value="Husband" @if($result) @if($result->reference_relation == 'Husband') selected @endif @endif>Husband</option>
+        <option value="Wife" @if($result) @if($result->reference_relation == 'Wife') selected @endif @endif>Wife</option>
       </select>
-      @if($errors->has('card_type'))
-        <span class="text-danger">{{$errors->first('card_type')}}</span>
+      @if($errors->has('reference_relation'))
+      <span class="text-danger">{{$errors->first('reference_relation')}}</span>
       @endif
     </div>
   </div>
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Embossing Name*</label>
-      <input name="embossing_name" class="form-control" @if($result) value="{{ $result->embossing_name }}" @else value="{{ old('embossing_name') }}" @endif required="true" type="text">
-      @if($errors->has('embossing_name'))
-      <span class="text-danger">{{$errors->first('embossing_name')}}</span>
+      <label class="sub-label">Mobile No.*</label>
+      <input name="reference_mobile_no" class="form-control" @if($result) value="{{ $result->reference_mobile_no }}" @else value="{{ old('reference_mobile_no') }}" @endif required="true" type="number">
+      @if($errors->has('reference_mobile_no'))
+      <span class="text-danger">{{$errors->first('reference_mobile_no')}}</span>
       @endif
     </div>
   </div>
 
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Home Telephone No.</label>
+      <input name="reference_home_telephone_no" class="form-control" @if($result) value="{{ $result->reference_home_telephone_no }}" @else value="{{ old('reference_home_telephone_no') }}" @endif type="number">
+      @if($errors->has('reference_home_telephone_no'))
+      <span class="text-danger">{{$errors->first('reference_home_telephone_no')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Address*</label>
+      <input name="reference_address" class="form-control" @if($result) value="{{ $result->reference_address }}" @else value="{{ old('reference_address') }}" @endif required="true" type="text">
+      @if($errors->has('reference_address'))
+      <span class="text-danger">{{$errors->first('reference_address')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Po Box No.*</label>
+      <input name="reference_po_box_no" class="form-control" @if($result) value="{{ $result->reference_po_box_no }}" @else value="{{ old('reference_po_box_no') }}" @endif required="true" type="number">
+      @if($errors->has('reference_po_box_no'))
+      <span class="text-danger">{{$errors->first('reference_po_box_no')}}</span>
+      @endif
+    </div>
+  </div>
 
   <div class="col-md-12 text-center">
-    <a href="{{ route('education-detail') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+    <a @if($cred == 1) href="{{ route('credit-card-information') }}" @else href="{{ route('education-detail') }}" @endif class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
   </div>
 </div>
