@@ -12,6 +12,200 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//Manager login
+Route::get('/manager/lnxx', [App\Http\Controllers\Auth\ManagerController::class, 'getLogin'])->name('agent');
+Route::post('/manager/login', [App\Http\Controllers\Auth\ManagerController::class, 'postLogin']);
+Route::any('/manager/logout', [App\Http\Controllers\Auth\ManagerController::class, 'agentLogout'])->name('logout-agent');
+Route::group(['middleware' => 'manager', 'after' => 'no-cache'], function () {
+    Route::prefix('manager')->group(function () {
+    Route::get('dashboard', ['as' => 'manager.dashboard', 'uses' => 'App\Http\Controllers\Manager\DashboardController@index']);
+    Route::any('leads/add_lead', [App\Http\Controllers\LeadController::class, 'create'])->name('manager.leads.add_leads');
+    Route::get('manager/lead/sample/sheet/download', 'App\Http\Controllers\UploadController@lead_sample_sheet_download')->name('manager.lead.sample.sheet.download');
+    Route::post('manager/upload/lead', 'App\Http\Controllers\UploadController@manager_lead_upload')->name('manager-upload-lead');
+    Route::resource('manager-lead','App\Http\Controllers\LeadController', [
+        'names' => [
+            'store'     => 'manager-lead.store',
+            'update'    => 'manager-lead.update',
+        ],
+        'except' => ['show','destroy']
+    ]);
+    Route::any('leads/open-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_leads'])->name('manager.leads.open_leads');
+    Route::any('manager/open-lead/action', ['as' => 'manager.open.lead.action',
+            'uses' => 'App\Http\Controllers\LeadController@assignleadAction']);
+    Route::any('manager/open/lead/paginate/{page?}', ['as' => 'manager.open.lead.paginate',
+            'uses' => 'App\Http\Controllers\LeadController@assignleadPaginate']);
+    Route::any('admin-view-details', 'App\Http\Controllers\LeadController@assign_lead_view');
+    Route::any('save-view-details', 'App\Http\Controllers\LeadController@save_view_details');
+    Route::any('leads/closed-leads', [App\Http\Controllers\LeadController::class, 'lead_close_leads'])->name('manager.leads.closed_leads');
+    Route::any('manager/close/lead/paginate/{page?}', ['as' => 'manager.close.lead.paginate',
+            'uses' => 'App\Http\Controllers\LeadController@CloseleadPaginate']);
+    Route::any('manager/close-lead/action', ['as' => 'manager.close.lead.action',
+            'uses' => 'App\Http\Controllers\LeadController@CloseleadsAction']);
+    Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download')->name('manager.leads.lead_close_leads.download');
+    Route::get('manager-lead/page', 'App\Http\Controllers\LeadController@admin_lead_page')->name('manager-lead-tracking');
+    Route::any('emp-lead/tracking-open', 'App\Http\Controllers\Employee\LeadController@admin_lead_open_tracking');
+    Route::any('emp-lead/tracking-inprocess', 'App\Http\Controllers\Employee\LeadController@admin_lead_inprocess_tracking');
+    Route::any('emp-lead/tracking-reminder', 'App\Http\Controllers\Employee\LeadController@admin_lead_reminder_tracking');
+    Route::get('admin-lead/popup', 'App\Http\Controllers\LeadController@admin_lead_popup');
+    Route::get('get-mail', 'App\Http\Controllers\LeadController@get_mail')->name('manager.get.mail');
+    Route::any('send_in_close_status', 'App\Http\Controllers\LeadController@send_in_close_status');
+    Route::get('follow_up_sub', [App\Http\Controllers\LeadController::class, 'follow_up_sub']);
+    Route::any('admin-lead/case-detail', 'App\Http\Controllers\LeadController@case_detail');
+    Route::any('leads/social', [App\Http\Controllers\LeadController::class, 'social'])->name('manager.leads.social');
+    Route::any('manager/employees', [App\Http\Controllers\ManagerController::class, 'manager_employees'])->name('manager.employees');
+    Route::any('employees/paginate/{page?}', ['as' => 'employees.paginate',
+            'uses' => 'App\Http\Controllers\ManagerController@employeespaginate']);
+    Route::any('employees/action', ['as' => 'employees.action',
+            'uses' => 'App\Http\Controllers\ManagerController@employeesaction']);
+    Route::any('admin-lead/mail-details', 'App\Http\Controllers\LeadController@mail_details');
+});
+});
+
+// Agent Login
+Route::any('leads/social/{u_id}', [App\Http\Controllers\Frontend\HomeController::class, 'social_form'])->name('social_form');
+Route::any('email/otp/lead', [App\Http\Controllers\Frontend\HomeController::class, 'email_otp_lead']);
+Route::any('mobile/otp/lead', [App\Http\Controllers\Frontend\HomeController::class, 'mobile_otp_lead']);
+Route::any('leads/store-social/{u_id}', [App\Http\Controllers\Frontend\HomeController::class, 'social_store'])->name('social.lead.store');
+Route::get('/agent/lnxx', [App\Http\Controllers\Auth\AgentController::class, 'getLogin'])->name('agent');
+Route::post('/agent/login', [App\Http\Controllers\Auth\AgentController::class, 'postLogin']);
+Route::any('/agent/logout', [App\Http\Controllers\Auth\AgentController::class, 'agentLogout'])->name('logout-agent');
+
+Route::group(['middleware' => 'agent', 'after' => 'no-cache'], function () {
+    Route::prefix('agent')->group(function () {
+    Route::get('dashboard', ['as' => 'agent.dashboard', 'uses' => 'App\Http\Controllers\Agent\DashboardController@index']);
+    Route::post('agent/upload/lead', 'App\Http\Controllers\UploadController@agent_lead_upload')->name('agent-upload-lead');
+    Route::get('agent/lead/sample/sheet/download', 'App\Http\Controllers\UploadController@lead_sample_sheet_download')->name('agent.lead.sample.sheet.download');
+    Route::resource('agent-lead','App\Http\Controllers\LeadController', [
+        'names' => [
+            'store'     => 'agent-lead.store',
+            'update'    => 'agent-lead.update',
+        ],
+        'except' => ['show','destroy']
+    ]);
+    Route::any('leads/add_lead', [App\Http\Controllers\LeadController::class, 'create'])->name('agent.leads.add_leads');
+    Route::any('leads/edit_lead/{id}', [App\Http\Controllers\Agent\LeadController::class, 'edit_leads'])->name('agent.leads.edit_leads');
+    Route::any('leads/open-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_leads'])->name('agent.leads.open_leads');
+    Route::any('leads/closed-leads', [App\Http\Controllers\LeadController::class, 'lead_close_leads'])->name('agent.leads.closed_leads');
+    Route::any('leads/social', [App\Http\Controllers\LeadController::class, 'social'])->name('agent.leads.social');
+    
+
+    Route::any('employeee/pending/paginate/{page?}', ['as' => 'employeee.pending.paginate',
+    'uses' => 'App\Http\Controllers\Employee\LeadController@leadPendingPaginate']);
+
+    Route::any('employeee/pending/action', ['as' => 'employeee.pending.action',
+            'uses' => 'App\Http\Controllers\Employee\LeadController@leadsPendingAction']);
+    
+    Route::any('agent/open-lead/action', ['as' => 'agent.open.lead.action',
+            'uses' => 'App\Http\Controllers\LeadController@assignleadAction']);
+        
+    Route::any('agent/close/lead/paginate/{page?}', ['as' => 'agent.close.lead.paginate',
+            'uses' => 'App\Http\Controllers\LeadController@CloseleadPaginate']);
+    Route::any('agent/close-lead/action', ['as' => 'agent.close.lead.action',
+            'uses' => 'App\Http\Controllers\LeadController@CloseleadsAction']);
+        
+    Route::any('agent/open/lead/paginate/{page?}', ['as' => 'agent.open.lead.paginate',
+            'uses' => 'App\Http\Controllers\LeadController@assignleadPaginate']);
+    Route::get('send-status', [App\Http\Controllers\Agent\LeadController::class, 'send_status'])->name('agent.send_status');
+    Route::get('runtime-note', [App\Http\Controllers\Agent\LeadController::class, 'runtime_note'])->name('agent.runtime-note');
+    Route::get('runtime-date', [App\Http\Controllers\Agent\LeadController::class, 'runtime_date'])->name('agent.runtime-date');
+    Route::any('agent-lead/tracking-open', 'App\Http\Controllers\Agent\LeadController@admin_lead_open_tracking');
+    Route::any('agent-lead/tracking-reminder', 'App\Http\Controllers\LeadController@admin_lead_reminder_tracking');
+    Route::any('agent-lead/tracking-inprocess', 'App\Http\Controllers\LeadController@admin_lead_inprocess_tracking');
+    Route::get('agent-lead/page', 'App\Http\Controllers\LeadController@admin_lead_page')->name('agent-lead-tracking');
+    Route::get('send-value', [App\Http\Controllers\CustomerController::class, 'send_value']);
+    Route::any('send_in_close_status', 'App\Http\Controllers\LeadController@send_in_close_status');
+    Route::get('get-mail', 'App\Http\Controllers\LeadController@get_mail')->name('agent.get.mail');
+    Route::get('admin-lead/popup', 'App\Http\Controllers\LeadController@admin_lead_popup')->name('agent-lead-popup');
+    Route::any('admin-view-details', 'App\Http\Controllers\LeadController@assign_lead_view');
+    Route::any('save-view-details', 'App\Http\Controllers\LeadController@save_view_details');
+    Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download')->name('agent.leads.lead_close_leads.download');
+    Route::any('admin-lead/case-detail', 'App\Http\Controllers\LeadController@case_detail');
+    Route::get('follow_up_sub', [App\Http\Controllers\LeadController::class, 'follow_up_sub']);
+    Route::any('admin-lead/mail-details', 'App\Http\Controllers\LeadController@mail_details');
+
+    // Route::get('ajax-send', [App\Http\Controllers\Employee\LeadController::class, 'ajax_send'])->name('ajax_send');
+
+});
+
+});
+
+
+
+// Employee login
+Route::get('/employee/lnxx', [App\Http\Controllers\Auth\EmpController::class, 'getLogin'])->name('employee');
+Route::post('/employee/login', [App\Http\Controllers\Auth\EmpController::class, 'postLogin']);
+Route::any('/employee/logout', [App\Http\Controllers\Auth\EmpController::class, 'employeeLogout'])->name('logout-employee');
+
+Route::group(['middleware' => 'emp', 'after' => 'no-cache'], function () {
+        Route::prefix('employee')->group(function () {
+        Route::get('dashboard', ['as' => 'employee.dashboard', 'uses' => 'App\Http\Controllers\Employee\DashboardController@index']);
+        Route::post('emp/upload/lead', 'App\Http\Controllers\UploadController@emp_lead_upload')->name('emp-upload-lead');
+        Route::get('emp/lead/sample/sheet/download', 'App\Http\Controllers\UploadController@lead_sample_sheet_download')->name('emp.lead.sample.sheet.download');
+
+        Route::resource('emp-lead','App\Http\Controllers\LeadController', [
+            'names' => [
+                // 'index'     => 'emp-lead.index',
+                // 'create'    => 'emp-lead.create',
+                'store'     => 'emp-lead.store',
+                'edit'      => 'emp-lead.edit',
+                'update'    => 'emp-lead.update',
+            ],
+            'except' => ['show','destroy']
+        ]);
+        // Route::resource('emp-lead','App\Http\Controllers\LeadController', [
+        //     'names' => [
+        //         'create'     => 'emp-lead.create',
+        //         'update'    => 'emp-lead.update',
+        //     ],
+        //     'except' => ['show','destroy']
+        // ]);
+        Route::any('leads/add_lead', [App\Http\Controllers\LeadController::class, 'create'])->name('leads.add_leads');
+        Route::any('leads/edit_lead/{id}', [App\Http\Controllers\Employee\LeadController::class, 'edit_leads'])->name('leads.edit_leads');
+        Route::any('leads/open-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_leads'])->name('leads.open_leads');
+        Route::any('leads/closed-leads', [App\Http\Controllers\LeadController::class, 'lead_close_leads'])->name('leads.closed_leads');
+         Route::any('leads/social', [App\Http\Controllers\LeadController::class, 'social'])->name('employee.leads.social');
+        Route::any('emp-lead/tracking-open', 'App\Http\Controllers\Employee\LeadController@admin_lead_open_tracking');
+        Route::any('emp-lead/tracking-reminder', 'App\Http\Controllers\Employee\LeadController@admin_lead_reminder_tracking');
+        Route::any('emp-lead/tracking-inprocess', 'App\Http\Controllers\Employee\LeadController@admin_lead_inprocess_tracking');
+        Route::get('emp-lead/page', 'App\Http\Controllers\LeadController@admin_lead_page')->name('emp-lead-tracking');
+
+
+        Route::any('employeee/pending/paginate/{page?}', ['as' => 'employeee.pending.paginate',
+        'uses' => 'App\Http\Controllers\Employee\LeadController@leadPendingPaginate']);
+
+        Route::any('employeee/pending/action', ['as' => 'employeee.pending.action',
+                'uses' => 'App\Http\Controllers\Employee\LeadController@leadsPendingAction']);
+        
+        Route::any('emp/open-lead/action', ['as' => 'emp.open.lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@assignleadAction']);
+            
+        Route::any('emp/close/lead/paginate/{page?}', ['as' => 'emp.close.lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@closeleadPaginate']);
+        Route::any('emp/close-lead/action', ['as' => 'emp.close.lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@closeleadAction']);
+            
+        Route::any('emp/open/lead/paginate/{page?}', ['as' => 'emp.open.lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@assignleadPaginate']);
+        Route::get('emp-lead/popup', 'App\Http\Controllers\Employee\LeadController@admin_lead_popup')->name('emp-lead-popup');
+        Route::any('admin-view-details', 'App\Http\Controllers\LeadController@assign_lead_view');
+            Route::any('save-view-details', 'App\Http\Controllers\LeadController@save_view_details');
+
+        Route::get('send-status', [App\Http\Controllers\Employee\LeadController::class, 'send_status'])->name('send_status');
+        Route::get('runtime-note', [App\Http\Controllers\Employee\LeadController::class, 'runtime_note'])->name('runtime-note');
+        Route::get('runtime-date', [App\Http\Controllers\Employee\LeadController::class, 'runtime_date'])->name('runtime-date');
+        Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download')->name('emp.leads.lead_close_leads.download');
+        Route::get('send-value', [App\Http\Controllers\CustomerController::class, 'send_value']);
+        Route::any('send_in_close_status', 'App\Http\Controllers\LeadController@send_in_close_status');
+        Route::get('get-mail', 'App\Http\Controllers\LeadController@get_mail')->name('emp.get.mail');
+        Route::get('admin-lead/popup', 'App\Http\Controllers\LeadController@admin_lead_popup')->name('emp-lead-popup');
+        Route::get('follow_up_sub', [App\Http\Controllers\LeadController::class, 'follow_up_sub']);
+        Route::any('admin-lead/case-detail', 'App\Http\Controllers\LeadController@case_detail');
+        Route::any('admin-lead/mail-details', 'App\Http\Controllers\LeadController@mail_details');
+
+});
+
+});
+
 
 Route::get('/admin/lnxx', [App\Http\Controllers\Auth\AuthController::class, 'getLogin'])->name('admin');
 Route::post('/admin/login', [App\Http\Controllers\Auth\AuthController::class, 'postLogin']);
@@ -55,9 +249,59 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('export-order', 'CustomerController@export_order')->name('export-order');
             Route::any('customer-record', 'CustomerController@customerRecord')->name('customer-record');
             // Customer route end   
-            Route::any('customer/upload-customer', 'CustomerController@upload_customer')->name('upload-customer');
-            Route::any('customer/import', 'CustomerController@ImportCustomer')->name('customer.import');
-      
+            Route::post('upload/lead', 'App\Http\Controllers\UploadController@lead_upload')->name('upload-lead');
+            Route::get('lead/sample/sheet/download', 'App\Http\Controllers\UploadController@lead_sample_sheet_download')->name('lead.sample.sheet.download');
+            Route::any('admin-lead/case-detail', 'App\Http\Controllers\LeadController@case_detail');
+            Route::any('admin-lead/tracking-open', 'App\Http\Controllers\LeadController@admin_lead_open_tracking');
+            Route::any('admin-lead/tracking-reminder', 'App\Http\Controllers\LeadController@admin_lead_reminder_tracking');
+            Route::any('admin-view-details', 'App\Http\Controllers\LeadController@assign_lead_view');
+            Route::any('save-view-details', 'App\Http\Controllers\LeadController@save_view_details');
+            Route::any('show_popup', 'App\Http\Controllers\LeadController@show_popup'); 
+            Route::any('send_in_close_status', 'App\Http\Controllers\LeadController@send_in_close_status');
+            Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download')->name('leads.lead_close_leads.download');
+    
+            Route::any('admin-lead/tracking-inprocess', 'App\Http\Controllers\LeadController@admin_lead_inprocess_tracking');
+            Route::get('admin-lead/page', 'App\Http\Controllers\LeadController@admin_lead_page')->name('admin-lead-tracking');
+            Route::get('admin-lead/popup', 'App\Http\Controllers\LeadController@admin_lead_popup')->name('admin-lead-popup');
+            Route::get('get-mail', 'App\Http\Controllers\LeadController@get_mail')->name('get.mail');
+            Route::resource('lead','App\Http\Controllers\LeadController', [
+                'names' => [
+                    'index'     => 'lead.index',
+                    'create'    => 'lead.create',
+                    'store'     => 'lead.store',
+                    'edit'      => 'lead.edit',
+                    'update'    => 'lead.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+            Route::any('lead/paginate/{page?}', ['as' => 'lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@leadPaginate']);
+            Route::any('lead/action', ['as' => 'lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@leadAction']);
+            Route::any('assign/lead/paginate/{page?}', ['as' => 'assign.lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@assignleadPaginate']);
+            Route::any('assign/lead/action', ['as' => 'assign.lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@assignleadAction']);
+            Route::any('open/lead/paginate/{page?}', ['as' => 'open.lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@openleadPaginate']);
+            Route::any('open/lead/action', ['as' => 'open.lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@openleadAction']);
+            Route::any('auto/lead/paginate/{page?}', ['as' => 'auto.lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@autoleadPaginate']);
+            Route::any('auto/lead/action', ['as' => 'auto.lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@autoleadAction']);
+            Route::any('close/lead/paginate/{page?}', ['as' => 'close.lead.paginate',
+                'uses' => 'App\Http\Controllers\LeadController@closeleadPaginate']);
+            Route::any('close/lead/action', ['as' => 'close.lead.action',
+                'uses' => 'App\Http\Controllers\LeadController@closeleadAction']);
+
+            Route::any('leads/lead-assign-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_leads'])->name('leads.lead_assign_leads');
+            Route::any('leads/lead-assign-automatic-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_automatic_leads'])->name('leads.lead_assign_automatic_leads');
+            Route::any('leads/lead-open-leads', [App\Http\Controllers\LeadController::class, 'lead_open_leads'])->name('leads.lead_open_leads');
+            Route::any('leads/lead-close-leads', [App\Http\Controllers\LeadController::class, 'lead_close_leads'])->name('leads.lead_close_leads');
+            
+            Route::any('multiple/check/val', [App\Http\Controllers\LeadController::class, 'multiple_check_val'])->name('leads.multiple_check_val');
+            
             // Change Password Routes
             Route::any('myaccount', ['as' => 'setting.manage-account',
                 'uses' => 'App\Http\Controllers\SettingController@myAccount']);
@@ -119,7 +363,6 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 ],
                 'except' => ['show','destroy']
             ]);
-
             Route::any('banks/paginate/{page?}', ['as' => 'banks.paginate',
                 'uses' => 'App\Http\Controllers\BankController@servicesPaginate']);
             Route::any('banks/action', ['as' => 'banks.action',
@@ -129,6 +372,29 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('banks/drop/{id?}', ['as' => 'banks.drop',
                 'uses' => 'banks@drop']);
             // banks
+           
+            // Employess Master route start
+            Route::resource('employee', 'App\Http\Controllers\EmpolyeeController', [
+                'names' => [
+                    'index'     => 'employee.index',
+                    'create'    => 'employee.create',
+                    'store'     => 'employee.store',
+                    'edit'      => 'employee.edit',
+                    'update'    => 'employee.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('employee/paginate/{page?}', ['as' => 'employee.paginate',
+                'uses' => 'App\Http\Controllers\EmpolyeeController@empPaginate']);
+            Route::any('employee/action', ['as' => 'employee.action',
+                'uses' => 'App\Http\Controllers\EmpolyeeController@servicesAction']);
+            Route::any('employee/toggle/{id?}', ['as' => 'employee.toggle',
+                'uses' => 'App\Http\Controllers\EmpolyeeController@servicesToggle']);
+            Route::any('employee/drop/{id?}', ['as' => 'employee.drop',
+                'uses' => 'EmpolyeeController@drop']);
+
+            
 
             // testimonials Master route start
             Route::resource('testimonials', 'App\Http\Controllers\TestimonialController', [
@@ -333,6 +599,18 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('company/drop/{id?}', ['as' => 'company.drop',
                 'uses' => 'company@drop']);
             // company
+            Route::get('send-value', [App\Http\Controllers\CustomerController::class, 'send_value']);
+            Route::get('follow_up_sub', [App\Http\Controllers\LeadController::class, 'follow_up_sub']);
+            Route::get('social_form_setting', [App\Http\Controllers\LeadController::class, 'social_form_setting']);
+            Route::get('social_form_e_status', [App\Http\Controllers\LeadController::class, 'social_form_e_status']);
+            Route::get('social_form_m_status', [App\Http\Controllers\LeadController::class, 'social_form_m_status']);
+            Route::post('automatic_save_cat', [App\Http\Controllers\LeadController::class, 'automatic_save_cat']);
+            Route::any('auto-distribution', [App\Http\Controllers\LeadController::class, 'auto_distribution']);
+            Route::any('filter-action-distribution', [App\Http\Controllers\LeadController::class, 'filter_action_distribution']);
+            Route::any('admin-lead/mail-details', 'App\Http\Controllers\LeadController@mail_details');
+            Route::any('emp-agent/filter', 'App\Http\Controllers\EmpolyeeController@emp_agent_filter');
+            Route::any('select-user-lead', 'App\Http\Controllers\LeadController@select_user_lead')->name('select-user-lead');
+            Route::any('get-personal-details', 'App\Http\Controllers\LeadController@get_personal_details')->name('get.personal.details');
 
 });
 

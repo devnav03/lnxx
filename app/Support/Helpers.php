@@ -21,6 +21,25 @@ function isSuperAdmin()
     }
 }
 
+function isEmp()
+{
+    if(\Auth::check()) {
+        return (\Auth::user()->user_type == 4) ? true : false;
+    }
+}
+function isAgent()
+{
+    if(\Auth::check()) {
+        return (\Auth::user()->user_type == 3) ? true : false;
+    }
+}
+function isManager()
+{
+    if(\Auth::check()) {
+        return (\Auth::user()->user_type == 5) ? true : false;
+    }
+}
+
 function pageIndex($index, $page, $perPage)
 {
     return (($page - 1) * $perPage) + $index;
