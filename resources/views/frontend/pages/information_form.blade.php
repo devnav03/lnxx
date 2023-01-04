@@ -17,7 +17,7 @@
   @if($customer_info->marital_status == 'Married')  
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Does Your Spouse Live In Uae?*</label> 
+      <label class="sub-label">Does Your Spouse Live In UAE?*</label> 
       <select name="spouse_live_in_uae" onChange="SpouseLive(this);" class="form-control" required="true">
         <option value="">Select</option>
         <option value="1" @if($result) @if($result->spouse_live_in_uae == 1) selected @endif @endif >Yes</option>
@@ -75,7 +75,7 @@
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Do You Own A Vehicle In Uae?*</label> 
+      <label class="sub-label">Do You Own A Vehicle In UAE?*</label> 
       <select name="vehicle_in_uae" class="form-control" required="true">
         <option value="">Select</option>
         <option value="1" @if($result) @if($result->vehicle_in_uae == 1) selected @endif @endif >Yes</option>
@@ -153,7 +153,7 @@
 
 
   <div class="col-md-12 text-center">
-    <a href="{{ route('education-detail') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+    <a @if($back == 1) href="{{ route('personal-loan-information') }}" @elseif($back == 2) href="{{ route('credit-card-information') }}" @else href="{{ route('education-detail') }}" @endif class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
   </div>
 </div>

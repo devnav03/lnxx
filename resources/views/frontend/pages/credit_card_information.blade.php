@@ -40,6 +40,111 @@
     </div>
   </div>
 
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Cm Billing Cycle Date*</label> 
+      <select name="cm_billing_cycle_date" class="form-control" required="true">
+        <option value="">Select</option>
+        <option value="5Th" @if($result) @if($result->cm_billing_cycle_date == '5Th') selected @endif @endif >5Th</option>
+        <option value="10Th" @if($result) @if($result->cm_billing_cycle_date == '10Th') selected @endif @endif >10Th</option>
+        <option value="19Th" @if($result) @if($result->cm_billing_cycle_date == '19Th') selected @endif @endif >19Th</option>
+        <option value="24Th" @if($result) @if($result->cm_billing_cycle_date == '24Th') selected @endif @endif >24Th</option>
+        <option value="Etc." @if($result) @if($result->cm_billing_cycle_date == 'Etc.') selected @endif @endif >Etc.</option>
+      </select>
+      @if($errors->has('cm_billing_cycle_date'))
+        <span class="text-danger">{{$errors->first('cm_billing_cycle_date')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">E Statement Subscription*</label> 
+      <select name="e_statement_subscription" class="form-control" required="true">
+        <option value="">Select</option>
+        <option value="Yes" @if($result) @if($result->e_statement_subscription == 'Yes') selected @endif @endif >Yes</option>
+        <option value="No" @if($result) @if($result->e_statement_subscription == 'No') selected @endif @endif >No</option>
+      </select>
+      @if($errors->has('e_statement_subscription'))
+        <span class="text-danger">{{$errors->first('e_statement_subscription')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Paper Statement Subscription*</label> 
+      <select name="paper_statement_subscription" class="form-control" required="true">
+        <option value="">Select</option>
+        <option value="Yes" @if($result) @if($result->paper_statement_subscription == 'Yes') selected @endif @endif >Yes</option>
+        <option value="No" @if($result) @if($result->paper_statement_subscription == 'No') selected @endif @endif >No</option>
+      </select>
+      @if($errors->has('paper_statement_subscription'))
+        <span class="text-danger">{{$errors->first('paper_statement_subscription')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-12">
+    <label>Supplementary Applicant(S) Cards Details</label>
+  </div>
+  <div class="col-md-2">
+    <label class="sub-label">Salutation*</label>
+    <select name="supplementary_salutation" class="form-control" required="true">
+      <option value="Mr." @if($result) @if($result->supplementary_salutation == 'Mr.') selected @endif @endif >Mr.</option>
+      <option value="Mrs." @if($result) @if($result->supplementary_salutation == 'Mrs.') selected @endif @endif>Mrs.</option>
+      <option value="Miss." @if($result) @if($result->supplementary_salutation == 'Miss.') selected @endif @endif>Miss</option>
+      <option value="Dr." @if($result) @if($result->supplementary_salutation == 'Dr.') selected @endif @endif >Dr.</option>
+      <option value="Prof." @if($result) @if($result->supplementary_salutation == 'Prof.') selected @endif @endif >Prof.</option>
+      <option value="Rev." @if($result) @if($result->supplementary_salutation == 'Rev.') selected @endif @endif >Rev.</option>
+      <option value="Other" @if($result) @if($result->supplementary_salutation == 'Other') selected @endif @endif >Other</option>
+    </select>
+  </div>
+  <div class="col-md-10">
+    <div class="row">  
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">First Name*</label>
+          <input name="supplementary_first_name" maxlength="16" class="form-control" @if($result) value="{{ $result->supplementary_first_name }}" @else value="{{ old('supplementary_first_name') }}" @endif type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$" required="true">
+          @if($errors->has('supplementary_first_name'))
+          <span class="text-danger">{{$errors->first('supplementary_first_name')}}</span>
+          @endif
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">Middle Name</label>
+          <input name="supplementary_middle_name" class="form-control" maxlength="16" value="{{ $result->supplementary_middle_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
+          @if($errors->has('supplementary_middle_name'))
+          <span class="text-danger">{{$errors->first('supplementary_middle_name')}}</span>
+          @endif
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="sub-label">Last Name*</label>
+          <input name="supplementary_last_name" required="true" maxlength="16" class="form-control" value="{{ $result->supplementary_last_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
+          @if($errors->has('supplementary_last_name'))
+            <span class="text-danger">{{$errors->first('supplementary_last_name')}}</span>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <label class="sub-label">Relationship*</label>
+    <select name="supplementary_relationship" class="form-control" required="true">
+      <option value="Mr." @if($result) @if($result->supplementary_relationship == 'Mr.') selected @endif @endif >Mr.</option>
+      <option value="Mrs." @if($result) @if($result->supplementary_relationship == 'Mrs.') selected @endif @endif>Mrs.</option>
+      <option value="Miss." @if($result) @if($result->supplementary_relationship == 'Miss.') selected @endif @endif>Miss</option>
+      <option value="Dr." @if($result) @if($result->supplementary_relationship == 'Dr.') selected @endif @endif >Dr.</option>
+      <option value="Prof." @if($result) @if($result->supplementary_relationship == 'Prof.') selected @endif @endif >Prof.</option>
+      <option value="Rev." @if($result) @if($result->supplementary_relationship == 'Rev.') selected @endif @endif >Rev.</option>
+      <option value="Other" @if($result) @if($result->supplementary_relationship == 'Other') selected @endif @endif >Other</option>
+    </select>
+  </div>
+
+
 
   <div class="col-md-12 text-center">
     <a href="{{ route('education-detail') }}" class="back_btn">Back</a> &nbsp;&nbsp;

@@ -33,6 +33,7 @@ use App\Models\AgentRequest;
 use App\Models\ContentManagement;
 use App\Models\ComanInformation;
 use App\Models\Dependent;
+use App\Models\ApplicationData;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -273,16 +274,84 @@ class HomeController extends Controller {
                 $id = $info->id;
                 (new ComanInformation)->store($inputs, $id); 
             } else {
-                (new ComanInformation)->store($inputs);
+                $id = (new ComanInformation)->store($inputs);
             }
             
+            $education = UserEducation::where('user_id', $user_id)->first();
 
+            $inputs['education'] = $education->education; 
+            $inputs['primary_school'] = $education->primary_school;
+            $inputs['high_school'] = $education->high_school;
+            $inputs['graduate'] = $education->graduate;
+            $inputs['postgraduate'] = $education->postgraduate;
+            $inputs['others'] = $education->others;
 
+            $address = Address::where('customer_id', $user_id)->select('id')->first();
+            $inputs['permanent_address_home_country_line_1'] = $address->permanent_address_home_country_line_1; 
+            $inputs['permanent_address_home_country_line_2'] = $address->permanent_address_home_country_line_2;
+            $inputs['permanent_address_home_country_line_3'] = $address->permanent_address_home_country_line_3;
+            $inputs['permanent_address_zipcode'] = $address->permanent_address_zipcode;
+            $inputs['permanent_home_country_emirates'] = $address->permanent_home_country_emirates;
+            $inputs['permanent_home_country_po_box'] = $address->permanent_home_country_po_box;
+            $inputs['permanent_address_country'] = $address->permanent_address_country;
+            $inputs['permanent_address_city'] = $address->permanent_address_city;
+            $inputs['permanent_addresstel_with_idd_code'] = $address->permanent_addresstel_with_idd_code;
+            $inputs['residential_address_line_1'] = $address->residential_address_line_1;
+            $inputs['residential_address_line_2'] = $address->residential_address_line_2;
+            $inputs['residential_address_line_3'] = $address->residential_address_line_3;
+            $inputs['residential_address_buliding_name'] = $address->residential_address_buliding_name;
+            $inputs['residential_address_street_name'] = $address->residential_address_street_name;
+            $inputs['residential_address_nearest_landmark'] = $address->residential_address_nearest_landmark;
+            $inputs['residential_emirate'] = $address->residential_emirate;
+            $inputs['residential_po_box'] = $address->residential_po_box;
+            $inputs['office_address_office_address_building_name'] = $address->office_address_office_address_building_name;
+            $inputs['office_address_street_name'] = $address->office_address_street_name;
+            $inputs['office_address_office_address_nearest'] = $address->office_address_office_address_nearest;
+            $inputs['office_emirate'] = $address->office_emirate;
+            $inputs['office_po_box'] = $address->office_po_box;
+            $inputs['mailing_address_line'] = $address->mailing_address_line;
+            $inputs['annual_rent'] = $address->annual_rent;
+            $inputs['mailing_po_box'] = $address->mailing_po_box;
+            $inputs['mailing_emirate'] = $address->mailing_emirate;
+            $inputs['company_name'] = $address->company_name;
+            $inputs['duration_at_current_address'] = $address->duration_at_current_address;
+            $inputs['company_address_line_1'] = $address->company_address_line_1;
+            $inputs['company_address_line_2'] = $address->company_address_line_2;
+            $inputs['company_address_line_3'] = $address->company_address_line_3;
+            $inputs['company_po_box'] = $address->company_po_box;
+            $inputs['company_phone_no'] = $address->company_phone_no;
+            $inputs['company_emirate'] = $address->company_emirate;
+            $inputs['resdence_type'] = $address->resdence_type;
+            $inputs['preferred_mailing_address'] = $address->preferred_mailing_address;
+            $inputs['preferred_statement_mode'] = $address->preferred_statement_mode;
+            $inputs['preferred_contact_number'] = $address->preferred_contact_number;
 
+            $PersonalLoan = PersonalLoanInformation::where('user_id', $user_id)->first();
+            $inputs['reference_title'] = $PersonalLoan->reference_title;
+            $inputs['reference_full_name'] = $PersonalLoan->reference_full_name;
+            $inputs['reference_relation'] = $PersonalLoan->reference_relation;
+            $inputs['reference_mobile_no'] = $PersonalLoan->reference_mobile_no;
+            $inputs['reference_home_telephone_no'] = $PersonalLoan->reference_home_telephone_no;
+            $inputs['reference_address'] = $PersonalLoan->reference_address;
+            $inputs['reference_po_box_no'] = $PersonalLoan->reference_po_box_no;
 
+            $CreditCard = CreditCardInformation::where('user_id', $user_id)->first();
+            $inputs['card_type'] = $CreditCard->card_type;
+            $inputs['embossing_name'] = $CreditCard->embossing_name;
 
+            $services = ServiceApply::where('app_status', 1)->where('customer_id', $user_id)->select('id', 'app_no')->get();
+
+            foreach ($services as $service) {
+                $app_id = Application::where('ref_id', $service->app_no)->select('id')->first();
+                $inputs['app_id'] = $app_id->id;
+                $id = (new ApplicationData)->store($inputs);
+                \DB::table('service_applies')->where('id', $service->id)->delete();
+            }
+
+            return redirect()->route('user-dashboard')->with('app_submit', 'app_submit');
 
         } catch (\Exception $exception) {
+         //  dd($exception);
             return back();    
         } 
     }
@@ -301,7 +370,7 @@ class HomeController extends Controller {
                     $back = 0;
                 }
 
-            $customer_info =  CustomerOnboarding::where('user_id', $user_id)->select('marital_status')->first();
+            $customer_info = CustomerOnboarding::where('user_id', $user_id)->select('marital_status')->first();
 
             return view('frontend.pages.information_form', compact('result', 'back', 'customer_info'));
         } catch (\Exception $exception) {
@@ -1506,7 +1575,7 @@ public function enter_name(Request $request){
     public function personal_loan_information(){
         try {
             $user_id = Auth::id();
-            $result = CreditCardInformation::where('user_id', $user_id)->select('id')->first();
+            $result = PersonalLoanInformation::where('user_id', $user_id)->first();
             $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
             $cred = 0; 
             if(in_array(3, $services)){
@@ -1588,6 +1657,12 @@ public function enter_name(Request $request){
 
                 if(in_array(3, $services)){
                     return redirect()->route('credit-card-information');
+                } else {
+                    if(in_array(1, $services)){
+                        return redirect()->route('personal-loan-information');
+                    } else {
+                        return redirect()->route('information-form');  
+                    }
                 }
 
         } catch (Exception $e) {
