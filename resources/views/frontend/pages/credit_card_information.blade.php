@@ -88,7 +88,7 @@
     <label>Supplementary Applicant(S) Cards Details</label>
   </div>
   <div class="col-md-2">
-    <label class="sub-label">Salutation*</label>
+    <label class="sub-label">Salutation</label>
     <select name="supplementary_salutation" class="form-control" required="true">
       <option value="Mr." @if($result) @if($result->supplementary_salutation == 'Mr.') selected @endif @endif >Mr.</option>
       <option value="Mrs." @if($result) @if($result->supplementary_salutation == 'Mrs.') selected @endif @endif>Mrs.</option>
@@ -103,8 +103,8 @@
     <div class="row">  
       <div class="col-md-4">
         <div class="form-group">
-          <label class="sub-label">First Name*</label>
-          <input name="supplementary_first_name" maxlength="16" class="form-control" @if($result) value="{{ $result->supplementary_first_name }}" @else value="{{ old('supplementary_first_name') }}" @endif type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$" required="true">
+          <label class="sub-label">First Name</label>
+          <input name="supplementary_first_name" maxlength="16" class="form-control" @if($result) value="{{ $result->supplementary_first_name }}" @else value="{{ old('supplementary_first_name') }}" @endif type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
           @if($errors->has('supplementary_first_name'))
           <span class="text-danger">{{$errors->first('supplementary_first_name')}}</span>
           @endif
@@ -113,7 +113,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="sub-label">Middle Name</label>
-          <input name="supplementary_middle_name" class="form-control" maxlength="16" value="{{ $result->supplementary_middle_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
+          <input name="supplementary_middle_name" class="form-control"  @if($result) value="{{ $result->supplementary_middle_name }}" @else value="{{ old('supplementary_middle_name') }}"  @endif type="text">
           @if($errors->has('supplementary_middle_name'))
           <span class="text-danger">{{$errors->first('supplementary_middle_name')}}</span>
           @endif
@@ -121,8 +121,8 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="sub-label">Last Name*</label>
-          <input name="supplementary_last_name" required="true" maxlength="16" class="form-control" value="{{ $result->supplementary_last_name }}" type="text" pattern="(?=^.{2,25}$)(?![.\n])(?=.*[a-zA-Z]).*$">
+          <label class="sub-label">Last Name</label>
+          <input name="supplementary_last_name" class="form-control" @if($result) value="{{ $result->supplementary_last_name }}" @else value="{{ old('supplementary_last_name') }}"  @endif type="text">
           @if($errors->has('supplementary_last_name'))
             <span class="text-danger">{{$errors->first('supplementary_last_name')}}</span>
           @endif
@@ -134,16 +134,164 @@
   <div class="col-md-6">
     <label class="sub-label">Relationship*</label>
     <select name="supplementary_relationship" class="form-control" required="true">
-      <option value="Mr." @if($result) @if($result->supplementary_relationship == 'Mr.') selected @endif @endif >Mr.</option>
-      <option value="Mrs." @if($result) @if($result->supplementary_relationship == 'Mrs.') selected @endif @endif>Mrs.</option>
-      <option value="Miss." @if($result) @if($result->supplementary_relationship == 'Miss.') selected @endif @endif>Miss</option>
-      <option value="Dr." @if($result) @if($result->supplementary_relationship == 'Dr.') selected @endif @endif >Dr.</option>
-      <option value="Prof." @if($result) @if($result->supplementary_relationship == 'Prof.') selected @endif @endif >Prof.</option>
-      <option value="Rev." @if($result) @if($result->supplementary_relationship == 'Rev.') selected @endif @endif >Rev.</option>
-      <option value="Other" @if($result) @if($result->supplementary_relationship == 'Other') selected @endif @endif >Other</option>
+      <option value="Wife" @if($result) @if($result->supplementary_relationship == 'Wife') selected @endif @endif >Wife</option>
+      <option value="Husband" @if($result) @if($result->supplementary_relationship == 'Husband') selected @endif @endif>Husband</option>
+      <option value="Mother" @if($result) @if($result->supplementary_relationship == 'Mother') selected @endif @endif>Mother</option>
+      <option value="Father" @if($result) @if($result->supplementary_relationship == 'Father') selected @endif @endif >Father</option>
+      <option value="Daughter" @if($result) @if($result->supplementary_relationship == 'Daughter') selected @endif @endif >Daughter</option>
+      <option value="Son" @if($result) @if($result->supplementary_relationship == 'Son') selected @endif @endif >Son</option>
+      <option value="Brother" @if($result) @if($result->supplementary_relationship == 'Brother') selected @endif @endif >Brother</option>
+      
+      <option value="Sister" @if($result) @if($result->supplementary_relationship == 'Sister') selected @endif @endif >Sister</option>
+      <option value="Others" @if($result) @if($result->supplementary_relationship == 'Others') selected @endif @endif >Others</option>
+      <option value="Company Partner" @if($result) @if($result->supplementary_relationship == 'Company Partner') selected @endif @endif >Company Partner</option>
     </select>
   </div>
 
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Embossing Name</label>
+      <input name="supplementary_embosing_name" class="form-control" @if($result) value="{{ $result->supplementary_embosing_name }}" @else value="{{ old('supplementary_embosing_name') }}" @endif type="text">
+      @if($errors->has('supplementary_embosing_name'))
+      <span class="text-danger">{{$errors->first('supplementary_embosing_name')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Nationality</label>
+      <select name="supplementary_nationality" class="form-control">
+        <option value="">Select</option>
+        @foreach($countries as $country)
+          <option value="{{ $country->id }}" @if($result) @if($result->supplementary_nationality == $country->id) selected @endif @endif >{{ $country->country_name }}</option>
+        @endforeach
+      </select>
+      @if($errors->has('supplementary_nationality'))
+      <span class="text-danger">{{$errors->first('supplementary_nationality')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Passport No.</label>
+      <input name="supplementary_passport_no" class="form-control" @if($result) value="{{ $result->supplementary_passport_no }}" @else value="{{ old('supplementary_passport_no') }}" @endif type="text">
+      @if($errors->has('supplementary_passport_no'))
+      <span class="text-danger">{{$errors->first('supplementary_passport_no')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Card limit (in AED)</label>
+      <input name="supplementary_credit_limit_aed" class="form-control" pattern="\d*" maxlength="6" @if($result) value="{{ $result->supplementary_credit_limit_aed }}" @else value="{{ old('supplementary_credit_limit_aed') }}" @endif type="text">
+      @if($errors->has('supplementary_credit_limit_aed'))
+      <span class="text-danger">{{$errors->first('supplementary_credit_limit_aed')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <label class="sub-label">Marital Status</label>
+    <select name="supplementary_marital_status" onChange="MaritalStatus(this);" class="form-control">
+      <option value="Single" @if($result) @if($result->supplementary_marital_status == "Single") selected @endif @endif >Single</option>
+      <option value="Married" @if($result) @if($result->supplementary_marital_status == "Married") selected @endif @endif >Married</option>
+      <option value="Others" @if($result) @if($result->supplementary_marital_status == "Others") selected @endif @endif >Others</option>
+    </select>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Mother'S Maiden Name</label>
+      <input name="supplementary_mother_maiden_name" class="form-control" @if($result) value="{{ $result->supplementary_mother_maiden_name }}" @else value="{{ old('supplementary_mother_maiden_name') }}" @endif type="text">
+      @if($errors->has('supplementary_mother_maiden_name'))
+      <span class="text-danger">{{$errors->first('supplementary_mother_maiden_name')}}</span>
+      @endif
+    </div>
+  </div>
+  <div class="col-md-12"> 
+    <label>Credit Shield Plus (Optional)</label>
+  </div>
+  <div class="col-md-12"> 
+    <div class="form-group" style="margin-bottom: 3px;">
+        <label style="font-weight: normal; font-size: 13px; margin-top: 6px;"><input type="checkbox" name="no_sign_up_credit_shield" style="width: 20px; height: 20px; box-shadow: none; margin-right: 10px; margin-top: 0px; float: left;margin-bottom: 5px;" @if($result) @if($result->no_sign_up_credit_shield == "1") checked="" @endif @endif value="1"> No, I would not like to sign up for credit shield plus</label>
+    </div>
+  </div>
+  <div class="col-md-12"> 
+    <div class="form-group">
+        <label style="font-weight: normal; font-size: 13px; margin-top: 6px;"><input style="width: 20px; height: 20px; box-shadow: none; margin-right: 10px; margin-top: 0px; float: left;margin-bottom: 0px;" type="checkbox" name="sign_up_credit_shield_plus" @if($result) @if($result->sign_up_credit_shield_plus == "1") checked="" @endif @endif value="1"> I would like to sign up for credit shield plus applicable for all my emirates islamic credit cards</label>
+    </div>
+  </div>
+  
+  <div class="col-md-12">
+    <label class="sub-label">Master Murabaha Agreement For The Sale Of Commodities For Credit Card Issuance*</label>
+    </div>
+    <div class="col-md-6">
+      <select name="master_murabaha_agreement" required="true" class="form-control">
+        <option value="">Select</option>    
+        <option value="1" @if($result) @if($result->master_murabaha_agreement == "1") selected @endif @endif >Yes</option>
+        <option value="0" @if($result) @if($result->master_murabaha_agreement == "0") selected @endif @endif >No</option>
+      </select>
+    </div>
+    <div class="col-md-12">
+        <label class="sub-label">Kyc Docs <span style="font-size: 13px;">(Income Documents- Sc/Labour Contract/Pay Slip/Bank Statement)</span></label>
+        <input type="file" @if($result)  @else required="true" @endif style="box-shadow: none;width: 100%;" name="kyc_docs"> 
+        @if($result)
+        @if($result->kyc_docs)
+        <a href="{!! asset($result->kyc_docs) !!}" style="display:block; margin-top: -8px; margin-bottom: 15px;" download><i class="fa-solid fa-download"></i> Download</a>
+        @endif
+        @endif
+        @if($result)
+        @if(empty($result->kyc_docs2))
+        <a onclick="kyc_docs1()" class="kyc_docs12" style="background: #5EB495; color: #fff; font-size: 13px; padding: 6px 15px;cursor: pointer;">Add More</a>
+        @endif
+        @else
+        <a onclick="kyc_docs1()" class="kyc_docs12" style="background: #5EB495; color: #fff; font-size: 13px; padding: 6px 15px;cursor: pointer;">Add More</a>
+        @endif
+    </div>
+    
+    <div class="col-md-12 kyc_docs1" @if($result) @if($result->kyc_docs2) style="margin-top:10px;" @else style="display:none;margin-top:10px" @endif  @else style="display:none;margin-top:10px" @endif >
+        <input type="file" style="box-shadow: none;width: 100%; margin-top:10px" name="kyc_docs2"> 
+        @if($result)
+        @if($result->kyc_docs2)
+        <a href="#" style="display:block; margin-top: -8px; margin-bottom: 15px;"><i class="fa-solid fa-download"></i> Download</a>
+        @endif
+        @endif
+        @if($result)
+        @if(empty($result->kyc_docs3))
+        <a onclick="kyc_docs2()" class="kyc_docs13" style="background: #5EB495; color: #fff; font-size: 13px; padding: 6px 15px;cursor: pointer;">Add More</a>
+        @endif
+        @else
+        <a onclick="kyc_docs2()" class="kyc_docs13" style="background: #5EB495; color: #fff; font-size: 13px; padding: 6px 15px;cursor: pointer;">Add More</a>
+        @endif
+    </div>
+    
+    <div class="col-md-12 kyc_docs2" @if($result) @if($result->kyc_docs3) style="margin-top:10px;" @else style="display:none;margin-top:10px;" @endif  @else style="display:none;margin-top:10px;" @endif >
+        <input type="file" style="box-shadow: none;width: 100%; margin-top:10px" name="kyc_docs3"> 
+        @if($result)
+        @if($result->kyc_docs3)
+        <a href="#" style="display:block; margin-top: -8px; margin-bottom: 15px;"><i class="fa-solid fa-download"></i> Download</a>
+        @endif
+        @endif
+        @if($result)
+        @if(empty($result->kyc_docs4))
+        <a onclick="kyc_docs3()" class="kyc_docs14" style="background: #5EB495; color: #fff; font-size: 13px; padding: 6px 15px;cursor: pointer;">Add More</a>
+        @endif
+        @else
+        <a onclick="kyc_docs3()" class="kyc_docs14" style="background: #5EB495; color: #fff; font-size: 13px; padding: 6px 15px;cursor: pointer;">Add More</a>
+        @endif
+    </div>
+    
+    <div class="col-md-12 kyc_docs3" @if($result) @if($result->kyc_docs4) style="margin-top:10px" @else style="display:none; margin-top:10px" @endif  @else style="display:none; margin-top:10px" @endif>
+        <input type="file" style="box-shadow: none;width: 100%;" name="kyc_docs4"> 
+        @if($result)
+        @if($result->kyc_docs4)
+        <a href="#" style="display:block; margin-top: -8px; margin-bottom: 15px;"><i class="fa-solid fa-download"></i> Download</a>
+        @endif
+        @endif
+    </div>
 
 
   <div class="col-md-12 text-center">
@@ -556,7 +704,20 @@
     }
   }
   
-
+    function kyc_docs1(){
+        $(".kyc_docs1").show();
+        $(".kyc_docs12").hide();
+    }
+    function kyc_docs2(){
+        $(".kyc_docs2").show();
+        $(".kyc_docs13").hide();
+    }
+    function kyc_docs3(){
+        $(".kyc_docs3").show();
+        $(".kyc_docs14").hide();
+    }
+    
+    
 
 </script>
 

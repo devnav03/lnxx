@@ -351,13 +351,14 @@ class HomeController extends Controller {
             return redirect()->route('user-dashboard')->with('app_submit', 'app_submit');
 
         } catch (\Exception $exception) {
-         //  dd($exception);
+           //dd($exception);
             return back();    
         } 
     }
 
     public function information_form(Request $request){
         try {
+                
                 $user_id = Auth::id();
                 $result = ComanInformation::where('user_id', $user_id)->first();
                 $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
@@ -374,6 +375,7 @@ class HomeController extends Controller {
 
             return view('frontend.pages.information_form', compact('result', 'back', 'customer_info'));
         } catch (\Exception $exception) {
+            //dd($exception);
             return back();    
         } 
     }
@@ -431,6 +433,31 @@ class HomeController extends Controller {
             $inputs['user_id'] = $user_id;
             $result = '';
             $cm_sal = ProductRequest::where('user_id', $user_id)->select('id')->first();
+
+            if(isset($request->exist_credit)){
+                $inputs['exist_credit'] = 1;
+            } else {
+                $inputs['exist_credit'] = 0;
+            }
+
+            if(isset($request->exist_personal)){
+                $inputs['exist_personal'] = 1;
+            } else {
+                $inputs['exist_personal'] = 0;
+            }
+
+            if(isset($request->exist_business)){
+                $inputs['exist_business'] = 1;
+            } else {
+                $inputs['exist_business'] = 0;
+            }
+            
+            if(isset($request->exist_mortgage)){
+                $inputs['exist_mortgage'] = 1;
+            } else {
+                $inputs['exist_mortgage'] = 0;
+            }
+
             if($cm_sal){
                 $id = $cm_sal->id;
                 (new ProductRequest)->store($inputs, $id); 
@@ -943,6 +970,29 @@ public function enter_name(Request $request){
                         $inputs['status'] = 0;
 
                         $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+
+                        $application_data['exist_credit'] = $ProductRequest->exist_credit;
+                        $application_data['exist_personal'] = $ProductRequest->exist_personal;
+                        $application_data['exist_business'] = $ProductRequest->exist_business;
+                        $application_data['exist_mortgage'] = $ProductRequest->exist_mortgage;
+                        $application_data['credit_member_since'] = $ProductRequest->credit_member_since;
+                        $application_data['credit_member_since2']= $ProductRequest->credit_member_since2;
+                        $application_data['credit_member_since3'] =$ProductRequest->credit_member_since3;
+                        $application_data['credit_member_since4'] =$ProductRequest->credit_member_since4;
+                        $application_data['loan_member_since'] = $ProductRequest->loan_member_since;
+                        $application_data['loan_member_since2'] = $ProductRequest->loan_member_since2;
+                        $application_data['loan_member_since3'] = $ProductRequest->loan_member_since3;
+                        $application_data['loan_member_since4'] = $ProductRequest->loan_member_since4;
+                        $application_data['business_member_since'] = $ProductRequest->business_member_since;
+
+                        $application_data['business_member_since2'] = $ProductRequest->business_member_since2;
+                        $application_data['business_member_since3'] = $ProductRequest->business_member_since3;
+                        $application_data['business_member_since4'] = $ProductRequest->business_member_since4;
+                        $application_data['mortgage_member_since'] = $ProductRequest->mortgage_member_since;
+                        $application_data['mortgage_member_since2'] = $ProductRequest->mortgage_member_since2;
+                        $application_data['mortgage_member_since3'] = $ProductRequest->mortgage_member_since3;
+                        $application_data['mortgage_member_since4'] = $ProductRequest->mortgage_member_since4;
+
                         $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
                         $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
                         $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
@@ -1044,7 +1094,7 @@ public function enter_name(Request $request){
                return view('frontend.pages.thanku', compact('ref_id'));
            
         } catch (\Exception $e) {
-          // dd($e);
+           //dd($e);
             return back();
         }
     }
@@ -1529,7 +1579,92 @@ public function enter_name(Request $request){
         try {
                 $user_id =  Auth::id();
                 $inputs = $request->all();  
-                $info = CreditCardInformation::where('user_id', $user_id)->select('id')->first();
+                $info = CreditCardInformation::where('user_id', $user_id)->select('id', 'kyc_docs', 'kyc_docs2', 'kyc_docs3', 'kyc_docs4')->first();
+
+                if(isset($request->no_sign_up_credit_shield)){
+                    $inputs['no_sign_up_credit_shield'] = $request->no_sign_up_credit_shield;
+                } else {
+                    $inputs['no_sign_up_credit_shield'] = 0;  
+                }
+                if(isset($request->sign_up_credit_shield_plus)){
+                    $inputs['sign_up_credit_shield_plus'] = $request->sign_up_credit_shield_plus;
+                } else {
+                    $inputs['sign_up_credit_shield_plus'] = 0;  
+                }
+                 
+                if(isset($inputs['kyc_docs']) or !empty($inputs['kyc_docs'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs')) {
+                        $file = $request->file('kyc_docs');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs;
+                }  
+                unset($inputs['kyc_docs']);
+                $inputs['kyc_docs'] = $image; 
+                
+                if(isset($inputs['kyc_docs2']) or !empty($inputs['kyc_docs2'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs2')) {
+                        $file = $request->file('kyc_docs2');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs2;
+                }  
+                unset($inputs['kyc_docs2']);
+                $inputs['kyc_docs2'] = $image; 
+                
+                if(isset($inputs['kyc_docs3']) or !empty($inputs['kyc_docs3'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs3')) {
+                        $file = $request->file('kyc_docs3');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs3;
+                }  
+                unset($inputs['kyc_docs3']);
+                $inputs['kyc_docs3'] = $image;
+                
+                if(isset($inputs['kyc_docs4']) or !empty($inputs['kyc_docs4'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs4')) {
+                        $file = $request->file('kyc_docs4');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs4;
+                }  
+                unset($inputs['kyc_docs4']);
+                $inputs['kyc_docs4'] = $image; 
+                
+                
                 $inputs['user_id'] = $user_id;
                 if($info){
                     $id = $info->id;
@@ -1551,7 +1686,7 @@ public function enter_name(Request $request){
     public function save_personal_loan_information(Request $request){
         try {
             
-           // dd($request);
+            
             $user_id = Auth::id();
             $inputs = $request->all();  
             $inputs['user_id'] = $user_id;
@@ -1568,6 +1703,7 @@ public function enter_name(Request $request){
             return redirect()->route('information-form');
 
         } catch (Exception $e) {
+            //dd($e);
             return back();
         }
     }
@@ -1633,7 +1769,8 @@ public function enter_name(Request $request){
         try {
                 $user_id =  Auth::id();
                 $result = CreditCardInformation::where('user_id', $user_id)->first();
-                return view('frontend.pages.credit_card_information', compact('result'));
+                $countries = Country::all();
+                return view('frontend.pages.credit_card_information', compact('result', 'countries'));
 
            } catch (Exception $e) {
             return back();

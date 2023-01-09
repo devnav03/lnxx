@@ -72,7 +72,8 @@ if($result) {
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">DOB*</label> 
-      <input name="date_of_birth" readonly="" class="form-control" id="my_date_picker_dob" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="text" required="true">
+      <input name="date_of_birth" class="form-control" id="my_date_picker_dob" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="text" required="true">
+      <i class="fa-solid fa-calendar"></i>
       @if($errors->has('date_of_birth'))
         <span class="text-danger">{{$errors->first('date_of_birth')}}</span>
       @endif
@@ -137,6 +138,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Spouse DOB*</label>
       <input name="spouse_date_of_birth" id="spouse_date_of_birth" class="form-control" @if($result) @if($result->marital_status == "Married") required="true" @endif value="{{ $result->spouse_date_of_birth }}" @else value="{{ old('spouse_date_of_birth') }}" @endif type="text">
+      <i class="fa-solid fa-calendar"></i>
       @if($errors->has('spouse_date_of_birth'))
       <span class="text-danger">{{$errors->first('spouse_date_of_birth')}}</span>
       @endif
@@ -147,6 +149,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Wedding Anniversary Date*</label>
       <input name="wedding_anniversary_date" id="date_of_joining" class="form-control" @if($result) @if($result->marital_status == "Married") required="true" @endif value="{{ $result->wedding_anniversary_date }}" @else value="{{ old('wedding_anniversary_date') }}" @endif type="text">
+      <i class="fa-solid fa-calendar"></i>
       @if($errors->has('wedding_anniversary_date'))
       <span class="text-danger">{{ $errors->first('wedding_anniversary_date') }}</span>
       @endif
@@ -173,7 +176,6 @@ if($result) {
         <option value="11" @if($result) @if($result->no_of_dependents == 11) selected @endif @endif>11</option>
         <option value="12" @if($result) @if($result->no_of_dependents == 12) selected @endif @endif>12</option>
       </select>
-
       @if($errors->has('no_of_dependents'))
       <span class="text-danger">{{$errors->first('no_of_dependents')}}</span>
       @endif
@@ -647,6 +649,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Date (when the score was fetched)</label>
       <input name="aecb_date" readonly="" class="form-control" id="aecb_date" @if($result) value="{{ $result->aecb_date }}" @else value="{{ old('aecb_date') }}" @endif type="text">
+      <i class="fa-solid fa-calendar"></i>
       @if($errors->has('aecb_date'))
       <span class="text-danger">{{$errors->first('aecb_date')}}</span>
       @endif
@@ -742,6 +745,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Passport Expiry Date*</label>
       <input name="passport_expiry_date" id="my_date_picker"  class="form-control" required="true" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text">
+      <i class="fa-solid fa-calendar"></i>
       @if($errors->has('passport_expiry_date'))
       <span class="text-danger">{{$errors->first('passport_expiry_date')}}</span>
       @endif

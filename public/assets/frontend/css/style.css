@@ -1279,13 +1279,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .personal_details_box button,
 .upload_btn {
-    background: rgba(9, 15, 5, 0.5);
+    background: #000;
     color: #fff;
     border: 0px;
     padding: 9px 60px;
     font-weight: 500;
     margin-top: 10px;
-    border-radius: 5px;
     cursor: pointer;
 }
 .personal_details_box button:hover,
@@ -1322,6 +1321,27 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 14px;
     cursor: pointer;
     margin-bottom: 10px;
+}
+#skip:hover{
+    color: #000 !important;
+}
+.del_fdt {
+    float: right;
+    color: #fff !important;
+    margin-top: 6px;
+    background: #f00;
+    padding: 3px 15px; 
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.personal_details .form-group {
+    position: relative;
+}
+.personal_details .form-group .fa-calendar {
+    position: absolute;
+    top: 40px;
+    right: 15px;
 }
 .cm_type.active{
    background: #FF6722;
@@ -2017,7 +2037,66 @@ footer{
     background-color: #fff !important;
 }
 
+.personal_details_box .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 27px;
+    margin-top: 5px !important;
+}
 
+.personal_details_box .switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.personal_details_box .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.personal_details_box .slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 8px;
+  bottom: 3.5px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.personal_details_box input:checked + .slider {
+  background-color: #5EB495;
+}
+
+.personal_details_box input:focus + .slider {
+  box-shadow: 0 0 1px #5EB495;
+}
+
+.personal_details_box input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.personal_details_box .slider.round {
+  border-radius: 34px;
+}
+
+.personal_details_box .slider.round:before {
+  border-radius: 50%;
+}
 
 
 

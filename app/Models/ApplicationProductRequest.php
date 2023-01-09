@@ -83,6 +83,27 @@ class ApplicationProductRequest extends Model {
         'interest_rate4', 
         'mortgage_emi4',
 
+        'exist_credit',
+        'exist_personal',
+        'exist_business',
+        'exist_mortgage',
+        'credit_member_since',
+        'credit_member_since2',
+        'credit_member_since3',
+        'credit_member_since4',
+        'loan_member_since',
+        'loan_member_since2',
+        'loan_member_since3',
+        'loan_member_since4',
+        'business_member_since',
+        'business_member_since2',
+        'business_member_since3',
+        'business_member_since4',
+        'mortgage_member_since',
+        'mortgage_member_since2',
+        'mortgage_member_since3',
+        'mortgage_member_since4',
+
         'created_at', 
         'updated_at' 
     ];

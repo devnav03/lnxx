@@ -220,6 +220,28 @@
         });
     });
 
+    $(function() {
+        $( ".member_joining" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#credit_member_since" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+    
+
+
 
 </script>
 
@@ -997,6 +1019,49 @@ ga('send', 'pageview');
 <script src="{{asset('assets/frontend/js/video.js')}}"></script>
 
 @endif
+
+@if($route == 'personal-loan-information')
+<script type="text/javascript">
+$(document).ready(function(){
+
+      fetch_product_data2();
+      function fetch_product_data2(query = '') {
+      $.ajax({
+       url:"{{ route('live_product_2') }}",
+       method:'GET',
+       data:{query:query},
+       dataType:'json',
+       success:function(data) {
+        $('#live_product_2').html(data.table_data);
+       }
+      })
+     }
+
+     $(document).on('keyup', '.live_product_2', function(){
+      $("#live_product_2").show();    
+      var query = $(this).val();
+      fetch_product_data2(query);
+     });
+    });
+
+    function getProduct_Code_2(val) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('check_product_code2') }}",
+            data: {'code' : val},
+            success: function(data){
+                if(data.status == 'Fail'){
+                } else{
+                    $(".product_id").val(data.product_id);
+                    $(".product_name2").val(data.product_name);
+                }
+                $("#live_product_2").hide();   
+            }
+        });
+    }
+</script>
+@endif
+
 @if($route == 'cm-details')
 <script type="text/javascript">
     $(document).ready(function(){
@@ -1068,7 +1133,6 @@ ga('send', 'pageview');
      });
     });
 
-
     function getProduct_Code_2(val) {
         $.ajax({
             type: "GET",
@@ -1083,7 +1147,6 @@ ga('send', 'pageview');
                 $("#live_product_2").hide();   
             }
         });
-
     }
     
     $(".form-rel2").mouseenter(function(){

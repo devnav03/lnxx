@@ -30,6 +30,8 @@ use App\Models\ProductRequest;
 use App\Models\AgentRequest;
 use App\Models\Dependent;
 use App\Models\ApplicationDependent;
+use App\Models\ComanInformation;
+use App\Models\CreditCardInformation;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
 use PDF;
@@ -358,6 +360,29 @@ class UserController extends Controller {
                         $inputs['mobile'] = $user->mobile;
                         $inputs['status'] = 0;
                         $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+
+                        $application_data['exist_credit'] = $ProductRequest->exist_credit;
+                        $application_data['exist_personal'] = $ProductRequest->exist_personal;
+                        $application_data['exist_business'] = $ProductRequest->exist_business;
+                        $application_data['exist_mortgage'] = $ProductRequest->exist_mortgage;
+                        $application_data['credit_member_since'] = $ProductRequest->credit_member_since;
+                        $application_data['credit_member_since2']= $ProductRequest->credit_member_since2;
+                        $application_data['credit_member_since3'] =$ProductRequest->credit_member_since3;
+                        $application_data['credit_member_since4'] =$ProductRequest->credit_member_since4;
+                        $application_data['loan_member_since'] = $ProductRequest->loan_member_since;
+                        $application_data['loan_member_since2'] = $ProductRequest->loan_member_since2;
+                        $application_data['loan_member_since3'] = $ProductRequest->loan_member_since3;
+                        $application_data['loan_member_since4'] = $ProductRequest->loan_member_since4;
+                        $application_data['business_member_since'] = $ProductRequest->business_member_since;
+
+                        $application_data['business_member_since2'] = $ProductRequest->business_member_since2;
+                        $application_data['business_member_since3'] = $ProductRequest->business_member_since3;
+                        $application_data['business_member_since4'] = $ProductRequest->business_member_since4;
+                        $application_data['mortgage_member_since'] = $ProductRequest->mortgage_member_since;
+                        $application_data['mortgage_member_since2'] = $ProductRequest->mortgage_member_since2;
+                        $application_data['mortgage_member_since3'] = $ProductRequest->mortgage_member_since3;
+                        $application_data['mortgage_member_since4'] = $ProductRequest->mortgage_member_since4;
+
                         $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
                         $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
                         $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
@@ -556,6 +581,29 @@ class UserController extends Controller {
                         $inputs['mobile'] = $user->mobile;
                         $inputs['status'] = 0;
                         $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+
+                        $application_data['exist_credit'] = $ProductRequest->exist_credit;
+                        $application_data['exist_personal'] = $ProductRequest->exist_personal;
+                        $application_data['exist_business'] = $ProductRequest->exist_business;
+                        $application_data['exist_mortgage'] = $ProductRequest->exist_mortgage;
+                        $application_data['credit_member_since'] = $ProductRequest->credit_member_since;
+                        $application_data['credit_member_since2']= $ProductRequest->credit_member_since2;
+                        $application_data['credit_member_since3'] =$ProductRequest->credit_member_since3;
+                        $application_data['credit_member_since4'] =$ProductRequest->credit_member_since4;
+                        $application_data['loan_member_since'] = $ProductRequest->loan_member_since;
+                        $application_data['loan_member_since2'] = $ProductRequest->loan_member_since2;
+                        $application_data['loan_member_since3'] = $ProductRequest->loan_member_since3;
+                        $application_data['loan_member_since4'] = $ProductRequest->loan_member_since4;
+                        $application_data['business_member_since'] = $ProductRequest->business_member_since;
+
+                        $application_data['business_member_since2'] = $ProductRequest->business_member_since2;
+                        $application_data['business_member_since3'] = $ProductRequest->business_member_since3;
+                        $application_data['business_member_since4'] = $ProductRequest->business_member_since4;
+                        $application_data['mortgage_member_since'] = $ProductRequest->mortgage_member_since;
+                        $application_data['mortgage_member_since2'] = $ProductRequest->mortgage_member_since2;
+                        $application_data['mortgage_member_since3'] = $ProductRequest->mortgage_member_since3;
+                        $application_data['mortgage_member_since4'] = $ProductRequest->mortgage_member_since4;
+                        
                         $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
                         $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
                         $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
@@ -1901,11 +1949,31 @@ class UserController extends Controller {
           } else {
             $data['credit_card_limit'] = null;
           }
-          
+          if($datas->exist_credit){
+            $data['exist_credit'] = $datas->exist_credit;
+          } else {
+            $data['exist_credit'] = null;
+          }
           if($datas->loan_amount){
             $data['loan_amount'] = $datas->loan_amount;
           } else {
             $data['loan_amount'] = null;
+          }
+          if($datas->exist_personal){
+            $data['exist_personal'] = $datas->exist_personal;
+          } else {
+            $data['exist_personal'] = null;
+          }
+          if($datas->exist_business){
+            $data['exist_business'] = $datas->exist_business;
+          } else {
+            $data['exist_business'] = null;
+          }
+
+          if($datas->exist_mortgage){
+            $data['exist_mortgage'] = $datas->exist_mortgage;
+          } else {
+            $data['exist_mortgage'] = null;
           }
 
           $credit_card_existing_financials  = [];
@@ -1922,6 +1990,7 @@ class UserController extends Controller {
                 'end_use_of_property' => $datas->end_use_of_property,
                 'interest_rate' => $datas->interest_rate,
                 'mortgage_emi' => $datas->mortgage_emi,
+                'mortgage_member_since' => $datas->mortgage_member_since,
               );
           }
           if($datas->mortgage_loan_amount2) {
@@ -1934,6 +2003,7 @@ class UserController extends Controller {
                 'end_use_of_property' => $datas->end_use_of_property2,
                 'interest_rate' => $datas->interest_rate2,
                 'mortgage_emi' => $datas->mortgage_emi2,
+                'mortgage_member_since' => $datas->mortgage_member_since2,
               );
           }
           if($datas->mortgage_loan_amount3) {
@@ -1946,6 +2016,7 @@ class UserController extends Controller {
                 'end_use_of_property' => $datas->end_use_of_property3,
                 'interest_rate' => $datas->interest_rate3,
                 'mortgage_emi' => $datas->mortgage_emi3,
+                'mortgage_member_since' => $datas->mortgage_member_since3,
               );
           }
           if($datas->mortgage_loan_amount4) {
@@ -1958,6 +2029,7 @@ class UserController extends Controller {
                 'end_use_of_property' => $datas->end_use_of_property4,
                 'interest_rate' => $datas->interest_rate4,
                 'mortgage_emi' => $datas->mortgage_emi4,
+                'mortgage_member_since' => $datas->mortgage_member_since4,
               );
           }
 
@@ -1967,6 +2039,7 @@ class UserController extends Controller {
                 'loan_bank_name' => $datas->loan_bank_name,
                 'original_loan_amount' => $datas->original_loan_amount,
                 'loan_emi' => $datas->loan_emi,
+                'loan_member_since' => $datas->loan_member_since,
               );
           }
           if($datas->loan_bank_name2) {
@@ -1975,6 +2048,7 @@ class UserController extends Controller {
                 'loan_bank_name' => $datas->loan_bank_nam2,
                 'original_loan_amount' => $datas->original_loan_amount2,
                 'loan_emi' => $datas->loan_emi2,
+                'loan_member_since' => $datas->loan_member_since2,
               );
           }
           if($datas->loan_bank_nam3) {
@@ -1983,6 +2057,7 @@ class UserController extends Controller {
                 'loan_bank_name' => $datas->loan_bank_nam3,
                 'original_loan_amount' => $datas->original_loan_amount3,
                 'loan_emi' => $datas->loan_emi3,
+                'loan_member_since' => $datas->loan_member_since3,
               );
           }
           if($datas->loan_bank_name4) {
@@ -1991,6 +2066,7 @@ class UserController extends Controller {
                 'loan_bank_name' => $datas->loan_bank_name4,
                 'original_loan_amount' => $datas->original_loan_amount4,
                 'loan_emi' => $datas->loan_emi4,
+                'loan_member_since' => $datas->loan_member_since4,
               );
           }
 
@@ -2000,6 +2076,7 @@ class UserController extends Controller {
                 'details_of_cards' => $datas->details_of_cards,
                 'credit_bank_name' => $datas->credit_bank_name,
                 'card_limit' => $datas->card_limit,
+                'credit_member_since' => $datas->credit_member_since,
               );
           }
           if($datas->details_of_cards2) {
@@ -2008,6 +2085,7 @@ class UserController extends Controller {
                 'details_of_cards' => $datas->details_of_cards2,
                 'credit_bank_name' => $datas->credit_bank_name2,
                 'card_limit' => $datas->card_limit2,
+                'credit_member_since' => $datas->credit_member_since2,
               );
           }
           if($datas->details_of_cards3) {
@@ -2016,6 +2094,7 @@ class UserController extends Controller {
                 'details_of_cards' => $datas->details_of_cards3,
                 'credit_bank_name' => $datas->credit_bank_name3,
                 'card_limit' => $datas->card_limit3,
+                'credit_member_since' => $datas->credit_member_since3,
               );
           }
           if($datas->details_of_cards4) {
@@ -2024,6 +2103,7 @@ class UserController extends Controller {
                 'details_of_cards' => $datas->details_of_cards4,
                 'credit_bank_name' => $datas->credit_bank_name4,
                 'card_limit' => $datas->card_limit4,
+                'credit_member_since' => $datas->credit_member_since4,
               );
           }
 
@@ -2034,6 +2114,7 @@ class UserController extends Controller {
               array(
                 'business_loan_amount' => $datas->business_loan_amount,
                 'business_loan_emi' => $datas->business_loan_emi,
+                'business_member_since' => $datas->business_member_since,
               );
           }
           if($datas->business_loan_amount2) {
@@ -2041,6 +2122,7 @@ class UserController extends Controller {
               array(
                 'business_loan_amount' => $datas->business_loan_amount2,
                 'business_loan_emi' => $datas->business_loan_emi2,
+                'business_member_since' => $datas->business_member_since2,
               );
           }
           if($datas->business_loan_amount3) {
@@ -2048,6 +2130,7 @@ class UserController extends Controller {
               array(
                 'business_loan_amount' => $datas->business_loan_amount3,
                 'business_loan_emi' => $datas->business_loan_emi3,
+                'business_member_since' => $datas->business_member_since3,
               );
           }
           if($datas->business_loan_amount4) {
@@ -2055,6 +2138,7 @@ class UserController extends Controller {
               array(
                 'business_loan_amount' => $datas->business_loan_amount4,
                 'business_loan_emi' => $datas->business_loan_emi4,
+                'business_member_since' => $datas->business_member_since4,
               );
           }
 
@@ -2081,42 +2165,87 @@ class UserController extends Controller {
             if(isset($request->credit_card_limit)){
               $credit_card_limit = $request->credit_card_limit;
             }
+            $exist_credit = 0;
+            if(isset($request->exist_credit)){
+              $exist_credit = $request->exist_credit;
+            }
+
             $details_of_cards = '';
             $credit_bank_name = '';
             $card_limit = '';
+            $credit_member_since = '';
+            
             $details_of_cards2 = '';
             $credit_bank_name2 = '';
             $card_limit2 = '';
+            $credit_member_since2 = '';
+
             $details_of_cards3 = '';
             $credit_bank_name3 = '';
             $card_limit3 = '';
+            $credit_member_since3 = '';
+
             $details_of_cards4 = '';
             $credit_bank_name4 = '';
             $card_limit4 = '';
+            $credit_member_since4 = '';
+
             $loan_amount = '';
             if(isset($request->loan_amount)){
               $loan_amount = $request->loan_amount;
             }
+
+            $exist_personal = 0;
+            if(isset($request->exist_personal)){
+              $exist_personal = $request->exist_personal;
+            }
+
             $loan_bank_name = '';
             $original_loan_amount = '';
             $loan_emi = '';
+            $loan_member_since = '';
+
             $loan_bank_name2 = '';
             $original_loan_amount2 = '';
             $loan_emi2 = '';
+            $loan_member_since2 = '';
+
             $loan_bank_name3 = '';
             $original_loan_amount3 = '';
             $loan_emi3 = '';
+            $loan_member_since3 = '';
+
             $loan_bank_name4 = '';
             $original_loan_amount4 = '';
             $loan_emi4 = '';
+            $loan_member_since4 = '';
+
+            $exist_business = 0;
+            if(isset($request->exist_business)){
+              $exist_business = $request->exist_business;
+            }
+
             $business_loan_amount = '';
             $business_loan_emi = '';
+            $business_member_since = '';
+
             $business_loan_amount2 = '';
             $business_loan_emi2 = '';
+            $business_member_since2 = '';
+
             $business_loan_amount3 = '';
             $business_loan_emi3 = '';
+            $business_member_since3 = '';
+
             $business_loan_amount4 = '';
             $business_loan_emi4 = '';
+            $business_member_since4 = '';
+
+
+            $exist_mortgage = 0;
+            if(isset($request->exist_mortgage)){
+              $exist_mortgage = $request->exist_mortgage;
+            }
 
             $mortgage_loan_amount = '';
             $purchase_price = '';
@@ -2125,6 +2254,7 @@ class UserController extends Controller {
             $end_use_of_property = '';
             $interest_rate = '';
             $mortgage_emi = '';
+            $mortgage_member_since = '';
 
             $mortgage_loan_amount2 = '';
             $purchase_price2 = '';
@@ -2133,6 +2263,7 @@ class UserController extends Controller {
             $end_use_of_property2 = '';
             $interest_rate2 = '';
             $mortgage_emi2 = '';
+            $mortgage_member_since2 = '';
 
             $mortgage_loan_amount3 = '';
             $purchase_price3 = '';
@@ -2141,6 +2272,8 @@ class UserController extends Controller {
             $end_use_of_property3 = '';
             $interest_rate3 = '';
             $mortgage_emi3 = '';
+            $mortgage_member_since3 = '';
+
             $mortgage_loan_amount4 = '';
             $purchase_price4 = '';
             $type_of_loan4 = '';
@@ -2148,6 +2281,7 @@ class UserController extends Controller {
             $end_use_of_property4 = '';
             $interest_rate4 = '';
             $mortgage_emi4 = '';
+            $mortgage_member_since4 = '';
             // $inputs = $request->all();
             $user_id = $user->id;
             // $inputs['user_id'] = $user_id;
@@ -2161,18 +2295,22 @@ class UserController extends Controller {
                     $details_of_cards = $details_of_card->details_of_cards;
                     $credit_bank_name = $details_of_card->credit_bank_name;
                     $card_limit = $details_of_card->card_limit;
+                    $credit_member_since = $details_of_card->credit_member_since;
                   } elseif ($i == 2) {
                     $details_of_cards2 = $details_of_card->details_of_cards;
                     $credit_bank_name2 = $details_of_card->credit_bank_name;
                     $card_limit2 = $details_of_card->card_limit;
+                    $credit_member_since2 = $details_of_card->credit_member_since;
                   } elseif ($i == 3) {
                     $details_of_cards3 = $details_of_card->details_of_cards;
                     $credit_bank_name3 = $details_of_card->credit_bank_name;
                     $card_limit3 = $details_of_card->card_limit;
+                    $credit_member_since3 = $details_of_card->credit_member_since;
                   } else {
                     $details_of_cards4 = $details_of_card->details_of_cards;
                     $credit_bank_name4 = $details_of_card->credit_bank_name;
                     $card_limit4 = $details_of_card->card_limit;
+                    $credit_member_since4 = $details_of_card->credit_member_since;
                   }
                 $i++;
               } 
@@ -2186,18 +2324,22 @@ class UserController extends Controller {
                     $loan_bank_name = $loan_bank_nam->loan_bank_name;
                     $original_loan_amount = $loan_bank_nam->original_loan_amount;
                     $loan_emi = $loan_bank_nam->loan_emi;
+                    $loan_member_since = $loan_bank_nam->loan_member_since;
                   } elseif ($i == 2) {
                     $loan_bank_name2 = $loan_bank_nam->loan_bank_name;
                     $original_loan_amount2 = $loan_bank_nam->original_loan_amount;
                     $loan_emi2 = $loan_bank_nam->loan_emi;
+                    $loan_member_since2 = $loan_bank_nam->loan_member_since;
                   } elseif ($i == 3) {
                     $loan_bank_name3 = $loan_bank_nam->loan_bank_name;
                     $original_loan_amount3 = $loan_bank_nam->original_loan_amount;
                     $loan_emi3 = $loan_bank_nam->loan_emi;
+                    $loan_member_since3 = $loan_bank_nam->loan_member_since;
                   } else {
                     $loan_bank_name4 = $loan_bank_nam->loan_bank_name; 
                     $original_loan_amount4 = $loan_bank_nam->original_loan_amount;
                     $loan_emi4 = $loan_bank_nam->loan_emi;
+                    $loan_member_since4 = $loan_bank_nam->loan_member_since;
                   }
                 $i++;
               }
@@ -2212,15 +2354,19 @@ class UserController extends Controller {
                   if($i == 1){
                     $business_loan_amount = $businessLoan->business_loan_amount;
                     $business_loan_emi = $businessLoan->business_loan_emi; 
+                    $business_member_since = $businessLoan->business_member_since; 
                   } elseif ($i == 2) {
                     $business_loan_amount2 = $businessLoan->business_loan_amount;
                     $business_loan_emi2 = $businessLoan->business_loan_emi; 
+                    $business_member_since2 = $businessLoan->business_member_since;
                   } elseif ($i == 3) {
                     $business_loan_amount3 = $businessLoan->business_loan_amount;
                     $business_loan_emi3 = $businessLoan->business_loan_emi; 
+                    $business_member_since3 = $businessLoan->business_member_since;
                   } else {
                     $business_loan_amount4 = $businessLoan->business_loan_amount; 
                     $business_loan_emi4 = $businessLoan->business_loan_emi; 
+                    $business_member_since4 = $businessLoan->business_member_since;
                   }
                 $i++;
               }
@@ -2238,6 +2384,7 @@ class UserController extends Controller {
                   $end_use_of_property = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate = $mortgage_loan_amoun->interest_rate;
                   $mortgage_emi = $mortgage_loan_amoun->mortgage_emi;
+                  $mortgage_member_since = $mortgage_loan_amoun->mortgage_member_since;
                 } elseif ($i == 2) {
                   $mortgage_loan_amount2 = $mortgage_loan_amoun->mortgage_loan_amount;
                   $purchase_price2 = $mortgage_loan_amoun->purchase_price;
@@ -2246,6 +2393,7 @@ class UserController extends Controller {
                   $end_use_of_property2 = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate2 = $mortgage_loan_amoun->interest_rate;
                   $mortgage_emi2 = $mortgage_loan_amoun->mortgage_emi;
+                  $mortgage_member_since2 = $mortgage_loan_amoun->mortgage_member_since;
                 } elseif ($i == 3) {
                   $mortgage_loan_amount3 = $mortgage_loan_amoun->mortgage_loan_amount;
                   $purchase_price3 = $mortgage_loan_amoun->purchase_price;
@@ -2254,6 +2402,7 @@ class UserController extends Controller {
                   $end_use_of_property3 = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate3 = $mortgage_loan_amoun->interest_rate;
                   $mortgage_emi3 = $mortgage_loan_amoun->mortgage_emi;
+                  $mortgage_member_since3 = $mortgage_loan_amoun->mortgage_member_since;
                 } else {
                   $mortgage_loan_amount4 = $mortgage_loan_amoun->mortgage_loan_amount;
                   $purchase_price4 = $mortgage_loan_amoun->purchase_price;
@@ -2262,6 +2411,7 @@ class UserController extends Controller {
                   $end_use_of_property4 = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate4 = $mortgage_loan_amoun->interest_rate; 
                   $mortgage_emi4 = $mortgage_loan_amoun->mortgage_emi; 
+                  $mortgage_member_since4 = $mortgage_loan_amoun->mortgage_member_since;
                 }
               $i++;
             }
@@ -2269,10 +2419,35 @@ class UserController extends Controller {
            
 
             $inputs['credit_card_limit'] =  $credit_card_limit;
+            $inputs['exist_credit'] = $exist_credit;
             $inputs['user_id'] = $user_id;
-            $inputs['details_of_cards'] =  $details_of_cards;
+            $inputs['details_of_cards'] = $details_of_cards;
             $inputs['credit_bank_name'] = $credit_bank_name;
             $inputs['card_limit'] =  $card_limit;
+            
+            $inputs['credit_member_since'] =  $credit_member_since;
+            $inputs['credit_member_since2'] =  $credit_member_since2;
+            $inputs['credit_member_since3'] =  $credit_member_since3;
+            $inputs['credit_member_since4'] =  $credit_member_since4;
+
+            $inputs['exist_personal'] = $exist_personal;
+            $inputs['loan_member_since'] =  $loan_member_since;
+            $inputs['loan_member_since2'] =  $loan_member_since2;
+            $inputs['loan_member_since3'] =  $loan_member_since3;
+            $inputs['loan_member_since4'] =  $loan_member_since4;
+
+            $inputs['exist_business'] = $exist_business;
+            $inputs['business_member_since'] =  $business_member_since;
+            $inputs['business_member_since2'] =  $business_member_since2;
+            $inputs['business_member_since3'] =  $business_member_since3;
+            $inputs['business_member_since4'] =  $business_member_since4;
+            
+            $inputs['exist_mortgage'] = $exist_mortgage;
+            $inputs['mortgage_member_since'] =  $mortgage_member_since;
+            $inputs['mortgage_member_since2'] =  $mortgage_member_since2;
+            $inputs['mortgage_member_since3'] =  $mortgage_member_since3;
+            $inputs['mortgage_member_since4'] =  $mortgage_member_since4;
+
             $inputs['details_of_cards2'] = $details_of_cards2;
             $inputs['credit_bank_name2'] =  $credit_bank_name2;
             $inputs['card_limit2'] = $card_limit2;
@@ -2833,6 +3008,261 @@ class UserController extends Controller {
         }
         catch(Exception $exception){
             return apiResponse(false, 500, lang('messages.server_error'));
+        }
+    }
+
+    public function show_credit_card_information(Request $request){
+        if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+                $user_id = $user->id;
+                $result = CreditCardInformation::where('user_id', $user_id)->first();
+                
+                if(isset($result->card_type)){
+                   $data['card_type'] = $result->card_type;   
+                } else {
+                   $data['card_type'] = null; 
+                }
+                if(isset($result->embossing_name)){
+                   $data['embossing_name'] = $result->embossing_name;   
+                } else {
+                   $data['embossing_name'] = null; 
+                }
+                if(isset($result->cm_billing_cycle_date)){
+                   $data['cm_billing_cycle_date'] = $result->cm_billing_cycle_date;   
+                } else {
+                   $data['cm_billing_cycle_date'] = null; 
+                }
+                if(isset($result->e_statement_subscription)){
+                   $data['e_statement_subscription'] = $result->e_statement_subscription;   
+                } else {
+                   $data['e_statement_subscription'] = null; 
+                }
+                if(isset($result->paper_statement_subscription)){
+                   $data['paper_statement_subscription'] = $result->paper_statement_subscription;   
+                } else {
+                   $data['paper_statement_subscription'] = null; 
+                }
+                if(isset($result->supplementary_salutation)){
+                   $data['supplementary_salutation'] = $result->supplementary_salutation;   
+                } else {
+                   $data['supplementary_salutation'] = null; 
+                }
+                if(isset($result->supplementary_relationship)){
+                   $data['supplementary_relationship'] = $result->supplementary_relationship;   
+                } else {
+                   $data['supplementary_relationship'] = null; 
+                }
+                if(isset($result->supplementary_first_name)){
+                   $data['supplementary_first_name'] = $result->supplementary_first_name;   
+                } else {
+                   $data['supplementary_first_name'] = null; 
+                }
+                if(isset($result->supplementary_middle_name)){
+                   $data['supplementary_middle_name'] = $result->supplementary_middle_name;   
+                } else {
+                   $data['supplementary_middle_name'] = null; 
+                }
+                if(isset($result->supplementary_last_name)){
+                   $data['supplementary_last_name'] = $result->supplementary_last_name;   
+                } else {
+                   $data['supplementary_last_name'] = null; 
+                }
+                if(isset($result->supplementary_embosing_name)){
+                   $data['supplementary_embosing_name'] = $result->supplementary_embosing_name;   
+                } else {
+                   $data['supplementary_embosing_name'] = null; 
+                }
+                
+                if(isset($result->supplementary_nationality)){
+                   $data['supplementary_nationality'] = $result->supplementary_nationality;   
+                } else {
+                   $data['supplementary_nationality'] = null; 
+                }
+                
+                if(isset($result->supplementary_passport_no)){
+                   $data['supplementary_passport_no'] = $result->supplementary_passport_no;   
+                } else {
+                   $data['supplementary_passport_no'] = null; 
+                }
+                if(isset($result->supplementary_credit_limit_aed)){
+                   $data['supplementary_credit_limit_aed'] = $result->supplementary_credit_limit_aed;   
+                } else {
+                   $data['supplementary_credit_limit_aed'] = null; 
+                }
+                if(isset($result->supplementary_marital_status)){
+                   $data['supplementary_marital_status'] = $result->supplementary_marital_status;   
+                } else {
+                   $data['supplementary_marital_status'] = null; 
+                }
+                if(isset($result->supplementary_mother_maiden_name)){
+                   $data['supplementary_mother_maiden_name'] = $result->supplementary_mother_maiden_name;   
+                } else {
+                   $data['supplementary_mother_maiden_name'] = null; 
+                }
+                
+                if(isset($result->no_sign_up_credit_shield)){
+                   $data['no_sign_up_credit_shield'] = $result->no_sign_up_credit_shield;   
+                } else {
+                   $data['no_sign_up_credit_shield'] = null; 
+                }
+                if(isset($result->sign_up_credit_shield_plus)){
+                   $data['sign_up_credit_shield_plus'] = $result->sign_up_credit_shield_plus;   
+                } else {
+                   $data['sign_up_credit_shield_plus'] = null; 
+                }
+                if(isset($result->master_murabaha_agreement)){
+                   $data['master_murabaha_agreement'] = $result->master_murabaha_agreement;   
+                } else {
+                   $data['master_murabaha_agreement'] = null; 
+                }
+                
+                $home = route('get-started');
+                
+                if(isset($result->kyc_docs)){
+                   $data['kyc_docs'] = $home.$result->kyc_docs;   
+                } else {
+                   $data['kyc_docs'] = null; 
+                }
+                
+                if(isset($result->kyc_docs2)){
+                   $data['kyc_docs2'] = $home.$result->kyc_docs2;   
+                } else {
+                   $data['kyc_docs2'] = null; 
+                }
+                
+                if(isset($result->kyc_docs3)){
+                   $data['kyc_docs3'] = $home.$result->kyc_docs3;   
+                } else {
+                   $data['kyc_docs3'] = null; 
+                }
+                if(isset($result->kyc_docs4)){
+                   $data['kyc_docs4'] = $home.$result->kyc_docs4;   
+                } else {
+                   $data['kyc_docs4'] = null; 
+                }
+                
+                return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+            }
+        }
+        
+    }
+
+    public function save_coman_information_form(Request $request){
+        if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+                $user_id = $user->id;
+                $info = ComanInformation::where('user_id', $user_id)->select('id')->first();
+                $inputs = $request->all();
+                $inputs['user_id'] = $user_id;
+                if($info){
+                    $id = $info->id;
+                    (new ComanInformation)->store($inputs, $id);
+                } else {
+                    (new ComanInformation)->store($inputs);
+                }
+                return response()->json(['success' => true, 'status' => 200, 'message' => 'information successfully saved.']);
+            }
+        }
+    }
+
+    public function save_credit_card_information(Request $request){
+        try {
+            if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+                $user_id = $user->id;
+                $inputs = $request->all();  
+                $info = CreditCardInformation::where('user_id', $user_id)->select('id', 'kyc_docs', 'kyc_docs2', 'kyc_docs3', 'kyc_docs4')->first();
+                $inputs['user_id'] = $user_id;
+                if(isset($inputs['kyc_docs']) or !empty($inputs['kyc_docs'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs')) {
+                        $file = $request->file('kyc_docs');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs;
+                }  
+                unset($inputs['kyc_docs']);
+                $inputs['kyc_docs'] = $image; 
+                
+                if(isset($inputs['kyc_docs2']) or !empty($inputs['kyc_docs2'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs2')) {
+                        $file = $request->file('kyc_docs2');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs2;
+                }  
+                unset($inputs['kyc_docs2']);
+                $inputs['kyc_docs2'] = $image; 
+                
+                if(isset($inputs['kyc_docs3']) or !empty($inputs['kyc_docs3'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs3')) {
+                        $file = $request->file('kyc_docs3');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs3;
+                }  
+                unset($inputs['kyc_docs3']);
+                $inputs['kyc_docs3'] = $image;
+                
+                if(isset($inputs['kyc_docs4']) or !empty($inputs['kyc_docs4'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs4')) {
+                        $file = $request->file('kyc_docs4');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs4;
+                }  
+                unset($inputs['kyc_docs4']);
+                $inputs['kyc_docs4'] = $image; 
+                
+                
+                $inputs['user_id'] = $user_id;
+                if($info){
+                    $id = $info->id;
+                    (new CreditCardInformation)->store($inputs, $id);  
+                } else {
+                    (new CreditCardInformation)->store($inputs); 
+                }
+                
+                return response()->json(['success' => true, 'status' => 200, 'message' => 'Credit card information successfully saved']);
+                
+                }   
+            } 
+        } catch (Exception $e) {
+            return back();
         }
     }
 

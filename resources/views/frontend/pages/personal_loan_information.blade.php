@@ -1,7 +1,6 @@
 @extends('frontend.layouts.app')
 @section('content')
 
-
 <section class="personal_details">
 <div class="container">  
 <div class="row">  
@@ -14,6 +13,108 @@
 {{ csrf_field() }}  
 
 <div class="row">
+
+  <div class="col-md-6">
+    <label class="sub-label">Existing Customer*</label>
+    <select name="existing_customer" onChange="ExistingCustomer(this);" class="form-control" required="true">
+      <option value="">Select</option>
+      <option value="1" @if($result) @if($result->existing_customer == "1") selected @endif @endif >Yes</option>
+      <option value="0" @if($result) @if($result->existing_customer == "0") selected @endif @endif >No</option>
+    </select>
+  </div>
+
+  <div class="col-md-6 account_no" @if($result) @if($result->existing_customer != "1") style="display: none;" @endif @else style="display: none;" @endif >
+    <div class="form-group">
+      <label class="sub-label">Account No*</label>
+      <input name="account_no" class="form-control" @if($result) @if($result->existing_customer == "1") required="true" @endif value="{{ $result->account_no }}" @else value="{{ old('account_no') }}" @endif type="number">
+      @if($errors->has('account_no'))
+      <span class="text-danger">{{$errors->first('account_no')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6 cif_no" @if($result) @if($result->existing_customer != "0") style="display: none;" @endif @else style="display: none;" @endif >
+    <div class="form-group">
+      <label class="sub-label">Cif No.*</label>
+      <input name="cif_no" class="form-control" @if($result) @if($result->existing_customer == "0") required="true" @endif value="{{ $result->cif_no }}" @else value="{{ old('cif_no') }}" @endif type="text">
+      @if($errors->has('cif_no'))
+      <span class="text-danger">{{$errors->first('cif_no')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12"> 
+    <div class="form-group">
+      <label class="sub-label">Tell Us More About Your Business</label>
+      <textarea name="about_your_business" rows="4" class="form-control" required="true"> @if($result) {{ $result->about_your_business }} @else {{ old('about_your_business') }} @endif</textarea>
+    </div>
+  </div>
+
+  <div class="col-md-6 self_employed_type">
+    <div class="form-group">
+      <label class="sub-label">Company Name*</label>
+      <input type="text" @if($result) value="{{ $result->self_company_name }}" @else value="{{ old('self_company_name') }}" @endif name="self_company_name" id="self_company_name" class="form-control live_product_2 product_name2" required="true">
+      <ul id="live_product_2"></ul> 
+      @if($errors->has('self_company_name'))
+      <span class="text-danger">{{$errors->first('self_company_name')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Years In Business*</label>
+      <input type="number" @if($result) value="{{ $result->years_in_business }}" @else value="{{ old('years_in_business') }}" @endif name="years_in_business" class="form-control" required="true"> 
+      @if($errors->has('years_in_business'))
+      <span class="text-danger">{{$errors->first('years_in_business')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <label class="sub-label">Designation*</label>
+    <select name="designation" class="form-control" required="true">
+      <option value="">Select</option>
+      <option value="Proprietor" @if($result) @if($result->designation == "Proprietor") selected @endif @endif >Proprietor</option>
+      <option value="Partner" @if($result) @if($result->designation == "Partner") selected @endif @endif >Partner</option>
+      <option value="Director" @if($result) @if($result->designation == "Director") selected @endif @endif >Director</option>
+      <option value="Other" @if($result) @if($result->designation == "Other") selected @endif @endif >Other</option>
+    </select>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Paid Up Capital (Aed)*</label>
+      <input type="number" @if($result) value="{{ $result->paid_up_capital }}" @else value="{{ old('paid_up_capital') }}" @endif name="paid_up_capital" class="form-control" required="true"> 
+      @if($errors->has('paid_up_capital'))
+      <span class="text-danger">{{$errors->first('paid_up_capital')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">No. Of Employees (Excl. Owner)*</label>
+      <input type="number" @if($result) value="{{ $result->no_of_employees }}" @else value="{{ old('no_of_employees') }}" @endif name="no_of_employees" class="form-control" required="true"> 
+      @if($errors->has('no_of_employees'))
+      <span class="text-danger">{{$errors->first('no_of_employees')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="form-group">
+      <label class="sub-label">Ownership Details*</label>
+      <textarea name="ownership_details" rows="4" class="form-control" required="true"> @if($result) {{ $result->ownership_details }} @else {{ old('ownership_details') }} @endif</textarea> 
+      @if($errors->has('ownership_details'))
+      <span class="text-danger">{{$errors->first('ownership_details')}}</span>
+      @endif
+    </div>
+  </div>
+
+
+
+
 
   <div class="col-md-12">
     <label>Reference Person In Home Country</label>
@@ -112,6 +213,11 @@
     </div>
   </div>
 
+
+
+
+
+
   <div class="col-md-12 text-center">
     <a @if($cred == 1) href="{{ route('credit-card-information') }}" @else href="{{ route('education-detail') }}" @endif class="back_btn">Back</a> &nbsp;&nbsp;
     <button type="submit">Proceed</button>
@@ -143,29 +249,18 @@
 </section>
 
 <script type="text/javascript">
-  function ChangeCountry(that) {
-    if (that.value == "229") {
-        $("#years_in_uae_div").hide();
-        // $(".show_hide").hide();
-        $("#years_in_uae").removeAttr('required');
-        // $(".Passport_img").removeAttr('required');
 
-    } else {
-        $("#years_in_uae_div").show();
-        $("#years_in_uae").attr("required", true);
-        // $(".Passport_img").attr("required", true); 
-        // $(".show_hide").show();
-
-    }
-  }
-
-  function AgentReference(that) {
+  function ExistingCustomer(that) {
     if (that.value == "1") {
-      $(".agent_reference_number").show();
-      $(".agent_reference_number input").attr("required", true);
+      $(".account_no").show();
+      $(".account_no input").attr("required", true);
+      $(".cif_no").hide();
+      $(".cif_no input").removeAttr('required');
     } else {
-      $(".agent_reference_number").hide();
-      $(".agent_reference_number input").removeAttr('required');
+      $(".account_no").hide();
+      $(".account_no input").removeAttr('required');
+      $(".cif_no").show();
+      $(".cif_no input").attr("required", true);
     }
   }
 
@@ -178,350 +273,6 @@
       $(".wife_name input").removeAttr('required');
     }
   }
-
-  function NoOfDependents(that) {
-    if (that.value == "0") {
-      $(".family1").hide();
-      $(".family2").hide();
-      $(".family3").hide();
-      $(".family4").hide();
-      $(".family5").hide();
-      $(".family6").hide();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-      
-      // $(".family1 input").removeAttr('required');
-      // $(".family2 input").removeAttr('required');
-      // $(".family3 input").removeAttr('required');
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-
-    } else if(that.value == "1") {
-      $(".family1").show();
-      $(".family2").hide();
-      $(".family3").hide();
-      $(".family4").hide();
-      $(".family5").hide();
-      $(".family6").hide();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").removeAttr('required');
-      // $(".family3 input").removeAttr('required');
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    }  else if(that.value == "2") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").hide();
-      $(".family4").hide();
-      $(".family5").hide();
-      $(".family6").hide();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").removeAttr('required');
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "3") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").hide();
-      $(".family5").hide();
-      $(".family6").hide();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "4") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").hide();
-      $(".family6").hide();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "5") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").hide();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "6") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").hide();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "7") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").show();
-      $(".family8").hide();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "8") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").show();
-      $(".family8").show();
-      $(".family9").hide();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "9") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").show();
-      $(".family8").show();
-      $(".family9").show();
-      $(".family10").hide();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "10") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").show();
-      $(".family8").show();
-      $(".family9").show();
-      $(".family10").show();
-      $(".family11").hide();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").attr("required", true);
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
-    } else if(that.value == "11") {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").show();
-      $(".family8").show();
-      $(".family9").show();
-      $(".family10").show();
-      $(".family11").show();
-      $(".family12").hide();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").attr("required", true);
-      // $(".family11 input").attr("required", true);
-      // $(".family12 input").removeAttr('required');
-    } else {
-      $(".family1").show();
-      $(".family2").show();
-      $(".family3").show();
-      $(".family4").show();
-      $(".family5").show();
-      $(".family6").show();
-      $(".family7").show();
-      $(".family8").show();
-      $(".family9").show();
-      $(".family10").show();
-      $(".family11").show();
-      $(".family12").show();
-
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").attr("required", true);
-      // $(".family11 input").attr("required", true);
-      // $(".family12 input").attr("required", true);
-    }
-  }
-  
 
 
 </script>

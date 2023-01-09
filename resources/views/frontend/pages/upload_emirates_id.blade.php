@@ -14,7 +14,6 @@ $temp_id = \Session::get('temp_id');
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px; margin-top: 40px;" class="img-responsive">
 </div>
-
 </div>
 <div class="col-md-6 sign_up_field">
 <!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->
@@ -66,18 +65,6 @@ You can skip this step and verify it later as well.</p>
 </div>
 </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

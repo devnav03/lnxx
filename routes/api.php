@@ -72,7 +72,10 @@ Route::any('v1/save-agent-information', ['as' => 'save-agent-information','uses'
 
 Route::any('v1/cms-content', ['as' => 'cms-content','uses' => 'App\Http\Controllers\API\V1\UserController@cms_content']);
 
+Route::any('v1/save-credit-card-informations', ['as' => 'save-credit-card-informations','uses' => 'App\Http\Controllers\API\V1\UserController@save_credit_card_information']);
+Route::any('v1/show-credit-card-information', ['as' => 'show-credit-card-information','uses' => 'App\Http\Controllers\API\V1\UserController@show_credit_card_information']);
 
+Route::any('v1/save-coman-information-form', ['as' => 'save-coman-information-form','uses' => 'App\Http\Controllers\API\V1\UserController@save_coman_information_form']);
 
 
 

@@ -45,6 +45,7 @@
     <div class="form-group">
       <label class="sub-label">Date of Joining*</label>
       <input name="date_of_joining" id="date_of_joining" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif class="form-control" @if($result) value="{{ $result->date_of_joining }}" @else value="{{ old('date_of_joining') }}" @endif type="text">
+      <i class="fa-solid fa-calendar"></i>
       @if($errors->has('date_of_joining'))
       <span class="text-danger">{{$errors->first('date_of_joining')}}</span>
       @endif
@@ -63,6 +64,7 @@
 
   <div class="col-md-12 salaried_type" @if($cm_type == 2 || $cm_type == 3) style="display: none;" @endif>
     <label class="sub-label" style="color: #000; font-size: 15px;">The most three recent salary credit</label>
+    <p style="color: rgba(9, 15, 5, 0.5);">To imporeve your approval rate. Please upload your salary credit slip</p>
     <div class="row">
     <div class="col-md-6">
       <div class="form-group">
@@ -260,11 +262,11 @@
       <label class="sub-label">Type of profession/business*</label>
       <select name="profession_business" id="profession_business" class="form-control" @if($cm_type == 2) required="true"  @endif>
         <option>Select</option>
-        <option value="Accounting" @if(isset($result->profession_business)) @if($result->profession_business == "Accounting") selected @endif @endif>Accounting</option>
-        <option value="Consulting" @if(isset($result->profession_business)) @if($result->profession_business == 'Consulting') selected @endif @endif>Consulting</option>
-        <option value="Event Planning" @if(isset($result->profession_business)) @if($result->profession_business == 'Event Planning') selected @endif @endif>Event Planning</option>
-        <option value="Finance" @if(isset($result->profession_business)) @if($result->profession_business == 'Finance') selected @endif @endif>Finance</option>
-        <option value="Human Resources" @if(isset($result->profession_business)) @if($result->profession_business == 'Human Resources') selected @endif @endif>Human Resources</option>
+        <option value="Retailer Wholesaler" @if(isset($result->profession_business)) @if($result->profession_business == "Retailer Wholesaler") selected @endif @endif>Retailer Wholesaler</option>
+        <option value="Manufacturer Professional" @if(isset($result->profession_business)) @if($result->profession_business == 'Manufacturer Professional') selected @endif @endif>Manufacturer Professional</option>
+        <option value="Services" @if(isset($result->profession_business)) @if($result->profession_business == 'Services') selected @endif @endif>Services</option>
+        <option value="Other" @if(isset($result->profession_business)) @if($result->profession_business == 'Other') selected @endif @endif>Other</option>
+        <option value="Industry" @if(isset($result->profession_business)) @if($result->profession_business == 'Industry') selected @endif @endif>Industry</option>
       </select>
       @if($errors->has('profession_business'))
       <span class="text-danger">{{$errors->first('profession_business')}}</span>

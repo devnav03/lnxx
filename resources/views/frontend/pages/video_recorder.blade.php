@@ -8,17 +8,18 @@
 <div class="personal_details_box cm_dt">
 <h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>   
 <h2 style="margin-bottom: 15px;">Upload Video</h2>
-
+<h4 style="font-size: 18px;">Kindly start uttering this sentence for video KYC.</h4>
+<p style="line-height: 24px;">Hello, my cid is lnxx{{\Auth::user()->id}} and my name is {{\Auth::user()->name}} {{\Auth::user()->middle_name}} {{\Auth::user()->last_name}}. I agree to all consent form, and I promise to promptly send the payment back to lnxx.</p>
 <div id="container">
 
     <video id="gum" style="width: 64%; margin-left: 18%;" playsinline autoplay muted></video>
     <video style="width: 64%; margin-left: 18%;display: none;" id="recorded" playsinline loop></video>
 
     <div style="text-align: center;">
-        <span id="start" style="margin-top: 10px;" class="btn btn-danger">Start camera</span>
-        <span id="record" style="color: #fff;background: #5EB495;margin-top: 10px;" class="btn" disabled>Start Recording</span>
-        <span id="play" style="color: #fff;background: #5EB495; display: none;margin-top: 10px;" class="btn" disabled>Play</span>
-        <span id="download" style="color: #fff;background: #5EB495; display: none;margin-top: 10px;" class="btn" disabled>Upload</span>
+        <span id="start" style="margin-top: 10px;cursor: pointer;" class="btn btn-danger">Start camera</span>
+        <span id="record" style="color: #fff;background: #5EB495;margin-top: 10px;cursor: pointer;" class="btn" disabled>Start Recording</span>
+        <span id="play" style="color: #fff;background: #5EB495; display: none;margin-top: 10px;cursor: pointer;" class="btn" disabled>Play</span>
+        <span id="download" style="color: #fff;background: #5EB495; display: none;margin-top: 10px;cursor: pointer;" class="btn" disabled>Upload</span>
         <p style="text-align: center; margin-top: 20px;"><a href="{{ route('thank-you') }}" id="skip" style="color: #ddd; font-size: 14px;">Skip & Submit</a></p>
     </div>
 
