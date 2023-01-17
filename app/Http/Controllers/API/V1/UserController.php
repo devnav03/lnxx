@@ -27,11 +27,15 @@ use App\Models\ContentManagement;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\ProductRequest;
+use App\Models\CardTypePreference;
+use App\Models\CreditCardPreferenceBank;
+use App\Models\PersonalLoanInformation;
 use App\Models\AgentRequest;
 use App\Models\Dependent;
 use App\Models\ApplicationDependent;
 use App\Models\ComanInformation;
 use App\Models\CreditCardInformation;
+use App\Models\CardType;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
 use PDF;
@@ -171,13 +175,161 @@ class UserController extends Controller {
 
             $data = \DB::table('applications')
                     ->join('services', 'services.id', '=', 'applications.service_id')
-                    ->select('applications.status', 'services.name', 'services.image', 'ref_id')
+                    ->select('applications.status', 'services.name', 'services.image', 'applications.created_at', 'ref_id')
                     ->where('applications.user_id', $user->id)->get();
 
             return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
           }
       }
     }
+
+    public function card_type_list(Request $request){
+        $data = CardType::where('status', 1)->select('name', 'id')->get();
+        return response()->json(['success' => true, 'status' => 200, 'data' => $data]); 
+    }
+
+    public function credit_dbr_calculation(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+              $user_id = $user->id;
+              $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 
+                'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 
+                'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
+            
+              $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first(); 
+
+              $avg_sal = 0;
+              $total_cred_limit = 0;
+              $cred_five = 0;
+              $emi = 0;
+              $credit_bank = [];
+
+              if($f_details->exist_personal == 1){
+                  $emi += $f_details->loan_emi;
+                  if($f_details->loan_emi2){
+                      $emi += $f_details->loan_emi2;
+                  }
+                  if($f_details->loan_emi3){
+                      $emi += $f_details->loan_emi3;
+                  }
+                  if($f_details->loan_emi4){
+                      $emi += $f_details->loan_emi4;
+                  }
+              }
+
+              if($f_details->exist_business == 1){
+                $emi += $f_details->business_loan_emi;
+                if($f_details->business_loan_emi2){
+                    $emi += $f_details->business_loan_emi2;
+                }
+                if($f_details->business_loan_emi3){
+                    $emi += $f_details->business_loan_emi3;
+                }
+                if($f_details->business_loan_emi4){
+                    $emi += $f_details->business_loan_emi4;
+                }
+            }
+
+            if($f_details->exist_mortgage == 1){
+                $emi += $f_details->mortgage_emi;
+                if($f_details->mortgage_emi2){
+                    $emi += $f_details->mortgage_emi2;
+                }
+                if($f_details->mortgage_emi3){
+                    $emi += $f_details->mortgage_emi3;
+                }
+                if($f_details->mortgage_emi4){
+                    $emi += $f_details->mortgage_emi4;
+                }
+            }
+
+
+            if($f_details->exist_credit == 1){
+                $cred1 = 0;
+                $cred2 = 0;
+                $cred3 = 0;
+                $cred4 = 0;
+                if($f_details->details_of_cards == 'Credit Card'){
+                    $cred1 = $f_details->card_limit;
+                    $credit_bank[] = $f_details->credit_bank_name;
+                }
+                if($f_details->details_of_cards2 == 'Credit Card'){
+                    $cred2 = $f_details->card_limit2;
+                   
+                    $credit_bank[] = $f_details->credit_bank_name2;
+                }
+                if($f_details->details_of_cards3 == 'Credit Card'){
+                    $cred3 = $f_details->card_limit3;
+                    $credit_bank[] = $f_details->credit_bank_name3;
+                }
+                if($f_details->details_of_cards4 == 'Credit Card'){
+                    $cred4 = $f_details->card_limit4;
+                    $credit_bank[] = $f_details->credit_bank_name4;
+                }
+                $total_cred_limit = $cred1+$cred2+$cred3+$cred4;
+                if($total_cred_limit != 0){
+                    $cred_five = $total_cred_limit/100*5;
+                }
+            }
+
+            if($cus_onboard->cm_type == 1){
+                $sal_details = CmSalariedDetail::where('customer_id', $user_id)->select('last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'monthly_salary')->first(); 
+                $no = 0; 
+                $sal1 = 0;
+                $sal2 = 0;
+                $sal3 = 0;
+                if($sal_details->last_one_salary_credits){
+                    $sal1 = $sal_details->last_one_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_two_salary_credits){
+                    $sal2 = $sal_details->last_two_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_three_salary_credits){
+                    $sal3 = $sal_details->last_three_salary_credits;
+                    $no++;
+                }
+                $total_sal = $sal1 + $sal2 + $sal3;  
+                if($no == 0){
+                    $no = 1;
+                } 
+                $avg_sal = $total_sal/$no;
+                if($avg_sal == 0){
+                 $avg_sal = $sal_details->monthly_salary; 
+                }
+            }
+            if($cus_onboard->cm_type == 2){
+                $sal_details = SelfEmpDetail::where('customer_id', $user_id)->select('annual_business_income')->first();
+                $avg_sal = $sal_details->annual_business_income/12;
+            }
+            if($cus_onboard->cm_type == 3){
+                $sal_details = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                $avg_sal = $sal_details->monthly_pension;
+            }
+            
+            $cred_emi = $emi+$cred_five;
+            $dbr_calculation = ($cred_emi/$avg_sal)*100;
+            $remaining_value = 50-$dbr_calculation;
+  
+            if($remaining_value > 0){
+                $your_emi = ($avg_sal*$remaining_value)/100;
+                $your_limit = $your_emi*20;
+                $eligible = 1;
+            } else {
+                $your_limit = 0;
+                $your_emi = 0;
+                $eligible = 0;
+            } 
+
+            return response()->json(['success' => true, 'status' => 200, 'eligible' => $eligible, 
+              'your_emi' => $your_emi, 'your_limit' => $your_limit ]); 
+
+          }
+      }
+    }
+
 
     public function cms_content(Request $request){
         $content =  ContentManagement::where('id', 1)->select('about', 'privacy', 'terms_conditions', 
@@ -758,32 +910,164 @@ class UserController extends Controller {
       if($request->api_key){
           $user = User::where('api_key', $request->api_key)->select('id')->first();
           if($user){
-            $data = [];
+          $data = [];
 
-            $service = ServiceApply::where('customer_id', $user->id)->where('service_id', 3)->select('service_id', 'bank_id')->first();
+          $service = ServiceApply::where('customer_id', $user->id)->where('service_id', 3)->select('service_id', 'bank_id')->first();
+
+          $user_id = $user->id;
+          $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
+            
+          $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
+
+          $avg_sal = 0;
+          $total_cred_limit = 0;
+          $cred_five = 0;
+          $emi = 0;
+          $credit_bank = [];
+
+          if($f_details->exist_personal == 1){
+                $emi += $f_details->loan_emi;
+                if($f_details->loan_emi2){
+                    $emi += $f_details->loan_emi2;
+                }
+                if($f_details->loan_emi3){
+                    $emi += $f_details->loan_emi3;
+                }
+                if($f_details->loan_emi4){
+                    $emi += $f_details->loan_emi4;
+                }
+            }
+
+            if($f_details->exist_business == 1){
+                $emi += $f_details->business_loan_emi;
+                if($f_details->business_loan_emi2){
+                    $emi += $f_details->business_loan_emi2;
+                }
+                if($f_details->business_loan_emi3){
+                    $emi += $f_details->business_loan_emi3;
+                }
+                if($f_details->business_loan_emi4){
+                    $emi += $f_details->business_loan_emi4;
+                }
+            }
+
+            if($f_details->exist_mortgage == 1){
+                $emi += $f_details->mortgage_emi;
+                if($f_details->mortgage_emi2){
+                    $emi += $f_details->mortgage_emi2;
+                }
+                if($f_details->mortgage_emi3){
+                    $emi += $f_details->mortgage_emi3;
+                }
+                if($f_details->mortgage_emi4){
+                    $emi += $f_details->mortgage_emi4;
+                }
+            }
+
+            if($f_details->exist_credit == 1){
+                $cred1 = 0;
+                $cred2 = 0;
+                $cred3 = 0;
+                $cred4 = 0;
+                if($f_details->details_of_cards == 'Credit Card'){
+                    $cred1 = $f_details->card_limit;
+                    $credit_bank[] = $f_details->credit_bank_name;
+                }
+                if($f_details->details_of_cards2 == 'Credit Card'){
+                    $cred2 = $f_details->card_limit2;
+                   
+                    $credit_bank[] = $f_details->credit_bank_name2;
+                }
+                if($f_details->details_of_cards3 == 'Credit Card'){
+                    $cred3 = $f_details->card_limit3;
+                    $credit_bank[] = $f_details->credit_bank_name3;
+                }
+                if($f_details->details_of_cards4 == 'Credit Card'){
+                    $cred4 = $f_details->card_limit4;
+                    $credit_bank[] = $f_details->credit_bank_name4;
+                }
+                $total_cred_limit = $cred1+$cred2+$cred3+$cred4;
+                if($total_cred_limit != 0){
+                    $cred_five = $total_cred_limit/100*5;
+                }
+            }
+
+            if($cus_onboard->cm_type == 1){
+                $sal_details = CmSalariedDetail::where('customer_id', $user_id)->select('last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'monthly_salary')->first(); 
+                $no = 0; 
+                $sal1 = 0;
+                $sal2 = 0;
+                $sal3 = 0;
+                if($sal_details->last_one_salary_credits){
+                    $sal1 = $sal_details->last_one_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_two_salary_credits){
+                    $sal2 = $sal_details->last_two_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_three_salary_credits){
+                    $sal3 = $sal_details->last_three_salary_credits;
+                    $no++;
+                }
+                $total_sal = $sal1 + $sal2 + $sal3;  
+                $avg_sal = $total_sal/$no;
+                if($avg_sal == 0){
+                 $avg_sal = $sal_details->monthly_salary; 
+                }
+            }
+            if($cus_onboard->cm_type == 2){
+                $sal_details = SelfEmpDetail::where('customer_id', $user_id)->select('annual_business_income')->first();
+                $avg_sal = $sal_details->annual_business_income/12;
+            }
+            if($cus_onboard->cm_type == 3){
+                $sal_details = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                $avg_sal = $sal_details->monthly_pension;
+            }
 
             if($service){
-         
                 $slide['service_id'] = $service->service_id;
                 $service_name = Service::where('id', $service->service_id)->select('name')->first();
                 $slide['service_name'] = $service_name->name;
                 $bank_data = [];
-                foreach(get_prefer_bank($service->service_id) as $bank){
-                    $bank_slide['bank_id'] = $bank->id;
-                    $bank_slide['bank_name'] = $bank->name;
 
-                    if($service->bank_id == $bank->id){
-                      $bank_slide['selected'] = true;
+                foreach(get_prefer_bank($service->service_id) as $bank){
+                    if($bank->default_show == 1){
+                      $bank_slide['bank_id'] = $bank->id;
+                      $bank_slide['bank_name'] = $bank->name;
+                      $bank_slide['valuable_text'] = $bank->valuable_text;
+                      
+                      $bank_data[] = $bank_slide;
                     } else {
-                      $bank_slide['selected'] = false;
+                      if($avg_sal >= $bank->min_salary && $avg_sal <= $bank->max_salary){
+                        $bank_slide['bank_id'] = $bank->id;
+                        $bank_slide['bank_name'] = $bank->name;
+                        $bank_slide['valuable_text'] = $bank->valuable_text;
+                        $bank_data[] = $bank_slide;
+                      } else {
+                         
+                        if($bank->existing_card == 1){
+                          $show = 0;
+                          foreach(get_existing_bank_card($bank->id) as $bank_card){
+                          if(in_array($bank_card->bank_id, $credit_bank)){
+                            $show = 1;
+                          }
+                        }
+
+                        if($show == 1){
+                          $bank_slide['bank_id'] = $bank->id;
+                          $bank_slide['bank_name'] = $bank->name;
+                          $bank_slide['valuable_text'] = $bank->valuable_text;
+                          $bank_data[] = $bank_slide;
+                        }
+                        } 
+                      }
                     }
-                    $bank_data[] = $bank_slide;
                 }
+
               $slide['bank_data']  = $bank_data;
               $data[] = $slide;  
-        
             }
-
           return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
           }
       }
@@ -795,11 +1079,34 @@ class UserController extends Controller {
         if($user){
           $user_id = $user->id;
   
-            ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
-              'bank_id' => $request->bank_id,
-              'decide_by' => $request->decide_by,
-            ]);
+            // ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
+            //   'bank_id' => $request->bank_id,
+            //   'decide_by' => $request->decide_by,
+            // ]);
 
+            \DB::table('credit_card_preference_bank')->where('user_id', $user_id)->delete();
+            \DB::table('card_type_preference')->where('user_id', $user_id)->delete();
+
+            if(isset($request->bank_id)){
+                $banks = explode(',', $request->bank_id);
+                foreach($banks as $bank_id){
+                    CreditCardPreferenceBank::create([
+                        'bank_id' => $bank_id,
+                        'user_id' => $user_id,
+                    ]);
+                }
+            }
+
+            if(isset($request->card_type)){
+                $card_types = explode(',', $request->card_type);
+                foreach($card_types as $card_type){
+                    CardTypePreference::create([
+                        'type_id' => $card_type,
+                        'user_id' => $user_id,
+                    ]);
+                }
+            }
+            
             return response()->json(['success' => true, 'status' => 200, 'message' => 'Bank preference have been successfully added']);  
        
         }
@@ -3148,6 +3455,25 @@ class UserController extends Controller {
         
     }
 
+    public function save_personal_loan_informations(Request $request){
+      if($request->api_key){
+        $user = User::where('api_key', $request->api_key)->select('id')->first();
+        if($user){
+            $user_id = $user->id;
+            $inputs = $request->all();
+            $inputs['user_id'] = $user_id;
+            $info = PersonalLoanInformation::where('user_id', $user_id)->select('id')->first();
+            if($info){
+              $id = $info->id;
+              (new PersonalLoanInformation)->store($inputs, $id);
+            } else {
+                (new PersonalLoanInformation)->store($inputs);
+            }
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Personal loan information successfully saved.']);
+        }
+      }
+    }
+
     public function save_coman_information_form(Request $request){
         if($request->api_key){
             $user = User::where('api_key', $request->api_key)->select('id')->first();
@@ -3167,6 +3493,26 @@ class UserController extends Controller {
         }
     }
 
+    public function show_coman_information_form(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+              $data = ComanInformation::where('user_id', $user->id)->first();
+              return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
+          }
+        }
+    }
+
+    public function show_personal_loan_informations(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+              $data = PersonalLoanInformation::where('user_id', $user->id)->first();
+              return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
+          }
+        }
+    }
+    
     public function save_credit_card_information(Request $request){
         try {
             if($request->api_key){
@@ -3186,7 +3532,7 @@ class UserController extends Controller {
                         $destinationPath = public_path().'/uploads/kyc_docs/';
                         $file->move($destinationPath, $fileName);
                     }
-                            $fname ='/uploads/salary_slip/';
+                            $fname ='/uploads/kyc_docs/';
                             $image = $fname.$fileName;
                         } else{
                             $image = @$info->kyc_docs;

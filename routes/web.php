@@ -507,6 +507,27 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'agent-request@drop']);
             // Agent Requests
 
+            // Card Type route start
+            Route::resource('card-type', 'App\Http\Controllers\CardTypeController', [
+                'names' => [
+                    'index'     => 'card-type.index',
+                    'create'    => 'card-type.create',
+                    'store'     => 'card-type.store',
+                    'edit'      => 'card-type.edit',
+                    'update'    => 'card-type.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('card-type/paginate/{page?}', ['as' => 'card-type.paginate',
+                'uses' => 'App\Http\Controllers\CardTypeController@Paginate']);
+            Route::any('card-type/action', ['as' => 'card-type.action',
+                'uses' => 'App\Http\Controllers\CardTypeController@Action']);
+            Route::any('card-type/toggle/{id?}', ['as' => 'card-type.toggle',
+                'uses' => 'App\Http\Controllers\CardTypeController@Toggle']);
+            Route::any('card-type/drop/{id?}', ['as' => 'card-type.drop',
+                'uses' => 'card-type@drop']);
+            // Card Type end
 
             // Refers Master route start
             Route::resource('refers', 'App\Http\Controllers\ReferController', [
@@ -683,6 +704,9 @@ Route::any('verify-emirates-id', [App\Http\Controllers\Frontend\HomeController::
 Route::any('verify-emirates', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates'])->name('verify-emirates');
 Route::any('preference', [App\Http\Controllers\Frontend\HomeController::class, 'preference'])->name('preference');
 Route::any('save-preference', [App\Http\Controllers\Frontend\HomeController::class, 'save_preference'])->name('save-preference');
+
+Route::any('personal-loan-preference', [App\Http\Controllers\Frontend\HomeController::class, 'personal_loan_preference'])->name('personal-loan-preference');
+
 Route::any('consent', [App\Http\Controllers\Frontend\HomeController::class, 'consent'])->name('consent');
 
 Route::any('live_product_1', [App\Http\Controllers\Frontend\HomeController::class, 'live_product_1'])->name('live_product_1');

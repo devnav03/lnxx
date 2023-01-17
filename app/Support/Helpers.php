@@ -197,7 +197,14 @@ function get_service_details($id){
 function get_prefer_bank($id){
     return \DB::table('bank_services')
             ->join('banks', 'banks.id', '=', 'bank_services.bank_id')
-            ->select('banks.name', 'banks.id')->where('bank_services.service_id', $id)->get(); 
+            ->join('credit_card_engines', 'credit_card_engines.bank_id', '=', 'banks.id')
+            ->select('banks.name', 'banks.id', 'credit_card_engines.min_salary', 'credit_card_engines.max_salary', 'credit_card_engines.existing_card', 'credit_card_engines.default_show', 'credit_card_engines.valuable_text')->where('bank_services.service_id', $id)->get(); 
+}
+
+function get_existing_bank_card($id){
+    return \DB::table('existing_credit_card_engines')
+            ->join('credit_card_engines', 'credit_card_engines.id', '=', 'existing_credit_card_engines.engine_id')
+            ->select('existing_credit_card_engines.bank_id', 'existing_credit_card_engines.credit_limit')->where('credit_card_engines.bank_id', $id)->get(); 
 }
 
 function get_sel_bank($id){

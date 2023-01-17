@@ -7,37 +7,77 @@
 <div class="col-md-7">
 <div class="personal_details_box cm_dt">
 <h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>  
-<h2>Bank Preference</h2>
-<h6 style="margin-bottom: 0px;">Please select the credit card preference</h6> 
-<form action="{{ route('save-preference') }}" method="post">
+<h2>Credit Card Preference</h2>
+<!-- <h6 style="margin-bottom: 0px;">Please select the credit card preference</h6>  -->
+<form action="{{ route('save-preference') }}" class="pref_bank" method="post">
 {{ csrf_field() }}  
 
-<div class="row">
-  <div class="col-md-12" style="margin-top: 20px;">
-    <label style="font-weight: normal; font-size: 15px;"><input type="radio" @if($service->decide_by == 0) checked @endif  onclick="javascript:yesnoCheck();" name="decide_by" id="yesCheck" value="0" style="margin-top: 3px; float: left; margin-right: 8px; width: 16px; margin-bottom: 8px;"> Let the lnxx decide</label><br>
-    <label style="font-weight: normal; font-size: 15px;"><input type="radio" @if($service->decide_by == 1) checked @endif onclick="javascript:yesnoCheck();" name="decide_by" value="1" id="noCheck" style="margin-top: 3px; float: left; margin-right: 8px; width: 16px; margin-bottom: 5px;"> I will select my preference</label>
-  </div>
+  @if($your_limit)
+  <p style="text-align: center; margin-top: 25px !important; max-width: 500px; margin: 0 auto; color: #333; font-weight: 500; font-size: 16px;">Based on the information that you have provided, you are eligible for a credit card with a limit of up to </p>
+  <h5 style="text-align: center; margin-top: 25px; margin-bottom: 25px; color: #5EB495; font-weight: 600;font-size: 20px;">AED {{ $your_limit }}/-<span style="color: rgba(0, 0, 0, 0.5);font-size: 20px;">*</span></h5>
+@endif 
+  <h6 style="color: #000;font-size: 16px;">Please tell us about the type of card you want to apply for:</h6>
+  @foreach($card_types as $card_type)
+  <label style="margin-right: 0px;width: 50%;float: left;margin-top: 15px;"><input type="checkbox"
+   name="card_type[]" value="{{ $card_type->id }}"> {{ $card_type->name }}</label>
+  @endforeach
+
+  <h4 style="border-top: 1px solid #f3f3f3; padding-top: 25px; color: #000; font-size: 16px;float: left;width: 100%;margin-top: 25px;">Please tell us about the choice of your banks</h4>
+  <!-- <p style="color: rgba(9, 15, 5, 0.5);">On the basis of your basic information details we are suggesting you these offers.</p> -->
   @if($service)
-  <div class="col-md-6" id="bank_select" @if($service->decide_by == 0) style="margin-top: 15px; display:none" @else style="margin-top: 15px;" @endif >
-    <!-- <label style="margin-bottom: 10px;">Select bank for {{ $service->name }}</label> -->
-    <input type="hidden" name="apply_id[]" value="{{ $service->id }}">
-@php
-    $sel_bank = get_sel_bank($service->id);
-@endphp  
-      <label style="font-weight: normal; margin-bottom: 5px; font-size: 15px;">Select Bank Preference*</label>  
-      <select name="bank_id" class="form-control" id="bank_select_field" @if($service->decide_by == 1) required="true" @endif>
-        <option value="">Select</option>
-        @foreach(get_prefer_bank($service->service_id) as $bank)
-          <option value="{{ $bank->id }}" @if($bank->id == $service->bank_id) selected @endif>{{ $bank->name }}</option>
+    <input type="hidden" name="apply_id[]" value="{{ $service->id }}"> 
+    <div class="row"> 
+      @foreach(get_prefer_bank($service->service_id) as $bank) 
+        
+        @if($bank->default_show == 1)
+        <div class="col-md-6" style="margin-bottom: 10px; margin-top: 5px;">
+          <label><input type="checkbox" name="bank_id[]" value="{{ $bank->id }}"> {{ $bank->name }} @if($bank->valuable_text)<span class="info_box"><i class="fa fa-circle-info"></i> <div class="bank_iinfo"><p>{{ $bank->valuable_text }}</p></div> </span>@endif </label>
+        </div>
+        @else
+
+        @if($avg_sal >= $bank->min_salary && $avg_sal <= $bank->max_salary)
+          <div class="col-md-6" style="margin-bottom: 10px; margin-top: 5px;">
+          <label><input type="checkbox" name="bank_id[]" value="{{ $bank->id }}"> {{ $bank->name }} @if($bank->valuable_text)<span class="info_box"><i class="fa fa-circle-info"></i> <div class="bank_iinfo"><p>{{ $bank->valuable_text }}</p></div> </span>@endif </label>
+          </div>
+        @else
+
+        @if($bank->existing_card == 1) 
+        @php
+          $show = 0;
+        @endphp
+        @foreach(get_existing_bank_card($bank->id) as $bank_card)
+            @if(in_array($bank_card->bank_id, $credit_bank))
+              @php
+                $show = 1;
+              @endphp
+            @endif 
         @endforeach
-      </select>
-  </div>
+        @if($show == 1)
+            
+            <div class="col-md-6" style="margin-bottom: 10px; margin-top: 5px;">
+          <label><input type="checkbox" name="bank_id[]" value="{{ $bank->id }}"> {{ $bank->name }} @if($bank->valuable_text)<span class="info_box"><i class="fa fa-circle-info"></i> <div class="bank_iinfo"><p>{{ $bank->valuable_text }}</p></div> </span>@endif </label>
+          </div>
+
+        @endif
+
+        @endif
+        @endif
+        @endif
+
+      @endforeach
+    </div> 
   @endif
-  <div class="col-md-12 text-center">
-    <a href="{{ route('product-requested') }}" class="back_btn">Back</a> &nbsp;&nbsp;
-    <button type="submit">Proceed</button>
+
+  <div class="credit_card_limit" style="border-top: 1px solid #f3f3f3; margin-top: 10px; padding-top: 45px; padding-bottom: 30px;">
+    <p style="text-align: center; max-width: 500px; margin: 0 auto; color: #333; font-weight: 500;font-size: 14px;">Please Note: Credit limits and loans are at the sole discretion of the loan/card extending bank.</p>
   </div>
-</div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <a href="{{ route('product-requested') }}" class="back_btn">Back</a> &nbsp;&nbsp;
+      <button type="submit">Proceed</button>
+    </div>
+  </div>
 </form>
 </div>
 </div>

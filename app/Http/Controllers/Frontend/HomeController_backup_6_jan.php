@@ -11,8 +11,6 @@ use App\Models\Bank;
 use App\Models\CustomerOnboarding;
 use App\Models\CmSalariedDetail;
 use App\Models\SelfEmpDetail;
-use App\Models\CardTypePreference;
-use App\Models\CreditCardPreferenceBank;
 use App\Models\OtherCmDetail;
 use App\Models\Service;
 use App\Models\Contact;
@@ -36,7 +34,6 @@ use App\Models\ContentManagement;
 use App\Models\ComanInformation;
 use App\Models\Dependent;
 use App\Models\ApplicationData;
-use App\Models\CardType;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -120,187 +117,16 @@ class HomeController extends Controller {
         try {
             // if($request->decide_by){
             $user_id = Auth::id();
-            // ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->where('service_id', 3)
-            // ->update([
-            //     'bank_id' => $request->bank_id,
-            //     'decide_by' => $request->decide_by,
-            // ]);
-            
-            \DB::table('credit_card_preference_bank')->where('user_id', $user_id)->delete();
-            \DB::table('card_type_preference')->where('user_id', $user_id)->delete();
-
-            if(isset($request->card_type)){
-                foreach($request->card_type as $card_type){
-                    CardTypePreference::create([
-                        'type_id' =>  $card_type,
-                        'user_id'   =>  $user_id,
-                    ]);
-                }
-            }
-
-            if(isset($request->bank_id)){
-                foreach($request->bank_id as $bank_id){
-                    CreditCardPreferenceBank::create([
-                        'bank_id' => $bank_id,
-                        'user_id' => $user_id,
-                    ]);
-                }
-            }
-
-            $ser = ServiceApply::where('app_status', 0)->where('service_id', 1)->where('customer_id', $user_id)->count(); 
-
-            if($ser == 0){
+            ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->where('service_id', 3)
+            ->update([
+                'bank_id' => $request->bank_id,
+                'decide_by' => $request->decide_by,
+            ]);
                 return redirect()->route('consent');
-            } else {
-                return redirect()->route('personal-loan-preference'); 
-            }
-
             // } else {
             //     return back();
             // }
         }  catch (\Exception $exception) {
-            //dd($exception);
-            return back();    
-        }
-    }
-
-    public function personal_loan_preference(Request $request){
-        try {
-            
-            $user_id = Auth::id();
-            $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 
-                'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 
-                'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
-            
-            $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
- 
-            //$result=array_intersect($a1,$a2);
-            $avg_sal = 0;
-            $total_cred_limit = 0;
-            $cred_five = 0;
-            $emi = 0;
-            $credit_bank = [];
-
-            if($f_details->exist_personal == 1){
-                $emi += $f_details->loan_emi;
-                if($f_details->loan_emi2){
-                    $emi += $f_details->loan_emi2;
-                }
-                if($f_details->loan_emi3){
-                    $emi += $f_details->loan_emi3;
-                }
-                if($f_details->loan_emi4){
-                    $emi += $f_details->loan_emi4;
-                }
-            }
-
-            if($f_details->exist_business == 1){
-                $emi += $f_details->business_loan_emi;
-                if($f_details->business_loan_emi2){
-                    $emi += $f_details->business_loan_emi2;
-                }
-                if($f_details->business_loan_emi3){
-                    $emi += $f_details->business_loan_emi3;
-                }
-                if($f_details->business_loan_emi4){
-                    $emi += $f_details->business_loan_emi4;
-                }
-            }
-
-            if($f_details->exist_mortgage == 1){
-                $emi += $f_details->mortgage_emi;
-                if($f_details->mortgage_emi2){
-                    $emi += $f_details->mortgage_emi2;
-                }
-                if($f_details->mortgage_emi3){
-                    $emi += $f_details->mortgage_emi3;
-                }
-                if($f_details->mortgage_emi4){
-                    $emi += $f_details->mortgage_emi4;
-                }
-            }
-
-
-            if($f_details->exist_credit == 1){
-                $cred1 = 0;
-                $cred2 = 0;
-                $cred3 = 0;
-                $cred4 = 0;
-                if($f_details->details_of_cards == 'Credit Card'){
-                    $cred1 = $f_details->card_limit;
-                    $credit_bank[] = $f_details->credit_bank_name;
-                }
-                if($f_details->details_of_cards2 == 'Credit Card'){
-                    $cred2 = $f_details->card_limit2;
-                   
-                    $credit_bank[] = $f_details->credit_bank_name2;
-                }
-                if($f_details->details_of_cards3 == 'Credit Card'){
-                    $cred3 = $f_details->card_limit3;
-                    $credit_bank[] = $f_details->credit_bank_name3;
-                }
-                if($f_details->details_of_cards4 == 'Credit Card'){
-                    $cred4 = $f_details->card_limit4;
-                    $credit_bank[] = $f_details->credit_bank_name4;
-                }
-                $total_cred_limit = $cred1+$cred2+$cred3+$cred4;
-                if($total_cred_limit != 0){
-                    $cred_five = $total_cred_limit/100*5;
-                }
-            }
-
-            if($cus_onboard->cm_type == 1){
-                $sal_details = CmSalariedDetail::where('customer_id', $user_id)->select('last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'monthly_salary')->first(); 
-                $no = 0; 
-                $sal1 = 0;
-                $sal2 = 0;
-                $sal3 = 0;
-                if($sal_details->last_one_salary_credits){
-                    $sal1 = $sal_details->last_one_salary_credits;
-                    $no++;
-                }
-                if($sal_details->last_two_salary_credits){
-                    $sal2 = $sal_details->last_two_salary_credits;
-                    $no++;
-                }
-                if($sal_details->last_three_salary_credits){
-                    $sal3 = $sal_details->last_three_salary_credits;
-                    $no++;
-                }
-                $total_sal = $sal1 + $sal2 + $sal3; 
-                if($no == 0){
-                    $no = 1;
-                }  
-                $avg_sal = $total_sal/$no;
-                if($avg_sal == 0){
-                 $avg_sal = $sal_details->monthly_salary; 
-                }
-            }
-            if($cus_onboard->cm_type == 2){
-                $sal_details = SelfEmpDetail::where('customer_id', $user_id)->select('annual_business_income')->first();
-                $avg_sal = $sal_details->annual_business_income/12;
-            }
-            if($cus_onboard->cm_type == 3){
-                $sal_details = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
-                $avg_sal = $sal_details->monthly_pension;
-            }
-            
-            $cred_emi = $emi+$cred_five;
-            $dbr_calculation = ($cred_emi/$avg_sal)*100;
-            $remaining_value = 50-$dbr_calculation;
-  
-            if($remaining_value > 0){
-                $your_emi = ($avg_sal*$remaining_value)/100;
-                $your_limit = $your_emi*20;
-            } else {
-                $your_limit = 0;
-                $your_emi = 0;
-            }
-
-        return view('frontend.pages.personal_loan_preference', compact('your_emi', 'your_limit'));
-
-        }  catch (\Exception $exception) {
-            //dd($exception);
             return back();    
         }
     }
@@ -525,14 +351,13 @@ class HomeController extends Controller {
             return redirect()->route('user-dashboard')->with('app_submit', 'app_submit');
 
         } catch (\Exception $exception) {
-           //dd($exception);
+         //  dd($exception);
             return back();    
         } 
     }
 
     public function information_form(Request $request){
         try {
-                
                 $user_id = Auth::id();
                 $result = ComanInformation::where('user_id', $user_id)->first();
                 $services = ServiceApply::where('customer_id', $user_id)->pluck('service_id')->toArray();
@@ -549,7 +374,6 @@ class HomeController extends Controller {
 
             return view('frontend.pages.information_form', compact('result', 'back', 'customer_info'));
         } catch (\Exception $exception) {
-            //dd($exception);
             return back();    
         } 
     }
@@ -1447,141 +1271,6 @@ public function enter_name(Request $request){
         try {
             $user_id =  Auth::id();
             $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
-
-            $card_types = CardType::where('status', 1)->select('name', 'id')->get();
-            
-            $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 
-                'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 
-                'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
-            
-            $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
- 
-            //$result=array_intersect($a1,$a2);
-         
-            $avg_sal = 0;
-            $total_cred_limit = 0;
-            $cred_five = 0;
-            $emi = 0;
-            $credit_bank = [];
-
-            if($f_details->exist_personal == 1){
-                $emi += $f_details->loan_emi;
-                if($f_details->loan_emi2){
-                    $emi += $f_details->loan_emi2;
-                }
-                if($f_details->loan_emi3){
-                    $emi += $f_details->loan_emi3;
-                }
-                if($f_details->loan_emi4){
-                    $emi += $f_details->loan_emi4;
-                }
-            }
-
-            if($f_details->exist_business == 1){
-                $emi += $f_details->business_loan_emi;
-                if($f_details->business_loan_emi2){
-                    $emi += $f_details->business_loan_emi2;
-                }
-                if($f_details->business_loan_emi3){
-                    $emi += $f_details->business_loan_emi3;
-                }
-                if($f_details->business_loan_emi4){
-                    $emi += $f_details->business_loan_emi4;
-                }
-            }
-
-            if($f_details->exist_mortgage == 1){
-                $emi += $f_details->mortgage_emi;
-                if($f_details->mortgage_emi2){
-                    $emi += $f_details->mortgage_emi2;
-                }
-                if($f_details->mortgage_emi3){
-                    $emi += $f_details->mortgage_emi3;
-                }
-                if($f_details->mortgage_emi4){
-                    $emi += $f_details->mortgage_emi4;
-                }
-            }
-
-
-            if($f_details->exist_credit == 1){
-                $cred1 = 0;
-                $cred2 = 0;
-                $cred3 = 0;
-                $cred4 = 0;
-                if($f_details->details_of_cards == 'Credit Card'){
-                    $cred1 = $f_details->card_limit;
-                    $credit_bank[] = $f_details->credit_bank_name;
-                }
-                if($f_details->details_of_cards2 == 'Credit Card'){
-                    $cred2 = $f_details->card_limit2;
-                   
-                    $credit_bank[] = $f_details->credit_bank_name2;
-                }
-                if($f_details->details_of_cards3 == 'Credit Card'){
-                    $cred3 = $f_details->card_limit3;
-                    $credit_bank[] = $f_details->credit_bank_name3;
-                }
-                if($f_details->details_of_cards4 == 'Credit Card'){
-                    $cred4 = $f_details->card_limit4;
-                    $credit_bank[] = $f_details->credit_bank_name4;
-                }
-                $total_cred_limit = $cred1+$cred2+$cred3+$cred4;
-                if($total_cred_limit != 0){
-                    $cred_five = $total_cred_limit/100*5;
-                }
-            }
-
-
-            if($cus_onboard->cm_type == 1){
-                $sal_details = CmSalariedDetail::where('customer_id', $user_id)->select('last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'monthly_salary')->first(); 
-                $no = 0; 
-                $sal1 = 0;
-                $sal2 = 0;
-                $sal3 = 0;
-                if($sal_details->last_one_salary_credits){
-                    $sal1 = $sal_details->last_one_salary_credits;
-                    $no++;
-                }
-                if($sal_details->last_two_salary_credits){
-                    $sal2 = $sal_details->last_two_salary_credits;
-                    $no++;
-                }
-                if($sal_details->last_three_salary_credits){
-                    $sal3 = $sal_details->last_three_salary_credits;
-                    $no++;
-                }
-                $total_sal = $sal1 + $sal2 + $sal3; 
-                if($no == 0){
-                    $no = 1;
-                }  
-                $avg_sal = $total_sal/$no;
-                if($avg_sal == 0){
-                 $avg_sal = $sal_details->monthly_salary; 
-                }
-            }
-            if($cus_onboard->cm_type == 2){
-                $sal_details = SelfEmpDetail::where('customer_id', $user_id)->select('annual_business_income')->first();
-                $avg_sal = $sal_details->annual_business_income/12;
-            }
-            if($cus_onboard->cm_type == 3){
-                $sal_details = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
-                $avg_sal = $sal_details->monthly_pension;
-            }
-            
-            $cred_emi = $emi+$cred_five;
-            $dbr_calculation = ($cred_emi/$avg_sal)*100;
-            $remaining_value = 50-$dbr_calculation;
-  
-            if($remaining_value > 0){
-                $your_emi = ($avg_sal*$remaining_value)/100;
-                $your_limit = $your_emi*20;
-            } else {
-                $your_limit = 0;
-                $your_emi = 0;
-            }
-
-
             if(isset($request->service)){
                 foreach($request->service as $service_id){
                     $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
@@ -1595,7 +1284,7 @@ public function enter_name(Request $request){
                 $service = \DB::table('service_applies')
                     ->join('services', 'services.id', '=', 'service_applies.service_id')
                     ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id')->where('service_applies.customer_id', $user_id)->get();    
-                return view('frontend.pages.preference', compact('service', 'your_emi', 'your_limit', 'card_types', 'avg_sal', 'credit_bank')); 
+                return view('frontend.pages.preference', compact('service')); 
             } else {
                 $apply_ser = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->count();
                 if($apply_ser == 0) {
@@ -1605,9 +1294,10 @@ public function enter_name(Request $request){
                     ->join('services', 'services.id', '=', 'service_applies.service_id')
                     ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id', 'service_applies.decide_by')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
                     // dd($services);   
-                return view('frontend.pages.preference', compact('service', 'your_emi', 'your_limit', 'card_types', 'avg_sal', 'credit_bank')); 
+                return view('frontend.pages.preference', compact('service')); 
                 }
             }
+
         } catch (Exception $e) {
             return back();
         }
@@ -1851,14 +1541,12 @@ public function enter_name(Request $request){
                     'last_name' => $request->last_name,
                     'eid_number' => $request->eid_number,
                 ]);  
-                
-                return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
 
-                // if($user->eid_status == 1) {
-                //     return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
-                // } else {
-                //     return redirect()->route('verify-emirates-id');
-                // }
+                if($user->eid_status == 1) {
+                    return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
+                } else {
+                    return redirect()->route('verify-emirates-id');
+                }
 
             } else {
                 $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('first_name_as_per_passport', 'cm_type')->first();
@@ -1889,92 +1577,7 @@ public function enter_name(Request $request){
         try {
                 $user_id =  Auth::id();
                 $inputs = $request->all();  
-                $info = CreditCardInformation::where('user_id', $user_id)->select('id', 'kyc_docs', 'kyc_docs2', 'kyc_docs3', 'kyc_docs4')->first();
-
-                if(isset($request->no_sign_up_credit_shield)){
-                    $inputs['no_sign_up_credit_shield'] = $request->no_sign_up_credit_shield;
-                } else {
-                    $inputs['no_sign_up_credit_shield'] = 0;  
-                }
-                if(isset($request->sign_up_credit_shield_plus)){
-                    $inputs['sign_up_credit_shield_plus'] = $request->sign_up_credit_shield_plus;
-                } else {
-                    $inputs['sign_up_credit_shield_plus'] = 0;  
-                }
-                 
-                if(isset($inputs['kyc_docs']) or !empty($inputs['kyc_docs'])) {
-                    $image_name = rand(100000, 999999);
-                    $fileName = '';
-                    if($file = $request->hasFile('kyc_docs')) {
-                        $file = $request->file('kyc_docs');
-                        $img_name = $file->getClientOriginalName();
-                        $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/kyc_docs/';
-                        $file->move($destinationPath, $fileName);
-                    }
-                            $fname ='/uploads/kyc_docs/';
-                            $image = $fname.$fileName;
-                        } else{
-                            $image = @$info->kyc_docs;
-                }  
-                unset($inputs['kyc_docs']);
-                $inputs['kyc_docs'] = $image; 
-                
-                if(isset($inputs['kyc_docs2']) or !empty($inputs['kyc_docs2'])) {
-                    $image_name = rand(100000, 999999);
-                    $fileName = '';
-                    if($file = $request->hasFile('kyc_docs2')) {
-                        $file = $request->file('kyc_docs2');
-                        $img_name = $file->getClientOriginalName();
-                        $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/kyc_docs/';
-                        $file->move($destinationPath, $fileName);
-                    }
-                            $fname ='/uploads/kyc_docs/';
-                            $image = $fname.$fileName;
-                        } else{
-                            $image = @$info->kyc_docs2;
-                }  
-                unset($inputs['kyc_docs2']);
-                $inputs['kyc_docs2'] = $image; 
-                
-                if(isset($inputs['kyc_docs3']) or !empty($inputs['kyc_docs3'])) {
-                    $image_name = rand(100000, 999999);
-                    $fileName = '';
-                    if($file = $request->hasFile('kyc_docs3')) {
-                        $file = $request->file('kyc_docs3');
-                        $img_name = $file->getClientOriginalName();
-                        $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/kyc_docs/';
-                        $file->move($destinationPath, $fileName);
-                    }
-                            $fname ='/uploads/kyc_docs/';
-                            $image = $fname.$fileName;
-                        } else{
-                            $image = @$info->kyc_docs3;
-                }  
-                unset($inputs['kyc_docs3']);
-                $inputs['kyc_docs3'] = $image;
-                
-                if(isset($inputs['kyc_docs4']) or !empty($inputs['kyc_docs4'])) {
-                    $image_name = rand(100000, 999999);
-                    $fileName = '';
-                    if($file = $request->hasFile('kyc_docs4')) {
-                        $file = $request->file('kyc_docs4');
-                        $img_name = $file->getClientOriginalName();
-                        $fileName = $image_name.$img_name;
-                        $destinationPath = public_path().'/uploads/kyc_docs/';
-                        $file->move($destinationPath, $fileName);
-                    }
-                            $fname ='/uploads/kyc_docs/';
-                            $image = $fname.$fileName;
-                        } else{
-                            $image = @$info->kyc_docs4;
-                }  
-                unset($inputs['kyc_docs4']);
-                $inputs['kyc_docs4'] = $image; 
-                
-                
+                $info = CreditCardInformation::where('user_id', $user_id)->select('id')->first();
                 $inputs['user_id'] = $user_id;
                 if($info){
                     $id = $info->id;
@@ -1996,7 +1599,7 @@ public function enter_name(Request $request){
     public function save_personal_loan_information(Request $request){
         try {
             
-            
+           // dd($request);
             $user_id = Auth::id();
             $inputs = $request->all();  
             $inputs['user_id'] = $user_id;
@@ -2013,7 +1616,6 @@ public function enter_name(Request $request){
             return redirect()->route('information-form');
 
         } catch (Exception $e) {
-            //dd($e);
             return back();
         }
     }
@@ -2443,8 +2045,8 @@ public function enter_name(Request $request){
                     'login_otp' => $otp,
                 ]);
 
-                return redirect()->route('upload-profile-image');
-               // return view('frontend.pages.emirates_id_verification'); 
+
+                return view('frontend.pages.emirates_id_verification'); 
 
             // return view('frontend.pages.upload_profile_image', compact('user')); 
 

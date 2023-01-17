@@ -58,10 +58,28 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                        {!! Form::label('max_salary', lang('Min Salary (In AED)'), array('class' => '')) !!}
+                                        {!! Form::label('max_salary', lang('Max Salary (In AED)'), array('class' => '')) !!}
                                         {!! Form::number('max_salary', null, array('class' => 'form-control', 'required'=> 'true')) !!}
                                         </div>
                                     </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                        {!! Form::label('default_show', lang('Show by default'), array('class' => '')) !!}
+                                        <select class="form-control" required="true" name="default_show">
+                                            <option @if(isset($result)) @if($result->default_show == 0) selected @endif @endif value="0">No</option>
+                                            <option @if(isset($result)) @if($result->default_show == 1) selected @endif @endif value="1">Yes</option>
+                                        </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                        {!! Form::label('valuable_text', lang('Valuable Text'), array('class' => '')) !!}
+                                        {!! Form::text('valuable_text', null, array('class' => 'form-control')) !!}
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                         {!! Form::label('existing_card', lang('Is Having Credit Card'), array('class' => '')) !!}
