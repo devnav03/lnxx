@@ -952,39 +952,6 @@ public function enter_name(Request $request){
  
                 }
             }
-
-
-            // if(isset($request->apply_id)){
-            //     if($request->bank_id){
-            //         foreach($request->apply_id as $apply_id){
-            //             if(isset($request->bank_id[$apply_id])) {
-            //                 ServiceApply::where('id', $apply_id)->update([
-            //                     'bank_id'  =>  $request->bank_id[$apply_id],
-            //                 ]);
-            //             }
-            //         }
-            //     }
-            //     $countries = Country::all();
-            //     $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
-            //     $result = CustomerOnboarding::where('user_id', $user_id)->first();
-
-            //     return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
-            // } else {
-
-            //     $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
-
-            //     if($apply_ser == 0) {
-            //         return redirect()->route('user-dashboard')->with('select_service', 'select_service');
-            //     } else {
-
-            //     $countries = Country::all();
-            //     $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
-            //     $result = CustomerOnboarding::where('user_id', $user_id)->first();
-            //     return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
-            //     }
-            // }
-
-
             $countries = Country::all();
             $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
             $result = CustomerOnboarding::where('user_id', $user_id)->first();
@@ -1536,10 +1503,13 @@ public function enter_name(Request $request){
         $e_otp = \DB::table('lead_email_otp')->where('email', $request->email)->first();
         $m_otp = \DB::table('lead_mobile_otp')->where('number', $request->number)->first();
         $status = \DB::table('lead_social_form_setting')->where('id', 1)->first();
-        if($e_otp->otp == $request->e_otp || $request->e_otp == 123456 || $status->e_otp == 0){
-         if($m_otp->otp == $request->m_otp || $request->m_otp == 123456 || $status->m_otp == 0){
+        if(@$e_otp->otp == $request->e_otp || $request->e_otp == 123456 || $status->e_otp == 0){
+         if(@$m_otp->otp == $request->m_otp || $request->m_otp == 123456 || $status->m_otp == 0){
             \DB::table('leads')->insert([
-                'name' => $request->name,
+                'saturation' => $request->sat,
+                'name' => $request->f_name,
+                'mname' => $request->m_name,
+                'lname' => $request->l_name,
                 'email' => $request->email,
                 'number' => $request->number,
                 'product' => $request->product,

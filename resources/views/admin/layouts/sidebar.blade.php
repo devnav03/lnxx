@@ -117,8 +117,8 @@
                                             $assign_lead_list_count = \DB::Select("SELECT COUNT(id) as lead_list_count FROM `leads` where lead_status != 'CLOSE' AND alloted_to IS NOT NUll")[0]->lead_list_count; 
                                             ?> 
                                             <li class="nav-sub-item"><a class="nav-sub-link" href="{{route('lead.create')}}">Add New Lead</a></li>
-                                            <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('lead.index') }}">Leads Listing<span class="badge bg-danger side-badge">{{$lead_list_count}}</span></a></li>
-                                            <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('leads.lead_assign_leads') }}">Leads Assign List<span class="badge bg-warning side-badge">{{$assign_lead_list_count}}</span></a></li>
+                                            <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('lead.index') }}">Unassigned Lead List<span class="badge bg-danger side-badge">{{$lead_list_count}}</span></a></li>
+                                            <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('leads.lead_assign_leads') }}">Assigned Lead List<span class="badge bg-warning side-badge">{{$assign_lead_list_count}}</span></a></li>
                                             <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('leads.lead_assign_automatic_leads') }}">Automatic Leads Distribution</a></li>
                                             <li class="nav-sub-item"><a class="nav-sub-link" href="{{route('admin-lead-tracking')}}">Lead Tracking</a></li>
                                             <li class="nav-sub-item"><a class="nav-sub-link" href="{{ route('leads.lead_open_leads') }}">All Leads<span class="badge bg-primary side-badge">{{$new_count}}</span></a></li>

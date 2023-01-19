@@ -35,7 +35,7 @@
 
     <td class="text-center">{!! $up_name !!}</td>
     <td >
-    <button type="button" class="btn btn-warning" data-toggle="modal" onclick="get_ids({{$detail->id}})" data-target="#exampleModal">
+    <button type="button" class="btn btn-warning" data-toggle="modal" onclick="get_ids({{$detail->id}})" data-target="#exampleModal1">
                                                                     Assign
                                                             </button>
         </td>

@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label for="name" class="control-label">Name</label>
+                                    <label for="name" class="control-label">Customer Name</label>
                                     {!! Form::text('name', null, array('class' =>
                                     'form-control')) !!}
                                 </div>
@@ -40,23 +40,23 @@
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="product_type"
-                                        class="control-label">Email</label>
+                                        class="control-label">Customer Email</label>
                                     {!! Form::text('email', null, array('class' =>
                                     'form-control')) !!}
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label for="product_type"
-                                        class="control-label">Mobile</label>
-                                    {!! Form::number('mobile', null, array('class' =>
-                                    'form-control')) !!}
+                                <label>Mobile</label>
+										<div class="input-group telephone-input">
+										</div> 
+                                        <input type="tel" class="form-control" name="number" id="mobile-number" style="width: 100%;">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="product_type"
-                                        class="control-label">Reference</label>
+                                        class="control-label">Agent/Employee Reference ID</label>
                                     {!! Form::text('reference', null, array('class' =>
                                     'form-control')) !!}
                                 </div>
@@ -64,16 +64,21 @@
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="product_type"
-                                        class="control-label">Source</label>
-                                    {!! Form::text('source', null, array('class' =>
-                                    'form-control')) !!}
+                                        class="control-label">By Source</label>
+                                        <select name="source" class="form-control minimal" aria-label="Default select example">
+                                                <option value="">Please Select</option>
+                                                <?php $get_source = \DB::table('lead_source')->get(); ?>
+                                                @foreach($get_source as $get_source)
+                                                <option value="{{$get_source->name}}">{{$get_source->name}}</option>
+                                                @endforeach
+                                            </select>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="product_type"
-                                        class="control-label">Product</label>
-                                        <select name="product" class="form-control" aria-label="Default select example">
+                                        class="control-label">By Product</label>
+                                        <select name="product" class="form-control minimal" aria-label="Default select example">
                                             <option value="" selected>Select Product Type</option>
                                             <?php $get_type = \DB::table('services')->where('status', 1)->get(); ?>
                                             @foreach($get_type as $get_type)
@@ -82,19 +87,37 @@
                                         </select>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="alloted_to"
-                                        class="control-label">Assign To</label>
-                                        <select name="alloted_to" class="form-control" aria-label="Default select example">
-                                            <option value="" selected>Select Product Type</option>
-                                            <?php $get_user_type = App\Models\User::where('status', 1)->where('user_type', 4)->orWhere('user_type', 3)->get(); ?>
-                                            @foreach($get_user_type as $get_user_type)
-                                            <option value="{{$get_user_type->id}}">{{$get_user_type->name}}</option>
-                                            @endforeach
-                                        </select>
-                                </div>
-                            </div>
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="alloted_to"
+                                                                    class="control-label">Assign To Agent/Employee</label>
+                                                                    <select name="alloted_to" class="form-control minimal" aria-label="Default select example">
+                                                                        <option value="" selected>Select Product Type</option>
+                                                                        <?php $get_user_type = App\Models\User::where('status', 1)->where('user_type', 4)->orWhere('user_type', 3)->get(); ?>
+                                                                        @foreach($get_user_type as $get_user_type)
+                                                                        <option value="{{$get_user_type->id}}">{{$get_user_type->name}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="product_type"
+                                                                    class="control-label">By Location</label>
+                                                                    <input type="text" class="form-control" >
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="product_type"
+                                                                    class="control-label">Between Dates</label>
+                                                                    <div style="display: block; width: 100%; height: calc(1.5em + 0.75rem rem + 2px); font-size: 0.875rem; font-weight: 400; line-height: 1.5; color: #a8afc7; background-color: #ffffff; background-clip: padding-box; border: 1px solid #e8e8f7; border-radius: 3px; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; height: 38px; border-radius: 5px;"> 
+                                                                    <input type="text" name="between_date" class="btn btn-default float-right" id="daterange-btn">
+                                                                    <i class="far fa-calendar-alt"></i>
+                                                                    </div>
+                                                                    
+                                                            </div>
+                                                        </div>
                             <div class="col-sm-3 margintop20">
                                 <div class="form-group">
                                     {!! Form::hidden('form-search', 1) !!}
@@ -136,6 +159,90 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <img src="{{asset('img/logo-black.png')}}" alt="logo">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="showDetails">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script>
+
+function view_details(id){
+    $.ajax({
+        type: 'GET',
+        url : "{{url('admin/admin-all-view-details')}}", 
+        data: {id:id},
+        success: function(response){
+                $("#showDetails").html(response)
+        }
+        });    
+}
+function savedata(id){
+    swal({
+            title: "Are you sure?",
+            // text: "Do you want to change status "+msg,
+            text: "Do you want update details",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, save change!",
+            closeOnConfirm: true
+            }, function (isConfirm) {
+                var name = $('#m_name').val();
+                var mname = $('#m_mname').val();
+                var lname = $('#m_lname').val();
+                var email = $('#m_email').val();
+                var number = $('#m_number').val();
+                var product = $('#m_product').val();
+                var source = $('#m_source').val();
+                var status = $('#m_status').val();
+                var assign_to = $('#m_assign_to').val();
+                $.ajax({
+                    type: 'GET',
+                    url : "{{url('admin/save-view-details')}}", 
+                    data: {id:id, name:name, mname:mname, lname:lname, email:email, number:number, product:product, source:source, status:status, assign_to:assign_to},
+                    success: function(response){
+                        toastr.options.timeOut = 1500;
+                        toastr.success('Details Update Succesfully');
+                    }
+                    });        
+            });   
+}
+</script>
+<script>                                                    
+    $(function () {
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges   : {
+            'Today'       : [moment(), moment()],
+            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+        },
+        function (start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+        );
+    });
+</script>
 
 @stop
 

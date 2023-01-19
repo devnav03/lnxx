@@ -41,7 +41,7 @@ Route::group(['middleware' => 'manager', 'after' => 'no-cache'], function () {
             'uses' => 'App\Http\Controllers\LeadController@CloseleadPaginate']);
     Route::any('manager/close-lead/action', ['as' => 'manager.close.lead.action',
             'uses' => 'App\Http\Controllers\LeadController@CloseleadsAction']);
-    Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download')->name('manager.leads.lead_close_leads.download');
+    Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download');
     Route::get('manager-lead/page', 'App\Http\Controllers\LeadController@admin_lead_page')->name('manager-lead-tracking');
     Route::any('emp-lead/tracking-open', 'App\Http\Controllers\Employee\LeadController@admin_lead_open_tracking');
     Route::any('emp-lead/tracking-inprocess', 'App\Http\Controllers\Employee\LeadController@admin_lead_inprocess_tracking');
@@ -255,11 +255,12 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('admin-lead/tracking-open', 'App\Http\Controllers\LeadController@admin_lead_open_tracking');
             Route::any('admin-lead/tracking-reminder', 'App\Http\Controllers\LeadController@admin_lead_reminder_tracking');
             Route::any('admin-view-details', 'App\Http\Controllers\LeadController@assign_lead_view');
+            Route::any('admin-all-view-details', 'App\Http\Controllers\LeadController@assign_all_lead_view');
             Route::any('save-view-details', 'App\Http\Controllers\LeadController@save_view_details');
             Route::any('show_popup', 'App\Http\Controllers\LeadController@show_popup'); 
             Route::any('send_in_close_status', 'App\Http\Controllers\LeadController@send_in_close_status');
             Route::any('leads/lead_close_leads/download', 'App\Http\Controllers\LeadController@lead_close_leads_download')->name('leads.lead_close_leads.download');
-    
+            Route::any('onboard/user/details', 'App\Http\Controllers\LeadController@onboard_user_details')->name('onboard.user.details');
             Route::any('admin-lead/tracking-inprocess', 'App\Http\Controllers\LeadController@admin_lead_inprocess_tracking');
             Route::get('admin-lead/page', 'App\Http\Controllers\LeadController@admin_lead_page')->name('admin-lead-tracking');
             Route::get('admin-lead/popup', 'App\Http\Controllers\LeadController@admin_lead_popup')->name('admin-lead-popup');
@@ -296,11 +297,13 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'App\Http\Controllers\LeadController@closeleadAction']);
 
             Route::any('leads/lead-assign-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_leads'])->name('leads.lead_assign_leads');
+            Route::any('leads/single_check_val', [App\Http\Controllers\LeadController::class, 'leads_single_check_val'])->name('leads.single_check_val');
             Route::any('leads/lead-assign-automatic-leads', [App\Http\Controllers\LeadController::class, 'lead_assign_automatic_leads'])->name('leads.lead_assign_automatic_leads');
             Route::any('leads/lead-open-leads', [App\Http\Controllers\LeadController::class, 'lead_open_leads'])->name('leads.lead_open_leads');
             Route::any('leads/lead-close-leads', [App\Http\Controllers\LeadController::class, 'lead_close_leads'])->name('leads.lead_close_leads');
             
             Route::any('multiple/check/val', [App\Http\Controllers\LeadController::class, 'multiple_check_val'])->name('leads.multiple_check_val');
+            Route::get('/autocomplete-search', [TypeaheadController::class, 'autocompleteSearch']);
             
             // Change Password Routes
             Route::any('myaccount', ['as' => 'setting.manage-account',
@@ -542,14 +545,22 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('filter-action-distribution', [App\Http\Controllers\LeadController::class, 'filter_action_distribution']);
             Route::any('admin-lead/mail-details', 'App\Http\Controllers\LeadController@mail_details');
             Route::any('emp-agent/filter', 'App\Http\Controllers\EmpolyeeController@emp_agent_filter');
+            Route::any('emp-agent/filter2', 'App\Http\Controllers\EmpolyeeController@emp_agent_filter2');
             Route::any('select-user-lead', 'App\Http\Controllers\LeadController@select_user_lead')->name('select-user-lead');
             Route::any('get-personal-details', 'App\Http\Controllers\LeadController@get_personal_details')->name('get.personal.details');
+            Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal')->name('view.save.personal');
+            Route::any('personal/detail/customer', 'App\Http\Controllers\LeadController@personal_detail_customer')->name('personal-detail-customer');
+            Route::any('empl/details', 'App\Http\Controllers\LeadController@empl_details')->name('empl-details');
+            Route::any('existing/financial/save', 'App\Http\Controllers\LeadController@existing_financial_save')->name('existing-financial-save');
+            Route::any('bank/preference', 'App\Http\Controllers\LeadController@bank_preference')->name('bank-preference');
+            Route::any('consent/form', 'App\Http\Controllers\LeadController@consent_form')->name('consent_form');
+            // Route::get('fetch-graph', 'App\Http\Controllers\LeadController@fetch_graph');
 
 });
 
 });
 
-
+// Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal');
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
 

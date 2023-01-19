@@ -90,13 +90,49 @@
                                     {!! Form::open(array('method' => 'POST', 'route' => array('social.lead.store', $u_id), 'id' => 'ajaxSave', 'class' => '', 'files'=>'true')) !!}
                                 
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="email">Name (As per ID Card)</label>
+                                    <div class="col-md-2">
+                                        <label for="email">Salutation</label>
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1"><i class="fa fa-user" aria-hidden="true"></i></span>
                                             </div>
-                                            <input type="text" name="name" class="form-control" placeholder="Enter your name">
+                                            <select name="sat" class="form-control minimal" aria-label="Default select example">
+                                                <option>Please Select</option>
+                                                <option value="Mr.">Mr.</option>
+                                                <option value="Mrs.">Mrs.</option>
+                                                <option value="Miss.">Miss</option>
+                                                <option value="Dr.">Dr.</option>
+                                                <option value="Prof.">Prof.</option>
+                                                <option value="Rev.">Rev.</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="email">First Name (As per ID Card)</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                            </div>
+                                            <input type="text" name="f_name" class="form-control" placeholder="Enter your name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="email">Middile Name (As per ID Card)</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                            </div>
+                                            <input type="text" name="m_name" class="form-control" placeholder="Enter your name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="email">Last Name (As per ID Card)</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                            </div>
+                                            <input type="text" name="l_name" class="form-control" placeholder="Enter your name">
                                         </div>
                                     </div>
                                     <?php

@@ -32,6 +32,12 @@ class Lead extends Model
          }
      }
     public function getlead($search = null, $skip, $perPage) {
+        // dd($search);
+        if(isset($search['between_date'])){
+            $new_request = explode(' - ', $search['between_date']);
+            $search['from'] = $new_request[0];
+            $search['to'] = $new_request[1];
+        }
         $take = ((int)$perPage > 0) ? $perPage : 20;
         $filter = 1; // default filter if no search
 
@@ -47,7 +53,8 @@ class Lead extends Model
             'source',
             'f_date',
             'uploaded_by',
-            'alloted_to'
+            'alloted_to',
+            'created_at'
         ];
 
         $sortBy = [
@@ -77,8 +84,13 @@ class Lead extends Model
             addslashes(trim($search['reference'])) . "%')" : "";
             $f6 = (array_key_exists('source', $search)) ? " AND (source LIKE '%" .
             addslashes(trim($search['source'])) . "%')" : "";
-            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6;
+            $f7 = (array_key_exists('from', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') >= '" .
+            addslashes($search['from']) . "')" : ""; 
+            $f8 =  (array_key_exists('to', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') <= '" .
+            addslashes($search['to']) . "')" : ""; 
+            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7 . $f8;
          }
+        //  dd($f8);
 
          return $this->whereRaw($filter)
                 ->where('alloted_to', Null) 
@@ -87,6 +99,11 @@ class Lead extends Model
                 ->get($fields);
     }
     public function getassignlead($search = null, $skip, $perPage) {
+        if(isset($search['between_date'])){
+            $new_request = explode(' - ', $search['between_date']);
+            $search['from'] = $new_request[0];
+            $search['to'] = $new_request[1];
+        }
         $auth_user_id = \Auth::user()->id;
         $user_type = Auth()->user()->user_type;
         $take = ((int)$perPage > 0) ? $perPage : 20;
@@ -104,7 +121,8 @@ class Lead extends Model
             'source',
             'f_date',
             'uploaded_by',
-            'alloted_to'
+            'alloted_to',
+            'created_at'
         ];
 
         $sortBy = [
@@ -136,7 +154,11 @@ class Lead extends Model
             addslashes(trim($search['source'])) . "%')" : "";
             $f7 = (array_key_exists('alloted_to', $search)) ? " AND (alloted_to = '" .
                 addslashes($search['alloted_to']) . "')" : "";
-            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7;
+            $f8 = (array_key_exists('from', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') >= '" .
+            addslashes($search['from']) . "')" : ""; 
+            $f9 =  (array_key_exists('to', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') <= '" .
+            addslashes($search['to']) . "')" : ""; 
+            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7 . $f8 .$f9;
          }
          if($user_type == 1){
             return $this->whereRaw($filter)
@@ -241,6 +263,11 @@ class Lead extends Model
     }
 
     public function getAdminOpenlead($search = null, $skip, $perPage) {
+        if(isset($search['between_date'])){
+            $new_request = explode(' - ', $search['between_date']);
+            $search['from'] = $new_request[0];
+            $search['to'] = $new_request[1];
+        }
         $take = ((int)$perPage > 0) ? $perPage : 20;
         $filter = 1; // default filter if no search
 
@@ -257,7 +284,8 @@ class Lead extends Model
             'f_date',
             'lead_status',
             'alloted_to',
-            'uploaded_by'
+            'uploaded_by',
+            'created_at'
         ];
 
         $sortBy = [
@@ -289,11 +317,17 @@ class Lead extends Model
             addslashes(trim($search['source'])) . "%')" : "";
             $f7 = (array_key_exists('alloted_to', $search)) ? " AND (alloted_to = '" .
                 addslashes($search['alloted_to']) . "')" : "";
-            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7;
+            $f8 = (array_key_exists('from', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') >= '" .
+            addslashes($search['from']) . "')" : ""; 
+            $f9 =  (array_key_exists('to', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') <= '" .
+            addslashes($search['to']) . "')" : ""; 
+            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7 . $f8 . $f9;
          }
 
          return $this->whereRaw($filter)
                 ->where('lead_status', '!=', 'CLOSE')
+                ->where('lead_status', '!=', 'DISQUALIFIED')
+                ->where('lead_status', '!=', 'INACTIVE CUSTOMER')
                 ->orderBy($orderEntity, $orderAction)
                 ->skip($skip)->take($take)
                 ->get($fields);
@@ -312,6 +346,11 @@ class Lead extends Model
             ->whereRaw($filter)->first();
     }
     public function getAdmincloselead($search = null, $skip, $perPage) {
+        if(isset($search['between_date'])){
+            $new_request = explode(' - ', $search['between_date']);
+            $search['from'] = $new_request[0];
+            $search['to'] = $new_request[1];
+        }
         $auth_user_id = \Auth::user()->id;
         $user_type = Auth()->user()->user_type;
         $take = ((int)$perPage > 0) ? $perPage : 20;
@@ -330,7 +369,8 @@ class Lead extends Model
             'f_date',
             'lead_status',
             'alloted_to',
-            'uploaded_by'
+            'uploaded_by',
+            'created_at'
         ];
 
         $sortBy = [
@@ -362,17 +402,25 @@ class Lead extends Model
             addslashes(trim($search['source'])) . "%')" : "";
             $f7 = (array_key_exists('alloted_to', $search)) ? " AND (alloted_to = '" .
                 addslashes($search['alloted_to']) . "')" : "";
-            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7;
+            $f8 = (array_key_exists('from', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') >= '" .
+            addslashes($search['from']) . "')" : ""; 
+            $f9 =  (array_key_exists('to', $search)) ? " AND (DATE_FORMAT(created_at, '%m/%d/%Y') <= '" .
+            addslashes($search['to']) . "')" : ""; 
+            $filter .= $f1 . $f2 . $f3 . $f4 . $f5 . $f6 . $f7 . $f8 . $f9;
          }
          if($user_type == 1){
             return $this->whereRaw($filter)
             ->where('lead_status', 'CLOSE')
+            ->orWhere('lead_status', 'DISQUALIFIED')
+            ->orWhere('lead_status', 'INACTIVE CUSTOMER')
             ->orderBy($orderEntity, $orderAction)
             ->skip($skip)->take($take)
             ->get($fields);   
          }elseif($user_type == 4 || $user_type == 3){
             return $this->whereRaw($filter)
-            ->where('lead_status', 'CLOSE')
+            ->orWhere('lead_status', 'CLOSE')
+            ->orWhere('lead_status', 'DISQUALIFIED')
+            ->orWhere('lead_status', 'INACTIVE CUSTOMER')
             ->where('alloted_to', $auth_user_id)
             ->orderBy($orderEntity, $orderAction)
             ->skip($skip)->take($take)
@@ -380,6 +428,8 @@ class Lead extends Model
          }elseif($user_type == 5){
             return $this->whereRaw($filter)
             ->where('lead_status', 'CLOSE')
+            ->where('lead_status', 'DISQUALIFIED')
+            ->where('lead_status', 'INACTIVE CUSTOMER')
             ->where('alloted_to', $auth_user_id)
             ->orderBy($orderEntity, $orderAction)
             ->skip($skip)->take($take)

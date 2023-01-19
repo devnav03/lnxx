@@ -69,13 +69,13 @@
 @php
     $route  = \Route::currentRouteName();    
 @endphp
-    @if($route == 'get-started')    
-        @include('frontend.layouts.header') 
-    @else 
-    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
-        @include('frontend.layouts.header_main')
-    @endif    
-    @endif
+        @if($route == 'get-started' || $route == 'view.save.personal')    
+            @include('frontend.layouts.header') 
+        @else 
+            @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
+                @include('frontend.layouts.header_main')
+            @endif    
+        @endif
         <!-- Main Content -->
         @yield('content')
         @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
