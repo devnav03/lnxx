@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApplicationPersonalLoanPreferenceBank extends Model {
 
-    protected $table = 'application_credit_card_preference_bank';
+    protected $table = 'application_personal_loan_preference_bank';
    
     protected $fillable = [
        'app_id', 'bank_id', 'loan_limit', 'loan_emi', 'created_at', 'updated_at'

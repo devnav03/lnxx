@@ -21,6 +21,10 @@
   <label style="margin-right: 0px;width: 50%;float: left;margin-top: 15px;"><input type="checkbox"
    name="card_type[]" value="{{ $card_type->id }}"> {{ $card_type->name }}</label>
   @endforeach
+  
+  @if(session()->has('no_card_type'))
+    <p style="color: #f00;">Kindly select a type of card </p>
+  @endif
 
   <input type="hidden" name="your_limit" value="{{ $your_limit }}">
 
@@ -67,6 +71,9 @@
         @endif
 
       @endforeach
+      @if(session()->has('no_credit_card'))
+        <p style="color: #f00; margin-left: 15px;">Kindly select a bank </p>
+      @endif
     </div> 
   @endif
 

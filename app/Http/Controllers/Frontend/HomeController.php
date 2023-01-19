@@ -122,10 +122,8 @@ class HomeController extends Controller {
 
     public function save_personal_loan_preference(Request $request){
         try{
-
             $user_id = Auth::id();
             \DB::table('personal_loan_preference_bank')->where('user_id', $user_id)->delete();
-
             if(isset($request->bank_id)){
                 foreach($request->bank_id as $bank_id){
                     PersonalLoanPreferenceBank::create([
@@ -135,10 +133,10 @@ class HomeController extends Controller {
                         'loan_emi'   =>  $request->your_emi,
                     ]);
                 }
+            } else {
+                return back()->with('no_preference_bank', 'no_preference_bank');
             }
-
             return redirect()->route('consent');
-
         } catch (\Exception $exception) {
            // dd($exception);
             return back();    
@@ -157,6 +155,8 @@ class HomeController extends Controller {
                         'user_id'   =>  $user_id,
                     ]);
                 }
+            } else {
+                return back()->with('no_card_type', 'no_card_type');
             }
             if(isset($request->bank_id)){
                 foreach($request->bank_id as $bank_id){
@@ -166,6 +166,8 @@ class HomeController extends Controller {
                         'loan_limit' => $request->your_limit,
                     ]);
                 }
+            } else {
+                return back()->with('no_credit_card', 'no_credit_card');
             }
             $ser = ServiceApply::where('app_status', 0)->where('service_id', 1)->where('customer_id', $user_id)->count(); 
             if($ser == 0){
@@ -1043,7 +1045,6 @@ public function enter_name(Request $request){
                         }
                                     }
                 } else {
-                     
                     \Session::start();
                     $temp_id = \Session::get('temp_id');
                     if($temp_id){
@@ -1052,7 +1053,6 @@ public function enter_name(Request $request){
                     }
                     return back();
                 }
-
             
         } catch (Exception $e) {
             return back();
@@ -1087,7 +1087,6 @@ public function enter_name(Request $request){
             return back();
         }
     }
-
 
     public function ServiceApply(Request $request){
         try {
@@ -1257,6 +1256,44 @@ public function enter_name(Request $request){
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
                         $app_id = (new ApplicationProductRequest)->store($application_data); 
+                        
+                        if($service->service_id == 3){
+                            $card_types = CardTypePreference::where('user_id', $user_id)->select('type_id')->get();
+                            if($card_types){
+                                foreach ($card_types as $card_type) {
+                                    ApplicationCardTypePreference::create([
+                                        'app_id' => $application_id,
+                                        'type_id' => $card_type->type_id,
+                                    ]);
+                                }
+                            }
+                            $CreditCards = CreditCardPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit')->get();
+                            if($CreditCards){
+                                foreach ($CreditCards as $CreditCard) {
+                                    ApplicationCreditCardPreferenceBank::create([
+                                        'app_id' => $application_id,
+                                        'bank_id' => $CreditCard->bank_id,
+                                        'loan_limit' => $CreditCard->loan_limit,
+                                    ]);
+                                }
+                            }
+                        }
+
+                        if($service->service_id == 1){
+                            $PersonalLoans = PersonalLoanPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit', 'loan_emi')->get();
+                            if($PersonalLoans){
+                                foreach ($PersonalLoans as $PersonalLoan) {
+                                    ApplicationPersonalLoanPreferenceBank::create([
+                                        'app_id' => $application_id,
+                                        'bank_id' => $PersonalLoan->bank_id,
+                                        'loan_limit' => $PersonalLoan->loan_limit,
+                                        'loan_emi' => $PersonalLoan->loan_emi,
+                                    ]);
+                                }
+                            }
+                        }
+                        
+
                         ServiceApply::where('id', $service->id)
                             ->update([
                             'app_no' => $a_no,
@@ -1283,7 +1320,7 @@ public function enter_name(Request $request){
                return view('frontend.pages.thanku', compact('ref_id'));
            
         } catch (\Exception $e) {
-           dd($e);
+           //dd($e);
             return back();
         }
     }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApplicationCardTypePreference extends Model {
 
-    protected $table = 'application_credit_card_preference_bank';
+    protected $table = 'application_card_type_preference';
    
     protected $fillable = [
        'app_id', 'type_id', 'created_at', 'updated_at'

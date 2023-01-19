@@ -25,6 +25,10 @@
         </div>
       @endforeach
     </div> 
+    @if(session()->has('no_preference_bank'))
+        <p style="color: #f00; margin-left: 15px;">Kindly select a bank</p>
+    @endif
+
     <input type="hidden" name="your_limit" value="{{ $your_limit }}">
     <input type="hidden" name="your_emi" value="{{ $your_emi }}">
  

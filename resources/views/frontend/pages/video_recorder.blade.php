@@ -9,7 +9,8 @@
 <h1 class="app_form_head">Application Form</h1>   
 <h2 style="margin-bottom: 15px;">Upload Video</h2>
 <h4 style="font-size: 18px;">Kindly start uttering this sentence for video KYC.</h4>
-<p style="line-height: 24px;">Hello, my cid is lnxx{{\Auth::user()->id}} and my name is {{\Auth::user()->name}} {{\Auth::user()->middle_name}} {{\Auth::user()->last_name}}. I agree to all consent form, and I promise to promptly send the payment back to lnxx.</p>
+<p style="line-height: 24px;">My name is {{\Auth::user()->name}} {{\Auth::user()->middle_name}} {{\Auth::user()->last_name}}. I have applied for financial products through JCBL and provided them with my information as asked for. I authorize JCBL to have my application processed. This is my emirates ID. My EID number is {{\Auth::user()->eid_number}} .<br><br>
+<b><i>Instructions:</i></b> Display the front and back of your Emirate ID card while speaking these words out loud.</p>
 <div id="container">
 
     <video id="gum" style="width: 64%; margin-left: 18%;" playsinline autoplay muted></video>
