@@ -27,6 +27,35 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+        <!-- Internal Daterangepicker css-->
+        <link href="{{asset('plugins/bootstrap-daterangepicker/daterangepicker.css')}}">
+        <!-- Internal TelephoneInput css-->
+        <link rel="stylesheet" href="{{asset('plugins/telephoneinput/telephoneinput.css')}}">
+        <!-- <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/daterangepicker/daterangepicker.css"> -->
+
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <style>
+select.minimal {
+background-image:
+  linear-gradient(45deg, transparent 50%, gray 50%),
+  linear-gradient(135deg, gray 50%, transparent 50%),
+  linear-gradient(to right, #ccc, #ccc);
+background-position:
+  calc(100% - 20px) calc(1em + 2px),
+  calc(100% - 15px) calc(1em + 2px),
+  calc(100% - 2.5em) 0.5em;
+background-size:
+  5px 5px,
+  5px 5px,
+  1px 1.5em;
+background-repeat: no-repeat;
+}
+</style>
+
 	</head>
 
 	<body class="ltr main-body leftmenu">
@@ -259,6 +288,11 @@
         <!-- Custom js -->
         <script src="{{ asset('js/custom.js') }}"></script>
         <script src="{{ asset('js/template.js') }}"></script>
+        <script src="{{ asset('plugins/jquery-ui/ui/widgets/datepicker.js') }}"></script>
+        <script src="{{ asset('plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+        <script src="{{ asset('plugins/daterangepicker.js') }}"></script>
+        <script src="{{ asset('plugins/telephoneinput/telephoneinput.js') }}"></script>
+		<script src="{{ asset('plugins/telephoneinput/inttelephoneinput.js') }}"></script>
         @if(Auth()->user()->user_type == 1)
         <script>
             function sendvalue(emp_id,emp_id1) {
@@ -299,5 +333,6 @@
             }
         </script>
         @endif
+        
 	</body>
 </html>

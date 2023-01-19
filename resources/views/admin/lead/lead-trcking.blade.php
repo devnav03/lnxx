@@ -83,8 +83,10 @@
     color: #ffffff !important;
 }
 </style>
-<script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
 
+<script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      
 <div class="agile-grids">
     <div class="grids">
         <div class="row">
@@ -97,6 +99,32 @@
                         @include('employee.layouts.messages')
                         <div class="panel panel-default">
 
+                            <div class="row row-sm">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="card custom-card">
+                                        <div class="card-body">
+                                            <div class = "panel-body row">
+                                                <div class="col-md-8">
+                                                    <h6 class="main-content-label mb-1">Lead Live Stat</h6>
+                                                </div>
+                                                <div class="col-md-4">
+                                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                                                    <i class="fa fa-calendar"></i>&nbsp;
+                                                    <span></span> <i class="fa fa-caret-down"></i>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body row">
+                                                <div class="col-md-12" style="margin-top: 15px;">
+                                                    <div class="row">
+                                                    <div id="columnchart_material"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row row-sm">
                                 <div class="col-lg-12 col-md-12">
                                     <div class="card custom-card">
@@ -324,10 +352,34 @@
                                                                         <input class="form-control" id="m_description">
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-12">
-                                                                    <div class="form-group">
-                                                                        <button type="submit" onclick="submit_personal_details();"
-                                                                            class="btn btn-success">Save</button>
+                                                                <div class="row">
+                                                                    <div class="col-sm-1">
+                                                                        <div class="form-group">
+                                                                            <button type="submit" onclick="submit_personal_details();"
+                                                                                class="btn btn-success">Save</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <div class="form-group" id="view-application-form">
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-1">
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <div id="employement">
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <div id="video">
+        
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <div id="consent-form">
+
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -438,7 +490,7 @@
                                                                     <div class="form-group">
                                                                         <label><b>Reason for Follow-Up</b></label>
                                                                         <select type="text" id="fol_region_follow"
-                                                                            name="region_follow" class="form-control">
+                                                                            name="region_follow" class="form-control minimal">
                                                                             <?php $regions = \DB::table('lead_regions')->get();?>
                                                                             <option>Please Select</option>
                                                                             @foreach($regions as $regions)
@@ -503,7 +555,7 @@
                                                                         <label><b>Select a predefined template from the
                                                                                 list below.</b></label>
                                                                         <select type="text" name="region_follow"
-                                                                            class="form-control">
+                                                                            class="form-control minimal">
                                                                             <option>Template 1</option>
                                                                             <option>Template 2</option>
                                                                             <option>Template 3</option>
@@ -607,6 +659,60 @@
         </div>
     </div>
 </div>
+<script>
+    // $.get("http://localhost/lnxx_new/public/admin/fetch-graph", function(xhr){
+    //     if(xhr.status==200){
+    //         var datas = xhr.responce;
+    //         alert(datas[i].year);
+    //         // var dts = [];
+    //         // dts += ['Date', 'Open', 'Inprocess', 'Reminder'];
+    //         // for(var i=0;i<datas.length;i++){
+    //         //     dts += [datas[i].year, datas[i].inprocess, datas[i].open, datas[i].close];
+    //         // }
+    //     }
+    // });
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'Open', 'Inprocess', 'Reminder'],
+          ['2014', 1000, 400, 200],
+          ['2015', 1170, 460, 250],
+          ['2016', 660, 1120, 300],
+          ['2017', 1030, 540, 350],
+          ['2017', 1030, 540, 350],
+          ['2017', 1030, 540, 350],
+          ['2017', 1030, 540, 350],
+          ['2017', 1030, 540, 350],
+          ['2017', 1030, 540, 350],
+          ['2017', 1030, 540, 350],
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Leads Performance',
+            subtitle: 'Opens, Inprocess, and Reminders',
+          },
+          series: {
+            0: { color: '#6259CA' },
+            1: { color: '#19B159' },
+            2: { color: '#FF9B21' },
+          },
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+    //   var options = {
+    //     legend: 'none',
+    //       series: {
+    //         0: { color: '#6259CA' },
+    //         1: { color: '#19B159' },
+    //         2: { color: '#FF9B21' },
+    //       },
+    //     }
+</script>
     @if(Auth()->user()->user_type == 1)
     <script>
     CKEDITOR.replace('description');
@@ -770,9 +876,9 @@
             .done(function(xhr) {
                 if (xhr.status == 200) {
                     $("#m_id").val(xhr.responce.id);
-                    $("#m_name").val(xhr.responce.name);
-                    $("#name1").html(xhr.responce.name);
-                    $("#name2").html(xhr.responce.name);
+                    $("#m_name").val(xhr.responce.name + xhr.responce.mname + xhr.responce.lname);
+                    $("#name1").html(xhr.responce.name + xhr.responce.mname + xhr.responce.lname);
+                    $("#name2").html(xhr.responce.name + xhr.responce.mname + xhr.responce.lname);
                     $("#sat").html(xhr.responce.saturation);
                     $("#m_email").val(xhr.responce.email);
                     $("#m_e_email").val(xhr.responce.email);
@@ -795,26 +901,101 @@
                     $("#source").html(xhr.responce.source);
                     $("#reference").html(xhr.responce.reference);
                     if (xhr.responce.lead_status == 'OPEN') {
+                        $("#view-application-form").html('');
                         $("#status_bar").html(
-                            '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><div class="linkstatus" style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px;"><div style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px; z-index:22;"></div></div></div><div class="col-sm-3" style="margin-left:-49px;"><a type="button"  onclick="send_in_close_status(' +
-                            xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>'
+                            '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><div class="linkstatus" style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px;"><div style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px; z-index:22;"></div></div></div><div class="col-sm-3" style="margin-left:-49px;"><a type="button"  onclick="send_in_close_status(' + xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>'
                             );
+                            $('#employement').html('');
+                            $('#video').html('');
+                            $('#consent-form').html('');
                     }
                     if (xhr.responce.lead_status == 'INPROCESS') {
+                        if(xhr.get_user_exist.id == ''){
+                            $("#view-application-form").html('<a type="button" onclick="onboard(' +xhr.responce.id +');" href="#" class="btn btn-warning">Start On Boarding</a>');
+                        }else{
+                            $("#view-application-form").html('<a type="button" target="_blank" href="http://localhost/lnxx_new/public/admin/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">Boarding In Process</a>');
+                        }
                         $("#status_bar").html(
-                            '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><a href="#"><div style="width:155px; height:30px; background-color:#FFB800; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FFB800;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px;"><div style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px; z-index:22;"></div></div></div><div class="col-sm-3" style="margin-left:-49px;"><a type="button"   onclick="send_in_close_status(' +xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>'
-                            );
+                            '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><a href="#"><div style="width:155px; height:30px; background-color:#FFB800; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FFB800;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px;"><div style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px; z-index:22;"></div></div></div><div class="col-sm-3" style="margin-left:-49px;"><a type="button"   onclick="send_in_close_status(' +xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>');
+                            if(xhr.application.cm_type == ''){
+                                $('#employement').html('<h6 class="text-center">EMPLOYMENT</h6><p class="text-center"><i style="color: red" class="fa fa-times"></i></p>');
+                            }if(xhr.application.cm_type != ''){
+                                $('#employement').html('<h6 class="text-center">EMPLOYMENT</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
+                            }
+                            if(xhr.application.video == ''){
+                                $('#video').html('<h6 class="text-center">VIDEO</h6><p class="text-center"><i style="color: red" class="fa fa-times"></i></p>');
+                            }if(xhr.application.video != ''){
+                                $('#video').html('<h6 class="text-center">VIDEO</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
+                            }
+                            if(xhr.application.consent_form == ''){
+                                $('#consent-form').html('<h6 class="text-center">CONSENT FORM</h6><p class="text-center"><i style="color: red" class="fa fa-times"></i></p>');
+                            }if(xhr.application.consent_form != ''){
+                                $('#consent-form').html('<h6 class="text-center">CONSENT FORM</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
+                            }
                     }
                     if (xhr.responce.lead_status == 'REMINDER') {
+                        if(xhr.get_user_exist.id == ''){
+                            $("#view-application-form").html('<a type="button" onclick="onboard(' +xhr.responce.id +');" href="#" class="btn btn-warning">On-board Customer</a>');
+                        }else{
+                            $("#view-application-form").html('<a type="button" target="_blank" href="http://localhost/lnxx_new/public/admin/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">On-boarded Customer</a>');
+                        }
                         $("#status_bar").html(
                             '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><a href="#"><div style="width:155px; height:30px; background-color:#FFB800; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FFB800;position:absolute;right: -20px;"></div></div></a></div><div class="col-sm-2" style="margin-left:-49px;"><a href="#"><div style="width:155px; height:30px; background-color:#FF8A00; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FF8A00;position:absolute;right: -20px; z-index:22;"></div></div></div></a><div class="col-sm-3" style="margin-left:-49px;"><a type="button"   onclick="send_in_close_status(' +xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>'
                             );
+                            if(xhr.application.cm_type == ''){
+                                $('#employement').html('<h6 class="text-center">EMPLOYMENT</h6><p class="text-center"><i style="color: red" class="fa fa-times"></i></p>');
+                            }if(xhr.application.cm_type != ''){
+                                $('#employement').html('<h6 class="text-center">EMPLOYMENT</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
+                            }
+                            if(xhr.application.video == ''){
+                                $('#video').html('<h6 class="text-center">VIDEO</h6><p class="text-center"><i style="color: red" class="fa fa-times"></i></p>');
+                            }if(xhr.application.video != ''){
+                                $('#video').html('<h6 class="text-center">VIDEO</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
+                            }
+                            if(xhr.application.consent_form == ''){
+                                $('#consent-form').html('<h6 class="text-center">CONSENT FORM</h6><p class="text-center"><i style="color: red" class="fa fa-times"></i></p>');
+                            }if(xhr.application.consent_form != ''){
+                                $('#consent-form').html('<h6 class="text-center">CONSENT FORM</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
+                            }
                     }
                 }
             })
             .fail(function(jqXHR, ajaxOptions, thrownError) {
                 console.log('Server error occured');
             });
+    }
+    function onboard(id){
+        swal({
+            title: "Are you sure?",
+            // text: "Do you want to change status "+msg,
+            text: "Do you want to On-Board",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, On-Board Lead!",
+            closeOnConfirm: true
+            }, function (isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{route('onboard.user.details')}}",
+                    data: {
+                        'id': id,
+                    },
+                    success: function(response) {
+                        if (response.status == 200) {
+                            toastr.options.timeOut = 1500;
+                            toastr.success('Lead On-Boarded Succesfully');
+                            window.open("http://localhost/lnxx_new/public/admin/view-save-personal/"+response.get_last_id);
+                            $("#view-application-form").html('<a type="button" onclick="onboard('+id+');" href="#" class="btn btn-success">On-boarded Customer</a>');
+                        }else{
+                            toastr.options.timeOut = 1500;
+                            toastr.error('This Email ID and Mobile No is already exists');
+                        }
+                    }
+                });
+            }
+        });
     }
     function submit_personal_details(){
         swal({
@@ -1055,23 +1236,34 @@
             confirmButtonColor: "#DD6B55",
             confirmButtonText: "Yes, change status!",
             closeOnConfirm: true
-        }, function (isConfirm) {
-            if (isConfirm) {
-                $.ajax({
-                    type: "GET",
-                url: "{{url('admin/send_in_close_status')}}",
-                data: {
-                    'id': id,
-                },
-                success: function(response) {
-                    toastr.options.timeOut = 1500;
-                    toastr.success('Lead Closed Succesfully');
-                    infinteLoadMore(1);
-                    infinteLoadMore1(1);
-                    infinteLoadMore2(1);
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                    url: "{{url('admin/send_in_close_status')}}",
+                    data: {
+                        'id': id,
+                    },
+                    success: function(response) {
+                        if(response.status == 200) {
+                        toastr.options.timeOut = 1500;
+                        toastr.success('Lead Closed Succesfully');
+                        infinteLoadMore(1);
+                        infinteLoadMore1(1);
+                        infinteLoadMore2(1);
+                        }
+                        if(response.status == 400){
+                            toastr.error('Employment type is not updated!');
+                        }
+                        if(response.status == 401){
+                            toastr.error('Video KYC is not updated!');
+                        }
+                        if(response.status == 402){
+                            toastr.error('Consent Form is not updated!');
+                        }
+                    }
+                    });
                 }
-                });
-            }
         });
         };
 </script>
@@ -2184,6 +2376,39 @@
         $(".maildetails").show();
     }
     </script>
+    <script type="text/javascript">
+    $(function() {
+
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+        //    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Weekly': [moment().subtract(6, 'days'), moment()],
+           'Montly': [moment().subtract(30, 'days'), moment()],
+        //    'This Month': [moment().startOf('month'), moment().endOf('month')],
+        //    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb).on('apply.daterangepicker', function (ev, picker) {
+        var startDate = picker.startDate.format('YYYY-MM-DD');
+        var endDate = picker.endDate.format('YYYY-MM-DD');
+        date_rage(startDate, endDate);  
+    });
+    cb(start, end);
+});
+ function date_rage(startDate, endDate){
+    alert(startDate);
+
+ }
+</script>
 
 
 

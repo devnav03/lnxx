@@ -183,22 +183,28 @@ public function uploadleads($importData_arr){
             $lead->name = $importData[1];
         }
         if(!empty($importData[2])){
-            $lead->email = $importData[2];
+            $lead->mname = $importData[2];
         }
-        if(is_numeric($importData[3])){
-            $lead->number = $importData[3];
+        if(!empty($importData[3])){
+            $lead->lname = $importData[3];
         }
         if(!empty($importData[4])){
-            $lead->product = $importData[4];
+            $lead->email = $importData[4];
         }
-        if(!empty($importData[5])){
-            $lead->reference = $importData[5];
+        if(is_numeric($importData[5])){
+            $lead->number = $importData[5];
         }
         if(!empty($importData[6])){
-            $lead->source = $importData[6];
+            $lead->product = $importData[6];
         }
         if(!empty($importData[7])){
-            $lead->note = $importData[7];
+            $lead->reference = $importData[7];
+        }
+        if(!empty($importData[8])){
+            $lead->source = $importData[8];
+        }
+        if(!empty($importData[9])){
+            $lead->note = $importData[9];
         }
         $lead->uploaded_by = $userId;
         if($user_type == 3 || $user_type == 4){
@@ -212,13 +218,15 @@ public function lead_sample_sheet_download(){
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=lead_sample_file'.'.csv');
         $output = fopen('php://output', 'w');
-        fputcsv($output, array('saturation', 'name', 'email', 'number', 'product', 'reference', 'source', 'note'));
-        $reports = array(["saturation"=>"Mr.", "name"=>"Demo Singh", "email"=>"demo@gmail.com" , "number"=>"999999999", "product"=>"Credit Card" , "reference"=>"LNXX1234" , "source"=>"Social Media" , "note"=>"NA"], ["saturation"=>"Miss.", "name"=>"Demo Sharma", "email"=>"demo2@gmail.com" , "number"=>"9999999999" , "product"=>"Personal Loan" , "reference"=>"LNXX1234" , "source"=>"Social Media" , "note"=>"NA"], ["saturation"=>"Dr.", "name"=>"Demo Arora", "email"=>"demo2@gmail.com" , "number"=>"999999999" , "product"=>"House Loan" , "reference"=>"LNXX1234" , "source"=>"Social Media" , "note"=>"NA"]);;
+        fputcsv($output, array('saturation', 'first name', 'middile name', 'last name', 'email', 'number', 'product', 'reference', 'source', 'note'));
+        $reports = array(["saturation"=>"Mr.", "name"=>"Demo Singh", "mname"=>"kumar", "lname"=>"Singh", "email"=>"demo@gmail.com" , "number"=>"999999999", "product"=>"Credit Card" , "reference"=>"LNXX1234" , "source"=>"Social Media" , "note"=>"NA"], ["saturation"=>"Miss.", "name"=>"Demo", "mname"=>"kumar", "lname"=>"Sharma", "email"=>"demo2@gmail.com" , "number"=>"9999999999" , "product"=>"Personal Loan" , "reference"=>"LNXX1234" , "source"=>"Social Media" , "note"=>"NA"], ["saturation"=>"Dr.", "name"=>"Demo", "mname"=>"", "lname"=>"Arora", "email"=>"demo2@gmail.com" , "number"=>"999999999" , "product"=>"House Loan" , "reference"=>"LNXX1234" , "source"=>"Social Media" , "note"=>"NA"]);;
         if (count($reports) > 0) {
             foreach ($reports as $report) {
                 $report_row = [
                     $report['saturation'],
                     ucfirst($report['name']),
+                    ucfirst($report['mname']),
+                    ucfirst($report['lname']),
                     $report['email'],
                     $report['number'],
                     $report['product'], 

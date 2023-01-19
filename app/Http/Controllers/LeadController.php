@@ -1,20 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-/**
- * :: Bank Controller ::
- * 
- *
- **/
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
 use Files;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Lead; 
+use App\Models\Bank; 
 use App\Models\Employee; 
+use App\Models\Country; 
+use App\Models\Company; 
+use App\Models\CustomerOnboarding; 
+use App\Models\ProductRequest; 
+use App\Models\ServiceApply; 
+use App\Models\SelfEmpDetail;
+use App\Models\CmSalariedDetail;
 use App\Models\User; 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use DB;
 
 class LeadController extends  Controller{
 
@@ -23,16 +27,36 @@ class LeadController extends  Controller{
     }
   
     public function create() {
-        return view('admin.lead.create');
+        $filterResult = User::select('name')->whereIn('user_type', [3, 4, 5])->get();
+        $explode = json_encode($filterResult);
+        return view('admin.lead.create', compact('explode'));
     }
+    // public function autocompleteSearch(Request $request)
+    // {
+    //       $query = $request->get('query');
+    //       $filterResult = User::where('name', 'LIKE', '%'. $query. '%')->get();
+    //       return response()->json($filterResult);
+    // } 
 
     public function store(Request $request) {
+        // dd($_POST);
         try {
             $inputs = $request->all();
             $user_id = \Auth::id();
             $user_type = Auth()->user()->user_type;
             if($user_type == 1){
                 $validator = (new Lead)->validate($inputs);
+                $inputs['saturation'] = $request->sat;
+                $inputs['name'] = $request->fname;
+                $inputs['mname'] = $request->mname;
+                $inputs['lname'] = $request->lname;
+                if(!empty($request->agent)){
+                    $inputs['alloted_to'] = $request->agent;
+                }elseif(!empty($request->employee)){
+                    $inputs['alloted_to'] = $request->employee;
+                }elseif(!empty($request->manager)){
+                    $inputs['alloted_to'] = $request->manager;
+                }
                 $inputs['uploaded_by'] = $user_id;
                 (new Lead)->store($inputs);
                 return back()->with('success', 'Lead successfully created');
@@ -95,8 +119,6 @@ class LeadController extends  Controller{
 
 
     public function leadPaginate(Request $request, $pageNumber = null) {
-    //  dd($request);
-
         if (!\Request::isMethod('post') && !\Request::ajax()) { //
             return lang('messages.server_error');
         }
@@ -430,7 +452,11 @@ class LeadController extends  Controller{
 
         return view('admin.lead.close_load', compact('inputs', 'data', 'total', 'page', 'perPage'));
     }
-    public function closeleadAction(Request $request){
+    public function leads_single_check_val(Request $request){
+        \DB::table('leads')->where('id', $request->m_id)->update(['alloted_to' => $request->id]);
+        return ['status'=>200];
+    }
+        public function closeleadAction(Request $request){
         $inputs = $request->all();
         if (!isset($inputs['tick']) || count($inputs['tick']) < 1) {
             return redirect()->route('employee.index')
@@ -467,12 +493,28 @@ class LeadController extends  Controller{
     public function admin_lead_page(){
        return view('admin.lead.lead-trcking');
     }
+    
+    // public function fetch_graph(){
+    //     $year = DB::select("SELECT YEAR(created_at) datex FROM `leads` GROUP BY datex");
+    //     foreach($year as $row){
+    //         $inprocess = DB::select("SELECT COUNT(id) as id FROM `leads` WHERE lead_status = 'INPROCESS' AND YEAR(created_at)='$row->datex'");
+    //         $open = DB::select("SELECT COUNT(id) as id FROM `leads` WHERE lead_status = 'OPEN' AND YEAR(created_at)='$row->datex'");
+    //         $close = DB::select("SELECT COUNT(id) as id FROM `leads` WHERE lead_status = 'CLOSE' AND YEAR(created_at)='$row->datex'");
+    //         $datas['year']=$row->datex;
+    //         $datas['inprocess']=!empty($inprocess[0]->id) ? $inprocess[0]->id:0;
+    //         $datas['open']=!empty($open[0]->id) ? $open[0]->id:0;
+    //         $datas['close']=!empty($close[0]->id) ? $close[0]->id:0;
+    //         $result[] = $datas;
+    //     }
+    //     $datas=['status'=>200,'responce'=>$result];
+    //     return response()->json($datas);
+    // }
     public function admin_lead_open_tracking(Request $request)
     {
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
         if($user_type == 1){
-            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->paginate(5);
+            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('seen_time', Null)->where('alloted_to', '!=', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -482,7 +524,7 @@ class LeadController extends  Controller{
                 return $artilces;
             }
         }elseif($user_type == 3){
-            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->paginate(5);
+            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->where('seen_time', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -492,7 +534,7 @@ class LeadController extends  Controller{
                 return $artilces;
             }
         }elseif($user_type == 4){
-            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->paginate(5);
+            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->where('seen_time', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -508,7 +550,7 @@ class LeadController extends  Controller{
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
         if($user_type == 1){
-            $results = lead::orderBy('id')->where('lead_status', 'INPROCESS')->paginate(5);
+            $results = lead::orderBy('id')->whereIn('lead_status', ['OPEN', 'INPROCESS'])->where('seen_time', '!=', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -583,16 +625,30 @@ class LeadController extends  Controller{
         $user_type = Auth()->user()->user_type;
         if($user_type == 3 || $user_type == 4){
             $time=Carbon::now()->toDateTimeString();
-            \DB::table('leads')->where('id', $request->id)->where('seen_time', Null)->update(['seen_time' => $time]); 
+            \DB::table('leads')->where('id', $request->id)->where('seen_time', Null)->update(['seen_time' => $time, 'lead_status' => 'INPROCESS']); 
         }
         $results = lead::where('id', $request->id)->first();
         $results->createdat = date_format(date_create($results->created_at),"d-M-Y H:i:s");
         $get_user = User::where('id', $results->alloted_to)->first();
+        $get_user_exist = User::select('id')->where('email', $results->email)->where('mobile', $results->number)->first();
+        if(empty(@$get_user_exist->id)){
+            @$get_user_exist->id = '';
+        }
         $get_upload = User::where('id', $results->uploaded_by)->first();
+        $application = \DB::table('applications')->select('cm_type', 'video', 'consent_form')->where(['email' => $results->email, 'mobile' => $results->number])->first();
+        if(empty(@$application->cm_type)){
+            @$application->cm_type = '';
+        }
+        if(empty(@$application->video)){
+            @$application->video = '';
+        }
+        if(empty(@$application->consent_form)){
+            @$application->consent_form = '';
+        }
         $get_status = \DB::table('status_master')->get();
         $decoded_status = json_encode($get_status, TRUE);
         if (!empty($results->id)){
-            $datas=['status'=>200,'responce'=>$results,'getuser'=>$get_user,'getupload'=>$get_upload,'decoded_status'=>$decoded_status];
+            $datas=['status'=>200,'responce'=>$results,'getuser'=>$get_user,'getupload'=>$get_upload,'decoded_status'=>$decoded_status, 'application' => $application, 'get_user_exist' => $get_user_exist];
             return response()->json($datas);
         }
     }
@@ -636,6 +692,68 @@ class LeadController extends  Controller{
                 <h5><b>Lead Details</b></h5>
                 <div class="form-row">
                     <div class="col">
+                        <label for="formGroupExampleInput">First Name</label>
+                        <input type="text" class="form-control" id="m_name" value="<?php echo "$lead->name"; ?>">
+                    </div>
+                    <div class="col">
+                        <label for="formGroupExampleInput">Middile Name</label>
+                        <input type="text" class="form-control" id="m_mname" value="<?php echo "$lead->mname"; ?>">
+                    </div>
+                </div>
+                <div class="form-row">
+                <div class="col">
+                        <label for="formGroupExampleInput">Last Name</label>
+                        <input type="text" class="form-control" id="m_lname" value="<?php echo "$lead->lname"; ?>">
+                    </div>
+                    <div class="col">
+                        <label for="formGroupExampleInput">Email</label> 
+                        <input type="text" class="form-control" id="m_email" value="<?php echo "$lead->email"; ?>">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label for="formGroupExampleInput">Mobile No.</label> 
+                        <input type="text" class="form-control" id="m_number" value="<?php echo "$lead->number"; ?>">
+                    </div>
+                    <div class="col">
+                        <label for="formGroupExampleInput">Product</label> 
+                        <input type="text" class="form-control" id="m_product" value="<?php echo "$lead->product"; ?>">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label for="formGroupExampleInput">Source</label> 
+                        <input type="text" class="form-control" id="m_source" value="<?php echo "$lead->source"; ?>">
+                    </div>
+                    <div class="col">
+                        <label for="formGroupExampleInput">Status</label> 
+                        <select type="text" class="form-control minimal" id="m_status">
+                            <?php foreach($status_master as $status_master){
+                             echo '<option value="'.$status_master->name.'">'.$status_master->name.'</option>';
+                            }?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top:10px;">
+                    <div class="col">
+                        <button type="button" onclick="savedata(<?php echo $lead->id; ?>)" class="btn btn-success">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        <?php 
+    }
+    public function assign_all_lead_view(Request $request){
+       $user_type = Auth()->user()->user_type;
+       if($user_type == 3 || $user_type == 4){
+        $time=Carbon::now()->toDateTimeString();
+        \DB::table('leads')->where('id', $request->id)->update(['seen_time' => $time, 'lead_status' => 'INPROCESS']); 
+       }
+       $lead = \DB::table('leads')->where('id', $request->id)->first();
+       $status_master = \DB::table('status_master')->get();
+       ?><form>
+                <h5><b>Lead Details</b></h5>
+                <div class="form-row">
+                    <div class="col">
                         <label for="formGroupExampleInput">Name</label>
                         <input type="text" class="form-control" id="m_name" value="<?php echo "$lead->name"; ?>">
                     </div>
@@ -661,9 +779,29 @@ class LeadController extends  Controller{
                     </div>
                     <div class="col">
                         <label for="formGroupExampleInput">Status</label> 
-                        <select type="text" class="form-control" id="m_status">
+                        <select type="text" class="form-control minimal" id="m_status">
                             <?php foreach($status_master as $status_master){
-                             echo '<option value="'.$status_master->name.'">'.$status_master->name.'</option>';
+                                if($status_master->name == $lead->lead_status){
+                                    echo '<option value="'.$status_master->name.'" selected>'.$status_master->name.'</option>';
+                                }else{
+                                    echo '<option value="'.$status_master->name.'">'.$status_master->name.'</option>';
+                                }
+                             
+                            }?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label for="formGroupExampleInput">Assign To</label> 
+                        <select type="text" class="form-control minimal" id="m_assign_to">
+                        <?php $get_emp = User::where('status', 1)->where('user_type', 4)->orWhere('user_type', 3)->get() ?>
+                            <?php foreach($get_emp as $get_emp){
+                            if($get_emp->id == $lead->alloted_to){
+                             echo '<option value="'.$get_emp->id.'" selected>'.$get_emp->name.'</option>';
+                            }else{
+                             echo '<option value="'.$get_emp->id.'">'.$get_emp->name.'</option>';
+                            }
                             }?>
                         </select>
                     </div>
@@ -678,21 +816,57 @@ class LeadController extends  Controller{
     }
     public function save_view_details(request $request){
          $time=Carbon::now()->toDateTimeString();
-         \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'close_time' => $time]); 
-       
+         if($request->status == 'CLOSE'){
+            \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'mname' => $request->mname, 'lname' => $request->lname, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'close_time' => $time , 'alloted_to' => $request->assign_to]); 
+         }else{
+            \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'mname' => $request->mname, 'lname' => $request->lname, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'alloted_to' => $request->assign_to]); 
+         }       
     }
     public function send_in_close_status(request $request){
-        $time=Carbon::now()->toDateTimeString();
-       \DB::table('leads')->where('id', $request->id)->update(['lead_status' => 'CLOSE', 'close_time' => $time]);
+        $user_status_check = DB::table('leads')->select('email', 'number')->where('id', $request->id)->first();
+        $application = \DB::table('applications')->select('cm_type', 'video', 'consent_form')->where(['email' => $user_status_check->email, 'mobile' => $user_status_check->number])->first();
+        if(@$application->cm_type == ''){
+            $datas=['status'=>400];
+            return response()->json($datas);
+        }elseif(@$application->video == ''){
+            $datas=['status'=>401];
+            return response()->json($datas);
+        }elseif(@$application->consent_form == ''){
+            $datas=['status'=>402];
+            return response()->json($datas);
+        }else{
+            $time=Carbon::now()->toDateTimeString();
+            \DB::table('leads')->where('id', $request->id)->update(['lead_status' => 'CLOSE', 'close_time' => $time]);
+            $datas=['status'=>200];
+            return response()->json($datas);
+        }
+        
     }
-
+    public function onboard_user_details(request $request){
+        $time=Carbon::now()->toDateTimeString();
+        $create_user = \DB::table('leads')->where('id', $request->id)->first();
+        if(User::where('email', $create_user->email)->orWhere('mobile', $create_user->number)->exists()){
+            $datas=['status'=>400];
+            return response()->json($datas);
+        }else{
+            \DB::table('users')->insert(['salutation' =>$create_user->saturation, 'name' => $create_user->name, 'middle_name' => $create_user->mname, 'last_name' => $create_user->lname, 'email' => $create_user->email, 'user_type' => 2, 'mobile' => $create_user->number, 'gender' =>  $create_user->gender, 'date_of_birth' => $create_user->dob, 'created_at' => $time, 'updated_at' => $time]);
+            $get_last_id = \DB::select('id')->where('email', $create_user->email)->where('mobile', $create_user->number)->first();
+            \DB::table('customer_onboardings')->insert(['user_id' => $get_last_id->id, 'first_name_as_per_passport' => $create_user->name, 'middle_name' => $create_user->mname, 'last_name' => $create_user->lname, 'date_of_birth' => $create_user->dob, 'salutation' => $create_user->saturation, 'gender' =>  $create_user->gender, 'created_at' => $time, 'updated_at' => $time]);
+            $service_id = \DB::select('id')->where('services', $create_user->product)->where('mobile', $create_user->number)->first();
+            \DB::table('service_applies')->insert(['customer_id' => $get_last_id->id, 'service_id' => $service_id->id, 'created_at' => $time, 'updated_at' => $time]);
+            $datas=['status'=>200, 'get_last_id' => $get_last_id->id];
+            return response()->json($datas);
+        }
+        
+    }
+    
     public function lead_close_leads_download(){
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=lead_sample_file'.'.csv');
         $output = fopen('php://output', 'w');
-        fputcsv($output, array('saturation', 'name', 'email', 'mobile', 'product', 'reference', 'source', 'Lead Status', 'note'));
+        fputcsv($output, array('saturation', 'first name', 'middile name', 'last name', 'email', 'mobile', 'product', 'reference', 'source', 'Lead Status', 'note'));
         if($user_type == 3 || $user_type == 4){
             $reports = Lead::where('lead_status', 'CLOSE')->where('alloted_to', $auth_user_id)->get();
         }elseif($user_type == 5){
@@ -705,6 +879,8 @@ class LeadController extends  Controller{
                 $report_row = [
                     $report['saturation'],
                     ucfirst($report['name']),
+                    ucfirst($report['mname']),
+                    ucfirst($report['lname']),
                     $report['email'],
                     $report['number'],
                     $report['product'], 
@@ -877,5 +1053,250 @@ class LeadController extends  Controller{
             \DB::table('leads')->where('id', $request->m_id)->update(['name' => $request->m_name, 'number' => $request->m_number, 'email' => $request->m_email, 'note' => $request->m_description]);
             $datas=['status'=>200];
             return response()->json($datas);   
+        }
+        public function view_save_personal($id){
+            $user_id = $id;
+            $banks = Bank::where('status', 1)->select('id', 'name')->get();
+            $countries = Country::all();
+            $user = User::where('id', $id)->first();
+            $result = CustomerOnboarding::where('user_id', $id)->first();
+            $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
+                if($result->cm_type == 1){
+                    $cm_type = CmSalariedDetail::where('customer_id', $user_id)->first();
+                } elseif ($result->cm_type == 2) {
+                    $cm_type = SelfEmpDetail::where('customer_id', $user_id)->first();
+                } elseif ($result->cm_type == 3) {
+                    $cm_type = OtherCmDetail::where('customer_id', $user_id)->first();  
+                } else {
+                    $cm_type = ''; 
+                }
+                if(isset($request->service)){
+                    foreach($request->service as $service_id){
+                        $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
+                        if($apply_ser == 0) {
+                            ServiceApply::create([
+                                'service_id'  =>  $service_id,
+                                'customer_id'  => $user_id,
+                            ]);
+                        }
+                    }
+                    $service = \DB::table('service_applies')
+                        ->join('services', 'services.id', '=', 'service_applies.service_id')
+                        ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id')->where('service_applies.customer_id', $user_id)->get();    
+                        return view('admin.lead.view-save-personal', compact('cm_type', 'user', 'result', 'countries', 'banks', 'service'));
+                } else {
+                    $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
+                    if($apply_ser == 0) {
+                        return redirect()->route('user-dashboard')->with('select_service', 'select_service');
+                    } else {
+                    $service = \DB::table('service_applies')
+                        ->join('services', 'services.id', '=', 'service_applies.service_id')
+                        ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id', 'service_applies.decide_by')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
+                        // dd($services);   
+                        return view('admin.lead.view-save-personal', compact('cm_type', 'user', 'result', 'countries', 'banks', 'service'));
+                    }
+                }
+        }
+    
+        public function personal_detail_customer(Request $request){
+            $user_id =  $request->user_id;
+            $inputs = $request->all(); 
+            $company = Company::where('status', 1)->select('id', 'name')->get();
+            if($request->first_name_as_per_passport){
+                $inputs['user_id'] = $user_id;
+                $result = '';
+                $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo')->first();
+
+                if(isset($inputs['passport_photo']) or !empty($inputs['passport_photo'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+
+                    if($file = $request->hasFile('passport_photo')) {
+                        $file = $request->file('passport_photo');
+                        $img_name = $file->getClientOriginalName();
+                        $image_resize = Image::make($file->getRealPath()); 
+                        $image_resize->resize(600, 600);
+                        $fileName = $image_name.$img_name;
+                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));               
+                    }
+
+                    $fname ='/uploads/passport_images/';
+                    $passport_photo = $fname.$fileName;
+                } else {
+                    $passport_photo = @$cm_details->passport_photo;
+                }
+
+                unset($inputs['passport_photo']);
+                $inputs['passport_photo'] = $passport_photo;
+
+                if($cm_details){
+                    $id = $cm_details->id;
+                    (new CustomerOnboarding)->store($inputs, $id); 
+                } else {
+                    (new CustomerOnboarding)->store($inputs); 
+                }
+                 
+                $cm_type = @$cm_details->cm_type;
+
+                if($cm_type == 1){
+                    $result = CmSalariedDetail::where('customer_id', $user_id)->first();
+                } elseif ($cm_type == 2) {
+                    $result = SelfEmpDetail::where('customer_id', $user_id)->first();
+                } elseif ($cm_type == 3) {
+                    $result = OtherCmDetail::where('customer_id', $user_id)->first();  
+                } else {
+                    $result = ''; 
+                }
+
+                $user = User::where('id', $user_id)->select('emirates_id', 'emirates_id_back', 'eid_status')->first();
+
+                if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+
+                    if($file = $request->hasFile('emirates_id_front')) {
+                        $file = $request->file('emirates_id_front') ;
+                        $img_name = $file->getClientOriginalName();
+                        $image_resize = Image::make($file->getRealPath()); 
+                        $image_resize->resize(750, 400);
+                        $fileName = $image_name.$img_name;
+                        $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
+                    }
+                    $fname ='/uploads/emirates_id/';
+                    $emirates_id_front = $fname.$fileName;
+                } else {
+                    $emirates_id_front = @$user->emirates_id;
+                }
+                if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('emirates_id_back')) {
+                        $file = $request->file('emirates_id_back') ;
+                        $img_name = $file->getClientOriginalName();
+                        $image_resize = Image::make($file->getRealPath()); 
+                        $image_resize->resize(750, 400);
+                        $fileName = $image_name.$img_name;
+                        $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
+                    }
+                    $fname ='/uploads/emirates_id/';
+                    $emirates_id_back = $fname.$fileName;
+                } else {
+                    $emirates_id_back = @$user->emirates_id_back;
+                }
+
+                User::where('id', $user_id)
+                ->update([
+                    'emirates_id' =>  $emirates_id_front,
+                    'emirates_id_back' =>  $emirates_id_back,
+                    'date_of_birth' => $request->date_of_birth,
+                    'gender' => $request->gender,
+                    'salutation' =>  $request->salutation,
+                    'name' => $request->first_name_as_per_passport,
+                    'middle_name' => $request->middle_name,
+                    'last_name' => $request->last_name,
+                    'eid_number' => $request->eid_number,
+                ]); 
+            }
+        }
+        public function empl_details(Request $request){
+            $user_id =  $request->user_id;
+                $inputs = $request->all();
+                $inputs['customer_id'] = $user_id;
+
+                $banks = Bank::where('status', 1)->select('id', 'name')->get();
+
+                if($request->cm_type) {
+                    $cm_type = $request->cm_type;
+                    $r_type = 1;
+                } else {
+                    $onboarding = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
+                    $cm_type = @$onboarding->cm_type;
+                    $r_type = 2;
+                }
+
+                if($cm_type){
+
+                    if($r_type == 1){
+                        CustomerOnboarding::where('user_id', $user_id)->update([
+                            'cm_type'  =>  $cm_type,
+                        ]);
+                    }
+
+                    if($cm_type == 1){
+                        $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id')->first();
+                        if($cm_sal){
+                            $id = $cm_sal->id;
+                            (new CmSalariedDetail)->store($inputs, $id); 
+                        } else {
+                            (new CmSalariedDetail)->store($inputs); 
+                        }
+                    $result = ProductRequest::where('user_id', $user_id)->first();
+                    $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->pluck('service_id')->toArray();
+                    return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));     
+                    } elseif ($cm_type == 2) {
+                
+                        $cm_sal = SelfEmpDetail::where('customer_id', $user_id)->select('id')->first();
+                        if($cm_sal){
+                            $id = $cm_sal->id;
+                            (new SelfEmpDetail)->store($inputs, $id); 
+                        } else {
+                            (new SelfEmpDetail)->store($inputs); 
+                        }
+                    $result = ProductRequest::where('user_id', $user_id)->first();
+                    $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->pluck('service_id')->toArray();
+                    return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
+                    } else {
+                        $cm_sal = OtherCmDetail::where('customer_id', $user_id)->select('id')->first();
+                        if($cm_sal){
+                            $id = $cm_sal->id;
+                            (new OtherCmDetail)->store($inputs, $id); 
+                        } else {
+                            (new OtherCmDetail)->store($inputs); 
+                        }
+                    $result = ProductRequest::where('user_id', $user_id)->first();
+                    $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->pluck('service_id')->toArray();
+                        return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
+                    }
+
+                } 
+        }
+        public function existing_financial_save(Request $request){
+                $user_id =  $request->user_id;
+                $inputs = $request->all();
+                $inputs['user_id'] = $user_id;
+                $result = '';
+                $cm_sal = ProductRequest::where('user_id', $user_id)->select('id')->first();
+                if($cm_sal){
+                    $id = $cm_sal->id;
+                    (new ProductRequest)->store($inputs, $id); 
+                } else {
+                    (new ProductRequest)->store($inputs); 
+                }
+                
+                $services = ServiceApply::where('app_status', 0)->where('customer_id', $user_id)->count();
+                if($services != 0){ 
+                $result = CustomerOnboarding::where('user_id', $user_id)->select('id', 'consent_form')->first();
+                $ser = 1300;
+                $ref_id = $ser.$result->id;
+                CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
+                $consent_form = $result->consent_form; 
+                }
+            }
+        public function bank_preference(Request $request){
+            $user_id =  $request->user_id;
+            ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->where('service_id', 3)
+            ->update([
+                'bank_id' => $request->bank_id,
+                'decide_by' => $request->decide_by,
+            ]);
+        }
+        public function consent_form(Request $request){
+            $user_id =  $request->user_id;
+            $inputs['user_id'] = $user_id;
+            $result = '';
+            $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
+            $ser = 1300;
+            $ref_id = $ser.$result->id;
+            CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id, 'consent_form' => 1]);
         }
 }

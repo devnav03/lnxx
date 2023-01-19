@@ -45,31 +45,31 @@
                                                     <div class="row">
                                                         <div class="col-sm-3">
                                                             <div class="form-group">
-                                                                <label for="name" class="control-label">Name</label>
+                                                                <label for="name" class="control-label">Customer Name</label>
                                                                 {!! Form::text('name', null, array('class' =>
                                                                 'form-control')) !!}
                                                             </div>
                                                         </div>
-                                                        <!-- <div class="col-sm-3">
+                                                        <div class="col-sm-3">
                                                             <div class="form-group">
                                                                 <label for="product_type"
-                                                                    class="control-label">Email</label>
+                                                                    class="control-label">Customer Email</label>
                                                                 {!! Form::text('email', null, array('class' =>
                                                                 'form-control')) !!}
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <div class="form-group">
-                                                                <label for="product_type"
-                                                                    class="control-label">Mobile</label>
-                                                                {!! Form::number('mobile', null, array('class' =>
-                                                                'form-control')) !!}
+                                                            <label>Mobile</label>
+										<div class="input-group telephone-input">
+										</div> 
+                                        <input type="tel" class="form-control" name="number" id="mobile-number" style="width: 100%;">
                                                             </div>
-                                                        </div> -->
+                                                        </div>
                                                         <div class="col-sm-3">
                                                             <div class="form-group">
                                                                 <label for="product_type"
-                                                                    class="control-label">Reference</label>
+                                                                    class="control-label">Agent/Employee Reference ID</label>
                                                                 {!! Form::text('reference', null, array('class' =>
                                                                 'form-control')) !!}
                                                             </div>
@@ -77,7 +77,7 @@
                                                         <div class="col-sm-3">
                                                             <div class="form-group">
                                                                 <label for="product_type"
-                                                                    class="control-label">Source</label>
+                                                                    class="control-label">By Source</label>
                                                                 {!! Form::text('source', null, array('class' =>
                                                                 'form-control')) !!}
                                                             </div>
@@ -85,8 +85,8 @@
                                                         <div class="col-sm-3">
                                                             <div class="form-group">
                                                                 <label for="product_type"
-                                                                    class="control-label">Product</label>
-                                                                    <select name="product" class="form-control" aria-label="Default select example">
+                                                                    class="control-label">By Product</label>
+                                                                    <select name="product" class="form-control minimal" aria-label="Default select example">
                                                                         <option value="" selected>Select Product Type</option>
                                                                         <?php $get_type = \DB::table('services')->where('status', 1)->get(); ?>
                                                                         @foreach($get_type as $get_type)
@@ -99,8 +99,8 @@
                                                         <div class="col-sm-3">
                                                             <div class="form-group">
                                                                 <label for="alloted_to"
-                                                                    class="control-label">Assign To</label>
-                                                                    <select name="alloted_to" class="form-control" aria-label="Default select example">
+                                                                    class="control-label">Assign To Agent/Employee</label>
+                                                                    <select name="alloted_to" class="form-control minimal" aria-label="Default select example">
                                                                         <option value="" selected>Select Product Type</option>
                                                                         <?php $get_user_type = App\Models\User::where('status', 1)->where('user_type', 4)->orWhere('user_type', 3)->get(); ?>
                                                                         @foreach($get_user_type as $get_user_type)
@@ -109,7 +109,25 @@
                                                                     </select>
                                                             </div>
                                                         </div>
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="product_type"
+                                                                    class="control-label">By Location</label>
+                                                                    <input type="text" class="form-control" >
+                                                            </div>
+                                                        </div>
                                                         @endif
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="product_type"
+                                                                    class="control-label">Between Dates</label>
+                                                                    <div style="display: block; width: 100%; height: calc(1.5em + 0.75rem rem + 2px); font-size: 0.875rem; font-weight: 400; line-height: 1.5; color: #a8afc7; background-color: #ffffff; background-clip: padding-box; border: 1px solid #e8e8f7; border-radius: 3px; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; height: 38px; border-radius: 5px;"> 
+                                                                    <input type="text" name="between_date" class="btn btn-default float-right" id="daterange-btn">
+                                                                    <i class="far fa-calendar-alt"></i>
+                                                                    </div>
+                                                                    
+                                                            </div>
+                                                        </div>
                                                         <div class="col-sm-3 margintop20">
                                                             <div class="form-group">
                                                                 {!! Form::hidden('form-search', 1) !!}
@@ -199,8 +217,261 @@
     </div>
   </div>
 </div>
+<!-- Modal -->
+  <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><img src="{{asset('img/logo-black.png')}}" alt="logo"> ASSIGN LEAD</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="row">
+            <div class="col-md-12">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div>
+                            <h6 class="main-content-label mb-1">Lead Distribution by Agent/Employee Category</h6>
+                            <input type="hidden" id="ids" value="">
+                        </div>
+                        <div class="panel-body row">
+                        <div class="col-md-12" style="margin-top: 15px;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="name" class="control-label">Name</label>
+                                            {!! Form::text('name', null, array('class' =>
+                                            'form-control', 'id' => 'name')) !!}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="product_type"
+                                                class="control-label">Email</label>
+                                            {!! Form::text('email', null, array('class' =>
+                                            'form-control', 'id' => 'email')) !!}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="product_type"
+                                                class="control-label">Mobile</label>
+                                            {!! Form::number('mobile', null, array('class' =>
+                                            'form-control', 'id' => 'mobile')) !!}
+                                        </div>
+                                            </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="user_type"
+                                                class="control-label">By Products</label>
+                                                <select name="pattern" id="product" class="form-control minimal" aria-label="Default select example">
+                                                <option>Select Product</option>
+                                                <?php $get_type = \DB::table('services')->get(); ?>
+                                                @foreach($get_type as $get_type)
+                                                <option value="{{$get_type->name}}">{{$get_type->name}}</option>
+                                                @endforeach
+                                                    
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="user_type"
+                                                class="control-label">By Language</label>
+                                                <select name="pattern" id="language" class="form-control minimal" aria-label="Default select example">
+                                                <?php $get_lang = \DB::table('lead_language_master')->get(); ?>
+                                                <option>Please Select</option>
+                                                @foreach($get_lang as $get_lang)
+                                                <option value="{{$get_lang->lang_name}}">{{$get_lang->lang_name}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="user_type"
+                                                class="control-label">Type of Selection</label>
+                                                <select name="user_type" id="user_type" class="form-control minimal" aria-label="Default select example">
+                                                    <option>Please Select</option>
+                                                    <option value="3">Agents</option>
+                                                    <option value="4">Employees</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="user_type"
+                                                class="control-label">Duration/Pattern</label>
+                                                <select onchange="duration_pattern(this.value)" class="form-control minimal" aria-label="Default select example">
+                                                    <option>Please Select</option>
+                                                    <option value="duration">Date</option>
+                                                    <option value="pattern">Pattern</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 duration" style="display:none">
+                                        <div class="form-group">
+                                            <label for="user_type" class="control-label">Selection of Duration</label>
+                                            <select onchange="custom_range(this.value)" class="form-control minimal" aria-label="Default select example">
+                                                    <option>Please Select</option>
+                                                    <option value="today">Today</option>
+                                                    <!-- <option value="yeasterday">Yeasterday</option> -->
+                                                    <option value="last7days">last 7 Days</option>
+                                                    <option value="last30days">last 30 Days</option>
+                                                    <!-- <option value="thismonth">This Month</option> -->
+                                                    <option value="CustomRange">Custom Range</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 custom_date" style="display:none">
+                                        <div class="form-group">
+                                            <label for="user_type" class="control-label">From Date</label>
+                                            <input type="date" name="f_date" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 custom_date" style="display:none">
+                                        <div class="form-group">
+                                            <label for="user_type" class="control-label">To Date</label>
+                                            <input type="date" name="t_date" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 pattern" style="display:none">
+                                        <div class="form-group">
+                                            <label for="user_type"
+                                                class="control-label">Selection of Pattern</label>
+                                                <select name="pattern" class="form-control minimal" aria-label="Default select example">
+                                                    <option value="" selected>Select</option>
+                                                    <option value="follow_up">No of Follow Up</option>
+                                                    <option value="reminder">No of Reminder</option>
+                                                    <option value="emails">No of E-mails</option>
+                                                    <option value="calls">No of Calls Attempts</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="user_type"
+                                                class="control-label">By Location</label>
+                                                <input type="text" class="form-control" >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 margintop20">
+                                        <div class="form-group">
+                                        <a href="#" onclick="search_filter2()" style="color:white;"
+                                                class="btn btn-success">Filter</a>    
+                                        <a href="#"
+                                                class="btn btn-warning">Reset Filter</a>
+                                        </div>
+                                    </div>
+                                    <div id="send-status">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="panel-body row">
+                            <div class="col-md-12" style="margin-top: 15px;">
+                            <input type="hidden" id="m_id">
+                            <div class="data-wrapper5" style="height:230px;overflow-y: scroll;">
+                                            <!-- Results -->
+                                        </div>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function check_send_2(id){
+    
+    var m_id = $("#m_id").val();
+    var id = id;
+    $.ajax({
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        type: 'POST',
+        url : "{{route('leads.single_check_val')}}", 
+        data: {m_id:m_id,id:id},
+        success:function(xhr){
+            if(xhr.status==200){
+                toastr.options.timeOut = 1000;
+                toastr.success('Lead Assign Succesfully');
+                setTimeout(function(){
+                    location.reload();
+                }, 2000);
+            }
+        },
+        });
+}
+</script>
+<script>
+function set_id(id){
+    $("#m_id").val(id);
+}
+</script>
 
 @if($route == 'leads.lead_assign_leads')
+<script>
+function search_filter2(){
+    var name = $("#name").val();
+    var email = $("#email").val();
+    var mobile = $("#mobile").val();
+    var type = $("#user_type").val();
+    var product = $("#product").val();
+    var language = $("#language").val();
+    var page = 1;
+    $('.data-wrapper5').scroll(function() {
+    if ($('.data-wrapper5').scrollTop() + $('.data-wrapper5').height() >= $(document).height()) {
+        page++;
+        infinteLoadMore4(page);
+    }
+    });
+    $.ajax({
+            url: "{{url('admin/emp-agent/filter2')}}?page=" + page,
+            datatype: "html",
+            data:{name:name, email:email, mobile:mobile, type:type, product:product, language:language},
+            type: "get",
+            beforeSend: function() {
+                $('.auto-load').show();
+                $('.priloder_ajax').show();
+            }
+        })
+        .done(function(response) {
+            if (response.length == 0) {
+                $('.auto-load').html("We don't have more data to display :(");
+                return;
+            }
+            $('.auto-load').hide();
+            $(".data-wrapper5").html(response);
+            var html = '<div class="priloder_ajax' + page + '">' +
+                '<div class="d-flex justify-content-center">' +
+                '<div class="spinner-grow text-primary" role="status">' +
+                '<span class="sr-only">Loading...</span>' +
+                '</div>' +
+                '</div></div>';
+            $(".data-wrapper5").append(html);
+            setTimeout(function() {
+                $('.priloder_ajax' + page).hide();
+            }, 2000);
+        })
+        .fail(function(jqXHR, ajaxOptions, thrownError) {
+            console.log('Server error occured');
+        });
+}
+</script>
 <script>
 
 function view_details(id){
@@ -215,6 +486,8 @@ function view_details(id){
 }
 function savedata(id){
     var name = $('#m_name').val();
+    var mname = $('#m_mname').val();
+    var lname = $('#m_lname').val();
     var email = $('#m_email').val();
     var number = $('#m_number').val();
     var product = $('#m_product').val();
@@ -223,7 +496,7 @@ function savedata(id){
     $.ajax({
         type: 'GET',
         url : "{{url('admin/save-view-details')}}", 
-        data: {id:id, name:name, email:email, number:number, product:product, source:source, status:status},
+        data: {id:id, name:name, m_mname:m_mname, m_lname:m_lname, email:email, number:number, product:product, source:source, status:status},
         success: function(response){
             location.reload();
         }
@@ -321,5 +594,55 @@ function savedata(id){
 }
 </script>
 @endif
+<script>                                                    
+    $(function () {
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges   : {
+            'Today'       : [moment(), moment()],
+            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+        },
+        function (start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+        );
+    });
+</script>
+<script>
+    function duration_pattern(value){
+        val = value;
+        if(val == ''){
+            $(".duration").hide();
+            $(".pattern").hide();
+            $('.custom_date').hide();  
+        }
+        if(val == 'duration'){
+            $(".duration").show();
+            $(".pattern").hide();
+            $('.custom_date').hide();  
+        }
+        if(val == 'pattern'){
+            $(".pattern").show();
+            $(".duration").hide();
+            $('.custom_date').hide();  
+        }
+    }
+</script>
+<script>
+    function custom_range(value){
+        if(value == 'CustomRange'){
+            $('.custom_date').show();
+        }else{
+            $('.custom_date').hide();   
+        }
+    }
+</script>
 @stop
 

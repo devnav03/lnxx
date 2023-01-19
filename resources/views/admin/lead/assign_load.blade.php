@@ -24,20 +24,18 @@
     $uploade_by = App\Models\User::select('name')->where('id', $detail->uploaded_by)->first();
     @$up_name =  $uploade_by->name
     ?>
-
     <td class="text-center">{!! $up_name !!}</td>
-    <td >
-            <?php $get_emp = App\Models\User::where('status', 1)->where('user_type', 4)->orWhere('user_type', 3)->get() ?>
-            
-            <select class="form-control"  id="send_value" onchange="sendvalue(this.value, {{$detail->id}})">    
-                <option>Assign Employee</option>
-                @foreach($get_emp as $get_emp)  
-                <option value="{{$get_emp->id}}" <?php if($get_emp->id == $detail->alloted_to){ echo "selected";} ?> >  {{$get_emp->name}}</option>
-                @endforeach
-            </select>
-        </td>
-    <td class="text-center col-md-1">
-    <button type="button" class="btn btn-primary" onclick="view_details({{$detail->id}})" data-toggle="modal" data-target="#exampleModalCenter">
+    <?php $get_emp = App\Models\User::select('name')->where('id', $detail->alloted_to)->first();
+    @$assigned_name = $get_emp->name;
+    ?>
+    <td class="text-center">
+        {!! $assigned_name !!}
+    </td>
+    <td class="text-center col-md-2">
+    <button type="button" class="btn btn-primary" onclick="set_id({{$detail->id}})" data-toggle="modal" data-target="#exampleModal">
+        <i class="fa fa-recycle" aria-hidden="true" title="Re-Assign"></i>
+    </button>
+    <button type="button" class="btn btn-primary" onclick="view_details({{$detail->id}})" data-toggle="modal" data-target="#exampleModalCenter" title="View Details">
     @if($detail->seen == '')
         <i class="fa fa-eye-slash" id="unseen_eye{{$detail->id}}"></i>
     @else

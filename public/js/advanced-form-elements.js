@@ -1,5 +1,4 @@
 $(function() {
-	
-	//Date range picker
-	$('#reservation').daterangepicker();
+    //Date range picker
+    $('#reservation').daterangepicker();
 });

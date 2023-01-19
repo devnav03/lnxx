@@ -37,7 +37,7 @@ display: none;
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="name" class="control-label">Automatic Assign by Category</label>
-                                                <select name="assign_by_category" id="" class="form-control">
+                                                <select name="assign_by_category" id="" class="form-control minimal">
                                                     <option>Please Select</option>
                                                     <?php 
                                                     $assign_category = DB::table('lead_auto_distribution_category')->get();
@@ -65,7 +65,7 @@ display: none;
                     </div>
                 </div>
                 
-                
+<!--                 
                 <div class="card custom-card">
                     <div class="card-body">
                         <div>
@@ -190,7 +190,7 @@ display: none;
         </div>
         <table id="paginate-load" data-route="{{route('auto.lead.paginate')}}" class="table table-hover">
         </table>
-    </form>
+    </form> -->
 </div>
 <script>
     function duration_pattern(value){

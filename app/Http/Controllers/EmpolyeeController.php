@@ -225,16 +225,52 @@ class EmpolyeeController extends  Controller{
     }
     public function emp_agent_filter(Request $request)
     {
+    $user_type = Auth()->user()->user_type;
+    $auth_user_id = \Auth::user()->id;
+    $results = \DB::select("SELECT * FROM users where user_type IN (3,4) and name LIKE '%$request->name%' and email LIKE '%$request->email%' and mobile LIKE '%$request->mobile%' and user_type = '$request->type'");
+    // print_r($results);
+    // die();
+    $artilces = '';
+        $artilces.= '<table class="table">
+        <thead>
+            <tr>
+                <th width="10%"><input type="checkbox" onclick="select_all_2()" value="1" id="select_all_2"></th>
+                <th width="40%">Name</th>
+                <th width="30%">Email</th>
+                <th width="20%">Mobile</th>
+            </tr>
+        </thead>
+        <tbody style="text-transform: capitalize !important;">';
+        $i = 0;
+        $len = count($results);
+        if ($request->page){
+            foreach ($results as $result) {
+                  $artilces.=
+                  '<tr>
+                  <td width="10%"><input type="checkbox" class="check_boxs" name="select_all_2[]" value="'.$result->id.'"></td>
+                  <td width="40%">'.$result->name.'</td>
+                  <td width="30%">'.$result->email.'</td>
+                  <td width="20%">'.$result->mobile.'</td>
+                  </tr>';
+            }
+            $artilces.= '</tbody>
+            </table>';
+        }
+        return $artilces;
+    
+} 
+    public function emp_agent_filter2(Request $request)
+    {
     //     print_r($request->name);
     //     die;
     $user_type = Auth()->user()->user_type;
     $auth_user_id = \Auth::user()->id;
-    $results = \DB::table('users')->where('user_type', [3,4])->where('name', 'LIKE', '%'.$request->name.'%')->where('email', 'LIKE', '%'.$request->emial.'%')->where('mobile', 'LIKE', '%'.$request->mobile.'%')->where('user_type', 'LIKE', '%'.$request->type.'%')->get();
+    $results = \DB::select("SELECT * FROM users where user_type IN (3,4) and name LIKE '%$request->name%' and email LIKE '%$request->email%' and mobile LIKE '%$request->mobile%' and user_type = '$request->type'");
     // $results = \DB::SELECT("SELECT a.id, a.to_mail_id, a.mail_to, a.subject, a.mail, a.send_by, a.created_at, a.updated_at, b.id, b.name FROM `lead_mails` as a LEFT JOIN leads as b on a.to_mail_id = b.id WHERE b.id = $request->id;");
-        $artilces = '<table class="table">
+        $artilces = '';
+        $artilces.= '<table class="table">
         <thead>
             <tr>
-                <th width="10%"><input type="checkbox" onclick="select_all_2()" value="1" id="select_all_2"></th>
                 <th width="40%">Name</th>
                 <th width="30%">Email</th>
                 <th width="20%">Mobile</th>
@@ -248,7 +284,6 @@ class EmpolyeeController extends  Controller{
             foreach ($results as $result) {
                   $artilces.=
                   '<tr>
-                  <td width="10%"><input type="checkbox" class="check_boxs" name="select_all_2[]" value="'.$result->id.'"></td>
                   <td width="40%">'.$result->name.'</td>
                   <td width="30%">'.$result->email.'</td>
                   <td width="20%">'.$result->mobile.'</td>

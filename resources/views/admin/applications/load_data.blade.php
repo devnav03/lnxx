@@ -40,7 +40,7 @@
     <td>{!! $detail->mobile !!}</td>
    <!--  <td class="text-center"> @if($detail->name) <i class="fa fa-check"></i> @else  <i class="fa fa-times"></i> @endif </td> -->
 
-    <td class="text-center"> @if($detail->cm_type != null)  <i class="fa fa-check"></i>  @else  <i class="fa fa-times"></i> @endif </td>
+    <td class="text-center"> @if($detail->cm_type != null)<i class="fa fa-check"></i>@else<i class="fa fa-times"></i> @endif </td>
   <!--   <td class="text-center"> @if($detail->pr_id) <i class="fa fa-check"></i> @else  <i class="fa fa-times"></i> @endif </td> -->
 
     <td class="text-center"> @if($detail->video) <i class="fa fa-check"></i> @else  <i class="fa fa-times"></i> @endif </td>
