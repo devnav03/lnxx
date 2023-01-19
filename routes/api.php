@@ -68,10 +68,20 @@ Route::any('v1/save-coman-information-form', ['as' => 'save-coman-information-fo
 Route::any('v1/show-coman-information-form', ['as' => 'show-coman-information-form','uses' => 'App\Http\Controllers\API\V1\UserController@show_coman_information_form']);
 Route::any('v1/save-personal-loan-informations', ['as' => 'save-personal-loan-informations','uses' => 'App\Http\Controllers\API\V1\UserController@save_personal_loan_informations']);
 Route::any('v1/show-personal-loan-informations', ['as' => 'show-personal-loan-informations','uses' => 'App\Http\Controllers\API\V1\UserController@show_personal_loan_informations']);
-
 Route::any('v1/card-type-list', ['as' => 'card-type-list','uses' => 'App\Http\Controllers\API\V1\UserController@card_type_list']);
-
 Route::any('v1/credit-dbr-calculation', ['as' => 'credit-dbr-calculation','uses' => 'App\Http\Controllers\API\V1\UserController@credit_dbr_calculation']);
+
+Route::any('v1/save-personal-loan-bank-preference', ['as' => 'save-personal-loan-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_personal_loan_bank_preference']);
+Route::any('v1/personal-loan-bank-list', ['as' => 'personal-loan-bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@personal_loan_bank_list']);
+
+
+
+
+
+
+
+
+
 
 
 

@@ -632,21 +632,17 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('emp-agent/filter', 'App\Http\Controllers\EmpolyeeController@emp_agent_filter');
             Route::any('select-user-lead', 'App\Http\Controllers\LeadController@select_user_lead')->name('select-user-lead');
             Route::any('get-personal-details', 'App\Http\Controllers\LeadController@get_personal_details')->name('get.personal.details');
-
 });
-
 });
 
 
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
-
 Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign_up');
 Route::any('register-email', [App\Http\Controllers\Frontend\HomeController::class, 'email_register'])->name('register-email');
 Route::any('email-otp', [App\Http\Controllers\Frontend\HomeController::class, 'email_otp'])->name('email-otp');
 Route::any('enter-name', [App\Http\Controllers\Frontend\HomeController::class, 'enter_name'])->name('enter-name');
 Route::any('user-register', [App\Http\Controllers\Frontend\HomeController::class, 'user_register'])->name('user-register');
-
 Route::get('getState', [App\Http\Controllers\CategoryController::class, 'getState'])->name('getState');
 Route::get('getCity', [App\Http\Controllers\CategoryController::class, 'getCity'])->name('getCity');
 Route::get('otp-match', [App\Http\Controllers\Frontend\HomeController::class, 'otp_match'])->name('otp-match');
@@ -656,22 +652,17 @@ Route::get('login-otp-match', [App\Http\Controllers\Frontend\HomeController::cla
 Route::any('sign-in', [App\Http\Controllers\Frontend\HomeController::class, 'sign_in'])->name('sign-in');
 Route::any('enter-login-otp', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp'])->name('enter-login-otp');
 Route::any('log-in', [App\Http\Controllers\Frontend\HomeController::class, 'login'])->name('log-in');
-
 Route::any('agent-menu', [App\Http\Controllers\Frontend\HomeController::class, 'agent_menu'])->name('agent-menu');
 Route::any('customer-menu', [App\Http\Controllers\Frontend\HomeController::class, 'customer_menu'])->name('customer-menu');
-
 Route::get('getSubcategory', [App\Http\Controllers\Frontend\HomeController::class, 'getSubcategory'])->name('getSubcategory');
 Route::get('otp-sent', [App\Http\Controllers\Frontend\HomeController::class, 'otp_sent'])->name('otp-sent');
 Route::get('email-check', [App\Http\Controllers\Frontend\HomeController::class, 'email_check'])->name('email-check');
-
 Route::any('terms-and-conditions', [App\Http\Controllers\Frontend\HomeController::class, 'terms_conditions'])->name('terms-and-conditions');
 Route::any('privacy-policy', [App\Http\Controllers\Frontend\HomeController::class, 'privacy_policy'])->name('privacy-policy');
 Route::any('disclaimer', [App\Http\Controllers\Frontend\HomeController::class, 'disclaimer'])->name('disclaimer');
 Route::any('community', [App\Http\Controllers\Frontend\HomeController::class, 'community'])->name('community');
-
 Route::any('contact-us', [App\Http\Controllers\Frontend\HomeController::class, 'contact_us'])->name('contact-us');
 Route::any('contact-enquiry', [App\Http\Controllers\Frontend\HomeController::class, 'contact_enquiry'])->name('contact-enquiry');
-
 Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
 
 Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
@@ -706,6 +697,8 @@ Route::any('preference', [App\Http\Controllers\Frontend\HomeController::class, '
 Route::any('save-preference', [App\Http\Controllers\Frontend\HomeController::class, 'save_preference'])->name('save-preference');
 
 Route::any('personal-loan-preference', [App\Http\Controllers\Frontend\HomeController::class, 'personal_loan_preference'])->name('personal-loan-preference');
+
+Route::any('save-personal-loan-preference', [App\Http\Controllers\Frontend\HomeController::class, 'save_personal_loan_preference'])->name('save-personal-loan-preference');
 
 Route::any('consent', [App\Http\Controllers\Frontend\HomeController::class, 'consent'])->name('consent');
 

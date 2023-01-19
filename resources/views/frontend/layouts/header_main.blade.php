@@ -6,7 +6,7 @@ $user_base = 'Customer';
 }
 @endphp
 
-@if($route == 'user-dashboard' || $route == 'personal-details' || $route == 'cm-details' || $route == 'product-requested' || $route == 'address-details' || $route ==  'select-services' || $route == 'thank-you' || $route == 'record-video' || $route == 'consent-approval' || $route == 'preference' || $route == 'consent' || $route == 'education-detail' || $route == 'credit-card-information' || $route == 'personal-loan-information' || $route == 'information-form') 
+@if($route == 'user-dashboard' || $route == 'personal-details' || $route == 'cm-details' || $route == 'product-requested' || $route == 'address-details' || $route ==  'select-services' || $route == 'thank-you' || $route == 'record-video' || $route == 'consent-approval' || $route == 'preference' || $route == 'consent' || $route == 'education-detail' || $route == 'credit-card-information' || $route == 'personal-loan-information' || $route == 'information-form' || $route == 'personal-loan-preference') 
 
 <header class="header dashboard-header">
   <div class="container">

@@ -6,7 +6,7 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box cm_dt">
-<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>   
+<h1 class="app_form_head">Application Form</h1>   
 <h2 style="margin-bottom: 15px;">Upload Video</h2>
 <h4 style="font-size: 18px;">Kindly start uttering this sentence for video KYC.</h4>
 <p style="line-height: 24px;">Hello, my cid is lnxx{{\Auth::user()->id}} and my name is {{\Auth::user()->name}} {{\Auth::user()->middle_name}} {{\Auth::user()->last_name}}. I agree to all consent form, and I promise to promptly send the payment back to lnxx.</p>

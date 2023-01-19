@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CreditCardPreferenceBank extends Model {
+class PersonalLoanPreferenceBank extends Model {
 
-    protected $table = 'credit_card_preference_bank';
+    protected $table = 'personal_loan_preference_bank';
    
     protected $fillable = [
-       'user_id', 'bank_id', 'loan_limit', 'created_at', 'updated_at'
+       'user_id', 'bank_id', 'loan_limit', 'loan_emi', 'created_at', 'updated_at'
     ];
-
 
     public function store($inputs, $id = null) {
        // dd($inputs);

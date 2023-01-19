@@ -6,7 +6,7 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
-<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>
+<h1 class="app_form_head">Application Form</h1>
 <h2 style="margin-bottom: 20px;">Education Details</h2>
 <!-- <h6>Please enter your information to check the Offer.</h6> -->
 

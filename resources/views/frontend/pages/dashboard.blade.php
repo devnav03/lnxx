@@ -21,7 +21,8 @@
         <div class="service-sel">
           <h5 style="font-size: 17px; font-weight: 600;">{{ $relation->name }}</h5>
           <p style="font-size: 14px;margin-bottom: 0px;">Status: @if($relation->status == 0)<span style="font-size: 14px; color: #5EB495;"> Pending </span>@endif </p>
-          <p style="font-size: 14px;">Reference No: #{{ $relation->ref_id }} </p>
+          <p style="font-size: 14px;margin-bottom: 0px;">Reference No: #{{ $relation->ref_id }} </p>
+          <p style="font-size: 14px;">Applied at: {!! date('d M, Y', strtotime($relation->created_at)) !!}</p>
         </div>
     </li>
     @endforeach

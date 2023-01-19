@@ -35,6 +35,7 @@ use App\Models\Dependent;
 use App\Models\ApplicationDependent;
 use App\Models\ComanInformation;
 use App\Models\CreditCardInformation;
+use App\Models\PersonalLoanPreferenceBank;
 use App\Models\CardType;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
@@ -1073,6 +1074,18 @@ class UserController extends Controller {
       }
     }
 
+    public function personal_loan_bank_list(){
+      $bank_data = []; 
+      foreach(get_prefer_bank_personal_loan(1) as $bank){
+          $bank_slide['bank_id'] = $bank->id;
+          $bank_slide['bank_name'] = $bank->name;          
+          $bank_data[] = $bank_slide;
+      }
+      $slide['bank_data']  = $bank_data;
+      $data[] = $slide; 
+      return response()->json(['success' => true, 'status' => 200, 'data' => $data]); 
+    }
+
     public function save_bank_preference(Request $request){
       if($request->api_key){
         $user = User::where('api_key', $request->api_key)->select('id')->first();
@@ -1090,10 +1103,11 @@ class UserController extends Controller {
             if(isset($request->bank_id)){
                 $banks = explode(',', $request->bank_id);
                 foreach($banks as $bank_id){
-                    CreditCardPreferenceBank::create([
-                        'bank_id' => $bank_id,
-                        'user_id' => $user_id,
-                    ]);
+                  CreditCardPreferenceBank::create([
+                      'bank_id' => $bank_id,
+                      'user_id' => $user_id,
+                      'loan_limit' => $request->your_limit,
+                  ]);
                 }
             }
 
@@ -1108,11 +1122,35 @@ class UserController extends Controller {
             }
             
             return response()->json(['success' => true, 'status' => 200, 'message' => 'Bank preference have been successfully added']);  
-       
         }
       } 
     }
+
+    public function save_personal_loan_bank_preference(Request $request){
+        if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+              $user_id = $user->id;
+              \DB::table('personal_loan_preference_bank')->where('user_id', $user_id)->delete();
+              if(isset($request->bank_id)){
+                  foreach($request->bank_id as $bank_id){
+                      PersonalLoanPreferenceBank::create([
+                          'bank_id'    =>  $bank_id,
+                          'user_id'    =>  $user_id,
+                          'loan_limit' =>  $request->your_limit,
+                          'loan_emi'   =>  $request->your_emi,
+                      ]);
+                  }
+              }
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Personal loan bank preference successfully saved']);
+            }
+        }
+    }
         
+
+
+
+
     public function service_list(Request $request){
       try {
             if($request->api_key){

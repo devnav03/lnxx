@@ -36,7 +36,11 @@ use App\Models\ContentManagement;
 use App\Models\ComanInformation;
 use App\Models\Dependent;
 use App\Models\ApplicationData;
+use App\Models\PersonalLoanPreferenceBank;
 use App\Models\CardType;
+use App\Models\ApplicationCardTypePreference;
+use App\Models\ApplicationCreditCardPreferenceBank;
+use App\Models\ApplicationPersonalLoanPreferenceBank;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -116,19 +120,36 @@ class HomeController extends Controller {
         }
     }
 
+    public function save_personal_loan_preference(Request $request){
+        try{
+
+            $user_id = Auth::id();
+            \DB::table('personal_loan_preference_bank')->where('user_id', $user_id)->delete();
+
+            if(isset($request->bank_id)){
+                foreach($request->bank_id as $bank_id){
+                    PersonalLoanPreferenceBank::create([
+                        'bank_id'    =>  $bank_id,
+                        'user_id'    =>  $user_id,
+                        'loan_limit' =>  $request->your_limit,
+                        'loan_emi'   =>  $request->your_emi,
+                    ]);
+                }
+            }
+
+            return redirect()->route('consent');
+
+        } catch (\Exception $exception) {
+           // dd($exception);
+            return back();    
+        }
+    }
+
     public function save_preference(Request $request){
         try {
-            // if($request->decide_by){
             $user_id = Auth::id();
-            // ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->where('service_id', 3)
-            // ->update([
-            //     'bank_id' => $request->bank_id,
-            //     'decide_by' => $request->decide_by,
-            // ]);
-            
             \DB::table('credit_card_preference_bank')->where('user_id', $user_id)->delete();
             \DB::table('card_type_preference')->where('user_id', $user_id)->delete();
-
             if(isset($request->card_type)){
                 foreach($request->card_type as $card_type){
                     CardTypePreference::create([
@@ -137,27 +158,21 @@ class HomeController extends Controller {
                     ]);
                 }
             }
-
             if(isset($request->bank_id)){
                 foreach($request->bank_id as $bank_id){
                     CreditCardPreferenceBank::create([
                         'bank_id' => $bank_id,
                         'user_id' => $user_id,
+                        'loan_limit' => $request->your_limit,
                     ]);
                 }
             }
-
             $ser = ServiceApply::where('app_status', 0)->where('service_id', 1)->where('customer_id', $user_id)->count(); 
-
             if($ser == 0){
                 return redirect()->route('consent');
             } else {
                 return redirect()->route('personal-loan-preference'); 
             }
-
-            // } else {
-            //     return back();
-            // }
         }  catch (\Exception $exception) {
             //dd($exception);
             return back();    
@@ -1268,7 +1283,7 @@ public function enter_name(Request $request){
                return view('frontend.pages.thanku', compact('ref_id'));
            
         } catch (\Exception $e) {
-           //dd($e);
+           dd($e);
             return back();
         }
     }
@@ -2514,8 +2529,7 @@ public function enter_name(Request $request){
             
             $relations = \DB::table('applications')
                     ->join('services', 'services.id', '=', 'applications.service_id')
-                    ->select('applications.status', 'services.name', 'services.image', 'applications.ref_id')
-                    ->where('applications.user_id', $user_id)->get();
+                    ->select('applications.status', 'services.name', 'services.image', 'applications.ref_id', 'applications.created_at')->where('applications.user_id', $user_id)->get();
 
             return view('frontend.pages.dashboard', compact('user', 'service', 'relations'));
         } catch (Exception $e) {

@@ -74,13 +74,13 @@
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
-    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations')
+    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations' && $route != 'thank-you')
         @include('frontend.layouts.header_main')
     @endif    
     @endif
         <!-- Main Content -->
         @yield('content')
-        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations')
+        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations' && $route != 'thank-you')
         @include('frontend.layouts.footer') 
         @endif
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

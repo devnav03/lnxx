@@ -1453,6 +1453,7 @@ input[type=number]::-webkit-outer-spin-button {
     background: url(../images/thanku_back.png);
     padding: 20px 0 60px 0;
     text-align: center;
+    height: 100vh;
 }
 .thanku_sec {
     padding: 50px 0;
@@ -1461,7 +1462,9 @@ input[type=number]::-webkit-outer-spin-button {
 
 .slider_background h2 {
     color: #090F05;
-    font-weight: 700;
+    font-weight: 500;
+    font-size: 22px;
+    margin-bottom: 20px;
 }
 .slider_background img {
     width: 45px;
@@ -2156,10 +2159,48 @@ footer{
     margin-bottom: 0px;
 }
 
-
-
-
-
+.app_form_head {
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid #f3f3f3;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+.cong-box {
+    background: url(../images/cong_back.png);
+    background-repeat: no-repeat;
+    margin: 0 auto;
+    max-width: 335px;
+    background-size: 100%;
+    padding: 30px;
+    text-align: center;
+    color: #fff;
+    margin-top: 60px;
+    padding-bottom: 100px;
+}
+.continue-application {
+    margin: 0 auto;
+    background: #0e140a;
+    color: #fff;
+    max-width: 335px;
+    display: block;
+    text-align: center;
+    margin-top: 0px;
+    padding: 11px 0px;
+    font-weight: 400;
+    font-size: 15px;
+}
+.do-it-later {
+    max-width: 415px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    color: #555;
+}
+.continue-application:hover{
+    color: #fff;
+}
 
 
 

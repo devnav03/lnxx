@@ -6,7 +6,7 @@
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
-<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>
+<h1 class="app_form_head">Application Form</h1>
 <h2 style="margin-bottom: 15px;">Personal loan information</h2>
 <!-- <h6 style="margin-top: 12px;margin-bottom: 15px;">Please enter your information to check the offer.</h6> -->
 <form action="{{ route('save-personal-loan-information') }}" enctype="multipart/form-data" method="post">

@@ -14,7 +14,7 @@ if($result) {
 <div class="row">  
 <div class="col-md-7">
 <div class="personal_details_box">
-<h1 style="font-size: 25px;margin-bottom: 20px;font-weight: 600;text-align: center;">Application Form</h1>  
+<h1 class="app_form_head">Application Form</h1>  
 <h2>Personal Details <span style="float: right; color: #000; font-size: 14px;font-weight: 600;">(*Mandatory)</span></h2>
 <h6 style="margin-top: 12px;margin-bottom: 15px;">Please enter your information to check the offer.</h6>
 <form action="{{ route('cm-details') }}" enctype="multipart/form-data" method="post">
