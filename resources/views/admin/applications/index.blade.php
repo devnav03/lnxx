@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="col-sm-2">
                                         <div class="form-group">
-                                        <label for="status" class="control-label">Payment Status</label>
+                                        <label for="status" class="control-label">Applications Status</label>
                                             <select class="form-control" name="status">
                                                 <option value="">Select</option>
                                                 <option value="102">Pending</option>

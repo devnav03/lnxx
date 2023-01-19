@@ -421,6 +421,27 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
                 'uses' => 'testimonials@drop']);
             // testimonials
 
+            // Credit Card Engines Master route start
+            Route::resource('credit-card-engines', 'App\Http\Controllers\CreditCardEnginesController', [
+                'names' => [
+                    'index'     => 'credit-card-engines.index',
+                    'create'    => 'credit-card-engines.create',
+                    'store'     => 'credit-card-engines.store',
+                    'edit'      => 'credit-card-engines.edit',
+                    'update'    => 'credit-card-engines.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('credit-card-engines/paginate/{page?}', ['as' => 'credit-card-engines.paginate',
+                'uses' => 'App\Http\Controllers\CreditCardEnginesController@servicesPaginate']);
+            Route::any('credit-card-engines/action', ['as' => 'credit-card-engines.action',
+                'uses' => 'App\Http\Controllers\CreditCardEnginesController@servicesAction']);
+            Route::any('credit-card-engines/toggle/{id?}', ['as' => 'credit-card-engines.toggle',
+                'uses' => 'App\Http\Controllers\CreditCardEnginesController@servicesToggle']);
+            Route::any('credit-card-engines/drop/{id?}', ['as' => 'credit-card-engines.drop',
+                'uses' => 'credit-card-engines@drop']);
+            // Credit Card Engines end
 
             // sliders Master route start
             Route::resource('sliders', 'App\Http\Controllers\SliderController', [
@@ -466,6 +487,73 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('landing-sliders/drop/{id?}', ['as' => 'landing-sliders.drop',
                 'uses' => 'landing-sliders@drop']);
             // small sliders
+
+            // Agent Requests route start
+            Route::resource('agent-request', 'App\Http\Controllers\AgentRequestController', [
+                'names' => [
+                    'index'     => 'agent-request.index',
+                    'create'    => 'agent-request.create',
+                    'store'     => 'agent-request.store',
+                    'edit'      => 'agent-request.edit',
+                    'update'    => 'agent-request.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('agent-request/paginate/{page?}', ['as' => 'agent-request.paginate',
+                'uses' => 'App\Http\Controllers\AgentRequestController@Paginate']);
+            Route::any('agent-request/action', ['as' => 'agent-request.action',
+                'uses' => 'App\Http\Controllers\AgentRequestController@Action']);
+            Route::any('agent-request/toggle/{id?}', ['as' => 'agent-request.toggle',
+                'uses' => 'App\Http\Controllers\AgentRequestController@Toggle']);
+            Route::any('agent-request/drop/{id?}', ['as' => 'agent-request.drop',
+                'uses' => 'agent-request@drop']);
+            // Agent Requests
+
+            // Card Type route start
+            Route::resource('card-type', 'App\Http\Controllers\CardTypeController', [
+                'names' => [
+                    'index'     => 'card-type.index',
+                    'create'    => 'card-type.create',
+                    'store'     => 'card-type.store',
+                    'edit'      => 'card-type.edit',
+                    'update'    => 'card-type.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('card-type/paginate/{page?}', ['as' => 'card-type.paginate',
+                'uses' => 'App\Http\Controllers\CardTypeController@Paginate']);
+            Route::any('card-type/action', ['as' => 'card-type.action',
+                'uses' => 'App\Http\Controllers\CardTypeController@Action']);
+            Route::any('card-type/toggle/{id?}', ['as' => 'card-type.toggle',
+                'uses' => 'App\Http\Controllers\CardTypeController@Toggle']);
+            Route::any('card-type/drop/{id?}', ['as' => 'card-type.drop',
+                'uses' => 'card-type@drop']);
+            // Card Type end
+
+            // Refers Master route start
+            Route::resource('refers', 'App\Http\Controllers\ReferController', [
+                'names' => [
+                    'index'     => 'refers.index',
+                    'create'    => 'refers.create',
+                    'store'     => 'refers.store',
+                    'edit'      => 'refers.edit',
+                    'update'    => 'refers.update',
+                ],
+                'except' => ['show','destroy']
+            ]);
+
+            Route::any('refers/paginate/{page?}', ['as' => 'refers.paginate',
+                'uses' => 'App\Http\Controllers\ReferController@Paginate']);
+            Route::any('refers/action', ['as' => 'refers.action',
+                'uses' => 'App\Http\Controllers\ReferController@Action']);
+            Route::any('refers/toggle/{id?}', ['as' => 'refers.toggle',
+                'uses' => 'App\Http\Controllers\ReferController@Toggle']);
+            Route::any('refers/drop/{id?}', ['as' => 'refers.drop',
+                'uses' => 'refers@drop']);
+            // small refers
+
 
             // Contact route start
             Route::resource('contact-enquiry','App\Http\Controllers\ContactController', [
@@ -548,6 +636,7 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('emp-agent/filter2', 'App\Http\Controllers\EmpolyeeController@emp_agent_filter2');
             Route::any('select-user-lead', 'App\Http\Controllers\LeadController@select_user_lead')->name('select-user-lead');
             Route::any('get-personal-details', 'App\Http\Controllers\LeadController@get_personal_details')->name('get.personal.details');
+<<<<<<< HEAD
             Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal')->name('view.save.personal');
             Route::any('personal/detail/customer', 'App\Http\Controllers\LeadController@personal_detail_customer')->name('personal-detail-customer');
             Route::any('empl/details', 'App\Http\Controllers\LeadController@empl_details')->name('empl-details');
@@ -556,20 +645,19 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('consent/form', 'App\Http\Controllers\LeadController@consent_form')->name('consent_form');
             // Route::get('fetch-graph', 'App\Http\Controllers\LeadController@fetch_graph');
 
+=======
+>>>>>>> 570c4b0ffea708978e629cbbd34a1f6151cd761b
 });
-
 });
 
 // Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal');
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
-
 Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign_up');
 Route::any('register-email', [App\Http\Controllers\Frontend\HomeController::class, 'email_register'])->name('register-email');
 Route::any('email-otp', [App\Http\Controllers\Frontend\HomeController::class, 'email_otp'])->name('email-otp');
 Route::any('enter-name', [App\Http\Controllers\Frontend\HomeController::class, 'enter_name'])->name('enter-name');
 Route::any('user-register', [App\Http\Controllers\Frontend\HomeController::class, 'user_register'])->name('user-register');
-
 Route::get('getState', [App\Http\Controllers\CategoryController::class, 'getState'])->name('getState');
 Route::get('getCity', [App\Http\Controllers\CategoryController::class, 'getCity'])->name('getCity');
 Route::get('otp-match', [App\Http\Controllers\Frontend\HomeController::class, 'otp_match'])->name('otp-match');
@@ -579,23 +667,17 @@ Route::get('login-otp-match', [App\Http\Controllers\Frontend\HomeController::cla
 Route::any('sign-in', [App\Http\Controllers\Frontend\HomeController::class, 'sign_in'])->name('sign-in');
 Route::any('enter-login-otp', [App\Http\Controllers\Frontend\HomeController::class, 'login_otp'])->name('enter-login-otp');
 Route::any('log-in', [App\Http\Controllers\Frontend\HomeController::class, 'login'])->name('log-in');
-
 Route::any('agent-menu', [App\Http\Controllers\Frontend\HomeController::class, 'agent_menu'])->name('agent-menu');
 Route::any('customer-menu', [App\Http\Controllers\Frontend\HomeController::class, 'customer_menu'])->name('customer-menu');
-
 Route::get('getSubcategory', [App\Http\Controllers\Frontend\HomeController::class, 'getSubcategory'])->name('getSubcategory');
 Route::get('otp-sent', [App\Http\Controllers\Frontend\HomeController::class, 'otp_sent'])->name('otp-sent');
 Route::get('email-check', [App\Http\Controllers\Frontend\HomeController::class, 'email_check'])->name('email-check');
-
 Route::any('terms-and-conditions', [App\Http\Controllers\Frontend\HomeController::class, 'terms_conditions'])->name('terms-and-conditions');
 Route::any('privacy-policy', [App\Http\Controllers\Frontend\HomeController::class, 'privacy_policy'])->name('privacy-policy');
 Route::any('disclaimer', [App\Http\Controllers\Frontend\HomeController::class, 'disclaimer'])->name('disclaimer');
 Route::any('community', [App\Http\Controllers\Frontend\HomeController::class, 'community'])->name('community');
-
 Route::any('contact-us', [App\Http\Controllers\Frontend\HomeController::class, 'contact_us'])->name('contact-us');
 Route::any('contact-enquiry', [App\Http\Controllers\Frontend\HomeController::class, 'contact_enquiry'])->name('contact-enquiry');
-
-
 Route::group(['middleware' => 'user-auth', 'after' => 'no-cache'], function () {
 
 Route::any('log-out', [App\Http\Controllers\Frontend\HomeController::class, 'logout'])->name('user-logout');
@@ -605,6 +687,15 @@ Route::any('personal-details', [App\Http\Controllers\Frontend\HomeController::cl
 Route::any('profile-update', [App\Http\Controllers\Frontend\HomeController::class, 'update_profile'])->name('profile-update');
 Route::any('cm-details', [App\Http\Controllers\Frontend\HomeController::class, 'cm_details'])->name('cm-details');
 Route::any('education-detail', [App\Http\Controllers\Frontend\HomeController::class, 'education_detail'])->name('education-detail');
+Route::any('save-education-details', [App\Http\Controllers\Frontend\HomeController::class, 'save_education_details'])->name('save-education-details');
+Route::any('credit-card-information', [App\Http\Controllers\Frontend\HomeController::class, 'credit_card_information'])->name('credit-card-information');
+Route::any('save-credit-card-information', [App\Http\Controllers\Frontend\HomeController::class, 'save_credit_card_information'])->name('save-credit-card-information');
+
+Route::any('personal-loan-information', [App\Http\Controllers\Frontend\HomeController::class, 'personal_loan_information'])->name('personal-loan-information');
+
+Route::any('save-personal-loan-information', [App\Http\Controllers\Frontend\HomeController::class, 'save_personal_loan_information'])->name('save-personal-loan-information');
+Route::any('information-form', [App\Http\Controllers\Frontend\HomeController::class, 'information_form'])->name('information-form');
+Route::any('save-information-form', [App\Http\Controllers\Frontend\HomeController::class, 'save_information_form'])->name('save-information-form');
 
 Route::any('product-requested', [App\Http\Controllers\Frontend\HomeController::class, 'product_requested'])->name('product-requested');
 
@@ -614,15 +705,16 @@ Route::any('record-video', [App\Http\Controllers\Frontend\HomeController::class,
 Route::any('consent-form', [App\Http\Controllers\Frontend\HomeController::class, 'consent_form'])->name('consent-form');
 Route::any('consent-approval', [App\Http\Controllers\Frontend\HomeController::class, 'consent_approval'])->name('consent-approval');
 Route::any('thank-you', [App\Http\Controllers\Frontend\HomeController::class, 'ServiceApply'])->name('thank-you');
-Route::any('upload-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'upload_emirates'])->name('upload-emirates-id');
-Route::any('upload-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'upload_profile_image'])->name('upload-profile-image');
 
-Route::any('emirates-id-verification', [App\Http\Controllers\Frontend\HomeController::class, 'emirates_id_verification'])->name('emirates-id-verification');
-Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'save_profile_image'])->name('save-profile-image');
 Route::any('verify-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates_id'])->name('verify-emirates-id');
 Route::any('verify-emirates', [App\Http\Controllers\Frontend\HomeController::class, 'verify_emirates'])->name('verify-emirates');
 Route::any('preference', [App\Http\Controllers\Frontend\HomeController::class, 'preference'])->name('preference');
 Route::any('save-preference', [App\Http\Controllers\Frontend\HomeController::class, 'save_preference'])->name('save-preference');
+
+Route::any('personal-loan-preference', [App\Http\Controllers\Frontend\HomeController::class, 'personal_loan_preference'])->name('personal-loan-preference');
+
+Route::any('save-personal-loan-preference', [App\Http\Controllers\Frontend\HomeController::class, 'save_personal_loan_preference'])->name('save-personal-loan-preference');
+
 Route::any('consent', [App\Http\Controllers\Frontend\HomeController::class, 'consent'])->name('consent');
 
 Route::any('live_product_1', [App\Http\Controllers\Frontend\HomeController::class, 'live_product_1'])->name('live_product_1');
@@ -633,14 +725,26 @@ Route::any('live_product_2', [App\Http\Controllers\Frontend\HomeController::clas
 
 Route::get('check_product_code2', [App\Http\Controllers\Frontend\HomeController::class, 'check_product_code2'])->name('check_product_code2');
 
+Route::any('refers', [App\Http\Controllers\Frontend\HomeController::class, 'refers'])->name('refers');
+Route::any('congratulations', [App\Http\Controllers\Frontend\HomeController::class, 'congratulations'])->name('congratulations');
+
 });
 
+Route::any('upload-emirates-id', [App\Http\Controllers\Frontend\HomeController::class, 'upload_emirates'])->name('upload-emirates-id');
+Route::any('upload-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'upload_profile_image'])->name('upload-profile-image');
+
+Route::any('emirates-id-verification', [App\Http\Controllers\Frontend\HomeController::class, 'emirates_id_verification'])->name('emirates-id-verification');
+
+Route::any('save-profile-image', [App\Http\Controllers\Frontend\HomeController::class, 'save_profile_image'])->name('save-profile-image');
+
+Route::any('agent-apply', [App\Http\Controllers\Frontend\HomeController::class, 'agent_apply'])->name('agent-apply');
 
 Route::get('reset', function (){
-    Artisan::call('route:clear');
-    Artisan::call('cache:clear');
-    Artisan::call('view:clear');
+    Artisan::call('optimize:clear');
     Artisan::call('config:cache');
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
 });
 
 

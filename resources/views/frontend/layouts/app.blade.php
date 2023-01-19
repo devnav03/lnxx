@@ -34,7 +34,8 @@
         <meta name="twitter:title" content="{{$keyword->meta_tag}}" />
         @endif
     @else
-<title>LNXX</title>
+    <title>LNXX - An online financial services platform for UAE's citizens.</title>
+
 @endif
 <meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=1">
@@ -47,7 +48,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,500;1,700&display=swap" rel="stylesheet">
 
-    <script src="https://kit.fontawesome.com/956568d106.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/956568d106.js" crossorigin="anonymous"></script>
 {!! Html::style('assets/frontend/css/stellarnav.min.css') !!}
 
 <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
@@ -59,6 +60,7 @@
 {!! HTML::style('assets/frontend/fonts/flaticon/font/flaticon.css') !!}
 <!-- {!! HTML::style('assets/frontend/css/bootstrap.min1.css') !!} -->
 {!! HTML::style('assets/frontend/css/style.css') !!}
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 @yield('css')
 </head>
@@ -69,6 +71,7 @@
 @php
     $route  = \Route::currentRouteName();    
 @endphp
+<<<<<<< HEAD
         @if($route == 'get-started' || $route == 'view.save.personal')    
             @include('frontend.layouts.header') 
         @else 
@@ -76,37 +79,203 @@
                 @include('frontend.layouts.header_main')
             @endif    
         @endif
+=======
+    @if($route == 'get-started')    
+        @include('frontend.layouts.header') 
+    @else 
+    @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations' && $route != 'thank-you')
+        @include('frontend.layouts.header_main')
+    @endif    
+    @endif
+>>>>>>> 570c4b0ffea708978e629cbbd34a1f6151cd761b
         <!-- Main Content -->
         @yield('content')
-        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
+        @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations' && $route != 'thank-you')
         @include('frontend.layouts.footer') 
         @endif
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    @if($route != 'record-video')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-<script type="text/javascript">       
-  var btn = $('#button2');
+    @endif
 
-  $(window).scroll(function() {
+       <!--  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+    <script type="text/javascript">
+        const config = { 
+        apiKey: "AIzaSyAId-eClnqk-cjkGV5fYsDLbiGWl917jvA",
+        authDomain: "lnxx-ce1d9.firebaseapp.com",
+        databaseURL: "https://lnxx-ce1d9-default-rtdb.firebaseio.com",
+        projectId: "lnxx-ce1d9",
+        storageBucket: "lnxx-ce1d9.appspot.com",
+        messagingSenderId: "379200459861",
+        appId: "1:379200459861:web:63d87def3fc0f969a230dc",
+        measurementId: "G-8CVESVEF66"
+        };
+        
+        firebase.initializeApp(config);
+    </script>
+
+
+    <script type="text/javascript">  
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                onSignInSubmit();
+            }
+        });
+
+        function otpSend() {
+            var signInWithPhoneNumber = document.getElementById('phone').value;
+      
+            const appVerifier = window.recaptchaVerifier;
+            firebase.auth().signInWithPhoneNumber(signInWithPhoneNumber, appVerifier)
+                .then((confirmationResult) => {
+  
+                    window.confirmationResult = confirmationResult;
+                    document.getElementById("sent-message").innerHTML = "Message sent succesfully.";
+                    document.getElementById("sent-message").classList.add("d-block");
+                }).catch((error) => {
+
+                    document.getElementById("error-message").innerHTML = error.message;
+                    document.getElementById("error-message").classList.add("d-block");
+                });
+        }
+
+        function otpVerify() {
+            var code = document.getElementById('otp-code').value;
+            confirmationResult.confirm(code).then(function (result) {
+                var user = result.user;
+                document.getElementById("sent-message").innerHTML = "You are succesfully logged in.";
+                document.getElementById("sent-message").classList.add("d-block");
+      
+            }).catch(function (error) {
+                document.getElementById("error-message").innerHTML = error.message;
+                document.getElementById("error-message").classList.add("d-block");
+            });
+        }
+    </script> -->
+
+      
+@if($route != 'record-video')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" ></script>
+<script>
+    $(function() {
+        $( "#my_date_picker" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            minDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#emirates_expire_date" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            minDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+    
+
+    $(function() {
+        var maxBirthdayDate = new Date();
+        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18 );
+        $( "#my_date_picker_dob" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            dateFormat: 'dd/mm/yy', 
+            maxDate: maxBirthdayDate,
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        var maxBirthdayDate = new Date();
+        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18 );
+        $( "#spouse_date_of_birth" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            dateFormat: 'dd/mm/yy', 
+            maxDate: maxBirthdayDate,
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#aecb_date" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#date_of_joining" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( ".member_joining" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#credit_member_since" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+    
+
+
+
+</script>
+
+<script type="text/javascript">       
+    var btn = $('#button2');
+
+    $(window).scroll(function() {
     if ($(window).scrollTop() > 300) {
       //alert('here');
       btn.addClass('show');
     } else {
-      btn.removeClass('show');
-     // alert('here 1');
-    }
-  });
+        btn.removeClass('show');
+            // alert('here 1');
+        }
+    });
 
-  btn.on('click', function(e) {
-    e.preventDefault();
-    $('html, body').animate({scrollTop:0}, '300');
-  });
+    btn.on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({scrollTop:0}, '300');
+    });
 
 </script>  
+ @endif
+@if($route != 'record-video')
         {!! Html::script('assets/frontend/js/jquery-ui.js') !!}
         {!! Html::script('assets/frontend/js/popper.min.js') !!}
         {!! Html::script('assets/frontend/js/owl.carousel.min.js') !!}
@@ -204,7 +373,7 @@ $('.main-slider').owlCarousel({
 $('.product-slider').owlCarousel({
     autoplay: true,
     smartSpeed: 900,
-    loop: true,
+    loop: false,
     margin: 20,
     nav: false,
     center:false,
@@ -228,7 +397,7 @@ $('.product-slider').owlCarousel({
             items:3,
         },
         1200:{
-            items:5
+            items:4
            
         }
     }
@@ -348,7 +517,7 @@ $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
 });
 
 </script>
-
+@endif
 @if($route == 'my-profile')
 <script type="text/javascript">
 imgInp.onchange = evt => {
@@ -360,13 +529,42 @@ imgInp.onchange = evt => {
 </script>
 @endif
 @if($route == 'upload-profile-image')
+{!! Html::script('assets/frontend/js/webcam.js') !!}
 <script type="text/javascript">
-imgInp.onchange = evt => {
-  const [file] = imgInp.files
-  if (file) {
-    blah.src = URL.createObjectURL(file)
-  }
-} 
+    
+Webcam.set({ 
+    width: 300, 
+    height: 300, 
+    image_format: 'jpeg', 
+    jpeg_quality: 90 
+}); 
+
+
+Webcam.attach( '#my_camera' ); 
+//     setInterval(function take_snapshot() { 
+        
+//         Webcam.snap( function(data_uri) { 
+//             $(".image-tag").val(data_uri); 
+//             document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>'; 
+//     } ); 
+// },10000);
+
+     function take_snapshot() {
+            Webcam.snap( function(data_uri) {
+                $(".image-tag").val(data_uri);
+                $('.btn').removeAttr('disabled');
+                document.getElementById('results').innerHTML = '<div style="font-weight: 500; margin-bottom: 8px;">Captured photo</div><img src="'+data_uri+'" width = "300px" height= "300px" style="border:1px solid #333;"/>';
+            } );
+        }
+
+</script>
+<script type="text/javascript">
+// imgInp.onchange = evt => {
+//   const [file] = imgInp.files
+//   if (file) {
+//     blah.src = URL.createObjectURL(file)
+//   }
+// } 
 </script>
 @endif
 
@@ -468,6 +666,28 @@ $('input[name=otp_code]').on('keyup' , function() {
     }
 }); 
 
+$('input[name=eid_number]').on('keyup' , function() { 
+    var id = $("input[name=eid_number]").val();
+    if( id.length == 15 ) {
+        $(".sh_emid").show();
+        $(".hide_text").hide();
+    } else {
+        $(".sh_emid").hide();
+        $(".hide_text").show(); 
+    }
+});
+    
+
+$('input[name=credit_score]').on('keyup' , function() { 
+    var id = $("input[name=credit_score]").val();
+    if( id.length == 0 ) {
+        $(".aecb_date").hide();
+    } else {
+        $(".aecb_date").show();
+    }
+    
+});
+
 
 $('input[name=login_otp]').on('keyup' , function() { 
     var id = $("input[name=id]").val();
@@ -501,7 +721,7 @@ $('input[name=login_otp]').on('keyup' , function() {
 
 $('input[name=mobile]').on('keyup' , function() { 
     var mobile = $("input[name=mobile]").val();
-    if( mobile.length == 7 ) {
+    if( mobile.length == 9 ) {
         $.ajax({
             type: "GET",
             url: "{{ route('otp-sent') }}",
@@ -584,6 +804,7 @@ function closeNav() {
 }
 
 </script>
+
 @if($route == 'product-requested')
 <script type="text/javascript">
 $(".credit_card1_open").click(function(){
@@ -639,185 +860,218 @@ $(".mortgage_loan4_open").click(function(){
 @endif
 @if($route == 'record-video')
 <script type="text/javascript">
-jQuery(function(){
-   jQuery('#start').click();
-});
 
-        'use strict';
 
-        /* globals MediaRecorder */
-        document.querySelector('#start').addEventListener('click', async () => {
-            $('#play').hide();
-            $('#download').hide();
-            $('#record').show();
-        
-           
+
+
+
+
+
+// jQuery(function(){
+//    jQuery('#start').click();
+// });
+//         'use strict';
+//         document.querySelector('#start').addEventListener('click', async () => {
+//             $('#play').hide();
+//             $('#download').hide();
+//             $('#record').show();
             
-            const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
-            const constraints = {
-                audio: {
-                    echoCancellation: {
-                        exact: hasEchoCancellation
-                    }
-                },
-                video: {
-                    width: 360,
-                    height: 200
-                }
-            };
+//             const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
+//             const constraints = {
+//                 audio: {
+//                     echoCancellation: {
+//                         exact: hasEchoCancellation
+//                     }
+//                 },
+//                 video: {
+//                     width: 360,
+//                     height: 200
+//                 }
+//             };
 
-            console.log('Using media constraints:', constraints);
-            await init(constraints);
-        });
+//             console.log('Using media constraints:', constraints);
+//             await init(constraints);
+//         });
 
-       
-      
-         let mediaRecorder;
-            let recordedBlobs;
-            let timerId = setInterval(() => document.getElementById("record").click(), 30000);
+//         let mediaRecorder;
+//         let recordedBlobs;
+//         let timerId = setInterval(() => document.getElementById("record").click(), 30000);
+//         const errorMsgElement = document.querySelector('span#errorMsg');
+//         const recordedVideo = document.querySelector('video#recorded');
+//         const recordButton = document.querySelector('#record');
+//         const playButton = document.querySelector('#play');
+//         const downloadButton = document.querySelector('#download');
+//         recordButton.addEventListener('click', () => {
+//             if (recordButton.textContent === 'Record') {
+//                 startRecording();
 
-        const errorMsgElement = document.querySelector('span#errorMsg');
-        const recordedVideo = document.querySelector('video#recorded');
-        const recordButton = document.querySelector('#record');
-        const playButton = document.querySelector('#play');
-        const downloadButton = document.querySelector('#download');
+//             } else {
+//                 stopRecording();
+//                 recordButton.textContent = 'Record';
+//                 playButton.disabled = false;
+//                 downloadButton.disabled = false;
+//             }
+//         });
 
-
-        recordButton.addEventListener('click', () => {
-            if (recordButton.textContent === 'Record') {
-                startRecording();
-
-            } else {
-                stopRecording();
-                recordButton.textContent = 'Record';
-                playButton.disabled = false;
-                downloadButton.disabled = false;
-            }
-        });
-
-
-        playButton.addEventListener('click', () => {
+//         playButton.addEventListener('click', () => {
            
-            $('#download').show();
-            $('#skip').hide();
-            const superBuffer = new Blob(recordedBlobs, {
-                type: 'video/webm'
-            });
-            recordedVideo.src = null;
-            recordedVideo.srcObject = null;
-            recordedVideo.src = window.URL.createObjectURL(superBuffer);
-            $('#videofile').val(recordedVideo.src);
-            recordedVideo.controls = true;
-            recordedVideo.play();
-        });
+//             $('#download').show();
+//             $('#skip').hide();
+//             const superBuffer = new Blob(recordedBlobs, {
+//                 type: 'video/webm'
+//             });
+//             recordedVideo.src = null;
+//             recordedVideo.srcObject = null;
+//             recordedVideo.src = window.URL.createObjectURL(superBuffer);
+//             $('#videofile').val(recordedVideo.src);
+//             recordedVideo.controls = true;
+//             recordedVideo.play();
+//         });
+//         downloadButton.addEventListener('click', () => {
+//             const blob = new Blob(recordedBlobs, {
+//                 type: 'video/mp4'
+//             });
+//             const url = window.URL.createObjectURL(blob);
+//             const a = document.createElement('a');
+//             a.style.display = 'none';
+//             // a.href = url;
+//             // a.download = 'test.mp4';
+//             document.body.appendChild(a);
+//             a.click();
+//             setTimeout(() => {
+//                 document.body.removeChild(a);
+//                 window.URL.revokeObjectURL(url);
+//             }, 100);
 
-
-        downloadButton.addEventListener('click', () => {
-            const blob = new Blob(recordedBlobs, {
-                type: 'video/mp4'
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            // a.href = url;
-            // a.download = 'test.mp4';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 100);
-
-            var formdata = new FormData();
-            formdata.append('blobFile', new Blob(recordedBlobs));
+//             var formdata = new FormData();
+//             formdata.append('blobFile', new Blob(recordedBlobs));
             
-            fetch('{{ route('consent-form') }}', {
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                method: 'POST',
-                body: formdata
-            }).then(() => {
-                window.location.href = 'https://sspl20.com/lnxx/thank-you';
-            })
+//             fetch('{{ route('consent-form') }}', {
+//                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+//                 method: 'POST',
+//                 body: formdata
+//             }).then(() => {
+//                 window.location.href = 'https://sspl20.com/lnxx/thank-you';
+//             })
+//         });
 
-            // $.ajax({
-            //     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            //     type: "POST",
-            //     url: "{{ route('consent-form') }}",
-            //     body: formdata,
-            //     // data: {'state_id' : val},
-            //     success: function(data){
-            //         $("#city").html(data);
-            //     }
-            // });
-        
-
-        });
-
-        function handleDataAvailable(event) {
-            console.log('handleDataAvailable', event);
-            if (event.data && event.data.size > 0) {
-                recordedBlobs.push(event.data);
-            }
-        }
-
-        function startRecording() {
-            recordedBlobs = [];
-            let options = {
-                mimeType: 'video/webm;codecs=vp9,opus',
+//         function handleDataAvailable(event) {
+//             console.log('handleDataAvailable', event);
+//             if (event.data && event.data.size > 0) {
+//                 recordedBlobs.push(event.data);
+//             }
+//         }
+//         function startRecording() {
+//             recordedBlobs = [];
+//             let options = {
+//                 mimeType: 'video/webm;codecs=vp9,opus',
                 
               
-            };
-            try {
-                mediaRecorder = new MediaRecorder(window.stream, options);
-            } catch (e) {
-                console.error('Exception while creating MediaRecorder:', e);
-                errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`;
-                return;
-            } 
-            console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-            recordButton.textContent = 'Stop Recording';
-            playButton.disabled = true;
-            downloadButton.disabled = true;
+//             };
+//             try {
+//                 mediaRecorder = new MediaRecorder(window.stream, options);
+//             } catch (e) {
+//                 console.error('Exception while creating MediaRecorder:', e);
+//                 errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`;
+//                 return;
+//             } 
+//             console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+//             recordButton.textContent = 'Stop Recording';
+//             playButton.disabled = true;
+//             downloadButton.disabled = true;
+//             mediaRecorder.onstop = (event) =>  {
+//                 $('#play').show();
+//                 $('#record').hide();
+//                 console.log('Recorder stopped: ', event);
+//                 console.log('Recorded Blobs: ', recordedBlobs);
+//             };
+//             mediaRecorder.ondataavailable = handleDataAvailable;
+//             mediaRecorder.start();
+//             console.log('MediaRecorder started', mediaRecorder);
+//         }
 
-            mediaRecorder.onstop = (event) =>  
-            {
-                $('#play').show();
-                $('#record').hide();
-                console.log('Recorder stopped: ', event);
-                console.log('Recorded Blobs: ', recordedBlobs);
-            };
-            mediaRecorder.ondataavailable = handleDataAvailable;
-            mediaRecorder.start();
-        
-            console.log('MediaRecorder started', mediaRecorder);
-        }
+//         function stopRecording() {
+//             mediaRecorder.stop();
+//         }
 
-        function stopRecording() {
-            mediaRecorder.stop();
-        }
+//         function handleSuccess(stream) {
+//             recordButton.disabled = false;
+//             console.log('getUserMedia() got stream:', stream);
+//             window.stream = stream;
+//             const gumVideo = document.querySelector('video#gum');
+//             gumVideo.srcObject = stream;
+//         }
 
-        function handleSuccess(stream) {
-            recordButton.disabled = false;
-            console.log('getUserMedia() got stream:', stream);
-            window.stream = stream;
-            const gumVideo = document.querySelector('video#gum');
-            gumVideo.srcObject = stream;
-        }
+//         async function init(constraints) {
+//             try {
+//                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
+//                 handleSuccess(stream);
+//             } catch (e) {
+//                 console.error('navigator.getUserMedia error:', e);
+//                 errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+//             }
+//         }
 
-        async function init(constraints) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                handleSuccess(stream);
-            } catch (e) {
-                console.error('navigator.getUserMedia error:', e);
-                errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+
+</script>
+<script>
+(function(i, s, o, g, r, a, m) {
+i['GoogleAnalyticsObject']=r; i[r]=i[r]||function() {
+  (i[r].q=i[r].q||[]).push(arguments);
+}, i[r].l=1*new Date(); a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0]; a.async=1; a.src=g; m.parentNode.insertBefore(a, m);
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+ga('create', 'UA-48530561-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="{{asset('assets/frontend/js/video.js')}}"></script>
+
+@endif
+
+@if($route == 'personal-loan-information')
+<script type="text/javascript">
+$(document).ready(function(){
+
+      fetch_product_data2();
+      function fetch_product_data2(query = '') {
+      $.ajax({
+       url:"{{ route('live_product_2') }}",
+       method:'GET',
+       data:{query:query},
+       dataType:'json',
+       success:function(data) {
+        $('#live_product_2').html(data.table_data);
+       }
+      })
+     }
+
+     $(document).on('keyup', '.live_product_2', function(){
+      $("#live_product_2").show();    
+      var query = $(this).val();
+      fetch_product_data2(query);
+     });
+    });
+
+    function getProduct_Code_2(val) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('check_product_code2') }}",
+            data: {'code' : val},
+            success: function(data){
+                if(data.status == 'Fail'){
+                } else{
+                    $(".product_id").val(data.product_id);
+                    $(".product_name2").val(data.product_name);
+                }
+                $("#live_product_2").hide();   
             }
-        }
-
-       
-       
+        });
+    }
 </script>
 @endif
+
 @if($route == 'cm-details')
 <script type="text/javascript">
     $(document).ready(function(){
@@ -889,7 +1143,6 @@ jQuery(function(){
      });
     });
 
-
     function getProduct_Code_2(val) {
         $.ajax({
             type: "GET",
@@ -904,7 +1157,6 @@ jQuery(function(){
                 $("#live_product_2").hide();   
             }
         });
-
     }
     
     $(".form-rel2").mouseenter(function(){
@@ -913,8 +1165,22 @@ jQuery(function(){
         $("#live_product_2").slideUp();
     });
 
-
 </script>
 @endif
+
+@if(session()->has('already_refer_friend'))
+<script type="text/javascript">
+    $('#exampleModal').modal('show');
+</script>
+@endif
+@if(session()->has('refer_friend'))
+<script type="text/javascript">
+    $('#exampleModal').modal('show');
+</script>
+@endif
+
+
+
+
 </body>
 </html>

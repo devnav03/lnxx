@@ -13,6 +13,7 @@ use App\Models\PreRegister;
 use App\Models\SelfEmpDetail;
 use App\Models\OtherCmDetail;
 use App\Models\UserEducation;
+use App\Models\Refer;
 use App\Models\CmSalariedDetail;
 use App\Models\CustomerOnboarding;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -22,16 +23,26 @@ use App\Models\ApplicationProductRequest;
 use App\Models\Address;
 use App\Models\Application;
 use App\Models\Bank;
+use App\Models\ContentManagement;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\ProductRequest;
+use App\Models\CardTypePreference;
+use App\Models\CreditCardPreferenceBank;
+use App\Models\PersonalLoanInformation;
+use App\Models\AgentRequest;
+use App\Models\Dependent;
+use App\Models\ApplicationDependent;
+use App\Models\ComanInformation;
+use App\Models\CreditCardInformation;
+use App\Models\PersonalLoanPreferenceBank;
+use App\Models\CardType;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
 use PDF;
 use App\PasswordHash;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
 
     public function about(){
 
@@ -66,7 +77,7 @@ class UserController extends Controller
                   'eid_status' =>  1,
                   ]);
 
-                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirates id successfully approved']);
+                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']);
 
                 } elseif ($request->otp == '652160') {
                   User::where('id', $user_id)
@@ -74,9 +85,9 @@ class UserController extends Controller
                   'eid_status' =>  1,
                   ]);
 
-                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirates id successfully approved']);
+                  return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']);
                 } else {
-                  return response()->json(['success' => false, 'status' => 201, 'message' => 'Invalid OTP Code']);
+                  return response()->json(['success' => false, 'status' => 201, 'message' => 'Invalid OTP try again']);
                 }
               } 
             }
@@ -165,12 +176,268 @@ class UserController extends Controller
 
             $data = \DB::table('applications')
                     ->join('services', 'services.id', '=', 'applications.service_id')
-                    ->select('applications.status', 'services.name', 'services.image', 'ref_id')
+                    ->select('applications.status', 'services.name', 'services.image', 'applications.created_at', 'ref_id')
                     ->where('applications.user_id', $user->id)->get();
 
             return response()->json(['success' => true, 'status' => 200, 'data' => $data]);       
           }
       }
+    }
+
+    public function card_type_list(Request $request){
+        $data = CardType::where('status', 1)->select('name', 'id')->get();
+        return response()->json(['success' => true, 'status' => 200, 'data' => $data]); 
+    }
+
+    public function credit_dbr_calculation(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+              $user_id = $user->id;
+              $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 
+                'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 
+                'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
+            
+              $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first(); 
+
+              $avg_sal = 0;
+              $total_cred_limit = 0;
+              $cred_five = 0;
+              $emi = 0;
+              $credit_bank = [];
+
+              if($f_details->exist_personal == 1){
+                  $emi += $f_details->loan_emi;
+                  if($f_details->loan_emi2){
+                      $emi += $f_details->loan_emi2;
+                  }
+                  if($f_details->loan_emi3){
+                      $emi += $f_details->loan_emi3;
+                  }
+                  if($f_details->loan_emi4){
+                      $emi += $f_details->loan_emi4;
+                  }
+              }
+
+              if($f_details->exist_business == 1){
+                $emi += $f_details->business_loan_emi;
+                if($f_details->business_loan_emi2){
+                    $emi += $f_details->business_loan_emi2;
+                }
+                if($f_details->business_loan_emi3){
+                    $emi += $f_details->business_loan_emi3;
+                }
+                if($f_details->business_loan_emi4){
+                    $emi += $f_details->business_loan_emi4;
+                }
+            }
+
+            if($f_details->exist_mortgage == 1){
+                $emi += $f_details->mortgage_emi;
+                if($f_details->mortgage_emi2){
+                    $emi += $f_details->mortgage_emi2;
+                }
+                if($f_details->mortgage_emi3){
+                    $emi += $f_details->mortgage_emi3;
+                }
+                if($f_details->mortgage_emi4){
+                    $emi += $f_details->mortgage_emi4;
+                }
+            }
+
+
+            if($f_details->exist_credit == 1){
+                $cred1 = 0;
+                $cred2 = 0;
+                $cred3 = 0;
+                $cred4 = 0;
+                if($f_details->details_of_cards == 'Credit Card'){
+                    $cred1 = $f_details->card_limit;
+                    $credit_bank[] = $f_details->credit_bank_name;
+                }
+                if($f_details->details_of_cards2 == 'Credit Card'){
+                    $cred2 = $f_details->card_limit2;
+                   
+                    $credit_bank[] = $f_details->credit_bank_name2;
+                }
+                if($f_details->details_of_cards3 == 'Credit Card'){
+                    $cred3 = $f_details->card_limit3;
+                    $credit_bank[] = $f_details->credit_bank_name3;
+                }
+                if($f_details->details_of_cards4 == 'Credit Card'){
+                    $cred4 = $f_details->card_limit4;
+                    $credit_bank[] = $f_details->credit_bank_name4;
+                }
+                $total_cred_limit = $cred1+$cred2+$cred3+$cred4;
+                if($total_cred_limit != 0){
+                    $cred_five = $total_cred_limit/100*5;
+                }
+            }
+
+            if($cus_onboard->cm_type == 1){
+                $sal_details = CmSalariedDetail::where('customer_id', $user_id)->select('last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'monthly_salary')->first(); 
+                $no = 0; 
+                $sal1 = 0;
+                $sal2 = 0;
+                $sal3 = 0;
+                if($sal_details->last_one_salary_credits){
+                    $sal1 = $sal_details->last_one_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_two_salary_credits){
+                    $sal2 = $sal_details->last_two_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_three_salary_credits){
+                    $sal3 = $sal_details->last_three_salary_credits;
+                    $no++;
+                }
+                $total_sal = $sal1 + $sal2 + $sal3;  
+                if($no == 0){
+                    $no = 1;
+                } 
+                $avg_sal = $total_sal/$no;
+                if($avg_sal == 0){
+                 $avg_sal = $sal_details->monthly_salary; 
+                }
+            }
+            if($cus_onboard->cm_type == 2){
+                $sal_details = SelfEmpDetail::where('customer_id', $user_id)->select('annual_business_income')->first();
+                $avg_sal = $sal_details->annual_business_income/12;
+            }
+            if($cus_onboard->cm_type == 3){
+                $sal_details = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                $avg_sal = $sal_details->monthly_pension;
+            }
+            
+            $cred_emi = $emi+$cred_five;
+            $dbr_calculation = ($cred_emi/$avg_sal)*100;
+            $remaining_value = 50-$dbr_calculation;
+  
+            if($remaining_value > 0){
+                $your_emi = ($avg_sal*$remaining_value)/100;
+                $your_limit = $your_emi*20;
+                $eligible = 1;
+            } else {
+                $your_limit = 0;
+                $your_emi = 0;
+                $eligible = 0;
+            } 
+
+            return response()->json(['success' => true, 'status' => 200, 'eligible' => $eligible, 
+              'your_emi' => $your_emi, 'your_limit' => $your_limit ]); 
+
+          }
+      }
+    }
+
+
+    public function cms_content(Request $request){
+        $content =  ContentManagement::where('id', 1)->select('about', 'privacy', 'terms_conditions', 
+          'contact')->first();
+        return response()->json(['success' => true, 'status' => 200, 'data' => $content]);  
+    }
+
+    public function save_agent_information(Request $request){
+
+      $check = AgentRequest::where('mobile', $request->mobile)->where('email', $request->email)->count();
+      if($check != 0){
+        return response()->json(['success' => false, 'status' => 201, 'message' => 'Email and mobile number is already exist']); 
+      }
+      $check = AgentRequest::where('mobile', $request->mobile)->count();
+      if($check != 0){
+        return response()->json(['success' => false, 'status' => 201, 'message' => 'Mobile number is already exist']); 
+      }
+      $check = AgentRequest::where('email', $request->email)->count();
+      if($check != 0){
+        return response()->json(['success' => false, 'status' => 201, 'message' => 'Email is already exist']); 
+      }
+  
+        $inputs = $request->all();
+        $image = '';
+        if(isset($inputs['education_document']) or !empty($inputs['education_document'])) {
+            $image_name = rand(100000, 999999);
+            $fileName = '';
+            if($file = $request->hasFile('education_document')) {
+                $file = $request->file('education_document');
+                $img_name = $file->getClientOriginalName();
+                $fileName = $image_name.$img_name;
+                $destinationPath = public_path().'/uploads/education_document/';
+                $file->move($destinationPath, $fileName);
+            }
+            $fname ='/uploads/education_document/';
+            $image = $fname.$fileName;
+        }
+        unset($inputs['education_document']);
+        $inputs['education_document'] = $image;
+
+        $image = '';
+        if(isset($inputs['resume']) or !empty($inputs['resume'])) {
+            $image_name = rand(100000, 999999);
+            $fileName = '';
+            if($file = $request->hasFile('resume')) {
+                $file = $request->file('resume');
+                $img_name = $file->getClientOriginalName();
+                $fileName = $image_name.$img_name;
+                $destinationPath = public_path().'/uploads/resume/';
+                $file->move($destinationPath, $fileName);
+            }
+            $fname ='/uploads/resume/';
+            $image = $fname.$fileName;
+        }
+        unset($inputs['resume']);
+        $inputs['resume'] = $image;
+
+        $id = (new AgentRequest)->store($inputs); 
+
+        return response()->json(['success' => true, 'status' => 200, 'message' => 'Your job application has been received successfully.']);
+
+    }
+
+
+
+
+    public function refer_friend(Request $request){
+       
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id', 'name')->first();
+          if($user){
+            $user_id = $user->id;
+            $user_chk = User::where('mobile', $request->mobile)->orWhere('email', $request->email)->first();
+            if($user_chk){
+              return response()->json(['success' => false, 'status' => 201, 'message' => 'Oops, you referred someone who was already registered.']);
+            } else {
+                $inputs = $request->all();
+                $inputs['user_id'] = $user->id;
+                (new Refer)->store($inputs); 
+                $name = $user->name; 
+                $user_code = 1300+$user_id;
+
+                $postdata = http_build_query(
+                    array(
+                        'username' => $request->name,
+                        'email' => $request->email,
+                        'sender_name' => $name,
+                        'user_code' => 'lnxx'.$user_code,
+                    )
+                );
+                        $opts = array('http' =>
+                            array(
+                            'method'  => 'POST',
+                            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                            'content' => $postdata
+                            )
+                        );
+                $context  = stream_context_create($opts);
+                $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/refer-friend', false, $context);
+
+               return response()->json(['success' => true, 'status' => 200, 'message' => 'Invitation sent successfully']);
+            }
+
+
+        }
+      }
+        
     }
 
     public function skipVideo(Request $request){
@@ -221,6 +488,15 @@ class UserController extends Controller
                         $inputs['consent_form'] = $CustomerOnboarding->consent_form;
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['aecb_date'] = $CustomerOnboarding->aecb_date;
+                        
+
+                        $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
+                        $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
+                        $inputs['aecb_image'] = $CustomerOnboarding->aecb_image;
+                        $inputs['wife_name'] = $CustomerOnboarding->wife_name;
+                        $inputs['wedding_anniversary_date'] = $CustomerOnboarding->wedding_anniversary_date;
+
                         $inputs['user_id'] = $user_id;
                         $inputs['salutation'] = $user->salutation;
                         $inputs['name'] = $user->name;
@@ -237,6 +513,29 @@ class UserController extends Controller
                         $inputs['mobile'] = $user->mobile;
                         $inputs['status'] = 0;
                         $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+
+                        $application_data['exist_credit'] = $ProductRequest->exist_credit;
+                        $application_data['exist_personal'] = $ProductRequest->exist_personal;
+                        $application_data['exist_business'] = $ProductRequest->exist_business;
+                        $application_data['exist_mortgage'] = $ProductRequest->exist_mortgage;
+                        $application_data['credit_member_since'] = $ProductRequest->credit_member_since;
+                        $application_data['credit_member_since2']= $ProductRequest->credit_member_since2;
+                        $application_data['credit_member_since3'] =$ProductRequest->credit_member_since3;
+                        $application_data['credit_member_since4'] =$ProductRequest->credit_member_since4;
+                        $application_data['loan_member_since'] = $ProductRequest->loan_member_since;
+                        $application_data['loan_member_since2'] = $ProductRequest->loan_member_since2;
+                        $application_data['loan_member_since3'] = $ProductRequest->loan_member_since3;
+                        $application_data['loan_member_since4'] = $ProductRequest->loan_member_since4;
+                        $application_data['business_member_since'] = $ProductRequest->business_member_since;
+
+                        $application_data['business_member_since2'] = $ProductRequest->business_member_since2;
+                        $application_data['business_member_since3'] = $ProductRequest->business_member_since3;
+                        $application_data['business_member_since4'] = $ProductRequest->business_member_since4;
+                        $application_data['mortgage_member_since'] = $ProductRequest->mortgage_member_since;
+                        $application_data['mortgage_member_since2'] = $ProductRequest->mortgage_member_since2;
+                        $application_data['mortgage_member_since3'] = $ProductRequest->mortgage_member_since3;
+                        $application_data['mortgage_member_since4'] = $ProductRequest->mortgage_member_since4;
+
                         $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
                         $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
                         $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
@@ -307,7 +606,7 @@ class UserController extends Controller
                         $inputs['preference_bank_id'] = $service->bank_id;
                         $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
-                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                        $slide['line'] = "Application Ref. ID #".$a_no. " for ".$service_name->name. "";
                          ServiceApply::where('id', $service->id)->update([
                           'app_no' => $a_no, 
                           'app_status' => 1,
@@ -315,9 +614,19 @@ class UserController extends Controller
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
 
-                        (new ApplicationProductRequest)->store($application_data); 
+                        $app_id = (new ApplicationProductRequest)->store($application_data); 
 
                         $ref_id[] = $slide;
+
+                        $ApplicationDependent['app_id'] = $app_id;
+                        $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
+                        if($dependents){
+                            foreach($dependents as $dependent){    
+                                $ApplicationDependent['name'] = $dependent->name;
+                                $ApplicationDependent['relation'] = $dependent->relation;
+                                (new ApplicationDependent)->store($ApplicationDependent); 
+                            }
+                        }
                     }
                 } 
 
@@ -401,6 +710,14 @@ class UserController extends Controller
                         $inputs['consent_form'] = $CustomerOnboarding->consent_form;
                         $inputs['cm_type'] = $CustomerOnboarding->cm_type;
                         $inputs['credit_score'] = $CustomerOnboarding->credit_score;
+                        $inputs['aecb_date'] = $CustomerOnboarding->aecb_date;
+
+                        $inputs['spouse_date_of_birth'] = $CustomerOnboarding->spouse_date_of_birth;
+                        $inputs['agent_reference'] = $CustomerOnboarding->agent_reference;
+                        $inputs['aecb_image'] = $CustomerOnboarding->aecb_image;
+                        $inputs['wife_name'] = $CustomerOnboarding->wife_name;
+                        $inputs['wedding_anniversary_date'] = $CustomerOnboarding->wedding_anniversary_date;
+
                         $inputs['user_id'] = $user_id;
                         $inputs['salutation'] = $user->salutation;
                         $inputs['name'] = $user->name;
@@ -417,6 +734,29 @@ class UserController extends Controller
                         $inputs['mobile'] = $user->mobile;
                         $inputs['status'] = 0;
                         $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
+
+                        $application_data['exist_credit'] = $ProductRequest->exist_credit;
+                        $application_data['exist_personal'] = $ProductRequest->exist_personal;
+                        $application_data['exist_business'] = $ProductRequest->exist_business;
+                        $application_data['exist_mortgage'] = $ProductRequest->exist_mortgage;
+                        $application_data['credit_member_since'] = $ProductRequest->credit_member_since;
+                        $application_data['credit_member_since2']= $ProductRequest->credit_member_since2;
+                        $application_data['credit_member_since3'] =$ProductRequest->credit_member_since3;
+                        $application_data['credit_member_since4'] =$ProductRequest->credit_member_since4;
+                        $application_data['loan_member_since'] = $ProductRequest->loan_member_since;
+                        $application_data['loan_member_since2'] = $ProductRequest->loan_member_since2;
+                        $application_data['loan_member_since3'] = $ProductRequest->loan_member_since3;
+                        $application_data['loan_member_since4'] = $ProductRequest->loan_member_since4;
+                        $application_data['business_member_since'] = $ProductRequest->business_member_since;
+
+                        $application_data['business_member_since2'] = $ProductRequest->business_member_since2;
+                        $application_data['business_member_since3'] = $ProductRequest->business_member_since3;
+                        $application_data['business_member_since4'] = $ProductRequest->business_member_since4;
+                        $application_data['mortgage_member_since'] = $ProductRequest->mortgage_member_since;
+                        $application_data['mortgage_member_since2'] = $ProductRequest->mortgage_member_since2;
+                        $application_data['mortgage_member_since3'] = $ProductRequest->mortgage_member_since3;
+                        $application_data['mortgage_member_since4'] = $ProductRequest->mortgage_member_since4;
+                        
                         $application_data['credit_card_limit'] = $ProductRequest->credit_card_limit;
                         $application_data['details_of_cards'] = $ProductRequest->details_of_cards;
                         $application_data['credit_bank_name'] = $ProductRequest->credit_bank_name;
@@ -487,7 +827,7 @@ class UserController extends Controller
                         $inputs['preference_bank_id'] = $service->bank_id;
                         $inputs['decide_by'] = $service->decide_by;
                         $service_name = Service::where('id', $service->service_id)->select('name')->first();
-                        $slide['line'] = "Reference Id #".$a_no. " for ".$service_name->name. "";
+                        $slide['line'] = "Application Ref. ID #".$a_no. " for ".$service_name->name. "";
                          ServiceApply::where('id', $service->id)->update([
                           'app_no' => $a_no, 
                           'app_status' => 1,
@@ -495,9 +835,19 @@ class UserController extends Controller
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
 
-                        (new ApplicationProductRequest)->store($application_data); 
+                        $app_id = (new ApplicationProductRequest)->store($application_data); 
 
                         $ref_id[] = $slide;
+
+                        $ApplicationDependent['app_id'] = $app_id;
+                        $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
+                        if($dependents){
+                            foreach($dependents as $dependent){    
+                                $ApplicationDependent['name'] = $dependent->name;
+                                $ApplicationDependent['relation'] = $dependent->relation;
+                                (new ApplicationDependent)->store($ApplicationDependent); 
+                            }
+                        }
                     }
                 } 
 
@@ -561,35 +911,179 @@ class UserController extends Controller
       if($request->api_key){
           $user = User::where('api_key', $request->api_key)->select('id')->first();
           if($user){
-            $data = [];
+          $data = [];
 
-            $service = ServiceApply::where('customer_id', $user->id)->where('service_id', 3)->select('service_id', 'bank_id')->first();
+          $service = ServiceApply::where('customer_id', $user->id)->where('service_id', 3)->select('service_id', 'bank_id')->first();
+
+          $user_id = $user->id;
+          $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
+            
+          $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('cm_type')->first();
+
+          $avg_sal = 0;
+          $total_cred_limit = 0;
+          $cred_five = 0;
+          $emi = 0;
+          $credit_bank = [];
+
+          if($f_details->exist_personal == 1){
+                $emi += $f_details->loan_emi;
+                if($f_details->loan_emi2){
+                    $emi += $f_details->loan_emi2;
+                }
+                if($f_details->loan_emi3){
+                    $emi += $f_details->loan_emi3;
+                }
+                if($f_details->loan_emi4){
+                    $emi += $f_details->loan_emi4;
+                }
+            }
+
+            if($f_details->exist_business == 1){
+                $emi += $f_details->business_loan_emi;
+                if($f_details->business_loan_emi2){
+                    $emi += $f_details->business_loan_emi2;
+                }
+                if($f_details->business_loan_emi3){
+                    $emi += $f_details->business_loan_emi3;
+                }
+                if($f_details->business_loan_emi4){
+                    $emi += $f_details->business_loan_emi4;
+                }
+            }
+
+            if($f_details->exist_mortgage == 1){
+                $emi += $f_details->mortgage_emi;
+                if($f_details->mortgage_emi2){
+                    $emi += $f_details->mortgage_emi2;
+                }
+                if($f_details->mortgage_emi3){
+                    $emi += $f_details->mortgage_emi3;
+                }
+                if($f_details->mortgage_emi4){
+                    $emi += $f_details->mortgage_emi4;
+                }
+            }
+
+            if($f_details->exist_credit == 1){
+                $cred1 = 0;
+                $cred2 = 0;
+                $cred3 = 0;
+                $cred4 = 0;
+                if($f_details->details_of_cards == 'Credit Card'){
+                    $cred1 = $f_details->card_limit;
+                    $credit_bank[] = $f_details->credit_bank_name;
+                }
+                if($f_details->details_of_cards2 == 'Credit Card'){
+                    $cred2 = $f_details->card_limit2;
+                   
+                    $credit_bank[] = $f_details->credit_bank_name2;
+                }
+                if($f_details->details_of_cards3 == 'Credit Card'){
+                    $cred3 = $f_details->card_limit3;
+                    $credit_bank[] = $f_details->credit_bank_name3;
+                }
+                if($f_details->details_of_cards4 == 'Credit Card'){
+                    $cred4 = $f_details->card_limit4;
+                    $credit_bank[] = $f_details->credit_bank_name4;
+                }
+                $total_cred_limit = $cred1+$cred2+$cred3+$cred4;
+                if($total_cred_limit != 0){
+                    $cred_five = $total_cred_limit/100*5;
+                }
+            }
+
+            if($cus_onboard->cm_type == 1){
+                $sal_details = CmSalariedDetail::where('customer_id', $user_id)->select('last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'monthly_salary')->first(); 
+                $no = 0; 
+                $sal1 = 0;
+                $sal2 = 0;
+                $sal3 = 0;
+                if($sal_details->last_one_salary_credits){
+                    $sal1 = $sal_details->last_one_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_two_salary_credits){
+                    $sal2 = $sal_details->last_two_salary_credits;
+                    $no++;
+                }
+                if($sal_details->last_three_salary_credits){
+                    $sal3 = $sal_details->last_three_salary_credits;
+                    $no++;
+                }
+                $total_sal = $sal1 + $sal2 + $sal3;  
+                $avg_sal = $total_sal/$no;
+                if($avg_sal == 0){
+                 $avg_sal = $sal_details->monthly_salary; 
+                }
+            }
+            if($cus_onboard->cm_type == 2){
+                $sal_details = SelfEmpDetail::where('customer_id', $user_id)->select('annual_business_income')->first();
+                $avg_sal = $sal_details->annual_business_income/12;
+            }
+            if($cus_onboard->cm_type == 3){
+                $sal_details = OtherCmDetail::where('customer_id', $user_id)->select('monthly_pension')->first();
+                $avg_sal = $sal_details->monthly_pension;
+            }
 
             if($service){
-         
                 $slide['service_id'] = $service->service_id;
                 $service_name = Service::where('id', $service->service_id)->select('name')->first();
                 $slide['service_name'] = $service_name->name;
                 $bank_data = [];
-                foreach(get_prefer_bank($service->service_id) as $bank){
-                    $bank_slide['bank_id'] = $bank->id;
-                    $bank_slide['bank_name'] = $bank->name;
 
-                    if($service->bank_id == $bank->id){
-                      $bank_slide['selected'] = true;
+                foreach(get_prefer_bank($service->service_id) as $bank){
+                    if($bank->default_show == 1){
+                      $bank_slide['bank_id'] = $bank->id;
+                      $bank_slide['bank_name'] = $bank->name;
+                      $bank_slide['valuable_text'] = $bank->valuable_text;
+                      
+                      $bank_data[] = $bank_slide;
                     } else {
-                      $bank_slide['selected'] = false;
+                      if($avg_sal >= $bank->min_salary && $avg_sal <= $bank->max_salary){
+                        $bank_slide['bank_id'] = $bank->id;
+                        $bank_slide['bank_name'] = $bank->name;
+                        $bank_slide['valuable_text'] = $bank->valuable_text;
+                        $bank_data[] = $bank_slide;
+                      } else {
+                         
+                        if($bank->existing_card == 1){
+                          $show = 0;
+                          foreach(get_existing_bank_card($bank->id) as $bank_card){
+                          if(in_array($bank_card->bank_id, $credit_bank)){
+                            $show = 1;
+                          }
+                        }
+
+                        if($show == 1){
+                          $bank_slide['bank_id'] = $bank->id;
+                          $bank_slide['bank_name'] = $bank->name;
+                          $bank_slide['valuable_text'] = $bank->valuable_text;
+                          $bank_data[] = $bank_slide;
+                        }
+                        } 
+                      }
                     }
-                    $bank_data[] = $bank_slide;
                 }
+
               $slide['bank_data']  = $bank_data;
               $data[] = $slide;  
-        
             }
-
           return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
           }
       }
+    }
+
+    public function personal_loan_bank_list(){
+      $bank_data = []; 
+      foreach(get_prefer_bank_personal_loan(1) as $bank){
+          $bank_slide['bank_id'] = $bank->id;
+          $bank_slide['bank_name'] = $bank->name;          
+          $bank_data[] = $bank_slide;
+      }
+      $slide['bank_data']  = $bank_data;
+      $data[] = $slide; 
+      return response()->json(['success' => true, 'status' => 200, 'data' => $data]); 
     }
 
     public function save_bank_preference(Request $request){
@@ -598,17 +1092,65 @@ class UserController extends Controller
         if($user){
           $user_id = $user->id;
   
-            ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
-              'bank_id' => $request->bank_id,
-              'decide_by' => $request->decide_by,
-            ]);
+            // ServiceApply::where('service_id', 3)->where('app_status', 0)->where('customer_id', $user_id)->update([
+            //   'bank_id' => $request->bank_id,
+            //   'decide_by' => $request->decide_by,
+            // ]);
 
-            return response()->json(['success' => true, 'status' => 200, 'message' => 'Preference successfully updated']);  
-       
+            \DB::table('credit_card_preference_bank')->where('user_id', $user_id)->delete();
+            \DB::table('card_type_preference')->where('user_id', $user_id)->delete();
+
+            if(isset($request->bank_id)){
+                $banks = explode(',', $request->bank_id);
+                foreach($banks as $bank_id){
+                  CreditCardPreferenceBank::create([
+                      'bank_id' => $bank_id,
+                      'user_id' => $user_id,
+                      'loan_limit' => $request->your_limit,
+                  ]);
+                }
+            }
+
+            if(isset($request->card_type)){
+                $card_types = explode(',', $request->card_type);
+                foreach($card_types as $card_type){
+                    CardTypePreference::create([
+                        'type_id' => $card_type,
+                        'user_id' => $user_id,
+                    ]);
+                }
+            }
+            
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Bank preference have been successfully added']);  
         }
       } 
     }
+
+    public function save_personal_loan_bank_preference(Request $request){
+        if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+              $user_id = $user->id;
+              \DB::table('personal_loan_preference_bank')->where('user_id', $user_id)->delete();
+              if(isset($request->bank_id)){
+                  foreach($request->bank_id as $bank_id){
+                      PersonalLoanPreferenceBank::create([
+                          'bank_id'    =>  $bank_id,
+                          'user_id'    =>  $user_id,
+                          'loan_limit' =>  $request->your_limit,
+                          'loan_emi'   =>  $request->your_emi,
+                      ]);
+                  }
+              }
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Personal loan bank preference successfully saved']);
+            }
+        }
+    }
         
+
+
+
+
     public function service_list(Request $request){
       try {
             if($request->api_key){
@@ -828,7 +1370,7 @@ class UserController extends Controller
           $otp = rand(100000, 999999);
           $inputs['mobile_otp'] = $otp;
           $id = (new PreRegister)->store($inputs);
-          $message = "Otp sent successfully";
+          $message = "OTP sent on your mobile number";
           return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id, 'mobile' => $request->mobile]);
         } catch(Exception $e){
         return apiResponse(false, 500, 'error');
@@ -866,7 +1408,7 @@ class UserController extends Controller
 
             $context  = stream_context_create($opts);
             $result = file_get_contents('https://sspl20.com/email-api/api/lnxx/email-otp', false, $context);
-            $message = "Otp sent successfully";
+            $message = "OTP sent on your email id";
             
           return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id, 'email' => $request->email]);
         } catch(Exception $e){
@@ -904,55 +1446,96 @@ class UserController extends Controller
 
     public function profile_image(Request $request){
 
-        $user = User::where('api_key', $request->api_key)->select('id', 'salutation', 'name', 'middle_name', 'last_name', 'email', 'mobile', 'api_key')->first();
-        if($user){
-          $inputs = $request->all();
+      $user = PreRegister::where('id', $request->id)->first();
+      if($user){
+        $inputs = $request->all();
+        $mg = "Account created successfully";
         $user_id = $user->id;
           $profile_image = '';
           if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
-              $image_name = rand(100000, 999999);
-              $fileName = '';
 
-              if($file = $request->hasFile('profile_image')) {
-                $file = $request->file('profile_image') ;
-                $img_name = $file->getClientOriginalName();
-                $image_resize = Image::make($file->getRealPath()); 
-                $image_resize->resize(300, 300);
-                $fileName = $image_name.$img_name;
-                $image_resize->save(public_path('/uploads/user_images/' .$fileName));                 
-              }
-
+              // $image_name = rand(100000, 999999);
+              // $fileName = '';
               // if($file = $request->hasFile('profile_image')) {
-              //     $file = $request->file('profile_image') ;
-              //     $img_name = $file->getClientOriginalName();
-              //     $fileName = $image_name.$img_name;
-              //     $destinationPath = public_path().'/uploads/user_images/' ;
-              //     $file->move($destinationPath, $fileName);
+              //   $file = $request->file('profile_image') ;
+              //   $img_name = $file->getClientOriginalName();
+              //   $image_resize = Image::make($file->getRealPath()); 
+              //   $image_resize->resize(300, 300);
+              //   $fileName = $image_name.$img_name;
+              //   $image_resize->save(public_path('/uploads/user_images/' .$fileName));
+              //   $mg = "Profile image successfully uploaded!";                
               // }
 
-              $fname ='/uploads/user_images/';
-              $profile_image = $fname.$fileName;
+              // $fname ='/uploads/user_images/';
+              // $profile_image = $fname.$fileName;
+
+
+              $image1 = $request->file('profile_image');
+              $originalExtension1 = $image1->getClientOriginalExtension();
+              $image_s1 = Image::make($image1)->orientate();
+              $image_s1->resize(300, null, function ($constraint) {
+              $constraint->aspectRatio();
+              });
+              $filename1 = random_int(9, 999999999) + time() . '.' . $originalExtension1;
+              $image_s1->save(public_path('/uploads/user_images/'.$filename1));
+              $profile_image = '/uploads/user_images/'.$filename1;
           }
+            
+            $api_key = $this->generateApiKey();
 
-          User::where('id', $user_id)
-            ->update([
+            User::create([
+              'salutation' => $user->salutation,
+              'name' => $user->name,
+              'mobile' => $user->mobile,
+              'middle_name' => $user->middle_name,
+              'last_name' => $user->last_name,
+              'email' => $user->email,
+              'api_key' => $api_key,
+              'emirates_id' => $user->emirates_id,
+              'emirates_id_back' => $user->emirates_id_back,
+              'eid_number' =>  $user->eid_number,
+              'eid_status' =>  $user->eid_status,
               'profile_image' => $profile_image,
-          ]); 
-        
+              'user_type' => 2,
+              'status' => 1,
+            ]);
+
+          // User::where('id', $user_id)
+          //   ->update([
+          //     'profile_image' => $profile_image,
+          // ]); 
+        $users = User::where('email', $user->email)->where('mobile', $user->mobile)->first();
         $home = route('get-started');
-        $data['salutation'] = $user->salutation;
-        $data['name'] = $user->name;
-        $data['middle_name'] = $user->middle_name;
-        $data['last_name'] = $user->last_name;
-        $data['email'] = $user->email;
-        $data['mobile'] = $user->mobile;
-        $data['api_key'] = $user->api_key;
-        $data['profile_image'] = $home.$profile_image;
+        $data['salutation'] = $users->salutation;
+        $data['name'] = $users->name;
+        $data['middle_name'] = $users->middle_name;
+        $data['last_name'] = $users->last_name;
+        $data['email'] = $users->email;
+        $data['mobile'] = $users->mobile;
+        $data['api_key'] = $users->api_key;
+        $user_id = 1300+$users->id;
+        $data['user_code'] = 'lnxx'.$user_id;
+        if($profile_image){
+          $data['profile_image'] = $home.$profile_image;
+        } else {
+          $data['profile_image'] = '';
+        }
 
-        return response()->json(['success' => true, 'status' => 200, 'message' => 'Profile image successfully uploaded', 'data' => $data ]);
+        return response()->json(['success' => true, 'status' => 200, 'message' => $mg, 'data' => $data ]);
       }
-
-
+    }
+    
+    public function verify_emirate(Request $request){
+        $user = PreRegister::where('id', $request->id)->select('login_otp')->first();
+        if($request->otp == $user->login_otp){
+            PreRegister::where('id', $request->id)->update(['eid_status' =>  1]);
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']); 
+        } elseif ($request->otp == '652160') {
+              PreRegister::where('id', $request->id)->update(['eid_status' =>  1]);
+              return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate id is successfully verified']); 
+        } else {
+              return response()->json(['success' => false, 'status' => 201, 'message' => 'Invalid OTP try again']); 
+        }
     }
 
     public function emirates_id(Request $request){
@@ -965,14 +1548,6 @@ class UserController extends Controller
       if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
           $image_name = rand(100000, 999999);
           $fileName = '';
-
-          // if($file = $request->hasFile('emirates_id_front')) {
-          //     $file = $request->file('emirates_id_front') ;
-          //     $img_name = $file->getClientOriginalName();
-          //     $fileName = $image_name.$img_name;
-          //     $destinationPath = public_path().'/uploads/emirates_id/' ;
-          //     $file->move($destinationPath, $fileName);
-          // }
 
           if($file = $request->hasFile('emirates_id_front')) {
               $file = $request->file('emirates_id_front') ;
@@ -990,13 +1565,6 @@ class UserController extends Controller
       if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
           $image_name = rand(100000, 999999);
           $fileName = '';
-          // if($file = $request->hasFile('emirates_id_back')) {
-          //     $file = $request->file('emirates_id_back') ;
-          //     $img_name = $file->getClientOriginalName();
-          //     $fileName = $image_name.$img_name;
-          //     $destinationPath = public_path().'/uploads/emirates_id/' ;
-          //     $file->move($destinationPath, $fileName);
-          // }
 
           if($file = $request->hasFile('emirates_id_back')) {
             $file = $request->file('emirates_id_back') ;
@@ -1014,7 +1582,7 @@ class UserController extends Controller
        
       $otp = rand(100000, 999999);
 
-      User::where('id', $user_id)
+      PreRegister::where('id', $request->id)
       ->update([
           'emirates_id' =>  $emirates_id_front,
           'emirates_id_back' =>  $emirates_id_back,
@@ -1022,7 +1590,7 @@ class UserController extends Controller
           'login_otp' => $otp,
       ]);
 
-      return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirates id successfully uploaded']);
+      return response()->json(['success' => true, 'status' => 200, 'message' => 'Emirate ID successfully uploaded!']);
       }
       }
     }
@@ -1034,62 +1602,68 @@ class UserController extends Controller
             $inputs['email_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
+            $message = "OTP Email id is successfully verified";
             
             $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile', 'name', 'middle_name', 'last_name', 'salutation')->first();
 
-            if($PreRegister){
-              $api_key = $this->generateApiKey();
-              $inputs['name'] = $PreRegister->name;
-              $inputs['email'] = $PreRegister->email;
-              $inputs['mobile'] = $PreRegister->mobile;
-              $inputs['salutation'] = $PreRegister->salutation;
-              $inputs['middle_name'] = $PreRegister->middle_name;
-              $inputs['last_name'] = $PreRegister->last_name;
-              $inputs['status'] = 1;
-              $inputs['user_type'] = 2;
-              $inputs['api_key'] = $api_key; 
+          //   if($PreRegister){
+          //     $api_key = $this->generateApiKey();
+          //     $inputs['name'] = $PreRegister->name;
+          //     $inputs['email'] = $PreRegister->email;
+          //     $inputs['mobile'] = $PreRegister->mobile;
+          //     $inputs['salutation'] = $PreRegister->salutation;
+          //     $inputs['middle_name'] = $PreRegister->middle_name;
+          //     $inputs['last_name'] = $PreRegister->last_name;
+          //     $inputs['status'] = 1;
+          //     $inputs['user_type'] = 2;
+          //     $inputs['api_key'] = $api_key; 
               
-              $id = (new User)->store($inputs);
-              $data['name'] = $PreRegister->name;
-              $data['email'] = $PreRegister->email;
-              $data['mobile'] = $PreRegister->mobile;
-              $data['middle_name'] = $PreRegister->middle_name;
-              $data['last_name'] = $PreRegister->last_name;
-              $data['api_key'] = $api_key;
+          //     $id = (new User)->store($inputs);
+          //     $data['name'] = $PreRegister->name;
+          //     $data['email'] = $PreRegister->email;
+          //     $data['mobile'] = $PreRegister->mobile;
+          //     $data['middle_name'] = $PreRegister->middle_name;
+          //     $data['last_name'] = $PreRegister->last_name;
+          //     $data['api_key'] = $api_key;
 
-            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
-          }
+          //   return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
+          // }
+
+          return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+
           } elseif ($request->otp == 652160) {
             $inputs['email_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
-            $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile', 'name', 'last_name', 'middle_name', 'salutation')->first();
+            $message = "Email id is successfully verified";
 
-            if($PreRegister){
-              $api_key = $this->generateApiKey();
-              $inputs['name'] = $PreRegister->name;
-              $inputs['email'] = $PreRegister->email;
-              $inputs['mobile'] = $PreRegister->mobile;
-              $inputs['middle_name'] = $PreRegister->middle_name;
-              $inputs['last_name'] = $PreRegister->last_name;
-              $inputs['salutation'] = $PreRegister->salutation;
-              $inputs['status'] = 1;
-              $inputs['user_type'] = 2;
-              $inputs['api_key'] = $api_key; 
+          //   $PreRegister =  PreRegister::where('id', $request->id)->where('email_status', 1)->where('mobile_status', 1)->select('email', 'mobile', 'name', 'last_name', 'middle_name', 'salutation')->first();
+
+          //   if($PreRegister){
+          //     $api_key = $this->generateApiKey();
+          //     $inputs['name'] = $PreRegister->name;
+          //     $inputs['email'] = $PreRegister->email;
+          //     $inputs['mobile'] = $PreRegister->mobile;
+          //     $inputs['middle_name'] = $PreRegister->middle_name;
+          //     $inputs['last_name'] = $PreRegister->last_name;
+          //     $inputs['salutation'] = $PreRegister->salutation;
+          //     $inputs['status'] = 1;
+          //     $inputs['user_type'] = 2;
+          //     $inputs['api_key'] = $api_key; 
               
-              $id = (new User)->store($inputs);
-              $data['name'] = $PreRegister->name;
-              $data['email'] = $PreRegister->email;
-              $data['mobile'] = $PreRegister->mobile;
-              $data['api_key'] = $api_key;
+          //     $id = (new User)->store($inputs);
+          //     $data['name'] = $PreRegister->name;
+          //     $data['email'] = $PreRegister->email;
+          //     $data['mobile'] = $PreRegister->mobile;
+          //     $data['api_key'] = $api_key;
+          //   return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
+          // }
 
-            return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'user' => $data]);
-          }
+          return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
+
           } else {
             $id = $request->id;
-            $message = "The OTP entered is incorrect.";
+            $message = "Invalid OTP try again";
             return response()->json(['success' => false, 'status' => 201, 'message' => $message, 'id' => $id]);
           }
       } catch(Exception $e){
@@ -1105,19 +1679,19 @@ class UserController extends Controller
             $inputs['mobile_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
+            $message = "Mobile no. is successfully verified";
             return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
           } elseif ($request->otp == 652160) {
             
             $inputs['mobile_status'] = 1; 
             $id = $request->id;
             (new PreRegister)->store($inputs, $id);
-            $message = "OTP verified successfully";
+            $message = "Mobile no. is successfully verified";
             return response()->json(['success' => true, 'status' => 200, 'message' => $message, 'id' => $id]);
 
           } else {
             $id = $request->id;
-            $message = "The OTP entered is incorrect.";
+            $message = "Invalid OTP try again";
             return response()->json(['success' => false, 'status' => 201, 'message' => $message, 'id' => $id]);
           }
         
@@ -1163,10 +1737,19 @@ class UserController extends Controller
                 return response()->json(['success' => true, 'status' => 200, 'message' => 'OTP sent successfully on your registered email', 'id' => $id, 'username' => $username]);
             } else {
                 $username = $request->username;
-                return response()->json(['success' => false, 'status' => 201, 'message' => 'Username not registered with us', 'username' => $username]);
+                
+                if(preg_match('(@)', $username) === 1) {
+                       return response()->json(['success' => false, 'status' => 201, 'message' => 'Entered email id is invalid. Try again!', 'username' => $username]);
+                } else {
+                  return response()->json(['success' => false, 'status' => 201, 'message' => 'Entered mobile number is invalid. Try again!', 'username' => $username]);
+                }
+
+                
+
             }
         }    
     }
+
     
     public function login_otp(Request $request){
     try{
@@ -1194,10 +1777,12 @@ class UserController extends Controller
             $data['profile_image'] = null;
             }
 
+            $user_id = 1300+$user_data->id;
+            $data['user_code'] = 'lnxx'.$user_id;
             $data['api_key'] = $api_key;
            return response()->json(['success' => true, 'status' => 200, 'message' => 'Login successfully', 'user' => $data]);
        } else{
-        $home = route('get-started');
+          $home = route('get-started');
             if($request->otp == 652160){
                $api_key = $this->generateApiKey();
                $user_data = User::where('id', $request->id)->first();
@@ -1220,6 +1805,9 @@ class UserController extends Controller
             } else {
             $data['profile_image'] = null;
             }
+            $user_id = 1300+$user_data->id;
+            $data['user_code'] = 'lnxx'.$user_id;
+
             $data['api_key'] = $api_key;
             return response()->json(['success' => true, 'status' => 200, 'message' => 'Login successfully', 'user' => $data]);
             } else {
@@ -1239,7 +1827,6 @@ class UserController extends Controller
 
                 $api_key = $this->generateApiKey();
                 if($user_data->api_key){
-
                 } else {
                   User::where('email', $request->email)
                   ->update([
@@ -1378,7 +1965,6 @@ class UserController extends Controller
                  ]);
                 }
                 if($user_data->user_type == 4){
-
                   return apiResponse(false, 200, 'You are not allow on APP');
                 } else {
                 $data['name'] = $user_data->name;
@@ -1429,13 +2015,20 @@ class UserController extends Controller
           $user = User::where('api_key', $request->api_key)->select('id', 'gender', 'date_of_birth', 'emirates_id', 'emirates_id_back', 'name', 'last_name', 'middle_name', 'salutation', 'eid_number', 'eid_status')->first();
           if($user) {
               $home = route('get-started');
-              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number')->first();
+              $datas = CustomerOnboarding::where('user_id', $user->id)->select('nationality', 'visa_number', 'marital_status', 'years_in_uae', 'passport_photo', 'reference_number', 'officer_email', 'eid_number', 'no_of_dependents', 'credit_score', 'passport_expiry_date', 'passport_number', 'aecb_date', 'agent_reference', 'aecb_image', 'wife_name', 'wedding_anniversary_date', 'spouse_date_of_birth')->first();
               //dd($data);
               if(isset($datas->passport_photo)){
                 $data['passport_photo'] = $home.$datas->passport_photo;
               } else {
                 $data['passport_photo'] = null;
               }
+
+              if(isset($datas->aecb_image)){
+                $data['aecb_image'] = $home.$datas->aecb_image;
+              } else {
+                $data['aecb_image'] = null;
+              }
+              
               if($user->emirates_id){
                 $data['emirates_id_front'] = $home.$user->emirates_id;
               } else {
@@ -1446,15 +2039,20 @@ class UserController extends Controller
               } else {
                 $data['emirates_id_back'] = null;
               }
-              if($datas->passport_expiry_date){
+              if(isset($datas->passport_expiry_date)){
                 $data['passport_expiry_date'] = $datas->passport_expiry_date;
               } else {
                 $data['passport_expiry_date'] = null;
               }
-              if($datas->passport_number){
+              if(isset($datas->passport_number)){
                 $data['passport_number'] = $datas->passport_number;
               } else {
                 $data['passport_number'] = null;
+              }
+              if(isset($datas->aecb_date)){
+                $data['aecb_date'] = $datas->aecb_date;
+              } else {
+                $data['aecb_date'] = null;
               }
 
               $data['gender'] = $user->gender;
@@ -1494,10 +2092,30 @@ class UserController extends Controller
               } else {
                 $data['marital_status'] = null;
               }
+              if(isset($datas->wife_name)){
+                $data['wife_name'] = $datas->wife_name;
+              } else {
+                $data['wife_name'] = null;
+              }
+              if(isset($datas->wedding_anniversary_date)){
+                $data['wedding_anniversary_date'] = $datas->wedding_anniversary_date;
+              } else {
+                $data['wedding_anniversary_date'] = null;
+              }
+              if(isset($datas->spouse_date_of_birth)){
+                $data['spouse_date_of_birth'] = $datas->spouse_date_of_birth;
+              } else {
+                $data['spouse_date_of_birth'] = null;
+              }
               if(isset($datas->years_in_uae)){
                 $data['years_in_uae'] = $datas->years_in_uae;
               } else {
                 $data['years_in_uae'] = null;
+              }
+              if(isset($datas->agent_reference)){
+                $data['agent_reference'] = $datas->agent_reference;
+              } else {
+                $data['agent_reference'] = null;
               }
               if(isset($datas->reference_number)){
                 $data['reference_number'] = $datas->reference_number;
@@ -1531,11 +2149,14 @@ class UserController extends Controller
                 $data['visa_number'] = null;
               }
 
+              $dependents = Dependent::where('user_id', $user->id)->select('name', 'relation')->get();
+              $data['dependents'] = $dependents;
+
               return apiResponseApp(true, 200, null, null, $data);
           }
         }
       } catch(\Exception $e){
-        // dd($e);
+         //dd($e);
           return back();
         }
     }
@@ -1561,14 +2182,71 @@ class UserController extends Controller
               $inputs['customer_id'] = $user->id;
               if($cm_type->cm_type == 1){
                 
-                  $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id')->first();
+                  $cm_sal = CmSalariedDetail::where('customer_id', $user_id)->select('id', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
+
+                  if(isset($inputs['last_one_salary_file']) or !empty($inputs['last_one_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_one_salary_file')) {
+                                $file = $request->file('last_one_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_one_salary_file;
+                        }  
+                        unset($inputs['last_one_salary_file']);
+                        $inputs['last_one_salary_file'] = $image;
+
+                        if(isset($inputs['last_two_salary_file']) or !empty($inputs['last_two_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_two_salary_file')) {
+                                $file = $request->file('last_two_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_two_salary_file;
+                        }  
+                        unset($inputs['last_two_salary_file']);
+                        $inputs['last_two_salary_file'] = $image;
+
+
+                        if(isset($inputs['last_three_salary_file']) or !empty($inputs['last_three_salary_file'])) {
+                            $image_name = rand(100000, 999999);
+                            $fileName = '';
+                            if($file = $request->hasFile('last_three_salary_file')) {
+                                $file = $request->file('last_three_salary_file');
+                                $img_name = $file->getClientOriginalName();
+                                $fileName = $image_name.$img_name;
+                                $destinationPath = public_path().'/uploads/salary_slip/';
+                                $file->move($destinationPath, $fileName);
+                            }
+                            $fname ='/uploads/salary_slip/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$cm_sal->last_three_salary_file;
+                        }  
+                        unset($inputs['last_three_salary_file']);
+                        $inputs['last_three_salary_file'] = $image;
+
+
                   if($cm_sal){
                     $id = $cm_sal->id;
                     (new CmSalariedDetail)->store($inputs, $id);
-                    return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully updated']);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Employment details have been successfully added']);
                   } else {
                     (new CmSalariedDetail)->store($inputs); 
-                    return response()->json(['success' => true, 'status' => 200, 'message' => 'CM Details successfully Saved']);
+                    return response()->json(['success' => true, 'status' => 200, 'message' => 'Employment details have been successfully added']);
                   }      
               } elseif ($cm_type->cm_type == 2) {
                 
@@ -1616,11 +2294,31 @@ class UserController extends Controller
           } else {
             $data['credit_card_limit'] = null;
           }
-          
+          if($datas->exist_credit){
+            $data['exist_credit'] = $datas->exist_credit;
+          } else {
+            $data['exist_credit'] = null;
+          }
           if($datas->loan_amount){
             $data['loan_amount'] = $datas->loan_amount;
           } else {
             $data['loan_amount'] = null;
+          }
+          if($datas->exist_personal){
+            $data['exist_personal'] = $datas->exist_personal;
+          } else {
+            $data['exist_personal'] = null;
+          }
+          if($datas->exist_business){
+            $data['exist_business'] = $datas->exist_business;
+          } else {
+            $data['exist_business'] = null;
+          }
+
+          if($datas->exist_mortgage){
+            $data['exist_mortgage'] = $datas->exist_mortgage;
+          } else {
+            $data['exist_mortgage'] = null;
           }
 
           $credit_card_existing_financials  = [];
@@ -1637,6 +2335,7 @@ class UserController extends Controller
                 'end_use_of_property' => $datas->end_use_of_property,
                 'interest_rate' => $datas->interest_rate,
                 'mortgage_emi' => $datas->mortgage_emi,
+                'mortgage_member_since' => $datas->mortgage_member_since,
               );
           }
           if($datas->mortgage_loan_amount2) {
@@ -1649,6 +2348,7 @@ class UserController extends Controller
                 'end_use_of_property' => $datas->end_use_of_property2,
                 'interest_rate' => $datas->interest_rate2,
                 'mortgage_emi' => $datas->mortgage_emi2,
+                'mortgage_member_since' => $datas->mortgage_member_since2,
               );
           }
           if($datas->mortgage_loan_amount3) {
@@ -1661,6 +2361,7 @@ class UserController extends Controller
                 'end_use_of_property' => $datas->end_use_of_property3,
                 'interest_rate' => $datas->interest_rate3,
                 'mortgage_emi' => $datas->mortgage_emi3,
+                'mortgage_member_since' => $datas->mortgage_member_since3,
               );
           }
           if($datas->mortgage_loan_amount4) {
@@ -1673,6 +2374,7 @@ class UserController extends Controller
                 'end_use_of_property' => $datas->end_use_of_property4,
                 'interest_rate' => $datas->interest_rate4,
                 'mortgage_emi' => $datas->mortgage_emi4,
+                'mortgage_member_since' => $datas->mortgage_member_since4,
               );
           }
 
@@ -1682,6 +2384,7 @@ class UserController extends Controller
                 'loan_bank_name' => $datas->loan_bank_name,
                 'original_loan_amount' => $datas->original_loan_amount,
                 'loan_emi' => $datas->loan_emi,
+                'loan_member_since' => $datas->loan_member_since,
               );
           }
           if($datas->loan_bank_name2) {
@@ -1690,6 +2393,7 @@ class UserController extends Controller
                 'loan_bank_name' => $datas->loan_bank_nam2,
                 'original_loan_amount' => $datas->original_loan_amount2,
                 'loan_emi' => $datas->loan_emi2,
+                'loan_member_since' => $datas->loan_member_since2,
               );
           }
           if($datas->loan_bank_nam3) {
@@ -1698,6 +2402,7 @@ class UserController extends Controller
                 'loan_bank_name' => $datas->loan_bank_nam3,
                 'original_loan_amount' => $datas->original_loan_amount3,
                 'loan_emi' => $datas->loan_emi3,
+                'loan_member_since' => $datas->loan_member_since3,
               );
           }
           if($datas->loan_bank_name4) {
@@ -1706,6 +2411,7 @@ class UserController extends Controller
                 'loan_bank_name' => $datas->loan_bank_name4,
                 'original_loan_amount' => $datas->original_loan_amount4,
                 'loan_emi' => $datas->loan_emi4,
+                'loan_member_since' => $datas->loan_member_since4,
               );
           }
 
@@ -1715,6 +2421,7 @@ class UserController extends Controller
                 'details_of_cards' => $datas->details_of_cards,
                 'credit_bank_name' => $datas->credit_bank_name,
                 'card_limit' => $datas->card_limit,
+                'credit_member_since' => $datas->credit_member_since,
               );
           }
           if($datas->details_of_cards2) {
@@ -1723,6 +2430,7 @@ class UserController extends Controller
                 'details_of_cards' => $datas->details_of_cards2,
                 'credit_bank_name' => $datas->credit_bank_name2,
                 'card_limit' => $datas->card_limit2,
+                'credit_member_since' => $datas->credit_member_since2,
               );
           }
           if($datas->details_of_cards3) {
@@ -1731,6 +2439,7 @@ class UserController extends Controller
                 'details_of_cards' => $datas->details_of_cards3,
                 'credit_bank_name' => $datas->credit_bank_name3,
                 'card_limit' => $datas->card_limit3,
+                'credit_member_since' => $datas->credit_member_since3,
               );
           }
           if($datas->details_of_cards4) {
@@ -1739,6 +2448,7 @@ class UserController extends Controller
                 'details_of_cards' => $datas->details_of_cards4,
                 'credit_bank_name' => $datas->credit_bank_name4,
                 'card_limit' => $datas->card_limit4,
+                'credit_member_since' => $datas->credit_member_since4,
               );
           }
 
@@ -1749,6 +2459,7 @@ class UserController extends Controller
               array(
                 'business_loan_amount' => $datas->business_loan_amount,
                 'business_loan_emi' => $datas->business_loan_emi,
+                'business_member_since' => $datas->business_member_since,
               );
           }
           if($datas->business_loan_amount2) {
@@ -1756,6 +2467,7 @@ class UserController extends Controller
               array(
                 'business_loan_amount' => $datas->business_loan_amount2,
                 'business_loan_emi' => $datas->business_loan_emi2,
+                'business_member_since' => $datas->business_member_since2,
               );
           }
           if($datas->business_loan_amount3) {
@@ -1763,6 +2475,7 @@ class UserController extends Controller
               array(
                 'business_loan_amount' => $datas->business_loan_amount3,
                 'business_loan_emi' => $datas->business_loan_emi3,
+                'business_member_since' => $datas->business_member_since3,
               );
           }
           if($datas->business_loan_amount4) {
@@ -1770,6 +2483,7 @@ class UserController extends Controller
               array(
                 'business_loan_amount' => $datas->business_loan_amount4,
                 'business_loan_emi' => $datas->business_loan_emi4,
+                'business_member_since' => $datas->business_member_since4,
               );
           }
 
@@ -1796,42 +2510,87 @@ class UserController extends Controller
             if(isset($request->credit_card_limit)){
               $credit_card_limit = $request->credit_card_limit;
             }
+            $exist_credit = 0;
+            if(isset($request->exist_credit)){
+              $exist_credit = $request->exist_credit;
+            }
+
             $details_of_cards = '';
             $credit_bank_name = '';
             $card_limit = '';
+            $credit_member_since = '';
+            
             $details_of_cards2 = '';
             $credit_bank_name2 = '';
             $card_limit2 = '';
+            $credit_member_since2 = '';
+
             $details_of_cards3 = '';
             $credit_bank_name3 = '';
             $card_limit3 = '';
+            $credit_member_since3 = '';
+
             $details_of_cards4 = '';
             $credit_bank_name4 = '';
             $card_limit4 = '';
+            $credit_member_since4 = '';
+
             $loan_amount = '';
             if(isset($request->loan_amount)){
               $loan_amount = $request->loan_amount;
             }
+
+            $exist_personal = 0;
+            if(isset($request->exist_personal)){
+              $exist_personal = $request->exist_personal;
+            }
+
             $loan_bank_name = '';
             $original_loan_amount = '';
             $loan_emi = '';
+            $loan_member_since = '';
+
             $loan_bank_name2 = '';
             $original_loan_amount2 = '';
             $loan_emi2 = '';
+            $loan_member_since2 = '';
+
             $loan_bank_name3 = '';
             $original_loan_amount3 = '';
             $loan_emi3 = '';
+            $loan_member_since3 = '';
+
             $loan_bank_name4 = '';
             $original_loan_amount4 = '';
             $loan_emi4 = '';
+            $loan_member_since4 = '';
+
+            $exist_business = 0;
+            if(isset($request->exist_business)){
+              $exist_business = $request->exist_business;
+            }
+
             $business_loan_amount = '';
             $business_loan_emi = '';
+            $business_member_since = '';
+
             $business_loan_amount2 = '';
             $business_loan_emi2 = '';
+            $business_member_since2 = '';
+
             $business_loan_amount3 = '';
             $business_loan_emi3 = '';
+            $business_member_since3 = '';
+
             $business_loan_amount4 = '';
             $business_loan_emi4 = '';
+            $business_member_since4 = '';
+
+
+            $exist_mortgage = 0;
+            if(isset($request->exist_mortgage)){
+              $exist_mortgage = $request->exist_mortgage;
+            }
 
             $mortgage_loan_amount = '';
             $purchase_price = '';
@@ -1840,6 +2599,7 @@ class UserController extends Controller
             $end_use_of_property = '';
             $interest_rate = '';
             $mortgage_emi = '';
+            $mortgage_member_since = '';
 
             $mortgage_loan_amount2 = '';
             $purchase_price2 = '';
@@ -1848,6 +2608,7 @@ class UserController extends Controller
             $end_use_of_property2 = '';
             $interest_rate2 = '';
             $mortgage_emi2 = '';
+            $mortgage_member_since2 = '';
 
             $mortgage_loan_amount3 = '';
             $purchase_price3 = '';
@@ -1856,6 +2617,8 @@ class UserController extends Controller
             $end_use_of_property3 = '';
             $interest_rate3 = '';
             $mortgage_emi3 = '';
+            $mortgage_member_since3 = '';
+
             $mortgage_loan_amount4 = '';
             $purchase_price4 = '';
             $type_of_loan4 = '';
@@ -1863,6 +2626,7 @@ class UserController extends Controller
             $end_use_of_property4 = '';
             $interest_rate4 = '';
             $mortgage_emi4 = '';
+            $mortgage_member_since4 = '';
             // $inputs = $request->all();
             $user_id = $user->id;
             // $inputs['user_id'] = $user_id;
@@ -1870,23 +2634,28 @@ class UserController extends Controller
             if($request->details_of_cards){
               $i = 1;
               $bus_data = json_decode($request->details_of_cards);
+
               foreach($bus_data as $key => $details_of_card) {
                   if($i == 1){
                     $details_of_cards = $details_of_card->details_of_cards;
                     $credit_bank_name = $details_of_card->credit_bank_name;
                     $card_limit = $details_of_card->card_limit;
+                    $credit_member_since = $details_of_card->credit_member_since;
                   } elseif ($i == 2) {
                     $details_of_cards2 = $details_of_card->details_of_cards;
                     $credit_bank_name2 = $details_of_card->credit_bank_name;
                     $card_limit2 = $details_of_card->card_limit;
+                    $credit_member_since2 = $details_of_card->credit_member_since;
                   } elseif ($i == 3) {
                     $details_of_cards3 = $details_of_card->details_of_cards;
                     $credit_bank_name3 = $details_of_card->credit_bank_name;
                     $card_limit3 = $details_of_card->card_limit;
+                    $credit_member_since3 = $details_of_card->credit_member_since;
                   } else {
                     $details_of_cards4 = $details_of_card->details_of_cards;
                     $credit_bank_name4 = $details_of_card->credit_bank_name;
                     $card_limit4 = $details_of_card->card_limit;
+                    $credit_member_since4 = $details_of_card->credit_member_since;
                   }
                 $i++;
               } 
@@ -1900,18 +2669,22 @@ class UserController extends Controller
                     $loan_bank_name = $loan_bank_nam->loan_bank_name;
                     $original_loan_amount = $loan_bank_nam->original_loan_amount;
                     $loan_emi = $loan_bank_nam->loan_emi;
+                    $loan_member_since = $loan_bank_nam->loan_member_since;
                   } elseif ($i == 2) {
                     $loan_bank_name2 = $loan_bank_nam->loan_bank_name;
                     $original_loan_amount2 = $loan_bank_nam->original_loan_amount;
                     $loan_emi2 = $loan_bank_nam->loan_emi;
+                    $loan_member_since2 = $loan_bank_nam->loan_member_since;
                   } elseif ($i == 3) {
                     $loan_bank_name3 = $loan_bank_nam->loan_bank_name;
                     $original_loan_amount3 = $loan_bank_nam->original_loan_amount;
                     $loan_emi3 = $loan_bank_nam->loan_emi;
+                    $loan_member_since3 = $loan_bank_nam->loan_member_since;
                   } else {
                     $loan_bank_name4 = $loan_bank_nam->loan_bank_name; 
                     $original_loan_amount4 = $loan_bank_nam->original_loan_amount;
                     $loan_emi4 = $loan_bank_nam->loan_emi;
+                    $loan_member_since4 = $loan_bank_nam->loan_member_since;
                   }
                 $i++;
               }
@@ -1926,15 +2699,19 @@ class UserController extends Controller
                   if($i == 1){
                     $business_loan_amount = $businessLoan->business_loan_amount;
                     $business_loan_emi = $businessLoan->business_loan_emi; 
+                    $business_member_since = $businessLoan->business_member_since; 
                   } elseif ($i == 2) {
                     $business_loan_amount2 = $businessLoan->business_loan_amount;
                     $business_loan_emi2 = $businessLoan->business_loan_emi; 
+                    $business_member_since2 = $businessLoan->business_member_since;
                   } elseif ($i == 3) {
                     $business_loan_amount3 = $businessLoan->business_loan_amount;
                     $business_loan_emi3 = $businessLoan->business_loan_emi; 
+                    $business_member_since3 = $businessLoan->business_member_since;
                   } else {
                     $business_loan_amount4 = $businessLoan->business_loan_amount; 
                     $business_loan_emi4 = $businessLoan->business_loan_emi; 
+                    $business_member_since4 = $businessLoan->business_member_since;
                   }
                 $i++;
               }
@@ -1952,6 +2729,7 @@ class UserController extends Controller
                   $end_use_of_property = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate = $mortgage_loan_amoun->interest_rate;
                   $mortgage_emi = $mortgage_loan_amoun->mortgage_emi;
+                  $mortgage_member_since = $mortgage_loan_amoun->mortgage_member_since;
                 } elseif ($i == 2) {
                   $mortgage_loan_amount2 = $mortgage_loan_amoun->mortgage_loan_amount;
                   $purchase_price2 = $mortgage_loan_amoun->purchase_price;
@@ -1960,6 +2738,7 @@ class UserController extends Controller
                   $end_use_of_property2 = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate2 = $mortgage_loan_amoun->interest_rate;
                   $mortgage_emi2 = $mortgage_loan_amoun->mortgage_emi;
+                  $mortgage_member_since2 = $mortgage_loan_amoun->mortgage_member_since;
                 } elseif ($i == 3) {
                   $mortgage_loan_amount3 = $mortgage_loan_amoun->mortgage_loan_amount;
                   $purchase_price3 = $mortgage_loan_amoun->purchase_price;
@@ -1968,6 +2747,7 @@ class UserController extends Controller
                   $end_use_of_property3 = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate3 = $mortgage_loan_amoun->interest_rate;
                   $mortgage_emi3 = $mortgage_loan_amoun->mortgage_emi;
+                  $mortgage_member_since3 = $mortgage_loan_amoun->mortgage_member_since;
                 } else {
                   $mortgage_loan_amount4 = $mortgage_loan_amoun->mortgage_loan_amount;
                   $purchase_price4 = $mortgage_loan_amoun->purchase_price;
@@ -1976,6 +2756,7 @@ class UserController extends Controller
                   $end_use_of_property4 = $mortgage_loan_amoun->end_use_of_property;
                   $interest_rate4 = $mortgage_loan_amoun->interest_rate; 
                   $mortgage_emi4 = $mortgage_loan_amoun->mortgage_emi; 
+                  $mortgage_member_since4 = $mortgage_loan_amoun->mortgage_member_since;
                 }
               $i++;
             }
@@ -1983,10 +2764,35 @@ class UserController extends Controller
            
 
             $inputs['credit_card_limit'] =  $credit_card_limit;
+            $inputs['exist_credit'] = $exist_credit;
             $inputs['user_id'] = $user_id;
-            $inputs['details_of_cards'] =  $details_of_cards;
+            $inputs['details_of_cards'] = $details_of_cards;
             $inputs['credit_bank_name'] = $credit_bank_name;
             $inputs['card_limit'] =  $card_limit;
+            
+            $inputs['credit_member_since'] =  $credit_member_since;
+            $inputs['credit_member_since2'] =  $credit_member_since2;
+            $inputs['credit_member_since3'] =  $credit_member_since3;
+            $inputs['credit_member_since4'] =  $credit_member_since4;
+
+            $inputs['exist_personal'] = $exist_personal;
+            $inputs['loan_member_since'] =  $loan_member_since;
+            $inputs['loan_member_since2'] =  $loan_member_since2;
+            $inputs['loan_member_since3'] =  $loan_member_since3;
+            $inputs['loan_member_since4'] =  $loan_member_since4;
+
+            $inputs['exist_business'] = $exist_business;
+            $inputs['business_member_since'] =  $business_member_since;
+            $inputs['business_member_since2'] =  $business_member_since2;
+            $inputs['business_member_since3'] =  $business_member_since3;
+            $inputs['business_member_since4'] =  $business_member_since4;
+            
+            $inputs['exist_mortgage'] = $exist_mortgage;
+            $inputs['mortgage_member_since'] =  $mortgage_member_since;
+            $inputs['mortgage_member_since2'] =  $mortgage_member_since2;
+            $inputs['mortgage_member_since3'] =  $mortgage_member_since3;
+            $inputs['mortgage_member_since4'] =  $mortgage_member_since4;
+
             $inputs['details_of_cards2'] = $details_of_cards2;
             $inputs['credit_bank_name2'] =  $credit_bank_name2;
             $inputs['card_limit2'] = $card_limit2;
@@ -2058,14 +2864,14 @@ class UserController extends Controller
             $ser = 1300;
             $ref_id = $ser.$result->id;
             CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
-            return response()->json(['success' => true, 'status' => 200, 'message' => 'Product request details successfully updated', 'ref_id' => $ref_id]);
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Product details have been successfully added', 'ref_id' => $ref_id]);
             } else {
                 (new ProductRequest)->store($inputs); 
                 $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
                 $ser = 1300;
                 $ref_id = $ser.$result->id;
                 CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id,]);
-                return response()->json(['success' => true, 'status' => 200, 'message' => 'Product request details successfully saved', 'ref_id' => $ref_id]);
+                return response()->json(['success' => true, 'status' => 200, 'message' => 'Product details have been successfully added', 'ref_id' => $ref_id]);
             }
         }
       }
@@ -2090,7 +2896,9 @@ class UserController extends Controller
               if($cm_type){
                 $data = '';
                 if($cm_type->cm_type == 1){
-                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits')->first();
+                  $data = CmSalariedDetail::where('customer_id', $user->id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
+
+                  $url = route('get-started');
                   
                   if(isset($data->company_name)){
                     $data['company_name'] = $data->company_name;
@@ -2112,17 +2920,36 @@ class UserController extends Controller
                   } else {
                     $data['last_three_salary_credits'] = null;
                   }
+                  if(isset($data->last_three_salary_file)){
+                    $data['last_three_salary_file'] = $url.$data->last_three_salary_file;
+                  } else {
+                    $data['last_three_salary_file'] = null;
+                  }
                   if(isset($data->last_two_salary_credits)){
                     $data['last_two_salary_credits'] = $data->last_two_salary_credits;
                   } else {
                     $data['last_two_salary_credits'] = null;
+                  }
+                  if(isset($data->last_two_salary_file)){
+                    $data['last_two_salary_file'] = $url.$data->last_two_salary_file;
+                  } else {
+                    $data['last_two_salary_file'] = null;
                   }
                   if(isset($data->last_one_salary_credits)){
                     $data['last_one_salary_credits'] = $data->last_one_salary_credits;
                   } else {
                     $data['last_one_salary_credits'] = null;
                   }
-
+                  if(isset($data->last_one_salary_file)){
+                    $data['last_one_salary_file'] = $url.$data->last_one_salary_file;
+                  } else {
+                    $data['last_one_salary_file'] = null;
+                  }
+                  if(isset($data->accommodation_company)){
+                    $data['accommodation_company'] = $data->accommodation_company;
+                  } else {
+                    $data['accommodation_company'] = null;
+                  }
 
                 } elseif ($cm_type->cm_type == 2) {
                     $data = SelfEmpDetail::where('customer_id', $user->id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income')->first();
@@ -2181,7 +3008,7 @@ class UserController extends Controller
               $inputs = $request->all(); 
               $inputs['user_id'] = $user_id;
 
-              $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo')->first();
+              $cm_details = CustomerOnboarding::where('user_id', $user_id)->select('id', 'cm_type', 'passport_photo', 'aecb_image')->first();
 
               $user = User::where('id', $user_id)->select('emirates_id', 'emirates_id_back')->first();
 
@@ -2189,11 +3016,11 @@ class UserController extends Controller
                     $image_name = rand(100000, 999999);
                     $fileName = '';
                     // if($file = $request->hasFile('emirates_id_front')) {
-                    //     $file = $request->file('emirates_id_front') ;
-                    //     $img_name = $file->getClientOriginalName();
-                    //     $fileName = $image_name.$img_name;
-                    //     $destinationPath = public_path().'/uploads/emirates_id/' ;
-                    //     $file->move($destinationPath, $fileName);
+                    // $file = $request->file('emirates_id_front') ;
+                    // $img_name = $file->getClientOriginalName();
+                    // $fileName = $image_name.$img_name;
+                    // $destinationPath = public_path().'/uploads/emirates_id/' ;
+                    // $file->move($destinationPath, $fileName);
                     // }
 
                     if($file = $request->hasFile('emirates_id_front')) {
@@ -2204,7 +3031,6 @@ class UserController extends Controller
                       $fileName = $image_name.$img_name;
                       $image_resize->save(public_path('/uploads/emirates_id/' .$fileName));                 
                     }
-
 
                     $fname ='/uploads/emirates_id/';
                     $emirates_id_front = $fname.$fileName;
@@ -2271,10 +3097,8 @@ class UserController extends Controller
                         $image_resize = Image::make($file->getRealPath()); 
                         $image_resize->resize(600, 600);
                         $fileName = $image_name.$img_name;
-                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));               
+                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));      
                     }
-
-
 
                     $fname ='/uploads/passport_images/';
                     $passport_photo = $fname.$fileName;
@@ -2284,15 +3108,72 @@ class UserController extends Controller
                 unset($inputs['passport_photo']);
                 $inputs['passport_photo'] = $passport_photo;
 
+                
+                if(isset($inputs['aecb_image']) or !empty($inputs['aecb_image'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('aecb_image')) {
+                        $file = $request->file('aecb_image') ;
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/aecb_image/' ;
+                        $file->move($destinationPath, $fileName);
+                    }
+                        $fname ='/uploads/aecb_image/';
+                        $image = $fname.$fileName;
+                } else{
+                    $image = @$cm_details->aecb_image;
+                }
+                unset($inputs['aecb_image']);
+                $inputs['aecb_image'] = $image;
+
+
+
               if($cm_details){
                   $id = $cm_details->id;
                   (new CustomerOnboarding)->store($inputs, $id); 
-                  $message = "Basic information details successfully updated";
+
+                  \DB::table('dependents')->where('user_id', $user_id)->delete();
+                  if($request->no_of_dependents != 0){
+                      $ik = 0;
+                      if(isset($request->dependents)){
+                      $bus_data = json_decode($request->dependents);  
+                      foreach ($bus_data as $key => $dependents) {
+                            $ik++;
+                            if($ik <= $request->no_of_dependents)
+                            if($dependents){
+                                Dependent::create([
+                                    'user_id' => $user_id,
+                                    'name' => $dependents->dependent_name,
+                                    'relation' => $dependents->dependent_relation,
+                                ]);
+                            } 
+                          }
+                      }
+                  }
+
+                  $message = "Your personal details have been successfully added";
                   return apiResponseAppmsg(true, 200, $message, null, null);
 
               } else {
                   (new CustomerOnboarding)->store($inputs); 
-                  $message = "Basic information details successfully created";
+                  if($request->no_of_dependents != 0){
+                        $ik = 0;
+                        if(isset($request->dependent_name)){
+                        $bus_data = json_decode($request->dependents);    
+                        foreach ($bus_data as $key => $dependents) {
+                            $ik++;
+                            if($ik <= $request->no_of_dependents)
+                            Dependent::create([
+                                'user_id' => $user_id,
+                                'name' => $dependents->dependent_name,
+                                'relation' => $dependents->dependent_relation,
+                            ]);
+                        }
+                      }
+                  }
+
+                  $message = "Your personal details have been successfully added";
                   return apiResponseAppmsg(true, 200, $message, null, null);
               }
 
@@ -2331,48 +3212,59 @@ class UserController extends Controller
           if($request->api_key){
            $user = User::where('api_key', $request->api_key)->select('id', 'profile_image')->first();
           if($user) {  
-
             $inputs = $request->all();
+            if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
 
-            if(isset($inputs['user_image']) or !empty($inputs['user_image']))
-            {
+                // $image_name = rand(100000, 999999);
+                // $fileName = '';
 
-                $image_name = rand(100000, 999999);
-                $fileName = '';
+                // if($file = $request->hasFile('user_image')) 
+                // {
+                //     $file = $request->file('user_image') ;
+                //     $img_name = $file->getClientOriginalName();
+                //     $fileName = $image_name.$img_name;
+                //     $destinationPath = public_path().'/uploads/user_images/' ;
+                //     $file->move($destinationPath, $fileName);
+                // }
+                // $fname ='/uploads/user_images/';
+                // $profile_images = $fname.$fileName;
 
-                if($file = $request->hasFile('user_image')) 
-                {
-                    $file = $request->file('user_image') ;
-                    $img_name = $file->getClientOriginalName();
-                    $fileName = $image_name.$img_name;
-                    $destinationPath = public_path().'/uploads/user_images/' ;
-                    $file->move($destinationPath, $fileName);
-                }
-                $fname ='/uploads/user_images/';
-                $profile_images = $fname.$fileName;
+              $image1 = $request->file('profile_image');
+              $originalExtension1 = $image1->getClientOriginalExtension();
+              $image_s1 = Image::make($image1)->orientate();
+              $image_s1->resize(300, null, function ($constraint) {
+              $constraint->aspectRatio();
+              });
+              $filename1 = random_int(9, 999999999) + time() . '.' . $originalExtension1;
+              $image_s1->save(public_path('/uploads/user_images/'.$filename1));
+              $profile_images = '/uploads/user_images/'.$filename1;
        
-
             } else {
                 $profile_images = $user->profile_image;
             }
 
+             unset($inputs['profile_image']);
 
-            $inputs = $inputs + [ 'updated_by' => $user->id,  'profile_image' => $profile_images,];
+            $inputs = $inputs + [ 'updated_by' => $user->id, 'profile_image' => $profile_images,];
 
             (new User)->store($inputs, $user->id);
             $url = route('get-started'); 
             
-             $u_data = User::where('id', $user->id)->select('id', 'name', 'email', 'gender', 'mobile', 'profile_image', 'date_of_birth')->first();
+             $u_data = User::where('id', $user->id)->select('id', 'salutation', 'name', 'middle_name', 
+              'last_name', 'email', 'gender', 'mobile', 'profile_image', 'date_of_birth')->first();
 
-             $data['id'] = $u_data->id;
-             $data['name'] = $u_data->name;
-             $data['email'] = $u_data->email;
-             $data['mobile'] = $u_data->mobile;
-             $data['date_of_birth'] = $u_data->date_of_birth;
-             if($u_data->profile_image){
+              $data['id'] = $u_data->id;
+              $data['salutation'] = $u_data->salutation;
+              $data['name'] = $u_data->name;
+              $data['middle_name'] = $u_data->middle_name;
+              $data['last_name'] = $u_data->last_name;
+              $data['email'] = $u_data->email;
+              $data['mobile'] = $u_data->mobile;
+              $data['date_of_birth'] = $u_data->date_of_birth;
+              if($u_data->profile_image){
                   $data['profile_image'] = $url.$u_data->profile_image;
                 } else {
-                  $data['profile_image'] =$u_data->profile_image;
+                  $data['profile_image'] = $u_data->profile_image;
               }
              $data['gender'] = $u_data->gender;
 
@@ -2401,12 +3293,12 @@ class UserController extends Controller
             $token_exist = UserDevice::where('device_token', $inputs['device_token'])->first();
             if (isset($token_exist)) {
                 (new UserDevice)->store($inputs, $token_exist['id']);
-            }else{
+            } else{
                 (new UserDevice)->store($inputs);
             }
             return apiResponse(true, 200, lang('User added successfully'));
 
-        }catch(Exception $e){
+        } catch(Exception $e){
            return apiResponse(false, 500, lang('messages.server_error'));
         }
     }
@@ -2464,17 +3356,315 @@ class UserController extends Controller
         }
     }
 
+    public function show_credit_card_information(Request $request){
+        if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+                $user_id = $user->id;
+                $result = CreditCardInformation::where('user_id', $user_id)->first();
+                
+                if(isset($result->card_type)){
+                   $data['card_type'] = $result->card_type;   
+                } else {
+                   $data['card_type'] = null; 
+                }
+                if(isset($result->embossing_name)){
+                   $data['embossing_name'] = $result->embossing_name;   
+                } else {
+                   $data['embossing_name'] = null; 
+                }
+                if(isset($result->cm_billing_cycle_date)){
+                   $data['cm_billing_cycle_date'] = $result->cm_billing_cycle_date;   
+                } else {
+                   $data['cm_billing_cycle_date'] = null; 
+                }
+                if(isset($result->e_statement_subscription)){
+                   $data['e_statement_subscription'] = $result->e_statement_subscription;   
+                } else {
+                   $data['e_statement_subscription'] = null; 
+                }
+                if(isset($result->paper_statement_subscription)){
+                   $data['paper_statement_subscription'] = $result->paper_statement_subscription;   
+                } else {
+                   $data['paper_statement_subscription'] = null; 
+                }
+                if(isset($result->supplementary_salutation)){
+                   $data['supplementary_salutation'] = $result->supplementary_salutation;   
+                } else {
+                   $data['supplementary_salutation'] = null; 
+                }
+                if(isset($result->supplementary_relationship)){
+                   $data['supplementary_relationship'] = $result->supplementary_relationship;   
+                } else {
+                   $data['supplementary_relationship'] = null; 
+                }
+                if(isset($result->supplementary_first_name)){
+                   $data['supplementary_first_name'] = $result->supplementary_first_name;   
+                } else {
+                   $data['supplementary_first_name'] = null; 
+                }
+                if(isset($result->supplementary_middle_name)){
+                   $data['supplementary_middle_name'] = $result->supplementary_middle_name;   
+                } else {
+                   $data['supplementary_middle_name'] = null; 
+                }
+                if(isset($result->supplementary_last_name)){
+                   $data['supplementary_last_name'] = $result->supplementary_last_name;   
+                } else {
+                   $data['supplementary_last_name'] = null; 
+                }
+                if(isset($result->supplementary_embosing_name)){
+                   $data['supplementary_embosing_name'] = $result->supplementary_embosing_name;   
+                } else {
+                   $data['supplementary_embosing_name'] = null; 
+                }
+                
+                if(isset($result->supplementary_nationality)){
+                   $data['supplementary_nationality'] = $result->supplementary_nationality;   
+                } else {
+                   $data['supplementary_nationality'] = null; 
+                }
+                
+                if(isset($result->supplementary_passport_no)){
+                   $data['supplementary_passport_no'] = $result->supplementary_passport_no;   
+                } else {
+                   $data['supplementary_passport_no'] = null; 
+                }
+                if(isset($result->supplementary_credit_limit_aed)){
+                   $data['supplementary_credit_limit_aed'] = $result->supplementary_credit_limit_aed;   
+                } else {
+                   $data['supplementary_credit_limit_aed'] = null; 
+                }
+                if(isset($result->supplementary_marital_status)){
+                   $data['supplementary_marital_status'] = $result->supplementary_marital_status;   
+                } else {
+                   $data['supplementary_marital_status'] = null; 
+                }
+                if(isset($result->supplementary_mother_maiden_name)){
+                   $data['supplementary_mother_maiden_name'] = $result->supplementary_mother_maiden_name;   
+                } else {
+                   $data['supplementary_mother_maiden_name'] = null; 
+                }
+                
+                if(isset($result->no_sign_up_credit_shield)){
+                   $data['no_sign_up_credit_shield'] = $result->no_sign_up_credit_shield;   
+                } else {
+                   $data['no_sign_up_credit_shield'] = null; 
+                }
+                if(isset($result->sign_up_credit_shield_plus)){
+                   $data['sign_up_credit_shield_plus'] = $result->sign_up_credit_shield_plus;   
+                } else {
+                   $data['sign_up_credit_shield_plus'] = null; 
+                }
+                if(isset($result->master_murabaha_agreement)){
+                   $data['master_murabaha_agreement'] = $result->master_murabaha_agreement;   
+                } else {
+                   $data['master_murabaha_agreement'] = null; 
+                }
+                
+                $home = route('get-started');
+                
+                if(isset($result->kyc_docs)){
+                   $data['kyc_docs'] = $home.$result->kyc_docs;   
+                } else {
+                   $data['kyc_docs'] = null; 
+                }
+                
+                if(isset($result->kyc_docs2)){
+                   $data['kyc_docs2'] = $home.$result->kyc_docs2;   
+                } else {
+                   $data['kyc_docs2'] = null; 
+                }
+                
+                if(isset($result->kyc_docs3)){
+                   $data['kyc_docs3'] = $home.$result->kyc_docs3;   
+                } else {
+                   $data['kyc_docs3'] = null; 
+                }
+                if(isset($result->kyc_docs4)){
+                   $data['kyc_docs4'] = $home.$result->kyc_docs4;   
+                } else {
+                   $data['kyc_docs4'] = null; 
+                }
+                
+                return response()->json(['success' => true, 'status' => 200, 'data' => $data]);
+            }
+        }
+        
+    }
+
+    public function save_personal_loan_informations(Request $request){
+      if($request->api_key){
+        $user = User::where('api_key', $request->api_key)->select('id')->first();
+        if($user){
+            $user_id = $user->id;
+            $inputs = $request->all();
+            $inputs['user_id'] = $user_id;
+            $info = PersonalLoanInformation::where('user_id', $user_id)->select('id')->first();
+            if($info){
+              $id = $info->id;
+              (new PersonalLoanInformation)->store($inputs, $id);
+            } else {
+                (new PersonalLoanInformation)->store($inputs);
+            }
+            return response()->json(['success' => true, 'status' => 200, 'message' => 'Personal loan information successfully saved.']);
+        }
+      }
+    }
+
+    public function save_coman_information_form(Request $request){
+        if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+                $user_id = $user->id;
+                $info = ComanInformation::where('user_id', $user_id)->select('id')->first();
+                $inputs = $request->all();
+                $inputs['user_id'] = $user_id;
+                if($info){
+                    $id = $info->id;
+                    (new ComanInformation)->store($inputs, $id);
+                } else {
+                    (new ComanInformation)->store($inputs);
+                }
+                return response()->json(['success' => true, 'status' => 200, 'message' => 'information successfully saved.']);
+            }
+        }
+    }
+
+    public function show_coman_information_form(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+              $data = ComanInformation::where('user_id', $user->id)->first();
+              return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
+          }
+        }
+    }
+
+    public function show_personal_loan_informations(Request $request){
+      if($request->api_key){
+          $user = User::where('api_key', $request->api_key)->select('id')->first();
+          if($user){
+              $data = PersonalLoanInformation::where('user_id', $user->id)->first();
+              return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
+          }
+        }
+    }
+    
+    public function save_credit_card_information(Request $request){
+        try {
+            if($request->api_key){
+            $user = User::where('api_key', $request->api_key)->select('id')->first();
+            if($user){
+                $user_id = $user->id;
+                $inputs = $request->all();  
+                $info = CreditCardInformation::where('user_id', $user_id)->select('id', 'kyc_docs', 'kyc_docs2', 'kyc_docs3', 'kyc_docs4')->first();
+                $inputs['user_id'] = $user_id;
+                if(isset($inputs['kyc_docs']) or !empty($inputs['kyc_docs'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs')) {
+                        $file = $request->file('kyc_docs');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs;
+                }  
+                unset($inputs['kyc_docs']);
+                $inputs['kyc_docs'] = $image; 
+                
+                if(isset($inputs['kyc_docs2']) or !empty($inputs['kyc_docs2'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs2')) {
+                        $file = $request->file('kyc_docs2');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs2;
+                }  
+                unset($inputs['kyc_docs2']);
+                $inputs['kyc_docs2'] = $image; 
+                
+                if(isset($inputs['kyc_docs3']) or !empty($inputs['kyc_docs3'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs3')) {
+                        $file = $request->file('kyc_docs3');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs3;
+                }  
+                unset($inputs['kyc_docs3']);
+                $inputs['kyc_docs3'] = $image;
+                
+                if(isset($inputs['kyc_docs4']) or !empty($inputs['kyc_docs4'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+                    if($file = $request->hasFile('kyc_docs4')) {
+                        $file = $request->file('kyc_docs4');
+                        $img_name = $file->getClientOriginalName();
+                        $fileName = $image_name.$img_name;
+                        $destinationPath = public_path().'/uploads/kyc_docs/';
+                        $file->move($destinationPath, $fileName);
+                    }
+                            $fname ='/uploads/kyc_docs/';
+                            $image = $fname.$fileName;
+                        } else{
+                            $image = @$info->kyc_docs4;
+                }  
+                unset($inputs['kyc_docs4']);
+                $inputs['kyc_docs4'] = $image; 
+                
+                
+                $inputs['user_id'] = $user_id;
+                if($info){
+                    $id = $info->id;
+                    (new CreditCardInformation)->store($inputs, $id);  
+                } else {
+                    (new CreditCardInformation)->store($inputs); 
+                }
+                
+                return response()->json(['success' => true, 'status' => 200, 'message' => 'Credit card information successfully saved']);
+                
+                }   
+            } 
+        } catch (Exception $e) {
+            return back();
+        }
+    }
+
 
     public function profile(Request $request){
         try{
 
           if($request->api_key){
-           $user = User::where('api_key', $request->api_key)->select('id', 'name', 'email', 'mobile', 'profile_image', 'gender', 'date_of_birth')->first();
+           $user = User::where('api_key', $request->api_key)->select('id', 'salutation', 'name', 
+            'middle_name', 'last_name', 'email', 'mobile', 'profile_image', 'gender', 'date_of_birth')->first();
             $url = route('get-started'); 
 
             if($user){
             $data['id'] = $user->id;
+            $data['salutation'] = $user->salutation;
             $data['name'] = $user->name;
+            $data['middle_name'] = $user->middle_name;
+            $data['last_name'] = $user->last_name;
             $data['email'] = $user->email;
             $data['mobile'] = $user->mobile;
             $data['date_of_birth'] = $user->date_of_birth;
@@ -2483,6 +3673,8 @@ class UserController extends Controller
                 } else {
                   $data['profile_image'] =$user->profile_image;
               }
+            $user_id = 1300+$user->id;
+            $data['user_code'] = 'lnxx'.$user_id;
             $data['gender'] = $user->gender;
 
             return apiResponseApp(true, 200, null, null, $data); 

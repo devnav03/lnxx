@@ -5,14 +5,15 @@
 <div class="container">  
 <div class="row"> 
 <div class="col-md-9">
-
 @if(session()->has('profile_update_message'))
     <p style="color: green;margin-bottom: 10px;">Your profile has been successfully updated</p>
 @endif
-
+@if(session()->has('app_submit'))
+    <p style="color: green;margin-bottom: 10px;">Your application has been submitted successfully</p>
+@endif
 @if(count($relations) != 0)
 <div class="lorem_dashboard">
-  <h2>My Relations</h2>
+  <h2 class="rel_head">My Relations</h2>
   <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
   <ul style="padding: 0px;list-style: none;">
     @foreach($relations as $relation)
@@ -20,7 +21,8 @@
         <div class="service-sel">
           <h5 style="font-size: 17px; font-weight: 600;">{{ $relation->name }}</h5>
           <p style="font-size: 14px;margin-bottom: 0px;">Status: @if($relation->status == 0)<span style="font-size: 14px; color: #5EB495;"> Pending </span>@endif </p>
-          <p style="font-size: 14px;">Reference No: #{{ $relation->ref_id }}</p>
+          <p style="font-size: 14px;margin-bottom: 0px;">Reference No: #{{ $relation->ref_id }} </p>
+          <p style="font-size: 14px;">Applied at: {!! date('d M, Y', strtotime($relation->created_at)) !!}</p>
         </div>
     </li>
     @endforeach
@@ -30,22 +32,20 @@
 
 @if(count($service) != 0)
 <div class="our_assistance ser_dt">
-<h2>Select Services</h2>
-<h6 style="font-size: 14px; margin-bottom: 0px;">You can select multiple products from the below list</h6>
-
+<h2>Select Products</h2>
+<h6 style="font-size: 14px; margin-bottom: 0px;">Offering you our best products from top UAE's banks</h6>
 <form action="{{ route('personal-details') }}" class="personal_details_box" method="post">
 {{ csrf_field() }}  
 
 <div class="row">
   <div class="col-md-12">
-
     @if(session()->has('select_service'))
       <p style="color: #f00;margin-bottom: 10px;">Kindly select a service</p>
     @endif
     <input type="hidden" name="page" value="service">
   <ul style="padding: 0px;">
 @php
-$button = 0;
+$button = 1;
 @endphp    
   @foreach($service as $service)
 @php
@@ -55,9 +55,9 @@ $button += $services;
 
     <li>
       <label class="ser_label" for="{{ $service->url }}" style="width: 100%;"> 
-      <input id="{{ $service->url }}" @if($services == 1) checked="" @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
+      <input id="{{ $service->url }}" @if($services == 1) checked="" @else @if($service->id == 1 || $service->id == 3) checked="" @endif   @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
         <div class="service-sel">
-            <!--  <img src="{!! asset($service->image) !!}" alt="img"> -->
+            <!-- <img src="{!! asset($service->image) !!}" alt="img"> -->
           <h5 style="margin-top: 2px; margin-left: 10px;">{{ $service->name }}</h5>
         </div>
       </label>
@@ -67,13 +67,25 @@ $button += $services;
   </div>
 
   <div class="col-md-12">
-<!--     <a href="{{ route('address-details') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
+  <!--  <a href="{{ route('address-details') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
     <button type="submit" id="elementID" @if($button == 0) disabled="disabled" style="margin-top: 20px;" @else style="margin-top: 20px; background: #000;" @endif >Proceed</button>
   </div>
 </div>
 </form>
 </div>
 @endif
+
+<div class="scan_dashboard">
+  <h3 style="font-weight: 700; font-size: 24px; margin-top: 15px;">Offers For You</h3>
+  <div class="row">
+    <div class="col-md-6" style="margin-top: 7px;">
+      <img src="{!! asset('assets/frontend/images/placeholder5xxxxx.png') !!}" alt="scan" class="img-responsive">
+    </div>
+    <div class="col-md-6" style="margin-top: 7px;">
+      <img src="{!! asset('assets/frontend/images/5xxplaceholder.png') !!}" class="img-responsive">
+    </div>
+  </div>
+</div>
 
 <div class="scan_dashboard">
   <div class="row">
@@ -104,8 +116,11 @@ $button += $services;
 </div>
 <div class="col-md-3">
 <div class="info_sidebar" style="padding-bottom: 30px; margin-top: 0px; margin-bottom: 30px;">
-  <h5 style="margin-bottom: 20px;">Refer and Earn</h5>
-  <a href="#" data-toggle="modal" data-target="#exampleModal" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Share </a>
+  <h5 style="margin-bottom: 10px;">Refer & Earn</h5>
+  <img src="{!! asset('assets/frontend/images/refer_earn.png')  !!}" style="margin-bottom: 25px;" class="img-responsive">
+  <p style="font-size: 13px;"><b>Spread your love for lnxx</b><br>
+Refer your friends to our service and earn rewards! For every friend you refer who signs up and becomes a paying customer, you'll receive a 100د.إ credit on your account. It's a win-win for everyone!</p>
+  <a href="#" data-toggle="modal" data-target="#exampleModal" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Invite </a>
 </div>  
 <div class="dashboard_sidebar">
 <h3>Application Update</h3> 
@@ -146,47 +161,63 @@ $button += $services;
 </div>
 </div>
 </section>
+@if(session()->has('already_refer_friend'))
+@php
+$refer_email = \Session::get('refer_email');
+$refer_name = \Session::get('refer_name');
+$refer_mobile = \Session::get('refer_mobile');
+@endphp
+@else 
+@php
+$refer_email = '';
+$refer_name = '';
+$refer_mobile = '';
+@endphp
+@endif
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Refer a Friend</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -9px;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form method="post">
+        @if(session()->has('already_refer_friend'))
+          <p style="color: #f00;">Oops, you referred someone who was already registered.</p>
+        @endif
+        @if(session()->has('refer_friend'))
+          <p style="color: green;">Invitation sent successfully</p>
+        @endif
 
-          <div class="form-group">
-            <label class="sub-label">Mobile Number*</label>
-            <input name="mobile" class="form-control" value="{{ old('mobile')}}" required="true" type="number">
-            @if($errors->has('mobile'))
-            <span class="text-danger">{{$errors->first('mobile')}}</span>
-            @endif
-          </div>
-
+        <form method="post" action="{{ route('refers') }}">
           <div class="form-group">
             <label class="sub-label">Name*</label>
-            <input name="name" class="form-control" value="{{ old('name')}}" required="true" type="text">
+            <input name="name" class="form-control" value="{{ $refer_name }}" required="true" type="text">
             @if($errors->has('name'))
             <span class="text-danger">{{$errors->first('name')}}</span>
             @endif
           </div>
-
+          <div class="form-group">
+            <label class="sub-label">Mobile Number*</label>
+            <input name="mobile" class="form-control" value="{{ $refer_mobile }}" required="true" type="number">
+            @if($errors->has('mobile'))
+            <span class="text-danger">{{$errors->first('mobile')}}</span>
+            @endif
+          </div>
+          {{ csrf_field() }}  
           <div class="form-group">
             <label class="sub-label">Email ID*</label>
-            <input name="email" class="form-control" value="{{ old('email')}}" required="true" type="email">
+            <input name="email" class="form-control" value="{{ $refer_email }}" required="true" type="email">
             @if($errors->has('email'))
             <span class="text-danger">{{$errors->first('email')}}</span>
             @endif
           </div>
-
           <div class="col-md-12 text-center">
-            <button type="submit">Submit</button>
+            <button class="ref_btn" type="submit">Submit</button>
           </div>
-
         </form>
       </div>
       <!-- <div class="modal-footer">

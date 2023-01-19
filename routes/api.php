@@ -53,16 +53,42 @@ Route::any('v1/consent-form-status', ['as' => 'consent-form-status','uses' => 'A
 
 Route::any('v1/bank-list', ['as' => 'bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@bank_list']);
 Route::any('v1/company-list', ['as' => 'company-list','uses' => 'App\Http\Controllers\API\V1\UserController@company_list']);
-
 Route::any('v1/verify-emirate-id', ['as' => 'verify-emirate-id','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirates']);
-
+Route::any('v1/verify-emirate', ['as' => 'verify-emirate','uses' => 'App\Http\Controllers\API\V1\UserController@verify_emirate']);
 Route::any('v1/my-relations', ['as' => 'my-relations','uses' => 'App\Http\Controllers\API\V1\UserController@my_relations']);
-
 Route::any('v1/bank-preference', ['as' => 'bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@bank_preference']);
-
 Route::any('v1/save-bank-preference', ['as' => 'save-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_bank_preference']);
-
 Route::any('v1/skip-video', ['as' => 'skip-video','uses' => 'App\Http\Controllers\API\V1\UserController@skipVideo']);
+Route::any('v1/refer-friend', ['as' => 'refer-friend','uses' => 'App\Http\Controllers\API\V1\UserController@refer_friend']);
+Route::any('v1/save-agent-information', ['as' => 'save-agent-information','uses' => 'App\Http\Controllers\API\V1\UserController@save_agent_information']);
+Route::any('v1/cms-content', ['as' => 'cms-content','uses' => 'App\Http\Controllers\API\V1\UserController@cms_content']);
+Route::any('v1/save-credit-card-informations', ['as' => 'save-credit-card-informations','uses' => 'App\Http\Controllers\API\V1\UserController@save_credit_card_information']);
+Route::any('v1/show-credit-card-information', ['as' => 'show-credit-card-information','uses' => 'App\Http\Controllers\API\V1\UserController@show_credit_card_information']);
+Route::any('v1/save-coman-information-form', ['as' => 'save-coman-information-form','uses' => 'App\Http\Controllers\API\V1\UserController@save_coman_information_form']);
+Route::any('v1/show-coman-information-form', ['as' => 'show-coman-information-form','uses' => 'App\Http\Controllers\API\V1\UserController@show_coman_information_form']);
+Route::any('v1/save-personal-loan-informations', ['as' => 'save-personal-loan-informations','uses' => 'App\Http\Controllers\API\V1\UserController@save_personal_loan_informations']);
+Route::any('v1/show-personal-loan-informations', ['as' => 'show-personal-loan-informations','uses' => 'App\Http\Controllers\API\V1\UserController@show_personal_loan_informations']);
+Route::any('v1/card-type-list', ['as' => 'card-type-list','uses' => 'App\Http\Controllers\API\V1\UserController@card_type_list']);
+Route::any('v1/credit-dbr-calculation', ['as' => 'credit-dbr-calculation','uses' => 'App\Http\Controllers\API\V1\UserController@credit_dbr_calculation']);
+
+Route::any('v1/save-personal-loan-bank-preference', ['as' => 'save-personal-loan-bank-preference','uses' => 'App\Http\Controllers\API\V1\UserController@save_personal_loan_bank_preference']);
+Route::any('v1/personal-loan-bank-list', ['as' => 'personal-loan-bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@personal_loan_bank_list']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

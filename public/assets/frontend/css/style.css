@@ -349,8 +349,9 @@ body{
     padding: 50px 0 30px 0;
 }
 .testimonials img{
-    width: 70px !important;
+    width: auto !important;
     margin: 0 auto;
+    max-height: 100px;
 }
 .testimonials-slide {
     max-width: 335px;
@@ -712,8 +713,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .sign_up_field h3{
     color: #000;
-    font-weight: 700;
-    font-size: 22px;
+    font-weight: 600;
+    font-size: 18px;
     margin-top: 30px;
 }
 .sign_up_field p {
@@ -848,7 +849,7 @@ input[type=number]::-webkit-outer-spin-button {
 .agent_banner .mob_input input {
     box-shadow: 1px 1px 10px rgb(0 0 0 / 20%);
     border: 1px solid rgba(9, 15, 6, 0.1);
-    padding-left: 55px;
+    padding-left: 15px;
 }
 .agent_banner .input-img {
     left: 15px;
@@ -1210,12 +1211,12 @@ input[type=number]::-webkit-outer-spin-button {
     color: #5EB495;
     background: url(../images/Icon_Component.png);
     background-repeat: no-repeat;
-    padding-left: 50px;
+    padding-left: 35px;
     margin-bottom: 0px;
     background-position: left;
-    font-weight: 700;
-    font-size: 25px;
-    background-size: 33px;
+    font-weight: 600;
+    font-size: 22px;
+    background-size: 25px;
 }
 .personal_details_box {
     background: #fff;
@@ -1278,13 +1279,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .personal_details_box button,
 .upload_btn {
-    background: rgba(9, 15, 5, 0.5);
+    background: #000;
     color: #fff;
     border: 0px;
     padding: 9px 60px;
     font-weight: 500;
     margin-top: 10px;
-    border-radius: 5px;
     cursor: pointer;
 }
 .personal_details_box button:hover,
@@ -1292,10 +1292,11 @@ input[type=number]::-webkit-outer-spin-button {
     background: #000;
 }
 .service-step h3 {
-    font-weight: 700;
+    font-weight: 600;
     color: #000;
-    font-size: 25px;
-    margin-bottom: 30px;
+    font-size: 22px;
+    margin-bottom: 15px;
+    line-height: 30px;
 }
 .personal_details .col-md-5 {
     padding-left: 40px;
@@ -1320,6 +1321,27 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 14px;
     cursor: pointer;
     margin-bottom: 10px;
+}
+#skip:hover{
+    color: #000 !important;
+}
+.del_fdt {
+    float: right;
+    color: #fff !important;
+    margin-top: 6px;
+    background: #f00;
+    padding: 3px 15px; 
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.personal_details .form-group {
+    position: relative;
+}
+.personal_details .form-group .fa-calendar {
+    position: absolute;
+    top: 40px;
+    right: 15px;
 }
 .cm_type.active{
    background: #FF6722;
@@ -1429,8 +1451,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .slider_background{
     background: url(../images/thanku_back.png);
-    padding: 100px 0;
+    padding: 20px 0 60px 0;
     text-align: center;
+    height: 100vh;
 }
 .thanku_sec {
     padding: 50px 0;
@@ -1439,7 +1462,9 @@ input[type=number]::-webkit-outer-spin-button {
 
 .slider_background h2 {
     color: #090F05;
-    font-weight: 700;
+    font-weight: 500;
+    font-size: 22px;
+    margin-bottom: 20px;
 }
 .slider_background img {
     width: 45px;
@@ -1499,10 +1524,16 @@ header.header .col-md-5 {
 .cus_dashboard .our_assistance.ser_dt {
     padding-bottom: 30px;
 }
-.cus_dashboard .our_assistance.ser_dt h2{
+.cus_dashboard .our_assistance.ser_dt h2,
+.rel_head {
     padding-left: 35px;
     margin-top: 20px;
     margin-bottom: 10px;
+}
+.rel_head{
+    background: url(../images/rel_icon.png);
+    background-repeat: no-repeat;
+    background-size: 30px
 }
 
 .sidenav {
@@ -1954,6 +1985,227 @@ footer{
 .product-index h2{
     margin-bottom: 20px;
 }
+
+.ref_btn {
+    background: #5EB495;
+    color: #fff;
+    padding: 10px 60px;
+    border: 0px;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    font-weight: 500;
+}
+#exampleModal input{
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 40%);
+    height: 40px;
+}
+#exampleModal label{
+    margin-bottom: 1px;
+}
+.ui-widget-header{
+    background: #5EB495 !important;
+    border: 1px solid #5EB495 !important;
+}
+.ui-state-default, .ui-widget-content .ui-state-default {
+    color: #5EB495 !important;
+}
+.rel_head{
+    position: relative;
+}
+.agent_banner .form-control[readonly] {
+    background-color: #fff;
+}
+.agent_banner input[type="file"]{
+    padding: 0px;
+    height: 29px;
+    box-shadow: none;
+    border: 0px;
+}
+.agent_banner button {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    height: 42px;
+    font-size: 15px;
+}
+.terms_conditions_box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    max-height: 155px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.form-control[readonly] {
+    background-color: #fff !important;
+}
+
+.personal_details_box .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 27px;
+    margin-top: 5px !important;
+}
+
+.personal_details_box .switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.personal_details_box .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.personal_details_box .slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 8px;
+  bottom: 3.5px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.personal_details_box input:checked + .slider {
+  background-color: #5EB495;
+}
+
+.personal_details_box input:focus + .slider {
+  box-shadow: 0 0 1px #5EB495;
+}
+
+.personal_details_box input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.personal_details_box .slider.round {
+  border-radius: 34px;
+}
+
+.personal_details_box .slider.round:before {
+  border-radius: 50%;
+}
+.pref_bank label {
+    font-size: 14px;
+    font-weight: 400;
+    margin-right: 15px;
+}
+.pref_bank label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 0;
+}
+.pref_bank label input {
+    width: 17px;
+    height: 17px;
+    margin-top: 3px; 
+    float: left; 
+    margin-right: 8px; 
+    margin-bottom: 5px;
+    box-shadow: none;
+}
+.bank_select-slide {
+    position: relative;
+    margin-top: 10px;
+}
+.bank_select-slide input{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+.pref_bank h5{
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+}
+.info_box{
+    
+}
+.bank_iinfo {
+    background: #fff;
+    position: absolute;
+    width: 95%;
+    z-index: 9;
+    display: none;
+    border: 1px solid #f00;
+    border-radius: 3px;
+    padding: 4px;
+}
+.info_box:hover .bank_iinfo{
+    display: block;
+}
+
+.bank_iinfo p{
+    font-size: 12px;
+    margin-bottom: 0px;
+}
+
+.app_form_head {
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid #f3f3f3;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+.cong-box {
+    background: url(../images/cong_back.png);
+    background-repeat: no-repeat;
+    margin: 0 auto;
+    max-width: 335px;
+    background-size: 100%;
+    padding: 30px;
+    text-align: center;
+    color: #fff;
+    margin-top: 60px;
+    padding-bottom: 100px;
+}
+.continue-application {
+    margin: 0 auto;
+    background: #0e140a;
+    color: #fff;
+    max-width: 335px;
+    display: block;
+    text-align: center;
+    margin-top: 0px;
+    padding: 11px 0px;
+    font-weight: 400;
+    font-size: 15px;
+}
+.do-it-later {
+    max-width: 415px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    color: #555;
+}
+.continue-application:hover{
+    color: #fff;
+}
+
+
+
+
+
 
 
 
