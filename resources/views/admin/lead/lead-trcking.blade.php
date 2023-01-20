@@ -207,8 +207,7 @@
                 <img src="{{asset('img/logo-black.png')}}" alt="logo">
                 <div class="row" style="display: contents;">
                     <div class="col" style="margin-top: 16px;">
-                        <p style="weight:400; font-size:16px;">Lead<br><span style="weight:700; font-size:16px;"><b
-                                    id="name1"></b></span></p>
+                        <p style="weight:400; font-size:16px;">Lead<br><span style="weight:700; font-size:16px;"><b id="name1"></b></span></p>
                     </div>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -223,11 +222,7 @@
                     </div>
                     <div class="col-md-4" style="line-height:1.6px;">
                         <p style="weight:700; font-size:16px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="14" viewBox="0 0 9 14"
-                                fill="none">
-                                <path
-                                    d="M7.60083 0.994376L1.19 0.0129304C0.8925 -0.034085 0.589167 0.0481919 0.361667 0.24213C0.134167 0.441945 0 0.729915 0 1.02964V13.4123C0 13.7355 0.2625 14 0.583333 14H2.47917V10.9146C2.47917 10.3446 2.93417 9.88616 3.5 9.88616H4.95833C5.52417 9.88616 5.97917 10.3446 5.97917 10.9146V14H8.45833V2.01108C8.45833 1.50567 8.09667 1.07665 7.60083 0.994376ZM3.20833 8.56385H2.33333C2.09183 8.56385 1.89583 8.36638 1.89583 8.12308C1.89583 7.87978 2.09183 7.68231 2.33333 7.68231H3.20833C3.44983 7.68231 3.64583 7.87978 3.64583 8.12308C3.64583 8.36638 3.44983 8.56385 3.20833 8.56385ZM3.20833 6.80077H2.33333C2.09183 6.80077 1.89583 6.60331 1.89583 6.36C1.89583 6.1167 2.09183 5.91923 2.33333 5.91923H3.20833C3.44983 5.91923 3.64583 6.1167 3.64583 6.36C3.64583 6.60331 3.44983 6.80077 3.20833 6.80077ZM3.20833 5.0377H2.33333C2.09183 5.0377 1.89583 4.84023 1.89583 4.59693C1.89583 4.35362 2.09183 4.15616 2.33333 4.15616H3.20833C3.44983 4.15616 3.64583 4.35362 3.64583 4.59693C3.64583 4.84023 3.44983 5.0377 3.20833 5.0377ZM3.20833 3.27462H2.33333C2.09183 3.27462 1.89583 3.07716 1.89583 2.83385C1.89583 2.59055 2.09183 2.39308 2.33333 2.39308H3.20833C3.44983 2.39308 3.64583 2.59055 3.64583 2.83385C3.64583 3.07716 3.44983 3.27462 3.20833 3.27462ZM6.125 8.56385H5.25C5.0085 8.56385 4.8125 8.36638 4.8125 8.12308C4.8125 7.87978 5.0085 7.68231 5.25 7.68231H6.125C6.3665 7.68231 6.5625 7.87978 6.5625 8.12308C6.5625 8.36638 6.3665 8.56385 6.125 8.56385ZM6.125 6.80077H5.25C5.0085 6.80077 4.8125 6.60331 4.8125 6.36C4.8125 6.1167 5.0085 5.91923 5.25 5.91923H6.125C6.3665 5.91923 6.5625 6.1167 6.5625 6.36C6.5625 6.60331 6.3665 6.80077 6.125 6.80077ZM6.125 5.0377H5.25C5.0085 5.0377 4.8125 4.84023 4.8125 4.59693C4.8125 4.35362 5.0085 4.15616 5.25 4.15616H6.125C6.3665 4.15616 6.5625 4.35362 6.5625 4.59693C6.5625 4.84023 6.3665 5.0377 6.125 5.0377ZM6.125 3.27462H5.25C5.0085 3.27462 4.8125 3.07716 4.8125 2.83385C4.8125 2.59055 5.0085 2.39308 5.25 2.39308H6.125C6.3665 2.39308 6.5625 2.59055 6.5625 2.83385C6.5625 3.07716 6.3665 3.27462 6.125 3.27462Z"
-                                    fill="#3A3A3A" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="14" viewBox="0 0 9 14" fill="none"><path d="M7.60083 0.994376L1.19 0.0129304C0.8925 -0.034085 0.589167 0.0481919 0.361667 0.24213C0.134167 0.441945 0 0.729915 0 1.02964V13.4123C0 13.7355 0.2625 14 0.583333 14H2.47917V10.9146C2.47917 10.3446 2.93417 9.88616 3.5 9.88616H4.95833C5.52417 9.88616 5.97917 10.3446 5.97917 10.9146V14H8.45833V2.01108C8.45833 1.50567 8.09667 1.07665 7.60083 0.994376ZM3.20833 8.56385H2.33333C2.09183 8.56385 1.89583 8.36638 1.89583 8.12308C1.89583 7.87978 2.09183 7.68231 2.33333 7.68231H3.20833C3.44983 7.68231 3.64583 7.87978 3.64583 8.12308C3.64583 8.36638 3.44983 8.56385 3.20833 8.56385ZM3.20833 6.80077H2.33333C2.09183 6.80077 1.89583 6.60331 1.89583 6.36C1.89583 6.1167 2.09183 5.91923 2.33333 5.91923H3.20833C3.44983 5.91923 3.64583 6.1167 3.64583 6.36C3.64583 6.60331 3.44983 6.80077 3.20833 6.80077ZM3.20833 5.0377H2.33333C2.09183 5.0377 1.89583 4.84023 1.89583 4.59693C1.89583 4.35362 2.09183 4.15616 2.33333 4.15616H3.20833C3.44983 4.15616 3.64583 4.35362 3.64583 4.59693C3.64583 4.84023 3.44983 5.0377 3.20833 5.0377ZM3.20833 3.27462H2.33333C2.09183 3.27462 1.89583 3.07716 1.89583 2.83385C1.89583 2.59055 2.09183 2.39308 2.33333 2.39308H3.20833C3.44983 2.39308 3.64583 2.59055 3.64583 2.83385C3.64583 3.07716 3.44983 3.27462 3.20833 3.27462ZM6.125 8.56385H5.25C5.0085 8.56385 4.8125 8.36638 4.8125 8.12308C4.8125 7.87978 5.0085 7.68231 5.25 7.68231H6.125C6.3665 7.68231 6.5625 7.87978 6.5625 8.12308C6.5625 8.36638 6.3665 8.56385 6.125 8.56385ZM6.125 6.80077H5.25C5.0085 6.80077 4.8125 6.60331 4.8125 6.36C4.8125 6.1167 5.0085 5.91923 5.25 5.91923H6.125C6.3665 5.91923 6.5625 6.1167 6.5625 6.36C6.5625 6.60331 6.3665 6.80077 6.125 6.80077ZM6.125 5.0377H5.25C5.0085 5.0377 4.8125 4.84023 4.8125 4.59693C4.8125 4.35362 5.0085 4.15616 5.25 4.15616H6.125C6.3665 4.15616 6.5625 4.35362 6.5625 4.59693C6.5625 4.84023 6.3665 5.0377 6.125 5.0377ZM6.125 3.27462H5.25C5.0085 3.27462 4.8125 3.07716 4.8125 2.83385C4.8125 2.59055 5.0085 2.39308 5.25 2.39308H6.125C6.3665 2.39308 6.5625 2.59055 6.5625 2.83385C6.5625 3.07716 6.3665 3.27462 6.125 3.27462Z" fill="#3A3A3A" />
                             </svg> <b>Name</b>
                         </p>
                         <p style="weight:400; font-size:15px;" id="name2"></p>
@@ -235,36 +230,22 @@
                     <div class="col-md-3" style="line-height:1.6px;">
                         <p style="weight:700; font-size:15px;">
                             <svg width="12" height="16" viewBox="0 0 20 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M18 0H2C0.9 0 0.00999999 0.9 0.00999999 2L0 14C0 15.1 0.9 16 2 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 4L10 9L2 4V2L10 7L18 2V4Z"
+                                xmlns="http://www.w3.org/2000/svg"> <path d="M18 0H2C0.9 0 0.00999999 0.9 0.00999999 2L0 14C0 15.1 0.9 16 2 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 4L10 9L2 4V2L10 7L18 2V4Z"
                                     fill="#3A3A3A" />
                             </svg> <b>Email</b>
                         </p>
                         <p style="weight:400; font-size:15px;" id="email1"></p>
                     </div>
                     <div class="col-md-2" style="line-height:10px;">
-                        <p style="weight:700; font-size:15px;">
-
-                            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M13.23 9.62889C12.2733 9.62889 11.3478 9.47333 10.4844 9.19333C10.3492 9.14749 10.2038 9.14068 10.0648 9.1737C9.92588 9.20671 9.79906 9.27821 9.69889 9.38L8.47778 10.9122C6.27667 9.86222 4.21556 7.87889 3.11889 5.6L4.63556 4.30889C4.84556 4.09111 4.90778 3.78778 4.82222 3.51556C4.53444 2.65222 4.38667 1.72667 4.38667 0.77C4.38667 0.35 4.03667 0 3.61667 0H0.925556C0.505556 0 0 0.186667 0 0.77C0 7.99556 6.01222 14 13.23 14C13.7822 14 14 13.51 14 13.0822V10.3989C14 9.97889 13.65 9.62889 13.23 9.62889Z"
-                                    fill="#3A3A3A" />
-                            </svg> <b>Phone</b>
-                        </p>
-                        <p style="weight:400; font-size:15px;" id="number1"></p>
+                    <p style="weight:700; font-size:15px;">
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.23 9.62889C12.2733 9.62889 11.3478 9.47333 10.4844 9.19333C10.3492 9.14749 10.2038 9.14068 10.0648 9.1737C9.92588 9.20671 9.79906 9.27821 9.69889 9.38L8.47778 10.9122C6.27667 9.86222 4.21556 7.87889 3.11889 5.6L4.63556 4.30889C4.84556 4.09111 4.90778 3.78778 4.82222 3.51556C4.53444 2.65222 4.38667 1.72667 4.38667 0.77C4.38667 0.35 4.03667 0 3.61667 0H0.925556C0.505556 0 0 0.186667 0 0.77C0 7.99556 6.01222 14 13.23 14C13.7822 14 14 13.51 14 13.0822V10.3989C14 9.97889 13.65 9.62889 13.23 9.62889Z" fill="#3A3A3A" /></svg> 
+                    <b>Phone</b>
+                    </p>
+                    <p style="weight:400; font-size:15px;" id="number1"></p>
                     </div>
                     <div class="col-md-2" style="line-height:1.6px;">
                         <p style="weight:700; font-size:15px;">
-
-
-                            <svg width="11" height="15" viewBox="0 0 11 15" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M10.4116 5.82905H0.416484C0.186281 5.82905 0 6.01528 0 6.24539C0 6.4755 0.186281 6.66173 0.416484 6.66173H1.04902L4.1647 10.5549V13.7399C4.1647 13.97 4.35098 14.1562 4.58119 14.1562H6.24708C6.47728 14.1562 6.66356 13.97 6.66356 13.7399V10.5549L9.77925 6.66173H10.4118C10.642 6.66173 10.8283 6.4755 10.8283 6.24539C10.8281 6.01528 10.6418 5.82905 10.4116 5.82905ZM6.66347 1.24908C6.66347 0.560297 6.10303 0 5.41406 0C4.72509 0 4.16466 0.560297 4.16466 1.24908C4.16466 1.93786 4.72509 2.49816 5.41406 2.49816C6.10303 2.49816 6.66347 1.93786 6.66347 1.24908ZM3.74817 4.99631H7.07991C7.31011 4.99631 7.49639 4.81008 7.49639 4.57997V3.74723C7.49639 3.05845 6.93595 2.49816 6.24698 2.49816H5.41406H4.58114C3.89217 2.49816 3.33173 3.05845 3.33173 3.74723V4.57997C3.33173 4.81008 3.51802 4.99631 3.74817 4.99631ZM1.78786 4.87434C1.95052 5.037 2.21409 5.037 2.37675 4.87434C2.53941 4.71173 2.53941 4.44825 2.37675 4.28559L1.54383 3.45286C1.38112 3.2902 1.11759 3.2902 0.954937 3.45286C0.792281 3.61552 0.792281 3.87895 0.954937 4.04161L1.78786 4.87434ZM9.04027 4.87434L9.87319 4.04161C10.0358 3.87895 10.0358 3.61552 9.87319 3.45286C9.71048 3.2902 9.44695 3.2902 9.2843 3.45286L8.45137 4.28559C8.28872 4.44825 8.28872 4.71173 8.45137 4.87434C8.61403 5.037 8.87756 5.037 9.04027 4.87434Z"
-                                    fill="#3A3A3A" />
-                            </svg> <b>Lead Owner</b>
+                        <svg width="11" height="15" viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4116 5.82905H0.416484C0.186281 5.82905 0 6.01528 0 6.24539C0 6.4755 0.186281 6.66173 0.416484 6.66173H1.04902L4.1647 10.5549V13.7399C4.1647 13.97 4.35098 14.1562 4.58119 14.1562H6.24708C6.47728 14.1562 6.66356 13.97 6.66356 13.7399V10.5549L9.77925 6.66173H10.4118C10.642 6.66173 10.8283 6.4755 10.8283 6.24539C10.8281 6.01528 10.6418 5.82905 10.4116 5.82905ZM6.66347 1.24908C6.66347 0.560297 6.10303 0 5.41406 0C4.72509 0 4.16466 0.560297 4.16466 1.24908C4.16466 1.93786 4.72509 2.49816 5.41406 2.49816C6.10303 2.49816 6.66347 1.93786 6.66347 1.24908ZM3.74817 4.99631H7.07991C7.31011 4.99631 7.49639 4.81008 7.49639 4.57997V3.74723C7.49639 3.05845 6.93595 2.49816 6.24698 2.49816H5.41406H4.58114C3.89217 2.49816 3.33173 3.05845 3.33173 3.74723V4.57997C3.33173 4.81008 3.51802 4.99631 3.74817 4.99631ZM1.78786 4.87434C1.95052 5.037 2.21409 5.037 2.37675 4.87434C2.53941 4.71173 2.53941 4.44825 2.37675 4.28559L1.54383 3.45286C1.38112 3.2902 1.11759 3.2902 0.954937 3.45286C0.792281 3.61552 0.792281 3.87895 0.954937 4.04161L1.78786 4.87434ZM9.04027 4.87434L9.87319 4.04161C10.0358 3.87895 10.0358 3.61552 9.87319 3.45286C9.71048 3.2902 9.44695 3.2902 9.2843 3.45286L8.45137 4.28559C8.28872 4.44825 8.28872 4.71173 8.45137 4.87434C8.61403 5.037 8.87756 5.037 9.04027 4.87434Z" fill="#3A3A3A" /></svg> <b>Lead Owner</b>
                         </p>
                         <p style="weight:400; font-size:15px;" id="lead_owner1"></p>
                     </div>
@@ -329,15 +310,30 @@
                                                             <div class="row">
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label><b>Name</b></label>
-                                                                        <input class="form-control" id="m_name">
-                                                                        <input type="hidden" id="m_id">
+                                                                    <label><b>First Name</b></label>
+                                                                    <input class="form-control" id="m_name">
+                                                                    <input type="hidden" id="m_id">
                                                                     </div>
                                                                 </div>
+
+                                                                <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                <label><b>Middle Name</b></label>
+                                                                <input class="form-control" id="mi_name">
+                                                                </div>
+                                                                </div>
+
+                                                                <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                <label><b>Last Name</b></label>
+                                                                <input class="form-control" id="ml_name">
+                                                                </div>
+                                                                </div>
+
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label><b>Mobile</b></label>
-                                                                        <input class="form-control" id="m_number">
+                                                                    <label><b>Mobile</b></label>
+                                                                    <input class="form-control" id="m_number">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
@@ -875,31 +871,45 @@
             })
             .done(function(xhr) {
                 if (xhr.status == 200) {
+
                     $("#m_id").val(xhr.responce.id);
-                    $("#m_name").val(xhr.responce.name + xhr.responce.mname + xhr.responce.lname);
-                    $("#name1").html(xhr.responce.name + xhr.responce.mname + xhr.responce.lname);
-                    $("#name2").html(xhr.responce.name + xhr.responce.mname + xhr.responce.lname);
-                    $("#sat").html(xhr.responce.saturation);
+                    $("#sat").val(xhr.responce.saturation);
+                    $("#m_name").val(xhr.responce.name);
+                    $("#mi_name").val(xhr.responce.mname);
+                    $("#ml_name").val(xhr.responce.lname);
+                    $("#name1").html(xhr.responce.name);
+                    $("#name2").html(xhr.responce.name);
                     $("#m_email").val(xhr.responce.email);
                     $("#m_e_email").val(xhr.responce.email);
                     $("#m_description").val(xhr.responce.note);
+
                     $("#email1").html('<a href="mailto:' + xhr.responce.email + '">' + xhr.responce.email + '</a>');
                     $("#m_number").val(xhr.responce.number);
                     $("#number1").html('<a href="tel:' + xhr.responce.number + '">' + xhr.responce.number + '</a>');
+
                     $("#m_source").val(xhr.responce.source);
                     $("#source").val(xhr.responce.source);
                     $("#m_Lead_product_type").val(xhr.responce.product);
                     $("#m_reference").val(xhr.responce.reference);
+
                     $("#f_date").html(xhr.responce.f_date);
+
                     $("#m_leadowner").val(xhr.getuser.name);
                     $("#lead_owner1").html(xhr.getuser.name);
+
                     $("#m_uploadedby").val(xhr.getupload.name);
+
+
                     $("#m_created_at").val(xhr.responce.createdat);
+
+
                     $("#m_createdat").val(xhr.responce.createdat);
                     $("#updated").html(xhr.responce.updated_at);
                     $("#product").html(xhr.responce.product);
+
                     $("#source").html(xhr.responce.source);
                     $("#reference").html(xhr.responce.reference);
+
                     if (xhr.responce.lead_status == 'OPEN') {
                         $("#view-application-form").html('');
                         $("#status_bar").html(
@@ -909,11 +919,13 @@
                             $('#video').html('');
                             $('#consent-form').html('');
                     }
+                    
                     if (xhr.responce.lead_status == 'INPROCESS') {
-                        if(xhr.get_user_exist.id == ''){
+                        
+                        if(xhr.get_user_exist == null){
                             $("#view-application-form").html('<a type="button" onclick="onboard(' +xhr.responce.id +');" href="#" class="btn btn-warning">Start On Boarding</a>');
                         }else{
-                            $("#view-application-form").html('<a type="button" target="_blank" href="http://localhost/lnxx_new/public/admin/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">Boarding In Process</a>');
+                            $("#view-application-form").html('<a type="button" target="_blank" href="<?php echo route('get-started'); ?>/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">Boarding In Process</a>');
                         }
                         $("#status_bar").html(
                             '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><a href="#"><div style="width:155px; height:30px; background-color:#FFB800; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FFB800;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px;"><div style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px; z-index:22;"></div></div></div><div class="col-sm-3" style="margin-left:-49px;"><a type="button"   onclick="send_in_close_status(' +xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>');
@@ -933,11 +945,12 @@
                                 $('#consent-form').html('<h6 class="text-center">CONSENT FORM</h6><p class="text-center"><i style="color: green" class="fa fa-check"></i></p>');
                             }
                     }
+
                     if (xhr.responce.lead_status == 'REMINDER') {
                         if(xhr.get_user_exist.id == ''){
                             $("#view-application-form").html('<a type="button" onclick="onboard(' +xhr.responce.id +');" href="#" class="btn btn-warning">On-board Customer</a>');
                         }else{
-                            $("#view-application-form").html('<a type="button" target="_blank" href="http://localhost/lnxx_new/public/admin/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">On-boarded Customer</a>');
+                            $("#view-application-form").html('<a type="button" target="_blank" href="<?php echo route('get-started'); ?>/admin/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">On-boarded Customer</a>');
                         }
                         $("#status_bar").html(
                             '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><a href="#"><div style="width:155px; height:30px; background-color:#FFB800; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FFB800;position:absolute;right: -20px;"></div></div></a></div><div class="col-sm-2" style="margin-left:-49px;"><a href="#"><div style="width:155px; height:30px; background-color:#FF8A00; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FF8A00;position:absolute;right: -20px; z-index:22;"></div></div></div></a><div class="col-sm-3" style="margin-left:-49px;"><a type="button"   onclick="send_in_close_status(' +xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>'
@@ -986,7 +999,7 @@
                         if (response.status == 200) {
                             toastr.options.timeOut = 1500;
                             toastr.success('Lead On-Boarded Succesfully');
-                            window.open("http://localhost/lnxx_new/public/admin/view-save-personal/"+response.get_last_id);
+                            window.open("<?php echo route('get-started'); ?>/view-save-personal/"+response.get_last_id);
                             $("#view-application-form").html('<a type="button" onclick="onboard('+id+');" href="#" class="btn btn-success">On-boarded Customer</a>');
                         }else{
                             toastr.options.timeOut = 1500;
@@ -1011,6 +1024,10 @@
             if (isConfirm) {
                 var m_id = $('#m_id').val();
                 var m_name = $('#m_name').val();
+
+                var mi_name = $('#mi_name').val();
+                var ml_name = $('#ml_name').val();
+
                 var m_number = $('#m_number').val();
                 var m_email = $('#m_email').val();
                 var m_description = $('#m_description').val();
@@ -1020,6 +1037,8 @@
                     data: {
                         'm_id': m_id,
                         'm_name': m_name,
+                        'mi_name': mi_name,
+                        'ml_name': ml_name,
                         'm_number': m_number,
                         'm_email': m_email,
                         'm_description': m_description
@@ -1418,6 +1437,7 @@
 
     <script>
     function get_popup(id) {
+
         viewcase(id);
         viewmails(id);
         $.ajax({
@@ -1430,7 +1450,7 @@
             .done(function(xhr) {
                 if (xhr.status == 200) {
                     $("#m_name").val(xhr.responce.name);
-                    $("#name1").html(xhr.responce.name);
+                    $("#name1").test(xhr.responce.name);
                     $("#name2").html(xhr.responce.name);
                     $("#sat").html(xhr.responce.saturation);
                     $("#m_email").val(xhr.responce.email);
@@ -1783,6 +1803,7 @@
 
     <script>
     function get_popup(id) {
+
         viewcase(id);
         viewmails(id);
         $.ajax({
@@ -2150,6 +2171,7 @@
 
     <script>
     function get_popup(id) {
+
         viewcase(id);
         viewmails(id);
         $.ajax({

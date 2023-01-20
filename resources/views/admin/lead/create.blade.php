@@ -101,10 +101,10 @@ input[type=submit] {
                                 @endif
                                 
                                 <div class="row">
-                                    <div class="col-md-2" style="width: 60%!important;">
+                                    <div class="col-md-2">
                                          <div class="form-group">
                                             {!! Form::label('salutation', lang('Salutation'), array('class' => '')) !!}
-                                            <select name="sat" class="form-control minimal" aria-label="Default select example" style="width: 60%!important;">
+                                            <select name="sat" class="form-control minimal" aria-label="Default select example">
                                                 <option value="Mr.">Mr.</option>
                                                 <option value="Mrs.">Mrs.</option>
                                                 <option value="Miss.">Miss</option>
@@ -115,19 +115,19 @@ input[type=submit] {
                                             </select>
                                         </div> 
                                     </div>  
-                                    <div class="col-md-4" style="margin-left: -75px;">
+                                    <div class="col-md-4">
                                          <div class="form-group"> 
                                             {!! Form::label('fname', lang('First Name'), array('class' => '')) !!}
                                             {!! Form::text('fname', null, array('class' => 'form-control', 'required' => 'true')) !!}
                                         </div> 
                                     </div>  
-                                    <div class="col-md-3" style="margin-left: -8px;">
+                                    <div class="col-md-3">
                                          <div class="form-group"> 
                                             {!! Form::label('mname', lang('Middle Name'), array('class' => '')) !!}
-                                            {!! Form::text('mname', null, array('class' => 'form-control', 'required' => 'true')) !!}
+                                            {!! Form::text('mname', null, array('class' => 'form-control')) !!}
                                         </div> 
                                     </div>  
-                                    <div class="col-md-4" style="margin-left: -5px;">
+                                    <div class="col-md-3">
                                          <div class="form-group"> 
                                             {!! Form::label('lname', lang('Last Name'), array('class' => '')) !!}
                                             {!! Form::text('lname', null, array('class' => 'form-control', 'required' => 'true')) !!}
@@ -135,39 +135,32 @@ input[type=submit] {
                                     </div>  
                                     <div class="col-md-4">
                                          <div class="form-group"> 
-                                            {!! Form::label('email', lang('Email'), array('class' => '')) !!}
-                                            {!! Form::email('email', null, array('class' => 'form-control', 'required' => 'true')) !!}
+                                          {!! Form::label('email', lang('Email'), array('class' => '')) !!}
+                                          {!! Form::email('email', null, array('class' => 'form-control', 'required' => 'true')) !!}
                                         </div> 
                                     </div>  
                                     <div class="col-md-4">
-										<label>Mobile</label>
-										<div class="input-group telephone-input">
-										</div> 
-                                        <input type="tel" class="form-control" name="number" id="mobile-number" style="width: 100%;">
-                                            <!-- {!! Form::label('number', lang('Mobile'), array('class' => '')) !!}
-                                            @if(!empty($result->number))
-                                            {!! Form::number('number', null, array('class' => 'form-control')) !!}
-                                            @else
-                                            {!! Form::number('number', null, array('class' => 'form-control', 'required' => 'true')) !!}
-                                            @endif -->
+										                <label>Mobile</label>
+										                <div class="input-group telephone-input"></div> 
+                                    <input type="tel" class="form-control" name="number" id="mobile-number" style="width: 100%;">
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group"> 
-                                            {!! Form::label('source', lang('Source'), array('class' => '')) !!}
-                                            <select name="source" class="form-control minimal" aria-label="Default select example">
-                                                <option>Select</option>
-                                                <?php $get_source = \DB::table('lead_source')->get(); ?>
-                                                @foreach($get_source as $get_source)
-                                                <option value="{{$get_source->name}}">{{$get_source->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div> 
+                                      <div class="form-group"> 
+                                        {!! Form::label('source', lang('Source'), array('class' => '')) !!}
+                                        <select name="source" class="form-control minimal" aria-label="Default select example">
+                                        <option>Select</option>
+                                        <?php $get_source = \DB::table('lead_source')->get(); ?>
+                                        @foreach($get_source as $get_source)
+                                          <option value="{{$get_source->name}}">{{$get_source->name}}</option>
+                                        @endforeach
+                                        </select>
+                                      </div> 
                                          <!-- <div class="form-group"> 
                                             {!! Form::label('source', lang('Source'), array('class' => '')) !!}
                                             {!! Form::text('source', null, array('class' => 'form-control')) !!}
                                         </div>  -->
                                     </div>    
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                          <div class="form-group"> 
                                             {!! Form::label('product', lang('Product'), array('class' => '')) !!}
                                             <select name="product" class="form-control minimal" aria-label="Default select example">
@@ -180,13 +173,13 @@ input[type=submit] {
                                         </div> 
                                     </div>  
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                          <div class="form-group"> 
                                             {!! Form::label('reference', lang('Agent/Employee Reference ID'), array('class' => '')) !!}
                                             {!! Form::text('reference', null, array('class' => 'form-control')) !!}
                                         </div> 
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                          <div class="form-group"> 
                                             {!! Form::label('reference', lang('Assign To'), array('class' => '')) !!}
                                             <select name="product" onchange="select_type(this.value)" class="form-control minimal" aria-label="Default select example">
@@ -243,7 +236,6 @@ input[type=submit] {
                                             </select>
                                         </div> 
                                     </div>
-                                    
                                     <div class="col-md-12">
                                          <div class="form-group"> 
                                             {!! Form::label('note', lang('Note'), array('class' => '')) !!}
@@ -251,9 +243,6 @@ input[type=submit] {
                                             <!-- {!! Form::text('note', null, array('class' => 'form-control')) !!} -->
                                         </div> 
                                     </div>
-                                     
-                            
-                                 
                                     <div class="col-md-12">
                                          <button type="submit" class="btn btn-default w3ls-button">Submit</button> 
                                     </div>

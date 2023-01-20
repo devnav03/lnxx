@@ -9,6 +9,8 @@ class Lead extends Model
     protected $fillable = [
         'saturation',
         'name',
+        'mname',
+        'lname',
         'email',
         'number',
         'product',

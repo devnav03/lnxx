@@ -636,21 +636,16 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
             Route::any('emp-agent/filter2', 'App\Http\Controllers\EmpolyeeController@emp_agent_filter2');
             Route::any('select-user-lead', 'App\Http\Controllers\LeadController@select_user_lead')->name('select-user-lead');
             Route::any('get-personal-details', 'App\Http\Controllers\LeadController@get_personal_details')->name('get.personal.details');
-<<<<<<< HEAD
-            Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal')->name('view.save.personal');
-            Route::any('personal/detail/customer', 'App\Http\Controllers\LeadController@personal_detail_customer')->name('personal-detail-customer');
-            Route::any('empl/details', 'App\Http\Controllers\LeadController@empl_details')->name('empl-details');
-            Route::any('existing/financial/save', 'App\Http\Controllers\LeadController@existing_financial_save')->name('existing-financial-save');
-            Route::any('bank/preference', 'App\Http\Controllers\LeadController@bank_preference')->name('bank-preference');
-            Route::any('consent/form', 'App\Http\Controllers\LeadController@consent_form')->name('consent_form');
-            // Route::get('fetch-graph', 'App\Http\Controllers\LeadController@fetch_graph');
 
-=======
->>>>>>> 570c4b0ffea708978e629cbbd34a1f6151cd761b
+
+Route::any('personal-details/{id}', [App\Http\Controllers\OnboardController::class, 'personal_details'])->name('admin.personal-details');
+Route::any('cm-details/{id}', [App\Http\Controllers\OnboardController::class, 'cm_details'])->name('admin.cm-details');
+
+
 });
 });
 
-// Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal');
+Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal');
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
 Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign_up');

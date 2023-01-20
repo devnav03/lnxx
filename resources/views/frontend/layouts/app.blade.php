@@ -71,15 +71,6 @@
 @php
     $route  = \Route::currentRouteName();    
 @endphp
-<<<<<<< HEAD
-        @if($route == 'get-started' || $route == 'view.save.personal')    
-            @include('frontend.layouts.header') 
-        @else 
-            @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id')
-                @include('frontend.layouts.header_main')
-            @endif    
-        @endif
-=======
     @if($route == 'get-started')    
         @include('frontend.layouts.header') 
     @else 
@@ -87,7 +78,6 @@
         @include('frontend.layouts.header_main')
     @endif    
     @endif
->>>>>>> 570c4b0ffea708978e629cbbd34a1f6151cd761b
         <!-- Main Content -->
         @yield('content')
         @if($route != 'sign_up' && $route != 'register-email' && $route != 'email-otp' && $route != 'enter-name' && $route != 'sign-in' && $route != 'enter-login-otp' && $route != 'upload-emirates-id' && $route != 'upload-profile-image' && $route != 'emirates-id-verification' && $route != 'verify-emirates-id' && $route != 'congratulations' && $route != 'thank-you')
@@ -682,10 +672,11 @@ $('input[name=credit_score]').on('keyup' , function() {
     var id = $("input[name=credit_score]").val();
     if( id.length == 0 ) {
         $(".aecb_date").hide();
+        $(".aecb_date input").removeAttr('required'); 
     } else {
         $(".aecb_date").show();
+        $(".aecb_date input").attr("required", true);
     }
-    
 });
 
 
@@ -1178,9 +1169,6 @@ $(document).ready(function(){
     $('#exampleModal').modal('show');
 </script>
 @endif
-
-
-
 
 </body>
 </html>

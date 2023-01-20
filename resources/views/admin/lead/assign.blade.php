@@ -23,12 +23,12 @@
                             <div class="row row-sm">
                                 <div class="col-lg-12 col-md-12">
                                     <div class="card custom-card">
-                                        <div class="card-body">
-                                            <div>
-                                            <h6 class="main-content-label mb-1">Assign Lead Filter</h6>
-                                            </div>
-                                            <div class="panel-body row">
-                                                <div class="col-md-12" style="margin-top: 15px;">
+                                    <div class="card-body">
+                                    <div>
+                                    <h6 class="main-content-label mb-1">Assign Lead Filter</h6>
+                                    </div>
+                                    <div class="panel-body row">
+                                            <div class="col-md-12" style="margin-top: 15px;">
                                                 @if($route == 'leads.lead_assign_leads')
                                                     {!! Form::open(array('method' => 'POST',
                                                     'route' => array('assign.lead.paginate'), 'id' => 'ajaxForm')) !!}
@@ -117,21 +117,18 @@
                                                             </div>
                                                         </div>
                                                         @endif
-                                                        <div class="col-sm-3">
-                                                            <div class="form-group">
-                                                                <label for="product_type"
-                                                                    class="control-label">Between Dates</label>
-                                                                    <div style="display: block; width: 100%; height: calc(1.5em + 0.75rem rem + 2px); font-size: 0.875rem; font-weight: 400; line-height: 1.5; color: #a8afc7; background-color: #ffffff; background-clip: padding-box; border: 1px solid #e8e8f7; border-radius: 3px; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; height: 38px; border-radius: 5px;"> 
-                                                                    <input type="text" name="between_date" class="btn btn-default float-right" id="daterange-btn">
-                                                                    <i class="far fa-calendar-alt"></i>
-                                                                    </div>
-                                                                    
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-3 margintop20">
-                                                            <div class="form-group">
-                                                                {!! Form::hidden('form-search', 1) !!}
-                                                                {!! Form::submit('Filter', array('class' => 'btn
+                        <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="product_type" class="control-label">Between Dates</label>
+                            <div style="display: block; width: 100%; height: calc(1.5em + 0.75rem rem + 2px); font-size: 0.875rem; font-weight: 400; line-height: 1.5; color: #a8afc7; background-color: #ffffff; background-clip: padding-box; border: 1px solid #e8e8f7; border-radius: 3px; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; height: 38px; border-radius: 5px;"> 
+                                <input type="text" name="between_date" class="btn btn-default float-right" id="daterange-btn"><i class="far fa-calendar-alt"></i>
+                            </div>                                    
+                        </div>
+                        </div>
+                        <div class="col-sm-3 margintop20">
+                            <div class="form-group">
+                            {!! Form::hidden('form-search', 1) !!}
+                            {!! Form::submit('Filter', array('class' => 'btn
                                                                 btn-primary')) !!}
                                                                 @if($route == 'leads.lead_assign_leads')
                                                                 <a href="{!! route('leads.lead_assign_leads') !!}"
@@ -261,7 +258,7 @@
                                             {!! Form::number('mobile', null, array('class' =>
                                             'form-control', 'id' => 'mobile')) !!}
                                         </div>
-                                            </div>
+                                    </div>
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="user_type"
@@ -272,7 +269,6 @@
                                                 @foreach($get_type as $get_type)
                                                 <option value="{{$get_type->name}}">{{$get_type->name}}</option>
                                                 @endforeach
-                                                    
                                                 </select>
                                         </div>
                                     </div>
@@ -294,7 +290,7 @@
                                             <label for="user_type"
                                                 class="control-label">Type of Selection</label>
                                                 <select name="user_type" id="user_type" class="form-control minimal" aria-label="Default select example">
-                                                    <option>Please Select</option>
+                                                    <option value="">Please Select</option>
                                                     <option value="3">Agents</option>
                                                     <option value="4">Employees</option>
                                                 </select>
@@ -358,15 +354,13 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6 margintop20">
-                                        <div class="form-group">
+                                    <div class="form-group">
                                         <a href="#" onclick="search_filter2()" style="color:white;"
                                                 class="btn btn-success">Filter</a>    
-                                        <a href="#"
-                                                class="btn btn-warning">Reset Filter</a>
-                                        </div>
+                                        <a href="#" class="btn btn-warning">Reset Filter</a>
                                     </div>
-                                    <div id="send-status">
                                     </div>
+                                        <div id="send-status"></div>
                                 </div>
                             </div>
                         </div>
@@ -496,7 +490,7 @@ function savedata(id){
     $.ajax({
         type: 'GET',
         url : "{{url('admin/save-view-details')}}", 
-        data: {id:id, name:name, m_mname:m_mname, m_lname:m_lname, email:email, number:number, product:product, source:source, status:status},
+        data: {id:id, name:name, mname:mname, lname:lname, email:email, number:number, product:product, source:source, status:status},
         success: function(response){
             location.reload();
         }

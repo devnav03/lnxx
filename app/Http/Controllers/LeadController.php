@@ -15,6 +15,7 @@ use App\Models\ProductRequest;
 use App\Models\ServiceApply; 
 use App\Models\SelfEmpDetail;
 use App\Models\CmSalariedDetail;
+use App\Models\Service;
 use App\Models\User; 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -50,6 +51,9 @@ class LeadController extends  Controller{
                 $inputs['name'] = $request->fname;
                 $inputs['mname'] = $request->mname;
                 $inputs['lname'] = $request->lname;
+                $inputs['number'] = str_replace('+971', '', $inputs['number']);
+                $inputs['number'] = str_replace(' ', '', $inputs['number']);
+
                 if(!empty($request->agent)){
                     $inputs['alloted_to'] = $request->agent;
                 }elseif(!empty($request->employee)){
@@ -509,8 +513,8 @@ class LeadController extends  Controller{
     //     $datas=['status'=>200,'responce'=>$result];
     //     return response()->json($datas);
     // }
-    public function admin_lead_open_tracking(Request $request)
-    {
+
+    public function admin_lead_open_tracking(Request $request) {
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
         if($user_type == 1){
@@ -523,7 +527,7 @@ class LeadController extends  Controller{
                 }
                 return $artilces;
             }
-        }elseif($user_type == 3){
+        } elseif($user_type == 3){
             $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->where('seen_time', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
@@ -533,7 +537,7 @@ class LeadController extends  Controller{
                 }
                 return $artilces;
             }
-        }elseif($user_type == 4){
+        } elseif($user_type == 4){
             $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->where('seen_time', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
@@ -560,7 +564,7 @@ class LeadController extends  Controller{
                 
                 return $artilces;
             }
-        }elseif($user_type == 3){
+        } elseif($user_type == 3){
             $results = lead::orderBy('id')->where('lead_status', 'INPROCESS')->where('alloted_to', $auth_user_id)->paginate(5);
             $artilces = '';
             if ($request->page){
@@ -571,7 +575,7 @@ class LeadController extends  Controller{
                 
                 return $artilces;
             }
-        }elseif($user_type == 4){
+        } elseif($user_type == 4){
             $results = lead::orderBy('id')->where('lead_status', 'INPROCESS')->where('alloted_to', $auth_user_id)->paginate(5);
             $artilces = '';
             if ($request->page){
@@ -583,9 +587,9 @@ class LeadController extends  Controller{
                 return $artilces;
             }
         }
-    }    
-    public function admin_lead_reminder_tracking(Request $request)
-    {
+    }  
+
+    public function admin_lead_reminder_tracking(Request $request) {
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
         if($user_type == 1){
@@ -598,7 +602,7 @@ class LeadController extends  Controller{
                 }
                 return $artilces;
             }
-        }elseif($user_type == 3){
+        } elseif($user_type == 3){
             $results = lead::orderBy('id')->where('lead_status', 'REMINDER')->where('alloted_to', $auth_user_id)->paginate(5);
             $artilces = '';
             if ($request->page){
@@ -608,7 +612,7 @@ class LeadController extends  Controller{
             }
             return $artilces;
         }
-        }elseif($user_type == 4){
+        } elseif($user_type == 4){
             $results = lead::orderBy('id')->where('lead_status', 'REMINDER')->where('alloted_to', $auth_user_id)->paginate(5);
         $artilces = '';
         if ($request->page){
@@ -620,35 +624,53 @@ class LeadController extends  Controller{
         }
         } 
     }
-    public function admin_lead_popup(Request $request)
-    {
+
+    public function admin_lead_popup(Request $request) {
         $user_type = Auth()->user()->user_type;
         if($user_type == 3 || $user_type == 4){
             $time=Carbon::now()->toDateTimeString();
             \DB::table('leads')->where('id', $request->id)->where('seen_time', Null)->update(['seen_time' => $time, 'lead_status' => 'INPROCESS']); 
         }
+
+
         $results = lead::where('id', $request->id)->first();
         $results->createdat = date_format(date_create($results->created_at),"d-M-Y H:i:s");
         $get_user = User::where('id', $results->alloted_to)->first();
-        $get_user_exist = User::select('id')->where('email', $results->email)->where('mobile', $results->number)->first();
-        if(empty(@$get_user_exist->id)){
-            @$get_user_exist->id = '';
+        $get_user_exist = User::select('id')->where('email', $results->email)->first();
+        if(empty($get_user_exist)){
+            $get_user_exist = User::select('id')->where('mobile', $results->number)->first();    
         }
+        if(empty($get_user)){
+            $get_user = (object)['name'];
+        }
+        
+        // $mname = '';
+        // $lname = '';
+        // if($results->mname){
+        //     $mname = $results->mname;
+        // }
+        // if($results->lname){
+        //     $lname = $results->lname;
+        // }
+
+        // $results->name = $results->name.' '.$mname.' '.$lname;
         $get_upload = User::where('id', $results->uploaded_by)->first();
-        $application = \DB::table('applications')->select('cm_type', 'video', 'consent_form')->where(['email' => $results->email, 'mobile' => $results->number])->first();
-        if(empty(@$application->cm_type)){
-            @$application->cm_type = '';
+
+        if(!empty($get_user_exist)){
+            $application = \DB::table('applications')->select('cm_type', 'video', 'consent_form')->where('user_id', $get_user_exist->id)->first();
+        } else {
+            $application['cm_type'] = '';
+            $application['video'] = '';
+            $application['consent_form'] = '';
+            //$get_user_exist->id = '';
         }
-        if(empty(@$application->video)){
-            @$application->video = '';
-        }
-        if(empty(@$application->consent_form)){
-            @$application->consent_form = '';
-        }
+
         $get_status = \DB::table('status_master')->get();
         $decoded_status = json_encode($get_status, TRUE);
+
         if (!empty($results->id)){
             $datas=['status'=>200,'responce'=>$results,'getuser'=>$get_user,'getupload'=>$get_upload,'decoded_status'=>$decoded_status, 'application' => $application, 'get_user_exist' => $get_user_exist];
+            //dd($datas);
             return response()->json($datas);
         }
     }
@@ -818,7 +840,7 @@ class LeadController extends  Controller{
          $time=Carbon::now()->toDateTimeString();
          if($request->status == 'CLOSE'){
             \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'mname' => $request->mname, 'lname' => $request->lname, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'close_time' => $time , 'alloted_to' => $request->assign_to]); 
-         }else{
+         } else{
             \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'mname' => $request->mname, 'lname' => $request->lname, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'alloted_to' => $request->assign_to]); 
          }       
     }
@@ -849,12 +871,29 @@ class LeadController extends  Controller{
             $datas=['status'=>400];
             return response()->json($datas);
         }else{
-            \DB::table('users')->insert(['salutation' =>$create_user->saturation, 'name' => $create_user->name, 'middle_name' => $create_user->mname, 'last_name' => $create_user->lname, 'email' => $create_user->email, 'user_type' => 2, 'mobile' => $create_user->number, 'gender' =>  $create_user->gender, 'date_of_birth' => $create_user->dob, 'created_at' => $time, 'updated_at' => $time]);
-            $get_last_id = \DB::select('id')->where('email', $create_user->email)->where('mobile', $create_user->number)->first();
-            \DB::table('customer_onboardings')->insert(['user_id' => $get_last_id->id, 'first_name_as_per_passport' => $create_user->name, 'middle_name' => $create_user->mname, 'last_name' => $create_user->lname, 'date_of_birth' => $create_user->dob, 'salutation' => $create_user->saturation, 'gender' =>  $create_user->gender, 'created_at' => $time, 'updated_at' => $time]);
-            $service_id = \DB::select('id')->where('services', $create_user->product)->where('mobile', $create_user->number)->first();
-            \DB::table('service_applies')->insert(['customer_id' => $get_last_id->id, 'service_id' => $service_id->id, 'created_at' => $time, 'updated_at' => $time]);
-            $datas=['status'=>200, 'get_last_id' => $get_last_id->id];
+
+            // \DB::table('users')->insert(['salutation' =>$create_user->saturation, 'name' => $create_user->name, 'middle_name' => $create_user->mname, 'last_name' => $create_user->lname, 'email' => $create_user->email, 'user_type' => 2, 'mobile' => $create_user->number]);
+
+            $user = new User;
+            $user->email = $create_user->email;
+            $user->mobile = $create_user->number;
+            $user->salutation = $create_user->saturation;
+            $user->name = $create_user->name;
+            $user->middle_name = $create_user->mname;
+            $user->last_name = $create_user->lname;
+            $user->user_type = 2;
+            $user->status = 1;
+            $user->save();
+
+            $get_last_id = User::where('email', $create_user->email)->where('mobile', $create_user->number)->select('id')->first();
+
+            // \DB::table('customer_onboardings')->insert(['user_id' => $get_last_id->id, 'first_name_as_per_passport' => $create_user->name, 'middle_name' => $create_user->mname, 'last_name' => $create_user->lname, 'date_of_birth' => $create_user->dob, 'salutation' => $create_user->saturation, 'gender' =>  $create_user->gender, 'created_at' => $time, 'updated_at' => $time]);
+            // $service_id = \DB::select('id')->where('services', $create_user->product)->where('mobile', $create_user->number)->first();
+            // \DB::table('service_applies')->insert(['customer_id' => $get_last_id->id, 'service_id' => $service_id->id, 'created_at' => $time, 'updated_at' => $time]);
+
+            $id = $get_last_id->id;
+
+            $datas=['status'=>200, 'get_last_id' => $id];
             return response()->json($datas);
         }
         
@@ -1050,52 +1089,69 @@ class LeadController extends  Controller{
             return response()->json(['status'=>200]);
         }
         public function get_personal_details(request $request){
-            \DB::table('leads')->where('id', $request->m_id)->update(['name' => $request->m_name, 'number' => $request->m_number, 'email' => $request->m_email, 'note' => $request->m_description]);
+            \DB::table('leads')->where('id', $request->m_id)->update([
+                'name' => $request->m_name, 
+                'mname' => $request->mi_name,
+                'lname' => $request->ml_name,
+                'number' => $request->m_number, 
+                'email' => $request->m_email, 
+                'note' => $request->m_description,
+            ]);
+
             $datas=['status'=>200];
             return response()->json($datas);   
         }
         public function view_save_personal($id){
-            $user_id = $id;
-            $banks = Bank::where('status', 1)->select('id', 'name')->get();
-            $countries = Country::all();
-            $user = User::where('id', $id)->first();
-            $result = CustomerOnboarding::where('user_id', $id)->first();
-            $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
-                if($result->cm_type == 1){
-                    $cm_type = CmSalariedDetail::where('customer_id', $user_id)->first();
-                } elseif ($result->cm_type == 2) {
-                    $cm_type = SelfEmpDetail::where('customer_id', $user_id)->first();
-                } elseif ($result->cm_type == 3) {
-                    $cm_type = OtherCmDetail::where('customer_id', $user_id)->first();  
-                } else {
-                    $cm_type = ''; 
-                }
-                if(isset($request->service)){
-                    foreach($request->service as $service_id){
-                        $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
-                        if($apply_ser == 0) {
-                            ServiceApply::create([
-                                'service_id'  =>  $service_id,
-                                'customer_id'  => $user_id,
-                            ]);
-                        }
-                    }
-                    $service = \DB::table('service_applies')
-                        ->join('services', 'services.id', '=', 'service_applies.service_id')
-                        ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id')->where('service_applies.customer_id', $user_id)->get();    
-                        return view('admin.lead.view-save-personal', compact('cm_type', 'user', 'result', 'countries', 'banks', 'service'));
-                } else {
-                    $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
-                    if($apply_ser == 0) {
-                        return redirect()->route('user-dashboard')->with('select_service', 'select_service');
-                    } else {
-                    $service = \DB::table('service_applies')
-                        ->join('services', 'services.id', '=', 'service_applies.service_id')
-                        ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id', 'service_applies.decide_by')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
-                        // dd($services);   
-                        return view('admin.lead.view-save-personal', compact('cm_type', 'user', 'result', 'countries', 'banks', 'service'));
-                    }
-                }
+
+
+            $selected_services = ServiceApply::where('customer_id', $id)->pluck('service_id')->toArray();                   
+            $service = Service::where('status', 1)->select('name', 'url', 'image', 'id')->orderBy('sort_order', 'ASC')->get();
+            $relations = \DB::table('applications')
+                    ->join('services', 'services.id', '=', 'applications.service_id')
+                    ->select('applications.status', 'services.name', 'services.image', 'applications.ref_id', 'applications.created_at')->where('applications.user_id', $id)->get();
+            return view('admin.lead.select-service', compact('selected_services', 'service', 'relations', 'id'));
+            
+            // $user_id = $id;
+            // $banks = Bank::where('status', 1)->select('id', 'name')->get();
+            // $countries = Country::all();
+            // $user = User::where('id', $id)->first();
+            // $result = CustomerOnboarding::where('user_id', $id)->first();
+            // $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
+            //     if($result->cm_type == 1){
+            //         $cm_type = CmSalariedDetail::where('customer_id', $user_id)->first();
+            //     } elseif ($result->cm_type == 2) {
+            //         $cm_type = SelfEmpDetail::where('customer_id', $user_id)->first();
+            //     } elseif ($result->cm_type == 3) {
+            //         $cm_type = OtherCmDetail::where('customer_id', $user_id)->first();  
+            //     } else {
+            //         $cm_type = ''; 
+            //     }
+            //     if(isset($request->service)){
+            //         foreach($request->service as $service_id){
+            //             $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
+            //             if($apply_ser == 0) {
+            //                 ServiceApply::create([
+            //                     'service_id'  =>  $service_id,
+            //                     'customer_id'  => $user_id,
+            //                 ]);
+            //             }
+            //         }
+            //         $service = \DB::table('service_applies')
+            //             ->join('services', 'services.id', '=', 'service_applies.service_id')
+            //             ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id')->where('service_applies.customer_id', $user_id)->get();    
+            //             return view('admin.lead.view-save-personal', compact('cm_type', 'user', 'result', 'countries', 'banks', 'service'));
+            //     } else {
+            //         $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
+            //         if($apply_ser == 0) {
+            //             return redirect()->route('user-dashboard')->with('select_service', 'select_service');
+            //         } else {
+            //         $service = \DB::table('service_applies')
+            //             ->join('services', 'services.id', '=', 'service_applies.service_id')
+            //             ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id', 'service_applies.decide_by')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
+            //             // dd($services);   
+            //             return view('admin.lead.view-save-personal', compact('cm_type', 'user', 'result', 'countries', 'banks', 'service'));
+            //         }
+            //     }
         }
     
         public function personal_detail_customer(Request $request){

@@ -9,7 +9,7 @@
     <p style="color: green;margin-bottom: 10px;">Your profile has been successfully updated</p>
 @endif
 @if(session()->has('app_submit'))
-    <p style="color: green;margin-bottom: 10px;">Your application has been submitted successfully</p>
+  <p style="color: green;margin-bottom: 10px;">Your application has been submitted successfully</p>
 @endif
 @if(count($relations) != 0)
 <div class="lorem_dashboard">

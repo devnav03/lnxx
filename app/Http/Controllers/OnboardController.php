@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -45,80 +45,9 @@ use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
 
-class HomeController extends Controller {
+class OnboardController extends Controller {
    
-    public function index() {
-        $banks = Bank::where('status', 1)->select('name', 'image')->get();
-        $services = Service::where('status', 1)->select('name', 'image', 'blue_icon')->orderBy('sort_order', 'ASC')->get();
-        $testimonials = Testimonial::where('status', 1)->select('title', 'image', 'comment')->get();
-        $smallSliders = SmallSlider::where('status', 1)->select('title', 'image', 'link')->get();
-        return view('frontend.pages.get_started', compact('banks', 'services', 'testimonials', 'smallSliders'));
-    }
 
-    public function home(){
-        try{
-            $services = Service::where('status', 1)->select('id', 'name', 'url', 'image', 'blue_icon')->orderBy('sort_order', 'ASC')->get(); 
-            $banks = Bank::where('status', 1)->select('name', 'image')->get();
-            $testimonials = Testimonial::where('status', 1)->select('title', 'image', 'comment')->get(); 
-            $sliders = Slider::where('status', 1)->select('title', 'image', 'link')->get(); 
-            $countries = Country::all();
-            return view('frontend.pages.home', compact('services', 'banks', 'testimonials', 'sliders', 'countries'));
-        } catch (Exception $exception) {
-            return back();
-        }
-    }
-
-    public function sign_up(){
-        return view('frontend.pages.sign_up');
-    }
-  
-    public function otp_sent(Request $request){
-        try {
-            $find = User::where('mobile', $request->mobile)->count();
-            if($find > 0){
-                $data['status'] = 'Fail';
-                return $data;
-            } else {
-                $gen_otp = rand(100000, 999999);
-                $otp = new UserOtp;
-                $otp->mobile = $request->mobile;
-                $otp->otp = $gen_otp;
-                $otp->save();
-
-                // $this->OtpEvent($request->mobile,$otp->otp);
-
-                $data['status'] = 'Sent';
-                return $data;
-            }
-        } catch (\Exception $exception) {
-        //dd($exception);
-        return back();    
-        }
-    }
-
-    public function agent_menu(){
-        try {
-           \Session::forget('user_base');
-           \Session::start();
-           \Session::put('user_base', 'Agent');
-            return redirect()->route('home');
-        } catch (\Exception $exception) {
-        //dd($exception);
-        return back();    
-        }
-    }
-
-    public function customer_menu(){
-        try {
-           \Session::forget('user_base');
-           \Session::start();
-           \Session::put('user_base', 'Customer');
-            return redirect()->route('home');
-        } catch (\Exception $exception) {
-        //dd($exception);
-            return back();    
-        }
-    }
 
     public function save_personal_loan_preference(Request $request){
         try{
@@ -361,7 +290,6 @@ class HomeController extends Controller {
         }
     }
 
-    
 
     public function check_product_code(Request $request){
         $code = Company::where('id', $request->code)->select('id', 'name')->first();
@@ -1664,85 +1592,39 @@ public function enter_name(Request $request){
         }
     }
 
-    public function personal_details(Request $request){
+    public function personal_details(Request $request, $id =null){
         try{
 
-            $user_id = Auth::id();
-
+            $user_id = $id;
             $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
             if(isset($request->page)){
+
                 \DB::table('service_applies')->where('customer_id', $user_id)->delete();
                 if(isset($request->service)){
                     foreach($request->service as $service_id){
-
                         ServiceApply::create([
                             'service_id'  =>  $service_id,
                             'customer_id'  => $user_id,
                         ]);
-                        
                     }
                 } else {
-                    return redirect()->route('user-dashboard')->with('select_service', 'select_service');
+                    return back()->with('select_service', 'select_service');
                 }
 
                 $countries = Country::all();
-                $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
+                $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number', 'profile_image', 'emirates_id', 'emirates_id_back')->first();
                 $result = CustomerOnboarding::where('user_id', $user_id)->first();
 
-                return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
+                return view('admin.lead.personal_details', compact('user', 'countries', 'result', 'user_id'));
 
-            } else {
-                $apply_ser = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->count();
-                if($apply_ser == 0) {
-                    return redirect()->route('user-dashboard')->with('select_service', 'select_service');
-                } else {
- 
-                $countries = Country::all();
-                $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
-                $result = CustomerOnboarding::where('user_id', $user_id)->first();
-
-                return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
- 
-                }
-            }
-
-
-            // if(isset($request->apply_id)){
-            //     if($request->bank_id){
-            //         foreach($request->apply_id as $apply_id){
-            //             if(isset($request->bank_id[$apply_id])) {
-            //                 ServiceApply::where('id', $apply_id)->update([
-            //                     'bank_id'  =>  $request->bank_id[$apply_id],
-            //                 ]);
-            //             }
-            //         }
-            //     }
-            //     $countries = Country::all();
-            //     $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
-            //     $result = CustomerOnboarding::where('user_id', $user_id)->first();
-
-            //     return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
-            // } else {
-
-            //     $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
-
-            //     if($apply_ser == 0) {
-            //         return redirect()->route('user-dashboard')->with('select_service', 'select_service');
-            //     } else {
-
-            //     $countries = Country::all();
-            //     $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
-            //     $result = CustomerOnboarding::where('user_id', $user_id)->first();
-            //     return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
-            //     }
-            // }
+            } 
 
 
             $countries = Country::all();
-            $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number')->first();
+            $user = User::where('id', $user_id)->select('name', 'salutation', 'middle_name', 'last_name', 'email', 'gender', 'date_of_birth', 'eid_number', 'profile_image', 'emirates_id', 'emirates_id_back')->first();
             $result = CustomerOnboarding::where('user_id', $user_id)->first();
    
-            return view('frontend.pages.personal_details', compact('user', 'countries', 'result'));
+            return view('admin.lead.personal_details', compact('user', 'countries', 'result', 'user_id'));
 
         } catch (Exception $e) {
            // dd($e);
@@ -1750,10 +1632,10 @@ public function enter_name(Request $request){
         }
     }
 
-    public function cm_details(Request $request){
+    public function cm_details(Request $request, $id =null){
         try{
 
-            $user_id =  Auth::id();
+            $user_id =  $id;
             $inputs = $request->all(); 
             $company = Company::where('status', 1)->select('id', 'name')->get();
 
@@ -1765,24 +1647,22 @@ public function enter_name(Request $request){
                 if(isset($inputs['passport_photo']) or !empty($inputs['passport_photo'])) {
                     $image_name = rand(100000, 999999);
                     $fileName = '';
-
                     if($file = $request->hasFile('passport_photo')) {
                         $file = $request->file('passport_photo');
                         $img_name = $file->getClientOriginalName();
                         $image_resize = Image::make($file->getRealPath()); 
                         $image_resize->resize(600, 600);
                         $fileName = $image_name.$img_name;
-                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));       
+                        $image_resize->save(public_path('/uploads/passport_images/' .$fileName));      
                     }
-
                     $fname ='/uploads/passport_images/';
                     $passport_photo = $fname.$fileName;
                 } else {
                     $passport_photo = @$cm_details->passport_photo;
                 }
-
                 unset($inputs['passport_photo']);
                 $inputs['passport_photo'] = $passport_photo;
+
 
                 if(isset($inputs['aecb_image']) or !empty($inputs['aecb_image'])) {
                     $image_name = rand(100000, 999999);
@@ -1806,9 +1686,7 @@ public function enter_name(Request $request){
                 if($cm_details){
                     $id = $cm_details->id;
                     (new CustomerOnboarding)->store($inputs, $id); 
-                    
                     \DB::table('dependents')->where('user_id', $user_id)->delete();
-
                     if($request->no_of_dependents != 0){
                         $ik = 0;
                         foreach ($request->dependent_name as $key => $dependents) {
@@ -1821,10 +1699,8 @@ public function enter_name(Request $request){
                                     'relation' => $request->dependent_relation[$key],
                                 ]);
                             }
-                            
                         }
                     }
-
                 } else {
                     (new CustomerOnboarding)->store($inputs); 
                     if($request->no_of_dependents != 0){
@@ -1837,7 +1713,6 @@ public function enter_name(Request $request){
                                 'name' => $dependents,
                                 'relation' => $request->dependent_relation[$key],
                             ]);
-                            
                         }
                     }
                 }
@@ -1854,7 +1729,7 @@ public function enter_name(Request $request){
                     $result = ''; 
                 }
 
-                $user = User::where('id', $user_id)->select('emirates_id', 'emirates_id_back', 'eid_status')->first();
+                $user = User::where('id', $user_id)->select('emirates_id', 'emirates_id_back', 'eid_status', 'profile_image')->first();
 
                 if(isset($inputs['emirates_id_front']) or !empty($inputs['emirates_id_front'])) {
                     $image_name = rand(100000, 999999);
@@ -1873,6 +1748,27 @@ public function enter_name(Request $request){
                 } else {
                     $emirates_id_front = @$user->emirates_id;
                 }
+
+
+                if(isset($inputs['profile_image']) or !empty($inputs['profile_image'])) {
+                    $image_name = rand(100000, 999999);
+                    $fileName = '';
+
+                    if($file = $request->hasFile('profile_image')) {
+                        $file = $request->file('profile_image') ;
+                        $img_name = $file->getClientOriginalName();
+                        $image_resize = Image::make($file->getRealPath()); 
+                        $image_resize->resize(300, 300);
+                        $fileName = $image_name.$img_name;
+                        $image_resize->save(public_path('/uploads/user_images/' .$fileName));                 
+                    }
+                    $fname ='/uploads/user_images/';
+                    $user_images = $fname.$fileName;
+                } else {
+                    $user_images = @$user->profile_image;
+                }
+
+
 
                 if(isset($inputs['emirates_id_back']) or !empty($inputs['emirates_id_back'])) {
                     $image_name = rand(100000, 999999);
@@ -1903,9 +1799,10 @@ public function enter_name(Request $request){
                     'middle_name' => $request->middle_name,
                     'last_name' => $request->last_name,
                     'eid_number' => $request->eid_number,
+                    'profile_image' => $user_images, 
                 ]);  
                 
-                return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
+                return view('admin.lead.cm_details', compact('cm_type', 'result', 'company', 'user_id'));
 
                 // if($user->eid_status == 1) {
                 //     return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
@@ -1928,9 +1825,9 @@ public function enter_name(Request $request){
                     } else {
                         $result = '';  
                     }
-                    return view('frontend.pages.cm_details', compact('cm_type', 'result', 'company'));
+                    return view('admin.lead.cm_details', compact('cm_type', 'result', 'company', 'user_id'));
                 } else {
-                    return redirect()->route('personal-details');
+                    return back();
                 }
             }
         } catch (Exception $e) {

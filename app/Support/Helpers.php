@@ -169,6 +169,10 @@ function get_family_info($id){
     return App\Models\Dependent::where('user_id', $user_id)->skip($id)->select('name', 'relation')->first();
 }
 
+function get_family_info_agent($id, $user_id){
+    return App\Models\Dependent::where('user_id', $user_id)->skip($id)->select('name', 'relation')->first();
+}
+
 function get_service_status($service_id){
 
     $id = \Auth::user()->id;
@@ -181,6 +185,19 @@ function get_service_status($service_id){
     }
     return $value;
 }
+
+function get_service_status_agent($service_id, $id){
+
+    $apply_ser = App\Models\ServiceApply::where('service_id', $service_id)->where('app_status', 0)->where('customer_id', $id)->count();
+    
+    if($apply_ser == 0){
+        $value = 0;
+    } else {
+        $value = 1;
+    }
+    return $value;
+}
+
 
 function get_service_details($id){
     $apply_ser = App\Models\ServiceApply::where('customer_id', $id)->select('service_id')->get();

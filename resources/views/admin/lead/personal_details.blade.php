@@ -1,4 +1,7 @@
-@extends('frontend.layouts.app')
+@extends('admin.layouts.admin')
+@php
+    $route  = \Route::currentRouteName();    
+@endphp
 @section('content')
 
 @php
@@ -12,12 +15,12 @@ if($result) {
 <section class="personal_details">
 <div class="container">  
 <div class="row">  
-<div class="col-md-7">
-<div class="personal_details_box">
-<h1 class="app_form_head">Application Form</h1>  
-<h2>Personal Details <span style="float: right; color: #000; font-size: 14px;font-weight: 600;">(*Mandatory)</span></h2>
-<h6 style="margin-top: 12px;margin-bottom: 15px;">Please enter your information to check the offer.</h6>
-<form action="{{ route('cm-details') }}" enctype="multipart/form-data" method="post">
+<div class="col-md-10">
+<div class="personal_details_box" style="margin-top: 20px;">
+<!-- <h1 class="app_form_head">Application Form</h1>   -->
+<h2 style="font-size: 22px; margin-bottom: 15px;">Personal Details <span style="float: right; color: #000; font-size: 14px;font-weight: 600;">(*Mandatory)</span></h2>
+<!-- <h6 style="margin-top: 12px;margin-bottom: 15px;">Please enter your information to check the offer.</h6> -->
+<form action="{{ route('admin.cm-details', $user_id) }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}  
 <div class="row">  
 <!-- <div class="col-md-12">
@@ -72,8 +75,8 @@ if($result) {
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">DOB*</label> 
-      <input name="date_of_birth" class="form-control" id="my_date_picker_dob" @if($result) value="{{ \Auth::user()->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="text" required="true">
-      <i class="fa-solid fa-calendar"></i>
+      <input name="date_of_birth" class="form-control" id="my_date_picker_dob" @if($result) value="{{ $user->date_of_birth }}" @else  value="{{ old('date_of_birth') }}" @endif type="text" required="true">
+      <i style="position: absolute; top: 42px; right: 30px;" class="ti-calendar sidemenu-icon menu-icon"></i>
       @if($errors->has('date_of_birth'))
         <span class="text-danger">{{$errors->first('date_of_birth')}}</span>
       @endif
@@ -83,9 +86,10 @@ if($result) {
   <div class="col-md-6">
     <label class="sub-label">Gender*</label>  
     <select name="gender" class="form-control" required="true">
-    <option value="Male" @if(\Auth::user()->gender == 'Male') selected @endif>Male</option>
-    <option value="Female" @if(\Auth::user()->gender == 'Female') selected @endif>Female</option>
-    <option value="Other" @if(\Auth::user()->gender == 'Other') selected @endif>Other</option>
+    <option value="">Select</option>  
+    <option value="Male" @if($user->gender == 'Male') selected @endif>Male</option>
+    <option value="Female" @if($user->gender == 'Female') selected @endif>Female</option>
+    <option value="Other" @if($user->gender == 'Other') selected @endif>Other</option>
     </select>
     @if($errors->has('gender'))
     <span class="text-danger">{{$errors->first('gender')}}</span>
@@ -94,8 +98,8 @@ if($result) {
 
   <div class="col-md-6">
     <div class="form-group">
-      <label class="sub-label">Nationality*</label>
-      <select name="nationality" onChange="ChangeCountry(this);" class="form-control" required="true">
+    <label class="sub-label">Nationality*</label>
+    <select name="nationality" onChange="ChangeCountry(this);" class="form-control" required="true">
         <option value="">Select</option>
         @foreach($countries as $country)
           <option value="{{ $country->id }}" @if($result) @if($result->nationality == $country->id) selected @endif @endif >{{ $country->country_name }}</option>
@@ -107,7 +111,7 @@ if($result) {
     </div>
   </div>
 
-  <div class="col-md-6" id="years_in_uae_div" @if($sel_country == 229) style="display: none;" @endif>
+<div class="col-md-6" id="years_in_uae_div" @if($sel_country == 229) style="display: none;" @endif>
       <label class="sub-label">No. of Years in UAE*</label>
       <input name="years_in_uae" maxlength="2" pattern="\d*" id="years_in_uae" class="form-control" @if($sel_country != 229) required="true" @endif   @if($result) value="{{ $result->years_in_uae }}" @else value="{{ old('years_in_uae') }}" @endif type="text">
       @if($errors->has('years_in_uae'))
@@ -138,7 +142,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Spouse DOB*</label>
       <input name="spouse_date_of_birth" id="spouse_date_of_birth" class="form-control" @if($result) @if($result->marital_status == "Married") required="true" @endif value="{{ $result->spouse_date_of_birth }}" @else value="{{ old('spouse_date_of_birth') }}" @endif type="text">
-      <i class="fa-solid fa-calendar"></i>
+      <i style="position: absolute; top: 42px; right: 30px;" class="ti-calendar sidemenu-icon menu-icon"></i>
       @if($errors->has('spouse_date_of_birth'))
       <span class="text-danger">{{$errors->first('spouse_date_of_birth')}}</span>
       @endif
@@ -149,7 +153,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Wedding Anniversary Date*</label>
       <input name="wedding_anniversary_date" id="date_of_joining" class="form-control" @if($result) @if($result->marital_status == "Married") required="true" @endif value="{{ $result->wedding_anniversary_date }}" @else value="{{ old('wedding_anniversary_date') }}" @endif type="text">
-      <i class="fa-solid fa-calendar"></i>
+      <i style="position: absolute; top: 42px; right: 30px;" class="ti-calendar sidemenu-icon menu-icon"></i>
       @if($errors->has('wedding_anniversary_date'))
       <span class="text-danger">{{ $errors->first('wedding_anniversary_date') }}</span>
       @endif
@@ -159,7 +163,6 @@ if($result) {
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">No. of Dependents*</label>
-     <!--  <input name="no_of_dependents" pattern="\d*" maxlength="2" minlength="1" class="form-control" required="true" @if($result) value="{{ $result->no_of_dependents }}" @else value="{{ old('no_of_dependents') }}" @endif type="text"> -->
       <select name="no_of_dependents" onChange="NoOfDependents(this);" class="form-control" required="true">
         <option value="">Select</option>
         <option value="0" @if($result) @if($result->no_of_dependents == 0) selected @endif @endif >0</option>
@@ -185,7 +188,7 @@ if($result) {
       <label style="color: #000; font-weight: 600;" class="sub-label">Dependents Name & Relation</label>
   </div>
 @php
-  $family = get_family_info(0);
+  $family = get_family_info_agent(0, $user_id);
 @endphp
 
   <div class="col-md-6 family1" @if($result) @if($result->no_of_dependents == 0) style="display: none;" @endif @else style="display: none;" @endif >
@@ -221,7 +224,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(1);
+  $family = get_family_info_agent(1, $user_id);
 @endphp
   <div class="col-md-6 family2" @if($result) @if($result->no_of_dependents >= 2) @else style="display: none;" @endif @else style="display: none;" @endif >
     <div class="form-group">
@@ -256,7 +259,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(2);
+  $family = get_family_info_agent(2, $user_id);
 @endphp
   <div class="col-md-6 family3" @if($result) @if($result->no_of_dependents >= 3) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -291,7 +294,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(3);
+  $family = get_family_info_agent(3, $user_id);
 @endphp
   <div class="col-md-6 family4" @if($result) @if($result->no_of_dependents >= 4) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -326,7 +329,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(4);
+  $family = get_family_info_agent(4, $user_id);
 @endphp
   <div class="col-md-6 family5" @if($result) @if($result->no_of_dependents >= 5) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -361,7 +364,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(5);
+  $family = $family = get_family_info_agent(5, $user_id);
 @endphp
   <div class="col-md-6 family6" @if($result) @if($result->no_of_dependents >= 6) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -396,7 +399,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(6);
+  $family = $family = get_family_info_agent(6, $user_id);;
 @endphp
   <div class="col-md-6 family7" @if($result) @if($result->no_of_dependents >= 7) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -431,7 +434,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(7);
+  $family = get_family_info_agent(7, $user_id);
 @endphp
   <div class="col-md-6 family8" @if($result) @if($result->no_of_dependents >= 8) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -466,7 +469,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(8);
+  $family = get_family_info_agent(8, $user_id);
 @endphp
   <div class="col-md-6 family9" @if($result) @if($result->no_of_dependents >= 9) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -501,7 +504,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(9);
+  $family = get_family_info_agent(9, $user_id);
 @endphp
   <div class="col-md-6 family10" @if($result) @if($result->no_of_dependents >= 10) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -536,7 +539,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(10);
+  $family = get_family_info_agent(10, $user_id);
 @endphp
   <div class="col-md-6 family11" @if($result) @if($result->no_of_dependents >= 11) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -571,7 +574,7 @@ if($result) {
     </div>
   </div>
 @php
-  $family = get_family_info(11);
+  $family = get_family_info_agent(11, $user_id);
 @endphp
   <div class="col-md-6 family12" @if($result) @if($result->no_of_dependents >= 12) @else style="display: none;" @endif @else style="display: none;" @endif>
     <div class="form-group">
@@ -649,7 +652,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Date (when the score was fetched)*</label>
       <input name="aecb_date" readonly="" class="form-control" id="aecb_date" @if($result) value="{{ $result->aecb_date }}" @else value="{{ old('aecb_date') }}" @endif type="text">
-      <i class="fa-solid fa-calendar"></i>
+      <i style="position: absolute; top: 42px; right: 30px;" class="ti-calendar sidemenu-icon menu-icon"></i>
       @if($errors->has('aecb_date'))
       <span class="text-danger">{{$errors->first('aecb_date')}}</span>
       @endif
@@ -658,7 +661,7 @@ if($result) {
 
   <div class="col-md-6 aecb_date" @if(isset($result)) @if($result->credit_score == '') style="display: none;" @endif  @else style="display: none;" @endif >
     <div class="form-group">
-      <label class="sub-label">AECB Credit Score Image*</label>
+      <label class="sub-label" style="width: 100%;">AECB Credit Score Image*</label>
       <input name="aecb_image" style="box-shadow: none; margin-top: 3px;" type="file">
       @if($errors->has('aecb_image'))
       <span class="text-danger">{{$errors->first('aecb_image')}}</span>
@@ -690,9 +693,9 @@ if($result) {
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Upload front photo of Emirates id <span style="font-size: 13px;">(allowed file types (.jpg, .jpeg, *.png only) with maximum size 2mb.)*</span></label>
-      @if(\Auth::user()->emirates_id)
+      @if($user->emirates_id)
         <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
-        <img src="{!! asset(\Auth::user()->emirates_id) !!}" id="blah" class="img-responsive">
+        <img src="{!! asset($user->emirates_id) !!}" id="blah" class="img-responsive" style="margin-top: 10px;">
       @else
           <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp" style="box-shadow: none; margin-top: 3px;" name="emirates_id_front">
           <img src="" id="blah" class="img-responsive">
@@ -706,9 +709,9 @@ if($result) {
   <div class="col-md-6">
     <div class="form-group">
       <label class="sub-label">Upload back photo of Emirates id <span style="font-size: 13px;">(allowed file types (.jpg, .jpeg, *.png only) with maximum size 2mb.)*</span></label>
-      @if(\Auth::user()->emirates_id_back)
+      @if($user->emirates_id_back)
         <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
-         <img src="{!! asset(\Auth::user()->emirates_id_back) !!}" id="blah1" class="img-responsive">
+         <img src="{!! asset($user->emirates_id_back) !!}" id="blah1" style="margin-top: 10px;" class="img-responsive">
       @else
         <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp1" style="box-shadow: none; margin-top: 3px;" name="emirates_id_back">
         <img src="" id="blah1" class="img-responsive">
@@ -745,7 +748,7 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Passport Expiry Date*</label>
       <input name="passport_expiry_date" id="my_date_picker"  class="form-control" required="true" @if(isset($result->passport_expiry_date)) value="{{ $result->passport_expiry_date }}" @else value="{{ old('passport_expiry_date') }}" @endif type="text">
-      <i class="fa-solid fa-calendar"></i>
+      <i style="position: absolute; top: 42px; right: 30px;" class="ti-calendar sidemenu-icon menu-icon"></i>
       @if($errors->has('passport_expiry_date'))
       <span class="text-danger">{{$errors->first('passport_expiry_date')}}</span>
       @endif
@@ -755,7 +758,8 @@ if($result) {
     <div class="form-group">
       <label class="sub-label">Upload passport photo <span style="font-size: 13px;">(allowed file types (.jpg, .jpeg, *.png only) with maximum size 2mb.)</span></label>
       @if(isset($result->passport_photo))
-        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;    width: 100%;
+    margin-bottom: 10px;" name="passport_photo" >
         <img src="{!! asset($result->passport_photo) !!}" id="blah2" class="img-responsive" style="max-height: 110px;">
       @else
         <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp2" style="box-shadow: none; margin-top: 3px;" name="passport_photo">
@@ -766,6 +770,24 @@ if($result) {
       @endif
     </div>
   </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Profile photo <span style="font-size: 13px;">(allowed file types (.jpg, .jpeg, *.png only) with maximum size 2mb.)</span></label>
+      @if(isset($user->profile_image))
+        <input type="file" accept="image/png, image/jpg, image/jpeg" id="imgInp5" style="box-shadow: none; margin-top: 3px;width: 100%; margin-bottom: 10px;" name="profile_image">
+        <img src="{!! asset($user->profile_image) !!}" id="blah5" class="img-responsive" style="max-height: 110px;">
+      @else
+        <input type="file" required="true" accept="image/png, image/jpg, image/jpeg" id="imgInp5" style="box-shadow: none; margin-top: 3px;" name="profile_image">
+        <img src="" id="blah5" class="img-responsive" style="max-height: 110px;">
+      @endif
+      @if($errors->has('profile_image'))
+        <span class="text-danger">{{$errors->first('profile_image')}}</span>
+      @endif
+    </div>
+  </div>
+
+
   <!--<div class="col-md-12">
     <label>Visa Details</label>
   </div>
@@ -783,29 +805,12 @@ if($result) {
     <label class="chk_bx" style="width: 100%; font-weight: normal; margin-bottom: 15px;"> @if($result) <input required="true" checked="" type="checkbox"> @else <input required="true" type="checkbox"> @endif By proceeding, you agree to the <a href="#">Terms and Conditions</a></label>
   </div> -->
   <div class="col-md-12 text-center">
-    <a href="{{ route('user-dashboard') }}" class="back_btn">Back</a> &nbsp;&nbsp;
-    <button type="submit">Proceed</button>
+    <a style="border: 1px solid #000;padding: 10px 30px;color: #000;" href="{{ route('get-started') }}/view-save-personal/{{ $user_id }}" class="back_btn">Back</a> &nbsp;&nbsp;
+    <button type="submit" style="background: #000; color: #fff; padding: 8px 25px; margin-bottom: 35px;">Proceed</button>
   </div>
 </div>
 </form>
 </div>
-</div>
-<div class="col-md-5">
-  <div class="service-step">
-    <h3>Please note that all fields marked with an asterisk (*) are required</h3>
-    <p>Thank you for taking the time to complete our form. In order to process your request, we need to collect certain information from you. Please make sure to fill out all of the required fields marked with an asterisk (*). These fields are essential for us to understand your needs and provide you with the best possible service.</p><br>
-    <p>If you have any questions about which fields are required, please don't hesitate to contact us. We're here to help you every step of the way.</p>
-  </div>
-
-<div class="service-step">
-<h3>Get money with just a few simple steps</h3>
-<ul style="padding-left: 15px; color: rgba(0, 0, 0, 0.5);">
-<li>Visit our website. This will help us understand your financial needs and determine which products and services are best for you.</li>
-<li>Submit your application and wait for a response. We'll review your information and get back to you as soon as possible with a decision.</li>
-<li>If your application for credit cards and loans is approved, you'll be able to access the limits that have been set for those products. The limits will likely be based on your credit score, income, and other financial information that you provided as part of the application process.</li>
-</ul>
-</div>
-
 </div>
 
 </div>
@@ -863,19 +868,6 @@ if($result) {
       $(".family10").hide();
       $(".family11").hide();
       $(".family12").hide();
-      
-      // $(".family1 input").removeAttr('required');
-      // $(".family2 input").removeAttr('required');
-      // $(".family3 input").removeAttr('required');
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
 
     } else if(that.value == "1") {
       $(".family1").show();
@@ -891,18 +883,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").removeAttr('required');
-      // $(".family3 input").removeAttr('required');
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     }  else if(that.value == "2") {
       $(".family1").show();
       $(".family2").show();
@@ -917,18 +897,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").removeAttr('required');
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "3") {
       $(".family1").show();
       $(".family2").show();
@@ -943,18 +911,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").removeAttr('required');
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "4") {
       $(".family1").show();
       $(".family2").show();
@@ -969,18 +925,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").removeAttr('required');
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "5") {
       $(".family1").show();
       $(".family2").show();
@@ -995,18 +939,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").removeAttr('required');
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "6") {
       $(".family1").show();
       $(".family2").show();
@@ -1021,18 +953,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").removeAttr('required');
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "7") {
       $(".family1").show();
       $(".family2").show();
@@ -1047,18 +967,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").removeAttr('required');
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "8") {
       $(".family1").show();
       $(".family2").show();
@@ -1073,18 +981,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").removeAttr('required');
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "9") {
       $(".family1").show();
       $(".family2").show();
@@ -1099,18 +995,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").removeAttr('required');
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "10") {
       $(".family1").show();
       $(".family2").show();
@@ -1125,18 +1009,6 @@ if($result) {
       $(".family11").hide();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").attr("required", true);
-      // $(".family11 input").removeAttr('required');
-      // $(".family12 input").removeAttr('required');
     } else if(that.value == "11") {
       $(".family1").show();
       $(".family2").show();
@@ -1151,18 +1023,6 @@ if($result) {
       $(".family11").show();
       $(".family12").hide();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").attr("required", true);
-      // $(".family11 input").attr("required", true);
-      // $(".family12 input").removeAttr('required');
     } else {
       $(".family1").show();
       $(".family2").show();
@@ -1177,21 +1037,74 @@ if($result) {
       $(".family11").show();
       $(".family12").show();
 
-      // $(".family1 input").attr("required", true);
-      // $(".family2 input").attr("required", true);
-      // $(".family3 input").attr("required", true);
-      // $(".family4 input").attr("required", true);
-      // $(".family5 input").attr("required", true);
-      // $(".family6 input").attr("required", true);
-      // $(".family7 input").attr("required", true);
-      // $(".family8 input").attr("required", true);
-      // $(".family9 input").attr("required", true);
-      // $(".family10 input").attr("required", true);
-      // $(".family11 input").attr("required", true);
-      // $(".family12 input").attr("required", true);
     }
   }
   
+
+  $(function() {
+    var maxBirthdayDate = new Date();
+    maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18 );
+    $( "#my_date_picker_dob" ).datepicker({
+        "setDate": new Date(),
+        "autoclose": true,
+        dateFormat: 'dd/mm/yy', 
+        maxDate: maxBirthdayDate,
+        changeYear: true
+    });
+  });
+
+  $(function() {
+        $( "#my_date_picker" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            minDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+  });
+  
+  $(function() {
+        $( "#date_of_joining" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+  });
+
+   $(function() {
+        var maxBirthdayDate = new Date();
+        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18 );
+        $( "#spouse_date_of_birth" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            dateFormat: 'dd/mm/yy', 
+            maxDate: maxBirthdayDate,
+            changeYear: true
+        });
+    });
+
+    $(function() {
+        $( "#aecb_date" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+    });
+
+    $('input[name=credit_score]').on('keyup' , function() { 
+      var id = $("input[name=credit_score]").val();
+      if( id.length == 0 ) {
+          $(".aecb_date").hide();
+          $(".aecb_date input").removeAttr('required'); 
+      } else {
+          $(".aecb_date").show();
+          $(".aecb_date input").attr("required", true);
+      }
+    });
 
 
 </script>
