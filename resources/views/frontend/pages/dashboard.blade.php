@@ -32,7 +32,7 @@
 
 @if(count($service) != 0)
 <div class="our_assistance ser_dt">
-<h2>Select Products</h2>
+<h2>What would you like to apply for today!</h2>
 <h6 style="font-size: 14px; margin-bottom: 0px;">Offering you our best products from top UAE's banks</h6>
 <form action="{{ route('personal-details') }}" class="personal_details_box" method="post">
 {{ csrf_field() }}  
@@ -52,7 +52,6 @@ $button = 1;
 $services = get_service_status($service->id);
 $button += $services;
 @endphp
-
     <li>
       <label class="ser_label" for="{{ $service->url }}" style="width: 100%;"> 
       <input id="{{ $service->url }}" @if($services == 1) checked="" @else @if($service->id == 1 || $service->id == 3) checked="" @endif   @endif type="checkbox" value="{{ $service->id }}" class="ser_chk" onChange="Selectser(this.value);" name="service[]"/>
@@ -65,7 +64,6 @@ $button += $services;
     @endforeach
   </ul>
   </div>
-
   <div class="col-md-12">
   <!--  <a href="{{ route('address-details') }}" class="back_btn">Back</a> &nbsp;&nbsp; -->
     <button type="submit" id="elementID" @if($button == 0) disabled="disabled" style="margin-top: 20px;" @else style="margin-top: 20px; background: #000;" @endif >Proceed</button>
@@ -75,7 +73,7 @@ $button += $services;
 </div>
 @endif
 
-<div class="scan_dashboard">
+<div class="scan_dashboard" style="display: none;">
   <h3 style="font-weight: 700; font-size: 24px; margin-top: 15px;">Offers For You</h3>
   <div class="row">
     <div class="col-md-6" style="margin-top: 7px;">
@@ -118,8 +116,9 @@ $button += $services;
 <div class="info_sidebar" style="padding-bottom: 30px; margin-top: 0px; margin-bottom: 30px;">
   <h5 style="margin-bottom: 10px;">Refer & Earn</h5>
   <img src="{!! asset('assets/frontend/images/refer_earn.png')  !!}" style="margin-bottom: 25px;" class="img-responsive">
-  <p style="font-size: 13px;"><b>Spread your love for lnxx</b><br>
-Refer your friends to our service and earn rewards! For every friend you refer who signs up and becomes a paying customer, you'll receive a 100د.إ credit on your account. It's a win-win for everyone!</p>
+  <p style="font-size: 13px;"><b>Invite your friends to the Lnxx family!</b><br>
+    <b>Refer your friends to Lnxx and get rewarded!</b><br>
+Special Offer: Get an AED 100 coupon of xyz as a token of our appreciation as soon as the friend you refer gets a product through Lnxx!</p>
   <a href="#" data-toggle="modal" data-target="#exampleModal" style="background: #5EB495; color: #fff; padding: 8px 20px; border-radius: 12px; font-size: 14px;"><i class="fa fa-share" style="margin-right: 6px;"></i> Invite </a>
 </div>  
 <div class="dashboard_sidebar">

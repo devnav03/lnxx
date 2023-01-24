@@ -640,12 +640,27 @@ Route::group(['middleware' => 'auth', 'after' => 'no-cache'], function () {
 
 Route::any('personal-details/{id}', [App\Http\Controllers\OnboardController::class, 'personal_details'])->name('admin.personal-details');
 Route::any('cm-details/{id}', [App\Http\Controllers\OnboardController::class, 'cm_details'])->name('admin.cm-details');
+Route::any('product-requested/{id}', [App\Http\Controllers\OnboardController::class, 'product_requested'])->name('admin.product-requested');
+Route::any('consent-approval/{id}', [App\Http\Controllers\OnboardController::class, 'consent_approval'])->name('admin.consent-approval');
+Route::any('preference/{id}', [App\Http\Controllers\OnboardController::class, 'preference'])->name('admin.preference');
+Route::any('save-preference/{id}', [App\Http\Controllers\OnboardController::class, 'save_preference'])->name('admin.save-preference');
+Route::any('personal-loan-preference/{id}', [App\Http\Controllers\OnboardController::class, 'personal_loan_preference'])->name('admin.personal-loan-preference');
+Route::any('save-personal-loan-preference/{id}', [App\Http\Controllers\OnboardController::class, 'save_personal_loan_preference'])->name('admin.save-personal-loan-preference');
+Route::any('consent/{id}', [App\Http\Controllers\OnboardController::class, 'consent'])->name('admin.consent');
+Route::any('record-video/{id}', [App\Http\Controllers\OnboardController::class, 'Record_Video'])->name('admin.record-video');
+
+Route::any('thank-you/{id}', [App\Http\Controllers\OnboardController::class, 'ServiceApply'])->name('admin.thank-you');
+
+Route::any('consent-form/{id}', [App\Http\Controllers\OnboardController::class, 'consent_form'])->name('admin.consent-form');
+Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal')->name('view-save-personal');
+
+
 
 
 });
 });
 
-Route::any('view-save-personal/{id}', 'App\Http\Controllers\LeadController@view_save_personal');
+
 Route::any('/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('get-started');
 Route::any('home', [App\Http\Controllers\Frontend\HomeController::class, 'home'])->name('home');
 Route::any('sign-up', [App\Http\Controllers\Frontend\HomeController::class, 'sign_up'])->name('sign_up');

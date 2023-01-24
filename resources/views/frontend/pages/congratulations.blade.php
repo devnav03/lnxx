@@ -9,10 +9,10 @@
 <div class="col-md-6 sign_up_field mx-auto" style="text-align: center; margin-top: 70px;
     border-radius: 15px; box-shadow: 1px 1px 24px #ddd;">
 <div style="text-align: center;"><img src="{!! asset('assets/frontend/images/lnxx_logo.png') !!}" style="max-height: 40px; margin-top: 25px;" alt="logo" class="img-responsive"></div>
-<h3 style="margin-top: 16px; font-weight: 600;">Congratulations</h3>
-<p style="margin-top: 20px; margin-bottom: 5px;">You are now connected to lnxx</p>
-<p>(lnxx{{$user_id}})</p>
-<a href="{{ route('user-dashboard') }}" style="background: #5EB495; color: #fff; padding: 11px 23px; font-size: 15px; font-weight: 500; border-radius: 9px;">Go to Dashboard</a>
+<h3 style="margin-top: 16px; font-weight: 600;">Congratulations!</h3>
+<p style="margin-top: 20px; margin-bottom: 5px;">Your Lnxx ID is: lnxx{{$user_id}}</p>
+<!-- <p>()</p> -->
+<a href="{{ route('user-dashboard') }}" style="background: #5EB495; color: #fff; padding: 11px 23px; font-size: 15px; font-weight: 500; border-radius: 9px;">Continue</a>
 </div>
 </div>
 </div>

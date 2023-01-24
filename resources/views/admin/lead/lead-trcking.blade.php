@@ -721,7 +721,7 @@
     <script>
     var page = 1;
     $('#data-wrapper').scroll(function() {
-        if ($('#data-wrapper').scrollTop() + $('#data-wrapper').height() >= $(document).height()) {
+        if ($('#data-wrapper').scrollTop() + $('#data-wrapper').height() <= $(document).height()) {
             page++;
             infinteLoadMore(page);
         }
@@ -769,7 +769,7 @@
     <script>
     var page = 1;
     $('#data-wrapper1').scroll(function() {
-        if ($('#data-wrapper1').scrollTop() + $('#data-wrapper1').height() >= $(document).height()) {
+        if ($('#data-wrapper1').scrollTop() + $('#data-wrapper1').height() <= $(document).height()) {
             page++;
             infinteLoadMore1(page);
         }
@@ -792,6 +792,7 @@
                     return;
                 }
                 $('.auto-load').hide();
+
                 $("#data-wrapper1").append(response);
                 var html = '<div class="priloder_ajax' + page + '">' +
                     '<div class="d-flex justify-content-center">' +
@@ -925,7 +926,7 @@
                         if(xhr.get_user_exist == null){
                             $("#view-application-form").html('<a type="button" onclick="onboard(' +xhr.responce.id +');" href="#" class="btn btn-warning">Start On Boarding</a>');
                         }else{
-                            $("#view-application-form").html('<a type="button" target="_blank" href="<?php echo route('get-started'); ?>/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">Boarding In Process</a>');
+                            $("#view-application-form").html('<a type="button" target="_blank" href="<?php echo route('get-started'); ?>/admin/view-save-personal/'+xhr.get_user_exist.id+'" class="btn btn-success">Boarding In Process</a>');
                         }
                         $("#status_bar").html(
                             '<div class="col-sm-1"><div class="form-group"><p style="weight:400; font-size:20px;"><b>Status:</b></p></div></div><div class="col-sm-2" style="z-index:22"><div style="width:155px; height:30px; background-color:#3D6AD6; position:relative; border-radius: 15px 0px 0px 15px;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -115px; color: #fff!important;font-size: 12px;">Open</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #3D6AD6;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px; z-index:11"><a href="#"><div style="width:155px; height:30px; background-color:#FFB800; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">In Proccess</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #FFB800;position:absolute;right: -20px;"></div></div></div><div class="col-sm-2" style="margin-left:-49px;"><div style="width:155px; height:30px; background-color:#A7ADAA; position:relative;"><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #fff;position:absolute;right: -24px; z-index:22;"><h6 style="margin: -8px 0px 0px -125px; color: #fff!important;font-size: 12px;">Reminder</h6></div><div style="width: 0;height: 0;border-top: 15px solid transparent;border-bottom: 15px solid transparent;border-left: 20px solid #A7ADAA;position:absolute;right: -20px; z-index:22;"></div></div></div><div class="col-sm-3" style="margin-left:-49px;"><a type="button"   onclick="send_in_close_status(' +xhr.responce.id +')"><div style="width:200px; height:30px; background-color:#058D3D; position:relative; border-radius: 0px 15px 15px 0px;"><div style="width: 0;height: 0;position:absolute;right: -24px;"><h6 style="margin: 7px 0px 0px -180px; color: #fff!important; font-size: 12px;">Set status as Complete</h6></div></div></a></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_case_detail()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -100px 0px 0px; background-color:#3D6AD6;"><i class="ti-alarm-clock menu-icon"></i> History </button></div></div><div class="col-sm-1"><div class="form-group" id="markascomplete"><button onclick="show_mail_datails()" type="button" class="btn btn-primary btn-lg" style="margin: -10px -135px 0px 72px; background-color:#3D6AD6; "><i class="ti-email menu-icon"></i> Mail</button></div></div>');
@@ -999,7 +1000,7 @@
                         if (response.status == 200) {
                             toastr.options.timeOut = 1500;
                             toastr.success('Lead On-Boarded Succesfully');
-                            window.open("<?php echo route('get-started'); ?>/view-save-personal/"+response.get_last_id);
+                            window.open("<?php echo route('get-started'); ?>/admin/view-save-personal/"+response.get_last_id);
                             $("#view-application-form").html('<a type="button" onclick="onboard('+id+');" href="#" class="btn btn-success">On-boarded Customer</a>');
                         }else{
                             toastr.options.timeOut = 1500;

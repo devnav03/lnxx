@@ -5,7 +5,7 @@
 <div class="container">
 <div class="row">
 	<div class="col-md-6">
-		<h3><span>An online</span>  <br>financial services platform <br><span>for UAE's citizens.</span></h3>
+		<h3><span>Your Partner for Life!</span>  <br>One-Stop, Full Function, Holistic Experience! <br><span>For all your Financial Needs!</span></h3>
 		<div class="row">
 			<div class="col-md-4">
 			    <img src="{!! asset('assets/frontend/images/found_qr_code.png')  !!}" alt="scan" class="img-responsive">
@@ -28,7 +28,7 @@
 <a href="{{ route('customer-menu') }}">	
 <div class="con-box">
 <h4>Enroll as customer</h4>
-<p>Get exclusive offers on personal loans and credit cards.</p>
+<p>Seamless Experience. Great offers!</p>
 <a class="con_btn" href="{{ route('customer-menu') }}">
 <img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
@@ -41,7 +41,7 @@
 <a href="{{ route('agent-menu') }}">	
 <div class="con-box">
 <h4>Become an agent</h4>
-<p>Get job opportunities to enhance your income and enrich your lifestyle.</p>
+<p>Join us on a Professionally Rewarding journey!</p>
 <a class="con_btn" href="{{ route('agent-menu') }}">
 <img src="{!! asset('assets/frontend/images/rectangle.png')  !!}" class="pre_hover">
 <img src="{!! asset('assets/frontend/images/Rectangle_right.png')  !!}" class="af_hover">
@@ -138,9 +138,10 @@
 </div>
 <div class="col-md-7">	
 <h2>About</h2>
-<h5>Leading financial services provider with a focus on UAE citizens' needs</h5> 
-<p>Lnxx is a digital Neo-bank platform designed to create and enhance meaningful customer engagement and new revenue opportunities through an online and mobile digital environment for customers enabling them to access any bank on a one-stop agnostic basis for their end-to-end full-function holistic financial needs.</p>
-<p>An online marketplace platform integrates with the financial institutions' (FI) systems for real-time processing and online approvals to the customers. Its online customer interface riding on the platform includes processing using demographic, social, behavioral and psycho-graphic variables along with seamless origination, assessment and fulfilment for financial products on a real time mode for customers. It leverages technology & data together with advanced analytics for faster and more reliable decision- making.</p>
+<h5>Lnxx - The next generation Digital Neobank!</h5> 
+<p>Lnxx is a digital online financial services platform offering a holistic end-to-end one-stop full function relationship experience to its customers!</p>
+<p>Offering simple and fast processes for a wide range of financial products and services across Corporate, SME, SMB, Self Employed and Individual Loans,  Credit Cards and Insurance), Lnxx provides an end to end model that is built on a data driven, analytics & AI based recommendation engine. </p>
+<p>Lnxx’s online marketplace platform integrates with the financial institutions’ (FI) systems for real-time processing and online approvals to customers. Its online customer interface riding on the platform includes processing using demographic, social, behavioural and psychographic variables along with seamless origination, assessment and fulfilment for financial products on a real time mode for customers. It leverages technology & data together with advanced analytics for faster and more reliable decisioning.</p>
 <a href="#">Learn More</a>
 </div>
 </div>
@@ -179,7 +180,7 @@
 <section class="lnxx-partners" style="margin-top: 80px;">
 <div class="container">
 <h2>Our Partners</h2>   
-<p>We collaborate with the biggest and best names in banking and<br> finance to bring you relevant items at competitive prices.</p>
+<p>Great Partners, Great Products!</p>
 <div class="row">
 @foreach($banks as $bank)	
 <div class="col-md-2">
@@ -190,23 +191,9 @@
 </div>
 </section>
 
-<!--<section class="lorem_ipsum">
-<div class="row">	
-<div class="col-md-4">	
-<img src="{!! asset('assets/frontend/images/Demo_image.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-7">	
-<h3>Lorem ipsum</h3>
-<h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, enim volutpat urna quisque.</p>
-
-</div>
-</div>
-</section> -->
-
 <section class="testimonials" style="border-top: 1px solid; margin-top: 75px;">
 <div class="container"> 
-<h2>Testimonial</h2>
+<h2>Testimonials</h2>
 <div class="testimonials-slider owl-theme owl-carousel">
 @foreach($testimonials as $testimonial)	
 <div class="item">

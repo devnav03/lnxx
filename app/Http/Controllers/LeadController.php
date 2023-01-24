@@ -518,7 +518,7 @@ class LeadController extends  Controller{
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
         if($user_type == 1){
-            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('seen_time', Null)->where('alloted_to', '!=', Null)->paginate(5);
+            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', '!=', Null)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -528,7 +528,7 @@ class LeadController extends  Controller{
                 return $artilces;
             }
         } elseif($user_type == 3){
-            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->where('seen_time', Null)->paginate(5);
+            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -538,7 +538,7 @@ class LeadController extends  Controller{
                 return $artilces;
             }
         } elseif($user_type == 4){
-            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->where('seen_time', Null)->paginate(5);
+            $results = lead::orderBy('id')->where('lead_status', 'OPEN')->where('alloted_to', $auth_user_id)->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -553,8 +553,11 @@ class LeadController extends  Controller{
     {
         $user_type = Auth()->user()->user_type;
         $auth_user_id = \Auth::user()->id;
+        $page = $request->page;
+        $total_c = $page*5;
+        $skip = $total_c-5;
         if($user_type == 1){
-            $results = lead::orderBy('id')->whereIn('lead_status', ['OPEN', 'INPROCESS'])->where('seen_time', '!=', Null)->paginate(5);
+            $results = lead::orderBy('id')->whereIn('lead_status', ['OPEN', 'INPROCESS'])->paginate(5);
             $artilces = '';
             if ($request->page){
                 foreach ($results as $result) {
@@ -840,7 +843,7 @@ class LeadController extends  Controller{
          $time=Carbon::now()->toDateTimeString();
          if($request->status == 'CLOSE'){
             \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'mname' => $request->mname, 'lname' => $request->lname, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'close_time' => $time , 'alloted_to' => $request->assign_to]); 
-         } else{
+         }else{
             \DB::table('leads')->where('id', $request->id)->update(['name' => $request->name, 'mname' => $request->mname, 'lname' => $request->lname, 'email' => $request->email, 'number' => $request->number, 'product' => $request->product, 'source' => $request->source, 'lead_status' => $request->status, 'alloted_to' => $request->assign_to]); 
          }       
     }

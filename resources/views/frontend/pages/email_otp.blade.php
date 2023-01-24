@@ -26,7 +26,7 @@
 	<div class="valid_no"></div>
 	<div class="not_verify" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
 	<div class="otp_verify" style="color: green; font-size: 12px; padding-top: 2px;"></div>
-	<div class="otp_email" style="color:green; font-size: 14px;">OTP sent successfully on your registered email id</div>
+	<div class="otp_email" style="color:green; font-size: 14px;">Please enter the OTP sent on the Email ID you gave us.</div>
 	<input type="hidden" name="mobile" value="{{ $mobile }}">
 	<input type="hidden" name="email" value="{{ $email }}">
 	<input type="hidden" name="salutation" value="{{ $salutation }}">

@@ -49,9 +49,9 @@ class OnboardController extends Controller {
    
 
 
-    public function save_personal_loan_preference(Request $request){
+    public function save_personal_loan_preference(Request $request, $id = null){
         try{
-            $user_id = Auth::id();
+            $user_id = $id;
             \DB::table('personal_loan_preference_bank')->where('user_id', $user_id)->delete();
             if(isset($request->bank_id)){
                 foreach($request->bank_id as $bank_id){
@@ -65,16 +65,16 @@ class OnboardController extends Controller {
             } else {
                 return back()->with('no_preference_bank', 'no_preference_bank');
             }
-            return redirect()->route('consent');
+            return redirect()->route('admin.consent', $user_id);
         } catch (\Exception $exception) {
            // dd($exception);
             return back();    
         }
     }
 
-    public function save_preference(Request $request){
+    public function save_preference(Request $request, $id = null){
         try {
-            $user_id = Auth::id();
+            $user_id = $id;
             \DB::table('credit_card_preference_bank')->where('user_id', $user_id)->delete();
             \DB::table('card_type_preference')->where('user_id', $user_id)->delete();
             if(isset($request->card_type)){
@@ -100,9 +100,9 @@ class OnboardController extends Controller {
             }
             $ser = ServiceApply::where('app_status', 0)->where('service_id', 1)->where('customer_id', $user_id)->count(); 
             if($ser == 0){
-                return redirect()->route('consent');
+                return redirect()->route('admin.consent', $user_id);
             } else {
-                return redirect()->route('personal-loan-preference'); 
+                return redirect()->route('admin.personal-loan-preference', $user_id); 
             }
         }  catch (\Exception $exception) {
             //dd($exception);
@@ -110,10 +110,10 @@ class OnboardController extends Controller {
         }
     }
 
-    public function personal_loan_preference(Request $request){
+    public function personal_loan_preference(Request $request, $id = null){
         try {
             
-            $user_id = Auth::id();
+            $user_id = $id;
             $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 
                 'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 
                 'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
@@ -243,7 +243,7 @@ class OnboardController extends Controller {
                 $your_emi = 0;
             }
 
-        return view('frontend.pages.personal_loan_preference', compact('your_emi', 'your_limit'));
+        return view('admin.lead.personal_loan_preference', compact('your_emi', 'your_limit', 'user_id'));
 
         }  catch (\Exception $exception) {
             //dd($exception);
@@ -317,15 +317,16 @@ class OnboardController extends Controller {
         }
     }
 
-    public function consent(){
+    public function consent($id = null){
         try{
-            $user_id = Auth::id();
+            $user_id = $id;
             $result = CustomerOnboarding::where('user_id', $user_id)->select('id', 'consent_form')->first();
             $consent_form = $result->consent_form;
 
-            return view('frontend.pages.consent_approval', compact('consent_form'));
+            return view('admin.lead.consent_approval', compact('consent_form', 'user_id'));
 
         } catch (\Exception $exception) {
+           // dd($exception);
             return back();    
         }
     }
@@ -545,9 +546,9 @@ class OnboardController extends Controller {
         }
     }
 
-    public function consent_approval(Request $request){
+    public function consent_approval(Request $request, $id = null){
         try {
-            $user_id =  Auth::id();
+            $user_id =  $id;
             $inputs = $request->all();
             $inputs['user_id'] = $user_id;
             $result = '';
@@ -583,7 +584,6 @@ class OnboardController extends Controller {
             } else {
                 (new ProductRequest)->store($inputs); 
             }
-            
             $services = ServiceApply::where('app_status', 0)->where('customer_id', $user_id)->count();
             if($services != 0){ 
             $result = CustomerOnboarding::where('user_id', $user_id)->select('id', 'consent_form')->first();
@@ -595,18 +595,16 @@ class OnboardController extends Controller {
             $ser = ServiceApply::where('app_status', 0)->where('service_id', 3)->where('customer_id', $user_id)->count(); 
 
             if($ser == 0){
-                return view('frontend.pages.consent_approval', compact('consent_form'));
+                return view('admin.lead.consent_approval', compact('consent_form', 'user_id'));
             } else {
-               return redirect()->route('preference');
+               return redirect()->route('admin.preference', $user_id);
             }
             
             } else {
-                return redirect()->route('user-dashboard')->with('profile_update_message', 'profile_update_message');
+                return back();
             }
-
-
         } catch (\Exception $exception) {
-          // dd($exception);
+          //dd($exception);
             return back();    
         }
     }
@@ -665,11 +663,11 @@ class OnboardController extends Controller {
         }
     }
 
-    public function consent_form(Request $request){
+    public function consent_form(Request $request, $id = null){
         try {
             
             $inputs = $request->all();
-            $user_id =  Auth::id();
+            $user_id =  $id;
             $vid_dt = CustomerOnboarding::where('user_id', $user_id)->select('video')->first();
             
             if(isset($inputs['blobFile']) or !empty($inputs['blobFile'])) {
@@ -1015,9 +1013,9 @@ public function enter_name(Request $request){
         }
     }
 
-    public function ServiceApply(Request $request){
+    public function ServiceApply(Request $request, $id = null){
         try {
-                $user_id =  Auth::id();
+                $user_id = $id;
                 $inputs['user_id'] = $user_id;
                 $CustomerOnboarding = CustomerOnboarding::where('user_id', $user_id)->first();
 
@@ -1025,7 +1023,7 @@ public function enter_name(Request $request){
                 $app_base = 1300;
                 if($services){
                         if($CustomerOnboarding->cm_type == 1){
-                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company')->first();
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
                             $inputs['company_name'] = $employee->company_name;
                             $inputs['date_of_joining'] = $employee->date_of_joining;
                             $inputs['monthly_salary'] = $employee->monthly_salary;
@@ -1034,6 +1032,9 @@ public function enter_name(Request $request){
                             $inputs['last_one_salary_credits'] = $employee->last_one_salary_credits;
                             $inputs['other_company'] = $employee->other_company;
                             $inputs['accommodation_company'] = $employee->accommodation_company;
+                            $inputs['last_one_salary_file'] = $employee->last_one_salary_file;
+                            $inputs['last_two_salary_file'] = $employee->last_two_salary_file;
+                            $inputs['last_three_salary_file'] = $employee->last_three_salary_file;
 
                         } elseif ($CustomerOnboarding->cm_type == 2){
                             $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();
@@ -1068,20 +1069,22 @@ public function enter_name(Request $request){
                         $inputs['wife_name'] = $CustomerOnboarding->wife_name;
                         $inputs['wedding_anniversary_date'] = $CustomerOnboarding->wedding_anniversary_date;
                         
+                        $my_info = User::where('id', $user_id)->first();
+
                         $inputs['user_id'] = $user_id;
-                        $inputs['salutation'] = \Auth::user()->salutation;
-                        $inputs['name'] = \Auth::user()->name;
-                        $inputs['middle_name'] = \Auth::user()->middle_name;
-                        $inputs['last_name'] = \Auth::user()->last_name;
-                        $inputs['email'] = \Auth::user()->email;
-                        $inputs['gender'] = \Auth::user()->gender;
-                        $inputs['date_of_birth'] = \Auth::user()->date_of_birth;
-                        $inputs['profile_image'] = \Auth::user()->profile_image;
-                        $inputs['emirates_id'] = \Auth::user()->emirates_id;
-                        $inputs['emirates_id_back'] = \Auth::user()->emirates_id_back;
-                        $inputs['eid_number'] = \Auth::user()->eid_number;
-                        $inputs['eid_status'] = \Auth::user()->eid_status;
-                        $inputs['mobile'] = \Auth::user()->mobile;
+                        $inputs['salutation'] = $my_info->salutation;
+                        $inputs['name'] = $my_info->name;
+                        $inputs['middle_name'] = $my_info->middle_name;
+                        $inputs['last_name'] = $my_info->last_name;
+                        $inputs['email'] = $my_info->email;
+                        $inputs['gender'] = $my_info->gender;
+                        $inputs['date_of_birth'] = $my_info->date_of_birth;
+                        $inputs['profile_image'] = $my_info->profile_image;
+                        $inputs['emirates_id'] = $my_info->emirates_id;
+                        $inputs['emirates_id_back'] = $my_info->emirates_id_back;
+                        $inputs['eid_number'] = $my_info->eid_number;
+                        $inputs['eid_status'] = $my_info->eid_status;
+                        $inputs['mobile'] = $my_info->mobile;
                         $inputs['status'] = 0;
 
                         $ProductRequest = ProductRequest::where('user_id', $user_id)->first();
@@ -1205,7 +1208,6 @@ public function enter_name(Request $request){
                                 }
                             }
                         }
-
                         if($service->service_id == 1){
                             $PersonalLoans = PersonalLoanPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit', 'loan_emi')->get();
                             if($PersonalLoans){
@@ -1219,7 +1221,6 @@ public function enter_name(Request $request){
                                 }
                             }
                         }
-                        
 
                         ServiceApply::where('id', $service->id)
                             ->update([
@@ -1227,7 +1228,6 @@ public function enter_name(Request $request){
                             'app_status' =>  1,
                         ]);
                         $ref_id[] = $slide;
-
                         $ApplicationDependent['app_id'] = $app_id;
                         $dependents = Dependent::where('user_id', $user_id)->select('name', 'relation')->get();
                        // dd($dependents);
@@ -1242,9 +1242,7 @@ public function enter_name(Request $request){
                 } else {
                     $ref_id = [];
                 }
-
-              //  dd($ref_id);
-               return view('frontend.pages.thanku', compact('ref_id'));
+               return view('admin.lead.thanku', compact('ref_id', 'user_id'));
            
         } catch (\Exception $e) {
            //dd($e);
@@ -1422,13 +1420,11 @@ public function enter_name(Request $request){
         }
     }
 
-    public function preference(Request $request){
+    public function preference(Request $request, $id = null){
         try {
-            $user_id =  Auth::id();
+            $user_id = $id;
             $apply_ser = ServiceApply::where('customer_id', $user_id)->count();
-
             $card_types = CardType::where('status', 1)->select('name', 'id')->get();
-            
             $f_details = ProductRequest::where('user_id', $user_id)->select('exist_credit', 'card_limit', 'card_limit2', 'card_limit3', 'card_limit4', 'exist_personal', 'loan_emi', 'loan_emi2', 'loan_emi3', 'loan_emi4', 'exist_business', 'business_loan_emi', 'business_loan_emi2', 
                 'business_loan_emi3', 'business_loan_emi4', 'exist_mortgage', 'mortgage_emi', 
                 'mortgage_emi2', 'mortgage_emi3', 'mortgage_emi4', 'details_of_cards', 'details_of_cards2', 'details_of_cards3', 'details_of_cards4', 'credit_bank_name', 'credit_bank_name2', 'credit_bank_name3', 'credit_bank_name4')->first();
@@ -1560,7 +1556,6 @@ public function enter_name(Request $request){
                 $your_emi = 0;
             }
 
-
             if(isset($request->service)){
                 foreach($request->service as $service_id){
                     $apply_ser = ServiceApply::where('service_id', $service_id)->where('customer_id', $user_id)->count();
@@ -1574,17 +1569,17 @@ public function enter_name(Request $request){
                 $service = \DB::table('service_applies')
                     ->join('services', 'services.id', '=', 'service_applies.service_id')
                     ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id')->where('service_applies.customer_id', $user_id)->get();    
-                return view('frontend.pages.preference', compact('service', 'your_emi', 'your_limit', 'card_types', 'avg_sal', 'credit_bank')); 
+                return view('admin.lead.preference', compact('service', 'your_emi', 'your_limit', 'card_types', 'avg_sal', 'credit_bank', 'user_id')); 
             } else {
                 $apply_ser = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->count();
                 if($apply_ser == 0) {
-                    return redirect()->route('user-dashboard')->with('select_service', 'select_service');
+                    return back();
                 } else {
                 $service = \DB::table('service_applies')
                     ->join('services', 'services.id', '=', 'service_applies.service_id')
                     ->select('service_applies.status', 'services.name', 'service_applies.id', 'service_applies.bank_id', 'services.id as service_id', 'service_applies.decide_by')->where('service_applies.customer_id', $user_id)->where('service_applies.service_id', 3)->where('service_applies.app_status', 0)->first(); 
                     // dd($services);   
-                return view('frontend.pages.preference', compact('service', 'your_emi', 'your_limit', 'card_types', 'avg_sal', 'credit_bank')); 
+                return view('admin.lead.preference', compact('service', 'your_emi', 'your_limit', 'card_types', 'avg_sal', 'credit_bank', 'user_id')); 
                 }
             }
         } catch (Exception $e) {
@@ -2008,10 +2003,9 @@ public function enter_name(Request $request){
 
     }
 
-    public function Record_Video(Request $request){
+    public function Record_Video(Request $request, $id = null){
         try {
-
-            $user_id =  Auth::id();
+            $user_id =  $id;
             $inputs['user_id'] = $user_id;
             $result = '';
             $result = CustomerOnboarding::where('user_id', $user_id)->select('id')->first();
@@ -2019,7 +2013,10 @@ public function enter_name(Request $request){
             $ref_id = $ser.$result->id;
             CustomerOnboarding::where('user_id', $user_id)->update(['ref_id'  =>  $ref_id, 'consent_form' => 1]);
 
-        return view('frontend.pages.video_recorder');
+            $user = User::where('id', $user_id)->select('name', 'middle_name', 'last_name', 
+                'eid_number')->first();
+    
+        return view('admin.lead.video_recorder', compact('user_id', 'user'));
     } catch (Exception $e) {
             return back();
         }
@@ -2135,9 +2132,9 @@ public function enter_name(Request $request){
     }
 
 
-    public function product_requested(Request $request){
+    public function product_requested(Request $request, $id = null){
         try {
-                $user_id =  Auth::id();
+                $user_id =  $id;
                 $inputs = $request->all();
                 $inputs['customer_id'] = $user_id;
                 $banks = Bank::where('status', 1)->select('id', 'name')->get();
@@ -2231,7 +2228,7 @@ public function enter_name(Request $request){
                         }
                     $result = ProductRequest::where('user_id', $user_id)->first();
                     $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->pluck('service_id')->toArray();
-                    return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));     
+                    return view('admin.lead.product_requested', compact('result', 'services', 'banks', 'user_id'));     
                     } elseif ($cm_type == 2) {
                 
                         $cm_sal = SelfEmpDetail::where('customer_id', $user_id)->select('id')->first();
@@ -2243,7 +2240,7 @@ public function enter_name(Request $request){
                         }
                     $result = ProductRequest::where('user_id', $user_id)->first();
                     $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->pluck('service_id')->toArray();
-                    return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
+                    return view('admin.lead.product_requested', compact('result', 'services', 'banks', 'user_id'));
                     } else {
                         $cm_sal = OtherCmDetail::where('customer_id', $user_id)->select('id')->first();
                         if($cm_sal){
@@ -2254,11 +2251,11 @@ public function enter_name(Request $request){
                         }
                     $result = ProductRequest::where('user_id', $user_id)->first();
                     $services = ServiceApply::where('customer_id', $user_id)->where('app_status', 0)->pluck('service_id')->toArray();
-                        return view('frontend.pages.product_requested', compact('result', 'services', 'banks'));
+                        return view('admin.lead.product_requested', compact('result', 'services', 'banks', 'user_id'));
                     }
 
                 } else {
-                    return redirect()->route('cm-details');
+                    return redirect()->route('admin.cm-details', $user_id);
                 }
          } catch (Exception $e) {
             return back();

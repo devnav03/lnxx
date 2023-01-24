@@ -36,6 +36,9 @@ use App\Models\ApplicationDependent;
 use App\Models\ComanInformation;
 use App\Models\CreditCardInformation;
 use App\Models\PersonalLoanPreferenceBank;
+use App\Models\ApplicationPersonalLoanPreferenceBank;
+use App\Models\ApplicationCreditCardPreferenceBank;
+use App\Models\ApplicationCardTypePreference;
 use App\Models\CardType;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
@@ -456,12 +459,20 @@ class UserController extends Controller {
               $app_base = 1300;
                 if($services){
                         if($CustomerOnboarding->cm_type == 1){
-                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company')->first();
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
                             $inputs['company_name'] = $employee->company_name;
                             $inputs['date_of_joining'] = $employee->date_of_joining;
                             $inputs['monthly_salary'] = $employee->monthly_salary;
                             $inputs['last_three_salary_credits'] = $employee->last_three_salary_credits;
+                            $inputs['last_two_salary_credits'] = $employee->last_two_salary_credits;
+                            $inputs['last_one_salary_credits'] = $employee->last_one_salary_credits;
                             $inputs['other_company'] = $employee->other_company;
+                            $inputs['accommodation_company'] = $employee->accommodation_company;
+
+                            $inputs['last_one_salary_file'] = $employee->last_one_salary_file;
+                            $inputs['last_two_salary_file'] = $employee->last_two_salary_file;
+                            $inputs['last_three_salary_file'] = $employee->last_three_salary_file;
+
                         } elseif ($CustomerOnboarding->cm_type == 2){
                             $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();
                             $inputs['self_company_name'] = $employee->self_company_name;
@@ -614,7 +625,43 @@ class UserController extends Controller {
                         $application_id = (new Application)->store($inputs); 
                         $application_data['application_id'] = $application_id;
 
-                        $app_id = (new ApplicationProductRequest)->store($application_data); 
+                        $app_id = (new ApplicationProductRequest)->store($application_data);
+
+                        if($service->service_id == 3){
+                            $card_types = CardTypePreference::where('user_id', $user_id)->select('type_id')->get();
+                            if($card_types){
+                                foreach ($card_types as $card_type) {
+                                    ApplicationCardTypePreference::create([
+                                        'app_id' => $application_id,
+                                        'type_id' => $card_type->type_id,
+                                    ]);
+                                }
+                            }
+                            $CreditCards = CreditCardPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit')->get();
+                            if($CreditCards){
+                                foreach ($CreditCards as $CreditCard) {
+                                    ApplicationCreditCardPreferenceBank::create([
+                                        'app_id' => $application_id,
+                                        'bank_id' => $CreditCard->bank_id,
+                                        'loan_limit' => $CreditCard->loan_limit,
+                                    ]);
+                                }
+                            }
+                        }
+
+                        if($service->service_id == 1){
+                            $PersonalLoans = PersonalLoanPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit', 'loan_emi')->get();
+                            if($PersonalLoans){
+                                foreach ($PersonalLoans as $PersonalLoan) {
+                                    ApplicationPersonalLoanPreferenceBank::create([
+                                        'app_id' => $application_id,
+                                        'bank_id' => $PersonalLoan->bank_id,
+                                        'loan_limit' => $PersonalLoan->loan_limit,
+                                        'loan_emi' => $PersonalLoan->loan_emi,
+                                    ]);
+                                }
+                            }
+                        }
 
                         $ref_id[] = $slide;
 
@@ -678,12 +725,21 @@ class UserController extends Controller {
                 $app_base = 1300;
                 if($services){
                         if($CustomerOnboarding->cm_type == 1){
-                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company')->first();
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
                             $inputs['company_name'] = $employee->company_name;
                             $inputs['date_of_joining'] = $employee->date_of_joining;
                             $inputs['monthly_salary'] = $employee->monthly_salary;
                             $inputs['last_three_salary_credits'] = $employee->last_three_salary_credits;
+                            $inputs['last_two_salary_credits'] = $employee->last_two_salary_credits;
+                            $inputs['last_one_salary_credits'] = $employee->last_one_salary_credits;
                             $inputs['other_company'] = $employee->other_company;
+                            $inputs['accommodation_company'] = $employee->accommodation_company;
+
+                            $inputs['last_one_salary_file'] = $employee->last_one_salary_file;
+                            $inputs['last_two_salary_file'] = $employee->last_two_salary_file;
+                            $inputs['last_three_salary_file'] = $employee->last_three_salary_file;
+
+
                         } elseif ($CustomerOnboarding->cm_type == 2){
                             $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();
                             $inputs['self_company_name'] = $employee->self_company_name;
@@ -836,6 +892,42 @@ class UserController extends Controller {
                         $application_data['application_id'] = $application_id;
 
                         $app_id = (new ApplicationProductRequest)->store($application_data); 
+
+                        if($service->service_id == 3){
+                            $card_types = CardTypePreference::where('user_id', $user_id)->select('type_id')->get();
+                            if($card_types){
+                                foreach ($card_types as $card_type) {
+                                    ApplicationCardTypePreference::create([
+                                        'app_id' => $application_id,
+                                        'type_id' => $card_type->type_id,
+                                    ]);
+                                }
+                            }
+                            $CreditCards = CreditCardPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit')->get();
+                            if($CreditCards){
+                                foreach ($CreditCards as $CreditCard) {
+                                    ApplicationCreditCardPreferenceBank::create([
+                                        'app_id' => $application_id,
+                                        'bank_id' => $CreditCard->bank_id,
+                                        'loan_limit' => $CreditCard->loan_limit,
+                                    ]);
+                                }
+                            }
+                        }
+
+                        if($service->service_id == 1){
+                            $PersonalLoans = PersonalLoanPreferenceBank::where('user_id', $user_id)->select('bank_id', 'loan_limit', 'loan_emi')->get();
+                            if($PersonalLoans){
+                                foreach ($PersonalLoans as $PersonalLoan) {
+                                    ApplicationPersonalLoanPreferenceBank::create([
+                                        'app_id' => $application_id,
+                                        'bank_id' => $PersonalLoan->bank_id,
+                                        'loan_limit' => $PersonalLoan->loan_limit,
+                                        'loan_emi' => $PersonalLoan->loan_emi,
+                                    ]);
+                                }
+                            }
+                        }
 
                         $ref_id[] = $slide;
 
@@ -1071,6 +1163,43 @@ class UserController extends Controller {
             }
           return response()->json(['success' => true, 'status' => 200, 'data' => $data]);  
           }
+      }
+    }
+
+
+    public function profile_score(Request $request){
+
+      if($request->api_key){
+        $user = User::where('api_key', $request->api_key)->select('id', 'emirates_id', 'gender')->first();
+          if($user){
+          $user_id = $user->id;
+          $score = 10;
+          $cus_onboard = CustomerOnboarding::where('user_id', $user_id)->select('nationality', 'date_of_birth', 'passport_photo', 'marital_status', 'cm_type', 'passport_number')->first(); 
+            if($cus_onboard){
+              if($cus_onboard->nationality != NULL && $cus_onboard->date_of_birth != NULL && $cus_onboard->marital_status != NULL && $cus_onboard->marital_status != NULL){
+                    $score += 5;
+              }
+            }
+            
+            if($cus_onboard->emirates_id != NULL){
+                    $score += 5;
+            }
+
+            if($cus_onboard->passport_photo != NULL && $cus_onboard->passport_number != NULL){
+                    $score += 5;
+            }
+
+            if($cus_onboard->cm_type != NULL){
+                    $score += 50;
+            }
+
+            $coman_info = ComanInformation::where('user_id', $user_id)->select('spouse_live_in_uae')->first();
+            if(!empty($coman_info)){
+                    $score += 10;
+            }
+
+            return response()->json(['success' => true, 'status' => 200, 'score' => $score]);
+        }
       }
     }
 

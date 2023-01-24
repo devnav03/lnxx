@@ -11,11 +11,10 @@
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px; max-width: 300px;" class="img-responsive">
 </div>
-
 </div>
 <div class="col-md-6 sign_up_field">
 <!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->
-<h3>Upload Profile Image</h3>
+<h3>Upload Your Photograph</h3>
 <!-- <p style="margin-bottom: 10px;">Please upload your profile image.</p> -->
 <form action="{{ route('save-profile-image') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}	
@@ -27,7 +26,7 @@
 
 	<div id="my_camera"></div> 
   
-    <a onclick="take_snapshot();" style="background: #5EB495; padding: 10px 20px; color: #fff; border-radius: 10px; margin-bottom: 17px;margin-bottom: 8px; display: inline-block;cursor: pointer;">Capture</a> 
+    <a onclick="take_snapshot();" style="background: #5EB495; padding: 10px 20px; color: #fff; border-radius: 10px; margin-bottom: 17px;margin-bottom: 8px; display: inline-block;cursor: pointer;">Take a Picture Now!</a> 
     <div id="results"><!-- Your captured image will appear here... --></div>
 <!-- 	@if($errors->has('profile_image'))
         <span class="text-danger">{{$errors->first('profile_image')}}</span>

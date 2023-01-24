@@ -75,6 +75,21 @@ Route::any('v1/save-personal-loan-bank-preference', ['as' => 'save-personal-loan
 Route::any('v1/personal-loan-bank-list', ['as' => 'personal-loan-bank-list','uses' => 'App\Http\Controllers\API\V1\UserController@personal_loan_bank_list']);
 
 
+Route::any('v1/profile-score', ['as' => 'profile-score','uses' => 'App\Http\Controllers\API\V1\UserController@profile_score']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -7,8 +7,8 @@
 <div class="col-md-8 mx-auto">
 <div class="row">
 <div class="col-md-6 sign_up_content">
-<h3>Welcome back to Lnxx</h3>
-<h5>Login to continue your account</h5>
+<h3>Welcome Back!</h3>
+<h5>Login to continue.</h5>
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_158.png')  !!}" style="padding-bottom: 20px; max-width: 300px;" class="img-responsive">
 </div>
@@ -16,7 +16,7 @@
 <div class="col-md-6 sign_up_field">
 <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a>
 <h3>Sign In</h3>
-<p>To proceed, verify your details.</p>
+<p>To proceed, enter your mobile number</p>
 
 @if(session()->has('username_mobile_not_exist'))
 <p style="color: #f00;margin-bottom: 25px;">Entered mobile no. not registered not with us</p>

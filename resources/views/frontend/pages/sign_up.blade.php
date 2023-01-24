@@ -12,64 +12,11 @@
 <div style="text-align:center">
 <img src="{!! asset('assets/frontend/images/Artboard_5.png')  !!}" style="padding-bottom: 20px;" class="img-responsive">
 </div>
-<!-- <ul>
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-<li>
-<div class="row">
-<div class="col-md-2">
-<img src="{!! asset('assets/frontend/images/sign_img.png')  !!}" class="img-responsive">
-</div>
-<div class="col-md-10">
-<h4>Lorem ipsum</h4>
-<p>Lorem ipsum dolor sit amet, consectetur elit.</p>
-</div>
-</div>
-</li>
-
-
-</ul> -->
-
-
 </div>
 <div class="col-md-6 sign_up_field">
 <!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->	
 <h3>Create New Account</h3>
-<p>Please enter your correct information.</p>
+<p>Let's get you started!</p>
 <form action="{{ route('register-email') }}" class="sn_form" method="post">
 {{ csrf_field() }}
 <div class="row">	
@@ -90,7 +37,6 @@
 			@if($errors->has('name'))
 		       <span class="text-danger">{{$errors->first('name')}}</span>
 		    @endif
-			 
 		</div>
     </div>
 
@@ -113,7 +59,8 @@
 
 </div>
 <div class="form-group mob_input">
-	<input type="number" id="phone" class="form-control" required="true" placeholder="Enter mobile number*" name="mobile">
+	<input type="number" id="phone" style="padding-left: 55px;" class="form-control" required="true" placeholder="Enter mobile number*" name="mobile">
+	<span style="position: absolute; top: 12px; font-size: 14px; left: 20px;">+971</span>
    <!--  <div id="recaptcha-container"></div> -->
 	<!-- <input type="number" onKeyPress="if(this.value.length==9) return false;" class="form-control" required="true" placeholder="Enter mobile number*" name="mobile"> -->
 
@@ -132,7 +79,7 @@
 <div class="form-group mob_input" style="margin-top: 25px;">
 	<input type="number" class="form-control" required="true" maxlength="6" placeholder="Enter OTP*" name="otp">
 	<img src="{!! asset('assets/frontend/images/otp.png')  !!}" alt="logo" class="input-img">
-	<div class="otp_lab">OTP will be sent to above mobile number</div>
+	<div class="otp_lab">Please enter the OTP sent on your mobile number</div>
 	<div class="not_verify" style="color: #f00; font-size: 12px; padding-top: 2px;"></div>
 	<div class="otp_verify" style="color: green; font-size: 12px; padding-top: 2px;"></div>
 	@if(session()->has('otp_not_match'))

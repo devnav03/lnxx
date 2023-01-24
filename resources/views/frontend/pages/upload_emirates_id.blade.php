@@ -21,7 +21,7 @@ $temp_id = \Session::get('temp_id');
 <p>Please upload your emirates id.</p>
 <form action="{{ route('emirates-id-verification') }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}	
-<label style="font-size: 14px;">Insert Emirates ID*</label>
+<label style="font-size: 14px;">Enter 14 digits of your Emirates ID*</label>
     <div class="form-group">
       <input name="eid_number" style="max-width: 327px;" pattern="\d*" class="form-control" maxlength="15" minlength="15"  value="{{ old('eid_number') }}" required="true" type="text">
       @if($errors->has('eid_number'))
@@ -46,8 +46,8 @@ $temp_id = \Session::get('temp_id');
 </div>
 
 <input type="hidden" value="{{ $temp_id }}" name="temp_id">
-<p style="font-size: 11px;" class="hide_text">This will help you get higher credit</br>
-You can skip this step and verify it later as well.</p>
+<!-- <p style="font-size: 11px;" class="hide_text">This will help you get higher credit</br>
+You can skip this step and verify it later as well.</p> -->
 <div class="btn-box" style="text-align: center;">
 <button class="btn">Next</button>
 <p style="margin-bottom: 0px;"><a style="color: #ddd; font-size: 14px;" href="{{ route('upload-profile-image') }}">Skip for now</a></p>

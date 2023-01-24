@@ -49,18 +49,18 @@ body a:hover{
     padding: 0px;
 }
 .banner h3{
-  font-family: 'Inria Sans', sans-serif;
-  font-weight: 400;
-  font-size: 45px;
-  line-height: 54px;
-  color: #000;
+    font-family: 'Inria Sans', sans-serif;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 40px;
+    color: #000;
 }
 .banner h3 span{
-  font-family: 'Inria Sans', sans-serif;
-  font-weight: 400;
-  font-size: 45px;
-  line-height: 54px;
-  color: #5EB495;
+    font-family: 'Inria Sans', sans-serif;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 46px;
+    color: #5EB495;
 }
 .banner {
     padding-top: 50px;
@@ -232,7 +232,7 @@ body a:hover{
   display: none;
 }
 .con-box img {
-    max-width: 70%;
+    max-width: 56%;
     float: right;
 }
 .con_btn:hover {
@@ -553,7 +553,7 @@ footer ul.footer-menu li a:hover{
     font-weight: 700;
     font-size: 19px;
     line-height: 26px;
-    margin-top: 0px;
+    margin-top: 25px;
 }
 .lnxx-work p {
     margin-top: 10px;

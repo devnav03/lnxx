@@ -16,8 +16,8 @@
 </div>
 <div class="col-md-6 sign_up_field">
 <!-- <a href="{{ route('home') }}"><img src="{!! asset('assets/frontend/images/cross.png') !!}" class="home-cross"></a> -->
-<h3>Register Email ID</h3>
-<p>Please enter your correct mail id.</p>
+<h3>Register your Email ID</h3>
+<p>Please enter your email id.</p>
 <form action="{{ route('email-otp') }}" method="post">
 {{ csrf_field() }}	
 <div class="form-group mob_input">

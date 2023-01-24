@@ -10,12 +10,12 @@
 <div class="col-md-9">
 <div class="personal_details_box cm_dt">
 <!-- <h1 class="app_form_head">Application Form</h1>   -->
-<h2 style="font-size: 22px; margin-bottom: 15px;">Employment Details</h2>
+<h2 style="font-size: 22px; margin-bottom: 15px;margin-top: 20px;">Employment Details</h2>
 <!-- <h6>Please enter your employment information</h6> -->
-<form action="{{ route('product-requested') }}" enctype="multipart/form-data" method="post">
+<form action="{{ route('admin.product-requested', $user_id) }}" enctype="multipart/form-data" method="post">
 {{ csrf_field() }}  
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-6" style="margin-bottom: 20px;">
   <label class="sub-label">Employment Type*</label>
     <select name="cm_type" class="form-control" required="true" onChange="RelationChange(this);">
       <option value="">Select</option>
@@ -41,7 +41,7 @@
     <div class="form-group">
       <label class="sub-label">Date of Joining*</label>
       <input name="date_of_joining" id="date_of_joining" @if($cm_type != 2 && $cm_type != 3) required="true"  @endif class="form-control" @if($result) value="{{ $result->date_of_joining }}" @else value="{{ old('date_of_joining') }}" @endif type="text">
-      <i class="fa-solid fa-calendar"></i>
+      <i style="position: absolute; top: 42px; right: 30px;" class="ti-calendar sidemenu-icon menu-icon"></i>
       @if($errors->has('date_of_joining'))
       <span class="text-danger">{{$errors->first('date_of_joining')}}</span>
       @endif
@@ -73,8 +73,8 @@
     </div>
 
     <div class="col-md-6">
-      <div class="form-group" style="width: 70%; float: left;">
-        <label class="sub-label">Upload salary slip</label>
+      <div class="form-group" style="width: 75%; float: left;">
+        <label class="sub-label">Upload salary slip</label><br>
         <input name="last_one_salary_file" style="box-shadow: none;padding-left: 0px;" class="form-control" type="file">
         @if($errors->has('last_one_salary_file'))
         <span class="text-danger">{{$errors->first('last_one_salary_file')}}</span>
@@ -82,7 +82,7 @@
       </div>
       @if($result)
           @if($result->last_one_salary_file)
-            <a href="{{ asset($result->last_one_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="fa-solid fa-download"></i> Download</a> 
+            <a href="{{ asset($result->last_one_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="ti-download sidemenu-icon menu-icon "></i> Download</a> 
           @endif
       @endif
     </div>
@@ -98,16 +98,16 @@
     </div> 
 
     <div class="col-md-6">
-      <div class="form-group" style="width: 70%; float: left;">
-        <label class="sub-label">Upload salary slip</label>
-        <input name="last_two_salary_file" style="box-shadow: none;padding-left: 0px; width: 70%; float: left;" class="form-control" type="file">
+      <div class="form-group" style="width: 75%; float: left;">
+        <label class="sub-label">Upload salary slip</label><br>
+        <input name="last_two_salary_file" style="box-shadow: none;padding-left: 0px; width: 100%; float: left;" class="form-control" type="file">
         @if($errors->has('last_two_salary_file'))
         <span class="text-danger">{{$errors->first('last_two_salary_file')}}</span>
         @endif
       </div>
       @if($result)
           @if($result->last_two_salary_file)
-            <a href="{{ asset($result->last_two_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="fa-solid fa-download"></i> Download</a> 
+            <a href="{{ asset($result->last_two_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="ti-download sidemenu-icon menu-icon "></i> Download</a> 
           @endif
       @endif
     </div> 
@@ -123,16 +123,16 @@
     </div>
 
     <div class="col-md-6">
-      <div class="form-group" style="width: 70%; float: left;">
-        <label class="sub-label">Upload salary slip</label>
-        <input name="last_three_salary_file" style="box-shadow: none; padding-left: 0px; width: 70%; float: left;" class="form-control" type="file">
+      <div class="form-group" style="width: 75%; float: left;">
+        <label class="sub-label">Upload salary slip</label><br>
+        <input name="last_three_salary_file" style="box-shadow: none; padding-left: 0px; width: 100%; float: left;" class="form-control" type="file">
         @if($errors->has('last_three_salary_file'))
         <span class="text-danger">{{$errors->first('last_three_salary_file')}}</span>
         @endif
       </div>
       @if($result)
           @if($result->last_three_salary_file)
-            <a href="{{ asset($result->last_three_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="fa-solid fa-download"></i> Download</a> 
+            <a href="{{ asset($result->last_three_salary_file) }}" download style="float: right;margin-top: 30px;"><i class="ti-download sidemenu-icon menu-icon "></i> Download</a> 
           @endif
       @endif
     </div> 
@@ -207,8 +207,8 @@
   </div>
 
   <div class="col-md-12 text-center">
-    <a href="{{ route('personal-details') }}" class="back_btn">Back</a> &nbsp;&nbsp;
-    <button type="submit">Proceed</button>
+    <a href="{{ route('admin.personal-details', $user_id) }}" class="back_btn" style="border: 1px solid #000;  padding: 10px 30px; color: #000;">Back</a> &nbsp;&nbsp;
+    <button type="submit" style="background: #000; color: #fff; padding: 8px 25px; margin-bottom: 35px;">Proceed</button>
   </div>
 </div>
 </form>
@@ -274,8 +274,177 @@ function RelationChange(that) {
    
 }
 
+$(function() {
+        $( "#date_of_joining" ).datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            maxDate: 0,
+            dateFormat: 'dd/mm/yy',
+            changeYear: true
+        });
+  });
 
 </script>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+
+      fetch_product_data1();
+      function fetch_product_data1(query = '') {
+      $.ajax({
+       url:"{{ route('live_product_1') }}",
+       method:'GET',
+       data:{query:query},
+       dataType:'json',
+       success:function(data) {
+        $('#live_product_1').html(data.table_data);
+       }
+      })
+     }
+
+     $(document).on('keyup', '.live_product_1', function(){
+      $("#live_product_1").show();    
+      var query = $(this).val();
+      fetch_product_data1(query);
+     });
+    });
+
+
+    function getProduct_Code_1(val) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('check_product_code') }}",
+            data: {'code' : val},
+            success: function(data){
+                if(data.status == 'Fail'){
+                } else{
+                    $(".product_id").val(data.product_id);
+                    $(".product_name").val(data.product_name);
+                }
+                $("#live_product_1").hide();   
+            }
+        });
+
+    }
+    
+    $(".form-rel").mouseenter(function(){
+    $("#live_product_1").slideDown();
+    }).mouseleave(function(){
+        $("#live_product_1").slideUp();
+    });
+
+
+    $(document).ready(function(){
+
+      fetch_product_data2();
+      function fetch_product_data2(query = '') {
+      $.ajax({
+       url:"{{ route('live_product_2') }}",
+       method:'GET',
+       data:{query:query},
+       dataType:'json',
+       success:function(data) {
+        $('#live_product_2').html(data.table_data);
+       }
+      })
+     }
+
+     $(document).on('keyup', '.live_product_2', function(){
+      $("#live_product_2").show();    
+      var query = $(this).val();
+      fetch_product_data2(query);
+     });
+    });
+
+    function getProduct_Code_2(val) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('check_product_code2') }}",
+            data: {'code' : val},
+            success: function(data){
+                if(data.status == 'Fail'){
+                } else{
+                    $(".product_id").val(data.product_id);
+                    $(".product_name2").val(data.product_name);
+                }
+                $("#live_product_2").hide();   
+            }
+        });
+    }
+    
+    $(".form-rel2").mouseenter(function(){
+    $("#live_product_2").slideDown();
+    }).mouseleave(function(){
+        $("#live_product_2").slideUp();
+    });
+
+</script>
+
+<style type="text/css">
+  
+#live_product_1 input,
+#live_product_2 input{
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    height: 100%;
+    z-index: 4;
+    margin-bottom: 0px;
+    cursor: pointer;
+} 
+#live_product_1 li,
+#live_product_2 li{
+    cursor: pointer;
+    position: relative;
+    padding: 4px 10px;
+}
+
+
+#live_product_1, #live_product_2, #live_product_3 {
+    position: absolute;
+    z-index: 999;
+    background: #f3f3f3;
+    width: 100%;
+    top: 64px;
+    list-style: none;
+    padding: 0px;
+  /*  display: none;*/
+}
+#total_records1,
+#total_records2 {
+    position: absolute;
+    z-index: 999;
+    background: #f3f3f3;
+    width: 100%;
+    top: 64px;
+    list-style: none;
+    display: none;
+}
+#total_records1 li,
+#total_records2 li{
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+#live_product_1 li, #live_product_2 li, 
+#live_product_3 li{
+    margin-bottom: 5px;
+    text-transform: capitalize;
+    font-weight: 500;
+    color: #000;
+}
+#live_product_1,
+#live_product_2{
+    display: none;
+}
+.view_hv:hover #total_records1,
+.form-rel:hover #live_product_1,
+.form-rel2:hover #live_product2,
+.view_hv:hover #live_product_2,
+.view_hv:hover #live_product_3{
+    display: block;
+}
+  
+</style>
 
 @endsection    

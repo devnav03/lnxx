@@ -452,6 +452,8 @@ class HomeController extends Controller {
         } 
     }
 
+
+
     public function save_information_form(Request $request){
         try {
 
@@ -477,7 +479,7 @@ class HomeController extends Controller {
             $inputs['postgraduate'] = $education->postgraduate;
             $inputs['others'] = $education->others;
 
-            $address = Address::where('customer_id', $user_id)->select('id')->first();
+            $address = Address::where('customer_id', $user_id)->first();
             $inputs['permanent_address_home_country_line_1'] = $address->permanent_address_home_country_line_1; 
             $inputs['permanent_address_home_country_line_2'] = $address->permanent_address_home_country_line_2;
             $inputs['permanent_address_home_country_line_3'] = $address->permanent_address_home_country_line_3;
@@ -529,6 +531,27 @@ class HomeController extends Controller {
             $CreditCard = CreditCardInformation::where('user_id', $user_id)->first();
             $inputs['card_type'] = $CreditCard->card_type;
             $inputs['embossing_name'] = $CreditCard->embossing_name;
+            $inputs['cm_billing_cycle_date'] = $CreditCard->cm_billing_cycle_date;
+            $inputs['e_statement_subscription'] = $CreditCard->e_statement_subscription;
+            $inputs['paper_statement_subscription'] = $CreditCard->paper_statement_subscription;
+            $inputs['supplementary_salutation'] = $CreditCard->supplementary_salutation;
+            $inputs['supplementary_relationship'] = $CreditCard->supplementary_relationship;
+            $inputs['supplementary_first_name'] = $CreditCard->supplementary_first_name;
+            $inputs['supplementary_middle_name'] = $CreditCard->supplementary_middle_name;
+            $inputs['supplementary_last_name'] = $CreditCard->supplementary_last_name;
+            $inputs['supplementary_embosing_name'] = $CreditCard->supplementary_embosing_name;
+            $inputs['supplementary_nationality'] = $CreditCard->supplementary_nationality;
+            $inputs['supplementary_passport_no'] = $CreditCard->supplementary_passport_no;
+            $inputs['supplementary_credit_limit_aed'] = $CreditCard->supplementary_credit_limit_aed;
+            $inputs['supplementary_marital_status'] = $CreditCard->supplementary_marital_status;
+            $inputs['supplementary_mother_maiden_name'] = $CreditCard->supplementary_mother_maiden_name;
+            $inputs['no_sign_up_credit_shield'] = $CreditCard->no_sign_up_credit_shield;
+            $inputs['sign_up_credit_shield_plus'] = $CreditCard->sign_up_credit_shield_plus;
+            $inputs['master_murabaha_agreement'] = $CreditCard->master_murabaha_agreement;
+            $inputs['kyc_docs'] = $CreditCard->kyc_docs;
+            $inputs['kyc_docs2'] = $CreditCard->kyc_docs2;
+            $inputs['kyc_docs3'] = $CreditCard->kyc_docs3;
+            $inputs['kyc_docs4'] = $CreditCard->kyc_docs4;
 
             $services = ServiceApply::where('app_status', 1)->where('customer_id', $user_id)->select('id', 'app_no')->get();
 
@@ -1097,7 +1120,7 @@ public function enter_name(Request $request){
                 $app_base = 1300;
                 if($services){
                         if($CustomerOnboarding->cm_type == 1){
-                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company')->first();
+                            $employee = CmSalariedDetail::where('customer_id', $user_id)->select('company_name', 'date_of_joining', 'monthly_salary', 'last_three_salary_credits', 'other_company', 'last_two_salary_credits', 'last_one_salary_credits', 'accommodation_company', 'last_one_salary_file', 'last_two_salary_file', 'last_three_salary_file')->first();
                             $inputs['company_name'] = $employee->company_name;
                             $inputs['date_of_joining'] = $employee->date_of_joining;
                             $inputs['monthly_salary'] = $employee->monthly_salary;
@@ -1106,6 +1129,10 @@ public function enter_name(Request $request){
                             $inputs['last_one_salary_credits'] = $employee->last_one_salary_credits;
                             $inputs['other_company'] = $employee->other_company;
                             $inputs['accommodation_company'] = $employee->accommodation_company;
+
+                            $inputs['last_one_salary_file'] = $employee->last_one_salary_file;
+                            $inputs['last_two_salary_file'] = $employee->last_two_salary_file;
+                            $inputs['last_three_salary_file'] = $employee->last_three_salary_file;
 
                         } elseif ($CustomerOnboarding->cm_type == 2){
                             $employee = SelfEmpDetail::where('customer_id', $user_id)->select('self_company_name', 'percentage_ownership', 'profession_business', 'annual_business_income', 'self_other_company')->first();

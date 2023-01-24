@@ -683,6 +683,7 @@ function view_details(id){
         });    
 }
 function savedata(id){
+    // alert(id);
     var name = $('#m_name').val();
     var mname = $('#m_mname').val();
     var lname = $('#m_lname').val();
@@ -690,10 +691,11 @@ function savedata(id){
     var number = $('#m_number').val();
     var product = $('#m_product').val();
     var source = $('#m_source').val();
+    var status = $('#m_status').val();
     $.ajax({
         type: 'GET',
         url : "{{url('admin/save-view-details')}}", 
-        data: {id:id, name:name, mname:mname, lname:lname, email:email, number:number, product:product, source:source},
+        data: {id:id, name:name, mname:mname, lname:lname, email:email, number:number, product:product, source:source, status:status},
         success: function(response){
             location.reload();
         }

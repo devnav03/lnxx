@@ -21,7 +21,7 @@ $user_base = 'Customer';
 <div class="logo_back">     
 <section class="product-index">
 <div class="container">
-<h5>Offering you our best products from top UAE's banks</h5>    
+<!-- <h5>Offering you our best products from top UAE's banks</h5>    --> 
 <div class="product-slider row owl-theme owl-carousel">
 @foreach($services as $service)
 <div class="col-md-12">
@@ -52,8 +52,8 @@ $user_base = 'Customer';
 <img src="{!! asset('assets/frontend/images/about_usimg.jpg')  !!}" class="img-responsive">
 </div>
 <div class="col-md-5">
-<h3>New generation digital Neobank that integrates products/services from multiple providers, improving and simplifying customer experiences based on the insights using data.</h3>
-<p>To be a leading financial services player that focuses on the needs of the resident UAE SME/Small Business and Consumer Mass Market/Mass Affluent population, including the migrant workforce, through an empowered platform that provides access to a host of financial services and related products for their best interest through an open architecture system by riding on the existing rail road provides by multiple banks, financial services institutions, ecommerce organizations, etc.<!--  both in UAE as well as through linkages with banks in respective home countries for additional products relevant to the ethnically diverse UAE population. --></p>
+<h3>Lnxx - Your digital banking partner for Life!</h3>
+<p>Come with us on a journey of options and opportunities! Lnxx offers you simple and fast processes for a wide range of financial products and services. Whether you are a salaried individual, a large corporate or a small business we get you the best products, serving you with an end to end model that is built on a data driven, analytics & AI based technology platform! </p>
 @if(\Auth::check())
 <a href="{{ route('sign-in') }}">Get Started</a>
 @else
@@ -72,12 +72,12 @@ $user_base = 'Customer';
 <div class="row">
 <div class="col-md-6">
 <h2>Get the lnxx app</h2>
-<h3>Get control of all your loan needs anywhere & anytime</h3>
+<h3>Get control of your financing needs - anywhere and anytime!</h3>
 <ul>
-<li>Latest credit offers</li>
-<li>Apply for loan application</li>
-<li>Track application status on the go</li>
-<li>Refer and earn program</li>
+<li>Latest Offers</li>
+<li>Seamless application process</li>
+<li>Track your application on the go</li>
+<li>Refer and earn!</li>
 </ul>
 <p style="margin-bottom: 4px;">Download lnxx app from</p>
 <div class="row" style="margin-bottom: 30px;">
@@ -95,7 +95,7 @@ $user_base = 'Customer';
 </div>
 <div class="col-md-6">
    <h4>Download the lnxx mobile app.</h4>
-   <p class="app_des">Get exclusive offers & enjoy a seamless experience.</p>
+   <p class="app_des">Options & Opportunities!</p>
 </div>
 </div>
 </div>
@@ -110,7 +110,7 @@ $user_base = 'Customer';
 <section class="lnxx-partners">
 <div class="container">
 <h2>Our Partners</h2>   
-<p>We collaborate with the biggest and best names in banking and<br> finance to bring you relevant items at competitive prices.</p>
+<p>Great Partners, Great Products!</p>
 <div class="row">
 @foreach($banks as $bank)	
 <div class="col-md-2">
@@ -164,7 +164,7 @@ $user_base = 'Customer';
 
 <section class="blog-articles" style="background: #EFF2F0; padding: 60px 0;">
 <div class="container">
-<h2>News & Article</h2>
+<h2>News & Articles</h2>
 <div class="blog-slider row owl-theme owl-carousel">  
 <div class="col-md-12">
 <div class="row">
@@ -186,38 +186,6 @@ $user_base = 'Customer';
 
 <section class="agent_banner">
 <div class="container">	
-
-<!-- <div class="col-md-6">
-<h2>Become a part of one of the UAE's leading general bank service providers.</h2>
-<p>Our broad range of industry sectors</p>
-<div class="row">	
-		<div class="col-md-4">	
-			<img src="{!! asset('assets/frontend/images/agent_pro.png')  !!}" class="ser_img">
-			<h4>Lorem Ipsum</h4>
-		</div>
-		<div class="col-md-4">	
-			<img src="{!! asset('assets/frontend/images/agent_pro.png')  !!}" class="ser_img">
-			<h4>Lorem Ipsum</h4>
-		</div>
-		<div class="col-md-4">	
-			<img src="{!! asset('assets/frontend/images/agent_pro.png')  !!}" class="ser_img">
-			<h4>Lorem Ipsum</h4>
-		</div>
-		<div class="col-md-4">	
-			<img src="{!! asset('assets/frontend/images/agent_pro.png')  !!}" class="ser_img">
-			<h4>Lorem Ipsum</h4>
-		</div>
-		<div class="col-md-4">	
-			<img src="{!! asset('assets/frontend/images/agent_pro.png')  !!}" class="ser_img">
-			<h4>Lorem Ipsum</h4>
-		</div>
-		<div class="col-md-4">	
-			<img src="{!! asset('assets/frontend/images/agent_pro.png')  !!}" class="ser_img">
-			<h4>Lorem Ipsum</h4>
-		</div>
-	</div>
-</div> -->
-<!-- <div class="col-md-1"></div> -->
 @if(session()->has('resume_submit'))
 <h5 style="text-align: center; color: #fff; max-width: 500px; margin: 0 auto; line-height: 30px;">Your job application has been received successfully. Thank you for applying!</h5>
 @else

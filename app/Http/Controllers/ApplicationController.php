@@ -20,6 +20,9 @@ use App\Models\Application;
 use App\Models\ApplicationProductRequest;
 use App\Models\Bank;
 use App\Models\ApplicationDependent;
+use App\Models\ApplicationPersonalLoanPreferenceBank;
+use App\Models\ApplicationCreditCardPreferenceBank;
+use App\Models\ApplicationData;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -141,6 +144,10 @@ class ApplicationController extends Controller {
         if (!$result) {
             abort(404);
         }
+
+        $PersonalLoanlimit = "";
+        $PersonalLoanPreference = [];
+        $CardTypePreference = [];
    
         $country = Country::all();
         $countries = Country::all();
@@ -159,10 +166,34 @@ class ApplicationController extends Controller {
                     ->select('service_applies.status', 'services.name', 'services.image')
                     ->where('service_applies.customer_id', $id)->get();
         $sel_services = ServiceApply::where('customer_id', $id)->pluck('service_id')->toArray();
-
         $dependents = ApplicationDependent::where('app_id', $id)->select('name', 'relation')->get();
+
+
+        if($result->service_id == 1){
+            $PersonalLoanlimit =  ApplicationPersonalLoanPreferenceBank::where('app_id', $result->id)->select('loan_limit', 'loan_emi')->first();
+            $PersonalLoanPreference = \DB::table('application_personal_loan_preference_bank')
+                    ->join('banks', 'banks.id', '=', 'application_personal_loan_preference_bank.bank_id')
+                    ->select('banks.name', 'banks.id')
+                    ->where('application_personal_loan_preference_bank.app_id', $id)->get();
+        }
+        if($result->service_id == 3){
+            $PersonalLoanlimit =  ApplicationCreditCardPreferenceBank::where('app_id', $result->id)->select('loan_limit')->first();
+            $PersonalLoanPreference = \DB::table('application_credit_card_preference_bank')
+                    ->join('banks', 'banks.id', '=', 'application_credit_card_preference_bank.bank_id')
+                    ->select('banks.name', 'banks.id')
+                    ->where('application_credit_card_preference_bank.app_id', $id)->get();
+
+            $CardTypePreference = \DB::table('application_card_type_preference')
+                    ->join('card_type', 'card_type.id', '=', 'application_card_type_preference.type_id')
+                    ->select('card_type.name', 'card_type.id')
+                    ->where('application_card_type_preference.app_id', $id)->get();
+
+        }
+
+        $app_data = ApplicationData::where('app_id', $id)->first();
+
                     
-        return view('admin.applications.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks', 'Application_Request', 'bank', 'service', 'dependents'));
+        return view('admin.applications.create', compact('result', 'country', 'UserEducation', 'address_details', 'countries', 'services', 'sel_services', 'company', 'banks', 'Application_Request', 'bank', 'service', 'dependents', 'PersonalLoanlimit', 'PersonalLoanPreference', 'CardTypePreference', 'app_data'));
     }
 
 

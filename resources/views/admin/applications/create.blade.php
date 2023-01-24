@@ -7,7 +7,7 @@
     <div class="grids">       
         <div class="row">
             <div class="col-md-12">
-            <h1 class="page-header"> @if(isset($result->ref_id)) Application No #{{ $result->ref_id }} @else Application @endif <a class="btn btn-sm btn-primary pull-right" href="{!! route('applications.index') !!}"> <i class="fa fa-arrow-left"></i> All Applications </a></h1>
+            <h1 style="font-size: 17px;font-weight: normal;" class="page-header"> @if(isset($result->ref_id)) Application No #{{ $result->ref_id }} @else Application @endif &nbsp;&nbsp; | &nbsp;&nbsp; Application For : {{ $service->name }} @if($result->service_id == 1) @if($PersonalLoanlimit) &nbsp;&nbsp; | &nbsp;&nbsp; Eligible Loan Amount AED {!! round($PersonalLoanlimit->loan_limit, 2) !!}/- &nbsp;&nbsp; | &nbsp;&nbsp;   EMI AED {!! round($PersonalLoanlimit->loan_emi, 2) !!}/- @endif @endif  @if($result->service_id == 3) @if($PersonalLoanlimit) &nbsp;&nbsp; | &nbsp;&nbsp; Eligible Limit AED {!! round($PersonalLoanlimit->loan_limit, 2) !!}/- @endif @endif <a class="btn btn-sm btn-primary pull-right" href="{!! route('applications.index') !!}"> <i class="fa fa-arrow-left"></i> All Applications </a></h1>
             <div class="card custom-card">
             <div class="card-body">
             <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
@@ -48,7 +48,7 @@
                                             @endif
                                         </div> 
                                     </div>
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                             {!! Form::label('mobile', lang('Mobile'), array('class' => '')) !!}
                                             @if(!empty($result->id))
@@ -62,7 +62,7 @@
                                         </div> 
                                     </div>
                                     
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                         {!! Form::label('date_of_birth', lang('Date of Birth'), array('class' => '')) !!}
                                         @if($result->date_of_birth)
@@ -78,7 +78,7 @@
                                     </div> 
                                     
                                     @if($result->gender)
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group"> 
                                         {!! Form::label('gender', lang('Gender'), array('class' => '')) !!}
                                         <input type="text" value="{{ $result->gender }}" readonly="" class="form-control"> 
@@ -100,16 +100,16 @@
                                     @endif
             
                                     @if(isset($result->profile_image))
-                                    <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="col-md-6" >
                                         <label>Profile Image</label><br>
                                         <img id="blah" src="{!! asset($result->profile_image) !!}" style="max-width: 150px;margin-top: 10px;" alt="" />
                                     </div>    
                                     @endif
 
                                     <input type="hidden" value="normal" name="provider">
-                                    <div class="col-md-6" style="margin-top: 20px;">
-                                   <!--  <button type="submit" class="btn btn-default w3ls-button">Submit</button>  -->
-                                    </div> 
+                                   <!--  <div class="col-md-6" style="margin-top: 20px;">
+                                    <button type="submit" class="btn btn-default w3ls-button">Submit</button> 
+                                    </div>  -->
                             </div>
                                     
                                 {!! Form::close() !!}
@@ -220,8 +220,8 @@
         <div class="form-group">
             <label class="sub-label">Nationality*</label>
             <select name="nationality" class="form-control" required="true">
-            @foreach($country as $country)       
-            <option value="{{ $country->id }}" @if($country->id == $result->nationality) selected @endif >{{ $country->country_name }}</option>
+            @foreach($country as $country1)       
+            <option value="{{ $country1->id }}" @if($country1->id == $result->nationality) selected @endif >{{ $country1->country_name }}</option>
             @endforeach  
             </select>
            <!--  <input name="nationality" class="form-control" value="{{ $result->nationality }}" type="text" required="true"> -->
@@ -309,7 +309,6 @@
                 </select>
                 </div>
             </div>
-
         @endforeach
     @endif
 
@@ -393,7 +392,6 @@
     </div>
     @endif
 
-
     </div>
     </div>
                                 
@@ -461,16 +459,26 @@
     </div>
   
     <div class="col-md-4">
-        <div class="form-group">
-          <label class="sub-label">First</label>
-          <input name="last_one_salary_credits" class="form-control" value="{{ $result->last_one_salary_credits }}" type="number">
-          @if($errors->has('last_one_salary_credits'))
-          <span class="text-danger">{{$errors->first('last_one_salary_credits')}}</span>
-          @endif
+        <div class="row">
+        <div class="col-md-9">
+            <div class="form-group">
+              <label class="sub-label">First</label>
+              <input name="last_one_salary_credits" class="form-control" value="{{ $result->last_one_salary_credits }}" type="number">
+              @if($errors->has('last_one_salary_credits'))
+              <span class="text-danger">{{$errors->first('last_one_salary_credits')}}</span>
+              @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            @if($result->last_one_salary_file)
+            <a style="margin-top: 39px; float: left; margin-left: -105px;" href="{{ asset($result->last_one_salary_file) }}" download>Download</a>
+            @endif
+        </div>
         </div>
     </div>
-
     <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-9">
         <div class="form-group">
           <label class="sub-label">Second</label>
           <input name="last_two_salary_credits" class="form-control" value="{{ $result->last_two_salary_credits }}" type="number">
@@ -479,14 +487,31 @@
           @endif
         </div>
     </div>
+    <div class="col-md-3">
+        @if($result->last_two_salary_file)
+        <a style="margin-top: 39px; float: left; margin-left: -105px;" href="{{ asset($result->last_two_salary_file) }}" download>Download</a>
+        @endif
+    </div>
+    </div>
+    </div>
+
 
     <div class="col-md-4">
+        <div class="row">
+        <div class="col-md-9">
         <div class="form-group">
           <label class="sub-label">Third</label>
           <input name="last_three_salary_credits" class="form-control" value="{{ $result->last_three_salary_credits }}" type="number">
           @if($errors->has('last_three_salary_credits'))
           <span class="text-danger">{{$errors->first('last_three_salary_credits')}}</span>
           @endif
+        </div>
+        </div>
+        <div class="col-md-3">
+        @if($result->last_three_salary_file)
+        <a style="margin-top: 39px; float: left; margin-left: -105px;" href="{{ asset($result->last_three_salary_file) }}" download>Download</a>
+        @endif
+        </div>
         </div>
     </div>
 
@@ -499,18 +524,13 @@
           @endif
         </div>
     </div>
-
-
-
     </div>                           
-         
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    </div> 
-                </div>
+    </div>                     
+    </div>
+    </div>
+    </div>
+    </div> 
+    </div>
            
             @endif  
             @if($result->cm_type == 2)
@@ -621,47 +641,45 @@
                 </div>
       
                 @endif
+            
+            @if(count($PersonalLoanPreference) != 0)
             <div class="card custom-card">
                 <div class="card-body">
-            <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
-                <div class="forms">
-                <div class="form-title">
-                    <h4>Selected Service</h4>                        
-                </div>
-                <div class="row">
-            <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="sub-label">Service</label>
-                      <input name="ser_name" class="form-control" value="{{ $service->name }}" type="text" readonly="">
-                    </div>
-                </div>
-                @if($result->service_id == 3)
-
-                @if($result->decide_by == 0) 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="sub-label">Preferred Bank</label>
-                          <input name="b_name" class="form-control" value="Lnxx will decide" type="text" readonly="">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                        <div class="forms">
+                            <div class="form-title">
+                                <h4>Preferred Bank</h4>                        
+                            </div>
+                            <ul style="padding-left: 15px; margin-bottom: 0px;">
+                                @foreach($PersonalLoanPreference as $preference_bank)
+                                    <li style="margin-bottom: 5px; font-size: 15px;">{{ $preference_bank->name }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
-                @else
-                    @if($bank)
-                    <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="sub-label">Preferred Bank</label>
-                          <input name="b_name" class="form-control" value="{{ $bank->name }}" type="text" readonly="">
+                </div>
+            </div> 
+            @endif
+
+            @if(count($CardTypePreference) != 0)
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                        <div class="forms">
+                            <div class="form-title">
+                                <h4>Preferred Card Type</h4>                        
+                            </div>
+                            <ul style="padding-left: 15px; margin-bottom: 0px;">
+                                @foreach($CardTypePreference as $CardType)
+                                    <li style="margin-bottom: 5px; font-size: 15px;">{{ $CardType->name }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
-                    @endif 
-                @endif 
-
-
-                @endif 
-            </div>
-            </div>
                 </div>
-            </div>
-            </div>
+            </div> 
+            @endif
+
 
             <div class="card custom-card">
             @if($Application_Request)    
@@ -682,7 +700,7 @@
                 @if($Application_Request->credit_card_limit)
                 <div class="col-md-6">
                     <div class="form-group">
-                      <label class="sub-label">Credit Card Limit</label>
+                      <label class="sub-label">Required credit card limit</label>
                       <input name="credit_card_limit" class="form-control" value="{{ $Application_Request->credit_card_limit }}" type="text">
                       @if($errors->has('credit_card_limit'))
                       <span class="text-danger">{{$errors->first('credit_card_limit')}}</span>
@@ -832,21 +850,25 @@
                 </div>
                 @endif
 
-                @if($Application_Request->loan_amount)
-                <div class="col-md-12">                            
+               
+             <!--    <div class="col-md-12">                            
                     <label style="font-size: 18px; margin-top: 15px;">Details For Personal Loan</label>
-                </div>  
+                </div>  --> 
+                @if($Application_Request->loan_amount)
                 <div class="col-md-6">
                     <div class="form-group">
-                      <label class="sub-label">Loan Amount</label>
+                      <label class="sub-label">Required Loan Amount</label>
                       <input name="loan_amount" class="form-control" value="{{ $Application_Request->loan_amount }}" type="text">
                       @if($errors->has('loan_amount'))
                       <span class="text-danger">{{$errors->first('loan_amount')}}</span>
                       @endif
                     </div>
                 </div>
+                @endif
+
+                @if($Application_Request->exist_personal == 1)
                 <div class="col-md-12">                            
-                    <label style="font-size: 15px; margin-top: 0px;">Details of Existing Loans</label>
+                    <label style="font-size: 15px; margin-top: 0px;">Details of Existing Personal Loans</label>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
@@ -1368,11 +1390,470 @@
             
             @endif
             </div>
+
+            
+            @if($app_data)
+            @if($app_data->residential_address_line_1)
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                    <div class="forms">
+                    <div class="form-title">
+                        <h4>Address Details</h4>                        
+                    </div>
+                    <div class="row">     
+                        <div class="col-md-12">
+                            <label class="sub-label" style="font-size: 17px; font-weight: 500; margin-bottom: 0px;">Residential Address Details</label>
+                        </div> 
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Residential Address Line 1</label>
+                              <input name="residential_address_line_1" class="form-control" value="{{ $app_data->residential_address_line_1 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Residential Address Line 2</label>
+                              <input name="residential_address_line_2" class="form-control" value="{{ $app_data->residential_address_line_2 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Residential Address Line 3</label>
+                              <input name="residential_address_line_3" class="form-control" value="{{ $app_data->residential_address_line_3 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Nearest Landmark</label>
+                              <input name="residential_address_nearest_landmark" class="form-control" value="{{ $app_data->residential_address_nearest_landmark }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Emirate</label>
+                              <input name="residential_emirate" class="form-control" value="{{ $app_data->residential_emirate }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">PO Box No</label>
+                              <input name="residential_po_box" class="form-control" value="{{ $app_data->residential_po_box }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Resdence Type</label>
+                                <select name="resdence_type" class="form-control">
+                                    <option value="">Select</option>
+                                    <option @if($app_data->resdence_type ==  "Shared") Selected @endif value="Shared">Shared</option>
+                                    <option @if($app_data->resdence_type ==  "Rented") Selected @endif value="Rented">Rented</option>
+                                    <option @if($app_data->resdence_type ==  "Owned") Selected @endif value="Owned">Owned</option>
+                                    <option @if($app_data->resdence_type ==  "Employer Provided") Selected @endif value="Employer Provided">Employer Provided</option>
+                                    <option @if($app_data->resdence_type ==  "Employer Provided") Selected @endif value="Employer Provided">Living With Parents</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Annual Rent</label>
+                              <input name="annual_rent" class="form-control" value="{{ $app_data->annual_rent }}" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Duration At Current Address</label>
+                              <input name="duration_at_current_address" class="form-control" value="{{ $app_data->duration_at_current_address }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="sub-label" style="font-size: 17px; font-weight: 500; margin-bottom: 0px;">Office Address</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Company Name</label>
+                              <input name="company_name" class="form-control" value="{{ $app_data->company_name }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Company Phone No</label>
+                              <input name="company_phone_no" class="form-control" value="{{ $app_data->company_phone_no }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 1</label>
+                              <input name="company_address_line_1" class="form-control" value="{{ $app_data->company_address_line_1 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 2</label>
+                              <input name="company_address_line_2" class="form-control" value="{{ $app_data->company_address_line_2 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 3</label>
+                              <input name="company_address_line_3" class="form-control" value="{{ $app_data->company_address_line_3 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Po Box No</label>
+                              <input name="company_po_box" class="form-control" value="{{ $app_data->company_po_box }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Emirate</label>
+                              <input name="company_emirate" class="form-control" value="{{ $app_data->company_emirate }}" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="sub-label" style="font-size: 17px; font-weight: 500; margin-bottom: 0px;">Permanent Address In Home Country</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 1</label>
+                              <input name="permanent_address_home_country_line_1" class="form-control" value="{{ $app_data->permanent_address_home_country_line_1 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 2</label>
+                              <input name="permanent_address_home_country_line_2" class="form-control" value="{{ $app_data->permanent_address_home_country_line_2 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 3</label>
+                              <input name="permanent_address_home_country_line_3" class="form-control" value="{{ $app_data->permanent_address_home_country_line_3 }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">City</label>
+                              <input name="permanent_address_city" class="form-control" value="{{ $app_data->permanent_address_city }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="sub-label">Country</label>
+                                <select class="form-control" name="permanent_address_country">
+                                    @foreach($country as $country)       
+                                    <option value="{{ $country->id }}" @if($country->id == $app_data->permanent_address_country) selected @endif >{{ $country->country_name }}</option>
+                                    @endforeach  
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Zip/Pin Code</label>
+                              <input name="permanent_address_zipcode" class="form-control" value="{{ $app_data->permanent_address_zipcode }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Tel. with IDD Code</label>
+                              <input name="permanent_addresstel_with_idd_code" class="form-control" value="{{ $app_data->permanent_addresstel_with_idd_code }}" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="sub-label" style="font-size: 17px; font-weight: 500; margin-bottom: 0px;">Mailing Address</label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Po Box</label>
+                              <input name="mailing_po_box" class="form-control" value="{{ $app_data->mailing_po_box }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Address Line 1</label>
+                              <input name="mailing_address_line" class="form-control" value="{{ $app_data->mailing_address_line }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Emirate</label>
+                              <input name="mailing_emirate" class="form-control" value="{{ $app_data->mailing_emirate }}" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Preferred Mailing Address</label>
+                                <select name="resdence_type" class="form-control">
+                                    <option value="">Select</option>
+                                    <option @if($app_data->resdence_type ==  "Residential") Selected @endif value="Residential">Residential</option>
+                                    <option @if($app_data->resdence_type ==  "Office") Selected @endif value="Office">Office</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Preferred Statement Mode</label>
+                                <select name="preferred_statement_mode" class="form-control">
+                                    <option value="">Select</option>
+                                    <option @if($app_data->preferred_statement_mode ==  "E-Mail") Selected @endif value="E-Mail">E-Mail</option>
+                                    <option @if($app_data->preferred_statement_mode ==  "Post") Selected @endif value="Post">Post</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="sub-label">Preferred Contact Number</label>
+                                <select name="preferred_contact_number" class="form-control">
+                                    <option value="">Select</option>
+                                    <option @if($app_data->preferred_contact_number ==  "Home") Selected @endif value="Home">Home</option>
+                                    <option @if($app_data->preferred_contact_number ==  "Business") Selected @endif value="Business">Business</option>
+                                    <option @if($app_data->preferred_contact_number ==  "Mobile") Selected @endif value="Mobile">Mobile</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div> 
+            @endif
+
+            @if($app_data->education)
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                        <div class="forms">
+                            <div class="form-title">
+                                <h4>Education Details</h4>                        
+                            </div>
+                            <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="sub-label">Qualification</label>
+                                  <input name="education" class="form-control" value="{{ $app_data->education }}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="sub-label">Primary School</label>
+                                  <input name="primary_school" class="form-control" value="{{ $app_data->primary_school }}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="sub-label">High School</label>
+                                  <input name="high_school" class="form-control" value="{{ $app_data->high_school }}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="sub-label">Graduate</label>
+                                  <input name="graduate" class="form-control" value="{{ $app_data->graduate }}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="sub-label">Postgraduate</label>
+                                  <input name="postgraduate" class="form-control" value="{{ $app_data->postgraduate }}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="sub-label">Others</label>
+                                  <input name="others" class="form-control" value="{{ $app_data->others }}" type="text">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            @endif
+
+            @if($app_data->vehicle_in_uae)
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="panel panel-widget forms-panel" style="float: left;width: 100%; padding-bottom: 20px;">
+                        <div class="forms">
+                            <div class="form-title">
+                                <h4>Personal details</h4>                        
+                            </div>
+                            <div class="row">
+
+ @if($result->marital_status == 'Married')  
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Does Your Spouse Live In UAE?*</label> 
+      <select name="spouse_live_in_uae" onChange="SpouseLive(this);" class="form-control" required="true">
+        <option value="">Select</option>
+        <option value="1" @if($app_data->spouse_live_in_uae == 1) selected @endif >Yes</option>
+        <option value="0" @if($app_data->spouse_live_in_uae == 0) selected @endif >No</option>
+      </select>
+      @if($errors->has('spouse_live_in_uae'))
+        <span class="text-danger">{{$errors->first('spouse_live_in_uae')}}</span>
+      @endif
+    </div>
+  </div>
+    @if($app_data->spouse_live_in_uae == 1)
+    <div class="col-md-6 spouse_working">
+        <div class="form-group">
+          <label class="sub-label">Spouse Working*</label> 
+          <select name="spouse_working" class="form-control">
+            <option value="">Select</option>
+            <option value="1" @if($app_data->spouse_working == 1) selected @endif >Yes</option>
+            <option value="0" @if($app_data->spouse_working == 0) selected @endif >No</option>
+          </select>
+          @if($errors->has('spouse_working'))
+            <span class="text-danger">{{$errors->first('spouse_working')}}</span>
+          @endif
+        </div>
+    </div>
+    @endif
+
+    <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">You Have Children In The UAE?*</label> 
+      <select name="children_in_the_uae" onChange="ChildrenUAE(this);" class="form-control" required="true">
+        <option value="">Select</option>
+        <option value="1" @if($app_data->children_in_the_uae == 1) selected @endif >Yes</option>
+        <option value="0" @if($app_data->children_in_the_uae == 0) selected @endif >No</option>
+      </select>
+      @if($errors->has('children_in_the_uae'))
+        <span class="text-danger">{{$errors->first('children_in_the_uae')}}</span>
+      @endif
+    </div>
+    </div>
+    @if($app_data->children_in_the_uae == 1)
+    <div class="col-md-6 ChildrenUAE" >
+        <div class="form-group">
+          <label class="sub-label">In School?*</label> 
+          <select name="in_school" class="form-control">
+            <option value="">Select</option>
+            <option value="1" @if($app_data->in_school == 1) selected @endif >Yes</option>
+            <option value="0" @if($app_data->in_school == 0) selected @endif >No</option>
+          </select>
+          @if($errors->has('in_school'))
+            <span class="text-danger">{{$errors->first('in_school')}}</span>
+          @endif
+        </div>
+    </div>
+    @endif
+  @endif
+
+<div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Do You Own A Vehicle In UAE?*</label> 
+      <select name="vehicle_in_uae" class="form-control" required="true">
+        <option value="">Select</option>
+        <option value="1" @if($app_data->vehicle_in_uae == 1) selected @endif >Yes</option>
+        <option value="0" @if($app_data->vehicle_in_uae == 0) selected @endif >No</option>
+      </select>
+      @if($errors->has('vehicle_in_uae'))
+        <span class="text-danger">{{$errors->first('vehicle_in_uae')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Favorite City (As A Security Feature)*</label>
+      <input name="favorite_city" class="form-control" value="{{ $app_data->favorite_city }}" required="true" type="text">
+      @if($errors->has('favorite_city'))
+      <span class="text-danger">{{$errors->first('favorite_city')}}</span>
+      @endif
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label class="sub-label" style="font-size: 17px; font-weight: 500; margin-bottom: 0px;">Bank Details</label>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="sub-label">Account Number</label>
+      <input name="account_number" class="form-control" value="{{ $app_data->account_number }}" type="number">
+      @if($errors->has('account_number'))
+      <span class="text-danger">{{$errors->first('account_number')}}</span>
+      @endif
+    </div>
+  </div>
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Bank Name</label>
+          <input name="bank_name" class="form-control" value="{{ $app_data->bank_name }}" type="text">
+          @if($errors->has('bank_name'))
+          <span class="text-danger">{{$errors->first('bank_name')}}</span>
+          @endif
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+        <label class="sub-label">Iban Number</label>
+        <input name="iban_number" class="form-control" value="{{ $app_data->iban_number }}" type="text">
+        @if($errors->has('iban_number'))
+        <span class="text-danger">{{$errors->first('iban_number')}}</span>
+        @endif
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <label class="sub-label" style="font-size: 17px; font-weight: 500; margin-bottom: 0px;">Multiple Nationality Holder Details</label>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Nationality Name</label>
+          <input name="multi_nationality_name" class="form-control" value="{{ $app_data->multi_nationality_name }}" type="text">
+          @if($errors->has('multi_nationality_name'))
+          <span class="text-danger">{{$errors->first('multi_nationality_name')}}</span>
+          @endif
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+          <label class="sub-label">Passport Number</label>
+          <input name="multi_passport_number" class="form-control" value="{{ $app_data->multi_passport_number }}" type="text">
+          @if($errors->has('multi_passport_number'))
+          <span class="text-danger">{{$errors->first('multi_passport_number')}}</span>
+          @endif
+        </div>
+    </div>
+
+
+
+
+        
+                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            @endif
+
+
+
+
+
+            @endif
+
+
+
     
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <style type="text/css">
 .form-body li{
